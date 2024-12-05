@@ -46,7 +46,7 @@ $page = 1;
 										while($row2 = mysqli_fetch_object($rs2)){
 									?>
 									<div class="pd_ctg_card">
-										<a href="product_category.html">
+										<a href="products.php?level_three=<?php print($row2->cat_id); ?>">
 											<div class="pd_ctg_image"><img src="getftpimage.php?img=<?php print($row2->pg_mime_source); ?>" alt=""></div>
 											<div class="pd_ctg_title"> <?php print($row2->cat_title); ?> </div>
 										</a>
@@ -245,7 +245,7 @@ $page = 1;
 										</div>
 									</div>
 								</div>
-								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+								<div class="gerenric_show_All"><a href="javascript:void(0)">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<div class="gerenric_white_box">
@@ -429,7 +429,7 @@ $page = 1;
 										</div>
 									</div>
 								</div>
-								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+								<div class="gerenric_show_All"><a href="javascript:void(0)">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<?php 
@@ -476,7 +476,7 @@ $page = 1;
 									?>
 								</div>
 							</div>
-							<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+							<div class="gerenric_show_All"><a href="product_category.php?level_one=<?php print($row1->group_id); ?>">Mehr anzeigen</a></div>
 						</div>
 						<?php 
 								}

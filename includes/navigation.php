@@ -26,7 +26,7 @@
             </li>
         </ul>
     </div>
-    <div >
+    <div>
         <div class="header_bottom">
             <div id="logo"><a href="index.php"><img src="images/logo.png" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
@@ -109,370 +109,373 @@
         <nav id="navigation_section">
             <ul>
                 <li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> All</a></li>
-                <?php 
+                <?php
                 $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND parent_id = '0'";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
-                if(mysqli_num_rows($rs) > 0){
-                    while($row = mysqli_fetch_object($rs)){
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
                 ?>
-                <li><a href="product_category.php?level_one=<?php print($row->group_id); ?>"> <?php print($row->cat_title); ?> </a></li>
-                <?php 
+                        <li><a href="product_category.php?level_one=<?php print($row->group_id); ?>"> <?php print($row->cat_title); ?> </a></li>
+                <?php
                     }
                 }
                 ?>
-                <li><a href="product_category.html">Satchel</a></li>
-                <li><a href="product_category.html" class="nav_sale">Sales & Offers</a></li>
+                <li><a href="javascript:void(0);">Satchel</a></li>
+                <li><a href="javascript:void(0);" class="nav_sale">Sales & Offers</a></li>
             </ul>
             <div class="nav_submenu">
                 <div class="nav_submenu_logo"><a href="index.php"><img src="images/logo.png" alt=""></a>
                     <div class="submenu_close"><i class="fa fa-close"></i> </div>
                 </div>
                 <ul>
-                    <li><a href="product_category.html">Organize & Register</a></li>
-                    <li><a href="product_category.html">Papers & Pads</a></li>
-                    <li><a href="product_category.html">Write</a></li>
-                    <li><a href="product_category.html">Gluing & Shipping</a></li>
-                    <li><a href="product_category.html">Presentation & Planning</a></li>
-                    <li><a href="product_category.html">Technology & Accessories</a></li>
-                    <li><a href="product_category.html">Ink & toner</a></li>
-                    <li><a href="product_category.html">Useful things in the office</a></li>
-                    <li><a href="product_category.html">Satchel</a></li>
+                    <?php
+                    $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND parent_id = '0'";
+                    $rs = mysqli_query($GLOBALS['conn'], $Query);
+                    if (mysqli_num_rows($rs) > 0) {
+                        while ($row = mysqli_fetch_object($rs)) {
+                    ?>
+                            <li><a href="product_category.php?level_one=<?php print($row->group_id); ?>"> <?php print($row->cat_title); ?> </a></li>
+                    <?php
+                        }
+                    }
+                    ?>
+                    <li><a href="javascript:void(0);">Satchel</a></li>
                 </ul>
                 <div class="nav_overlay"></div>
             </div>
 
         </nav>
-        <?php if($page == 0){ ?>
+        <?php if ($page == 0) { ?>
             <div class="header_nav_2">
-            <ul>
-                <li><a href="javascript:void(0)"><span>HOME & KITCHEN</span></a>
-                    <div class="sub_menu">
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <div class="sub_menu_div">
-                                <div class="sub_menu_image"><img src="images/product_img1.jpg" alt=""></div>
-                                <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                <ul>
+                    <li><a href="javascript:void(0)"><span>HOME & KITCHEN</span></a>
+                        <div class="sub_menu">
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <div class="sub_menu_div">
+                                    <div class="sub_menu_image"><img src="images/product_img1.jpg" alt=""></div>
+                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                                </div>
+                            </div>
+                            <div class="sub_menu_col">
+                                <div class="sub_menu_div">
+                                    <div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
+                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                                </div>
+                            </div>
+                            <div class="sub_menu_col">
+                                <div class="sub_menu_div">
+                                    <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
+                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="sub_menu_col">
-                            <div class="sub_menu_div">
-                                <div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
-                                <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                    </li>
+                    <li><a href="javascript:void(0)"><span>SPECIAL OFFERS</span></a></li>
+                    <li><a href="javascript:void(0)"><span>FURNITURE</span></a>
+                        <div class="sub_menu">
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <div class="sub_menu_div">
+                                    <div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
+                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                                </div>
+                            </div>
+                            <div class="sub_menu_col">
+                                <div class="sub_menu_div">
+                                    <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
+                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="sub_menu_col">
-                            <div class="sub_menu_div">
-                                <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
-                                <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                    </li>
+                    <li><a href="javascript:void(0)"><span>LARGE APPLIANCES</span></a>
+                        <div class="sub_menu">
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <div class="sub_menu_div">
+                                    <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
+                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-                <li><a href="javascript:void(0)"><span>SPECIAL OFFERS</span></a></li>
-                <li><a href="javascript:void(0)"><span>FURNITURE</span></a>
-                    <div class="sub_menu">
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <div class="sub_menu_div">
-                                <div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
-                                <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+                    </li>
+                    <li><a href="javascript:void(0)"><span>SMALL APPLIANCES</span></a>
+                        <div class="sub_menu">
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                            </div>
+                            <div class="sub_menu_col">
+                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
+                                <h3>LIVING ROOM</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Chairs</a></li>
+                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
+                                    <li><a href="javascript:void(0)">Tables</a></li>
+                                    <li><a href="javascript:void(0)">Cabinets</a></li>
+                                    <li><a href="javascript:void(0)">Bookcases</a></li>
+                                </ul>
                             </div>
                         </div>
-                        <div class="sub_menu_col">
-                            <div class="sub_menu_div">
-                                <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
-                                <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li><a href="javascript:void(0)"><span>LARGE APPLIANCES</span></a>
-                    <div class="sub_menu">
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <div class="sub_menu_div">
-                                <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
-                                <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li><a href="javascript:void(0)"><span>SMALL APPLIANCES</span></a>
-                    <div class="sub_menu">
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                        <div class="sub_menu_col">
-                            <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                            <h3>LIVING ROOM</h3>
-                            <ul>
-                                <li><a href="javascript:void(0)">Chairs</a></li>
-                                <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                <li><a href="javascript:void(0)">Tables</a></li>
-                                <li><a href="javascript:void(0)">Cabinets</a></li>
-                                <li><a href="javascript:void(0)">Bookcases</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-                <li><a href="javascript:void(0)"><span>COOKING & DINING</span></a></li>
-                <li><a href="javascript:void(0)"><span>HOME TEXTILES</span></a></li>
-                <li><a href="javascript:void(0)"><span>LIGHTING</span></a></li>
-            </ul>
-        </div>
+                    </li>
+                    <li><a href="javascript:void(0)"><span>COOKING & DINING</span></a></li>
+                    <li><a href="javascript:void(0)"><span>HOME TEXTILES</span></a></li>
+                    <li><a href="javascript:void(0)"><span>LIGHTING</span></a></li>
+                </ul>
+            </div>
         <?php } ?>
     </div>
 </header>
