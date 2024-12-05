@@ -1,0 +1,816 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<meta name="viewport" content="width=device-width; initial-scale=1.0">
+<title>Wacker 24</title>
+<link href="css/styles.css" rel="stylesheet" type="text/css" />
+<link href="css/slick-theme.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/jquery-ui.css">
+<link href="css/responsive.css" rel="stylesheet" type="text/css" />
+<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-2.2.0.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+
+<script>
+	function blinker() {
+		$('.nav_sale').fadeOut(500);
+		$('.nav_sale').fadeIn(500);
+	}
+	setInterval(blinker, 1000);
+</script>
+<script >
+	$( () => {
+		
+		//On Scroll Functionality
+		$(window).scroll( () => {
+			var windowTop = $(window).scrollTop();
+			windowTop > 10 ? $('.header_sticky').addClass('headersticky') : $('.header_sticky').removeClass('headersticky');
+		});
+		
+		//Click Logo To Scroll To Top
+		$('#scroll_top').on('click', () => {
+			$('html,body').animate({
+				scrollTop: 0
+			},500);
+		});
+		
+		//Smooth Scrolling Using Navigation Menu
+		 
+		$('a[href*="#"]').on('click', function(e){
+			$('html,body').animate({
+				scrollTop: $($(this).attr('href')).offset().top -15/*Fixed header k liye is ko uncomment krna hai*/
+			},500);
+			e.preventDefault();
+		});
+		
+		//Toggle Menu
+		$('.all_menu').on('click', () => {
+			$('.all_menu').toggleClass('closeMenu');
+			$('.nav_submenu').toggleClass('showMenu');
+			
+			$('.nav_overlay, .submenu_close').on('click', () => {
+				$('.nav_submenu').removeClass('showMenu');
+				$('.nav_submenu').removeClass('closeMenu');
+			});
+		});
+		
+	}); 
+</script>
+<script>
+	$(document).ready(function(){
+	  $(".filter_mobile, .categroy_close_mb").click(function(){
+		$(".pd_left").toggle();
+	  });
+	});
+</script>
+<script>
+	$(function() {
+	$( "#slider-range" ).slider({
+	  range: true,
+	  min: 130,
+	  max: 500,
+	  values: [ 130, 250 ],
+	  slide: function( event, ui ) {
+		$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+	  }
+	});
+	$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+	  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+});
+</script>
+</head>
+
+<body>
+	<div id="container" align="center">
+		
+		<!--FORM_POPUP_START-->
+		<div class="form_popup">
+			<div class="inner_popup">
+				<div class="form_popup_content">
+					<div class="form_popup_heading">Add payment card <div class="form_popup_close"><i class="fa fa-times"></i></div></div>
+					<div class="form_popup_content_inner">
+						<div class="gerenric_form">
+							<ul>
+								<li>
+									<div class="form_label">Selection</div>
+									<div class="form_field">
+										<select class="gerenric_input">
+											<option value="">Vise</option>
+											<option value="">Mastercard</option>
+										</select>
+									</div>
+								</li>
+								<li>
+									<div class="form_label">Account holder name</div>
+									<div class="form_field"><input type="text" class="gerenric_input"></div>
+								</li>
+								<li>
+									<div class="form_label">card number</div>
+									<div class="form_field"><input type="number" class="gerenric_input"></div>
+								</li>
+								<li>
+									<div class="form_row">
+										<div class="form_left">
+											<div class="form_field"><input type="text" class="gerenric_input" placeholder="12"></div>
+										</div>
+										<div class="form_right">
+											<div class="form_field"><input type="text" class="gerenric_input" placeholder="2030"></div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="form_field"><input type="text" class="gerenric_input" placeholder="147"></div>
+								</li>
+								<li class="mt_30">
+									<div class="form_two_button">
+										<button class="gerenric_btn">Update</button>
+										<button class="gerenric_btn gray_btn">Cancel</button>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--FORM_POPUP_END-->	
+
+		<!--HEADER_SECTION_START-->
+		<header id="header_section">
+			<div class="header_top">
+				<ul>
+					<li>
+						<div class="gerenric_switch">
+							<span>Private Customer</span>
+							<span>
+								<input type="checkbox" hidden="hidden" id="username">
+							<label class="switch" for="username"></label>
+							</span>
+						</div>
+					</li>
+					<li>Business Customer</li>
+				</ul>
+				<ul>
+					<li><a href="javascript:void(0)">About Wacker 24</a></li>
+					<li><a href="javascript:void(0)">Contact</a></li>
+					<li>
+						<div class="header_language">
+							<div class="language_select"><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
+							<ul>
+								<li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
+								<li><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="header_sticky">
+				<div class="header_bottom">
+					<div id="logo"><a href="index.html"><img src="images/logo.png" alt=""></a></div>
+					<div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
+					<div class="header_search">
+						<div class="header_select">
+							<select class="header_select_slt">
+								<option value="">ALL</option>
+								<option value="">Organize & Register</option>
+								<option value="">Papers & Pads</option>
+								<option value="">Write</option>
+								<option value="">Gluing & Shipping</option>
+								<option value="">Presentation & Planning</option>
+								<option value="">Technology & Accessories</option>
+								<option value="">ink & toner</option>
+								<option value="">Useful things in the office</option>
+							</select>
+						</div>
+						<input type="text" class="search_input" placeholder="Suchhbegriff">
+						<button class="search_icon"></button>
+					</div>
+					<div class="header_account">
+						<ul>
+							<li><a href="javascript:void(0)"><div class="appointment_booking"><i class="fa fa-check-square-o" aria-hidden="true"></i> appointment booking</div></a></li>
+							<li>
+								<div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
+								<div class="hdr_text">
+									<a href="javascript:void(0)"><span>Hello Login</span>Account & List <i class="fa fa-caret-down"></i></a>
+									<div class="account_nav">
+										<ul>
+											<li><span>My lists</span></li>
+											<li><a href="special_price.html">special prices</a></li>
+											<li><a href="shopping_list.html">shopping lists</a></li>
+											<li class="account_hdr"><span>My Account</span></li>
+											<li><a href="my_personal.html">Personal Data</a></li>
+											<li><a href="my_order.html">Orders</a></li>
+											<li><a href="my_address.html">Addresses</a></li>
+											<li><a href="payment.html">Payment Methord</a></li>
+											<li><a href="javascript:void(0)">Logout</a></li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="hdr_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
+								<div class="hdr_text"><a href="javascript:void(0)"><span>0 Items</span>Cart</a></div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<nav id="navigation_section">
+					<ul>
+						<li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> All</a></li>
+						<li><a href="javascript:void(0)">Organize & Register</a></li>
+						<li><a href="javascript:void(0)">Papers & Pads</a></li>
+						<li><a href="javascript:void(0)">Write</a></li>
+						<li><a href="javascript:void(0)">Gluing & Shipping</a></li>
+						<li><a href="javascript:void(0)">Presentation & Planning</a></li>
+						<li><a href="javascript:void(0)">Technology & Accessories</a></li>
+						<li><a href="javascript:void(0)">Ink & toner</a></li>
+						<li><a href="javascript:void(0)">Useful things in the office</a></li>
+						<li><a href="javascript:void(0)">Satchel</a></li>
+						<li><a href="javascript:void(0)" class="nav_sale">Sales & Offers</a></li>
+					</ul>
+					<div class="nav_submenu">
+						<div class="nav_submenu_logo"><a href="index.html"><img src="images/logo.png" alt=""></a> <div class="submenu_close"><i class="fa fa-close"></i> </div></div>
+						<ul>
+							<li><a href="javascript:void(0)">Organize & Register</a></li>
+							<li><a href="javascript:void(0)">Papers & Pads</a></li>
+							<li><a href="javascript:void(0)">Write</a></li>
+							<li><a href="javascript:void(0)">Gluing & Shipping</a></li>
+							<li><a href="javascript:void(0)">Presentation & Planning</a></li>
+							<li><a href="javascript:void(0)">Technology & Accessories</a></li>
+							<li><a href="javascript:void(0)">Ink & toner</a></li>
+							<li><a href="javascript:void(0)">Useful things in the office</a></li>
+							<li><a href="javascript:void(0)">Satchel</a></li>
+						</ul>
+						<div class="nav_overlay"></div>
+					</div>
+					
+				</nav>
+				<div class="header_nav_2">
+					<ul>
+						<li><a href="javascript:void(0)"><span>HOME & KITCHEN</span></a>
+							<div class="sub_menu">
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<div class="sub_menu_div">
+										<div class="sub_menu_image"><img src="images/product_img1.jpg" alt=""></div>
+										<div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+									</div>
+								</div>
+								<div class="sub_menu_col">
+									<div class="sub_menu_div">
+										<div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
+										<div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+									</div>
+								</div>
+								<div class="sub_menu_col">
+									<div class="sub_menu_div">
+										<div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
+										<div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li><a href="javascript:void(0)"><span>SPECIAL OFFERS</span></a></li>
+						<li><a href="javascript:void(0)"><span>FURNITURE</span></a>
+							<div class="sub_menu">
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<div class="sub_menu_div">
+										<div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
+										<div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+									</div>
+								</div>
+								<div class="sub_menu_col">
+									<div class="sub_menu_div">
+										<div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
+										<div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li><a href="javascript:void(0)"><span>LARGE APPLIANCES</span></a>
+							<div class="sub_menu">
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<div class="sub_menu_div">
+										<div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
+										<div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li><a href="javascript:void(0)"><span>SMALL APPLIANCES</span></a>
+							<div class="sub_menu">
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+								<div class="sub_menu_col">
+									<h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+									<h3>LIVING ROOM</h3>
+									<ul>
+										<li><a href="javascript:void(0)">Chairs</a></li>
+										<li><a href="javascript:void(0)">Sofas & Couches</a></li>
+										<li><a href="javascript:void(0)">Tables</a></li>
+										<li><a href="javascript:void(0)">Cabinets</a></li>
+										<li><a href="javascript:void(0)">Bookcases</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li><a href="javascript:void(0)"><span>COOKING & DINING</span></a></li>
+						<li><a href="javascript:void(0)"><span>HOME TEXTILES</span></a></li>
+						<li><a href="javascript:void(0)"><span>LIGHTING</span></a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<!--HEADER_SECTION_END-->
+
+		<!--BREADCRUMB_SECTION_START-->
+		<div class="gerenric_breadcrumb">
+			<div class="page_width_1480">
+				<div class="breadcrumb_inner">
+					<ul>
+						<li><a href="javascript:void(0)">My data</a></li>
+						<li><a href="javascript:void(0)">payments</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--BREADCRUMB_SECTION_END-->
+		
+		<!--CONTENT_SECTION_START-->
+		<section id="content_section">
+			<div class="payment_page gerenric_padding">
+				<div class="page_width_1480">
+					<h1>Payments</h1>
+					<div class="gerenric_address">
+						<div class="address_col">
+							<div class="gerenric_add_box form_popup_trigger">
+								<div>
+									<div class="add_icon"><i class="fa fa-plus"></i></div>
+									<div class="add_text">Add new payment methods</div>
+								</div>
+							</div>
+						</div>
+						<div class="address_col">
+							<div class="address_card">
+								<div class="address_detail">
+									<h2>Payment Detail</h2>
+									<ul>
+										<li><span>Vise</span></li>
+										<li>Sayed Kamal Hussaini</li>
+										<li>3434 2343 3243 3243</li>
+										<li>12</li>
+										<li>2030</li>
+										<li>147</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						
+					</div>	
+				</div>
+			</div>
+		</section>
+		<!--CONTENT_SECTION_END-->
+
+		<!--FOOTER_SECTION_START-->
+		<div id="scroll_top">Back to top</div>
+		<footer id="footer_section">
+			<div class="page_width">
+				<div class="footer_top">
+					<div class="footer-col">
+						<h2>About Wacker</h2>
+						<ul>
+							<li><a href="javascript:void(0)">About Us</a></li>
+							<li><a href="javascript:void(0)">Data protection</a></li>
+							<li><a href="javascript:void(0)">Terms and Conditions</a></li>
+							<li><a href="javascript:void(0)">Partner</a></li>
+							<li><a href="javascript:void(0)">Wacker and the Environment</a></li>
+							<li><a href="javascript:void(0)">Imprint</a></li>
+							<li><a href="javascript:void(0)">Cancellation policy</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>Service</h2>
+						<ul>
+							<li><a href="javascript:void(0)">Disposal of old devices</a></li>
+							<li><a href="javascript:void(0)">Return of used batteries</a></li>
+							<li><a href="javascript:void(0)">Return of packaging material</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>Discover More</h2>
+						<ul>
+							<li><a href="javascript:void(0)">Copy Shop</a></li>
+							<li><a href="javascript:void(0)">Test</a></li>
+							<li><a href="javascript:void(0)">DHL parcel shop</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>Contact & Directions</h2>
+						<ul>
+							<li><a href="javascript:void(0)">Contact form</a></li>
+							<li><a href="javascript:void(0)">Opening hours</a></li>
+							<li><a href="javascript:void(0)">Directions</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>payment methods</h2>
+						<div class="footer_payment_method">
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/amExpress.jpg" alt=""></div>
+								<div class="payment_card_title">American Express</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/mastercard.jpg" alt=""></div>
+								<div class="payment_card_title">Mastercard</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/payPal.jpg" alt=""></div>
+								<div class="payment_card_title">PayPal</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/teba.jpg" alt=""></div>
+								<div class="payment_card_title">Teba</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/visa.jpg" alt=""></div>
+								<div class="payment_card_title">Visa</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/sepa.jpg" alt=""></div>
+								<div class="payment_card_title">Sepa</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer_bottom">
+					<div class="footer_btm_left">
+						<div class="social_medial">
+							<ul>
+								<li><a href="javascript:void(0)"><img src="images/youtube_icon.png" alt=""></a></li>
+								<li><a href="javascript:void(0)"><img src="images/facebook_icon.png" alt=""></a></li>
+								<li><a href="javascript:void(0)"><img src="images/twitter_icon.png" alt=""></a></li>
+								<li><a href="javascript:void(0)"><img src="images/instagram_icon.png" alt=""></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="footer_btm_right">
+						<button class="subscribe_newsletter_btn">Subscribe to Newsletter</button>
+					</div>
+					
+				</div>
+				<div class="footer_logo"><a href="index.html"><img src="images/logo.png" alt=""></a></div>
+			</div>
+		</footer>
+		<!--FOOTER_SECTION_END-->
+
+	</div>
+
+</body>
+<script src="js/slick.js"></script>
+<script type="text/javascript">
+   $(".banner_slider").slick({
+	dots: false,
+	infinite: true,
+	slidesToShow: 1,
+	autoplay: false,
+	autoplaySpeed:3000,
+	slidesToScroll: 1,
+});
+$(".gerenric_slider").slick({
+	slidesToShow: 6,
+	slidesToScroll: 1,
+	autoplay:false,
+	dots:false,
+	autoplaySpeed:2000,
+	infinite: true,
+		responsive: [
+			
+		{
+		breakpoint: 1024,
+		settings: {
+			slidesToShow:4,
+			slidesToScroll: 1,
+		}
+		},
+		{
+		breakpoint: 650,
+		settings: {
+			slidesToShow:3,
+			slidesToScroll: 1
+		}
+		},
+		{
+		breakpoint: 480,
+		settings: {
+			slidesToShow: 2,
+			slidesToScroll: 1
+		}
+		}
+	]
+});
+$(".brand_slider").slick({
+	slidesToShow:10,
+	slidesToScroll: 1,
+	autoplay:false,
+	dots:false,
+	autoplaySpeed:2000,
+	infinite: true,
+		responsive: [
+		{
+		breakpoint: 1200,
+		settings: {
+			slidesToShow:6,
+			slidesToScroll: 1
+		}
+		},	
+		{
+		breakpoint: 1024,
+		settings: {
+			slidesToShow:4,
+			slidesToScroll: 1,
+		}
+		},
+		{
+		breakpoint: 650,
+		settings: {
+			slidesToShow:3,
+			slidesToScroll: 1
+		}
+		},
+		{
+		breakpoint: 480,
+		settings: {
+			slidesToShow: 2,
+			slidesToScroll: 1
+		}
+		}
+	]
+});
+
+</script>
+<script>
+	$(window).load(function () {
+		$(".form_popup_trigger").click(function(){ $('.form_popup').show(); $('.form_popup').resize(); $('body').css({'overflow':'hidden'});});
+		$('.form_popup_close').click(function(){ $('.form_popup').hide(); $('body').css({'overflow':'inherit'}); });
+	});
+</script>
+</html>
