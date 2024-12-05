@@ -41,7 +41,7 @@
 												<div class="pd_image_inner"><img src="getftpimage.php?img=<?php print($pg_mime_source[0]); ?>" alt=""></div>
 											</a></div>
 										<div class="pd_detail">
-											<div class="pd_title"><a href="product_page.html"> <?php print($row1->cat_title); ?> </a></div>
+											<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id); ?>"> <?php print($row1->cat_title); ?> </a></div>
 											<ul>
 											<?php
 												$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.parent_id = '".$row1->group_id."' ORDER BY  RAND() LIMIT 0,3";

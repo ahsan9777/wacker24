@@ -1,6 +1,6 @@
 <?php
 $leve_id = 11;
-if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0 ){
+if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) || (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0)  ){
     if(isset($_REQUEST['level_two'])){
 
         $leve_id = $_REQUEST['level_two'];
@@ -8,6 +8,10 @@ if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || isset($_REQ
     } elseif(isset($_REQUEST['level_three'])){
 
         $leve_id = substr($_REQUEST['level_three'],0,3);
+
+    } elseif(isset($_REQUEST['manf_id'])){
+
+        $leve_id = 11;
     }
 } else{
     $leve_id = $_REQUEST['level_one'];
@@ -25,8 +29,13 @@ if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || isset($_REQ
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if(mysqli_num_rows($rs) > 0){
                     while($row = mysqli_fetch_object($rs)){
+                        if(isset($_REQUEST['level_one']) || isset($_REQUEST['manf_id'])){
+                            $cat_link = "products.php?level_two=".$row->group_id;
+                        } elseif(isset($_REQUEST['level_two']) || isset($_REQUEST['level_three'])){
+                            $cat_link = "products.php?level_three=".$row->group_id; 
+                        }
                 ?>
-                <li><a href="javascript:void(0)"> <?php print($row->cat_title); ?> </a></li>
+                <li><a href=" <?php print($cat_link); ?> "> <?php print($row->cat_title); ?> </a></li>
                 <?php 
                     }
                 }
@@ -42,7 +51,7 @@ if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || isset($_REQ
                 if(mysqli_num_rows($rs) > 0){
                     while($row = mysqli_fetch_object($rs)){
                 ?>
-                <li><a href="javascript:void(0)"> <?php print($row->manf_name); ?> </a></li>
+                <li><a href="products.php?manf_id=<?php print($row->manf_id); ?>"> <?php print($row->manf_name); ?> </a></li>
                 <?php 
                     }
                 }
