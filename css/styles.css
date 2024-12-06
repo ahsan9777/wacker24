@@ -41,6 +41,7 @@ a{ text-decoration:none;}
 .txt_align_center{ text-align:center;}
 .txt_align_right{ text-align:right;}
 .position_relative{ position:relative;}
+.sticky{position: sticky; top: 100px;}
 p{ font-size:15px; color:#000; text-align:left; font-weight:400; line-height:150%; margin-bottom:10px;}
 h1{ font-size:28px; color:#000; text-align:left; font-weight:normal; margin-bottom:15px;}
 h2{ font-size:22px; color:#000; text-align:left; font-weight:normal; margin-bottom:15px;}
@@ -132,7 +133,7 @@ body.body-white{background-color: #fff !important;}
 .gerenric_product .pd_detail .pd_prise{ font-size: 25px; color: #B12704; font-weight: 500; margin-bottom: 10px;}
 .gerenric_product .pd_detail .pd_prise.price_without_tex{ display: none;}
 .gerenric_product .pd_detail .pd_btn .gerenric_btn{width: 100%; min-width: inherit; margin-bottom: 20px; border-radius: 100px; font-weight: normal; font-size: 14px;}
-.product_detail_page .product_detail_section1 .product_left .product_main_image{width: 100%; margin-bottom: 20px;position: relative;}
+.product_detail_page .product_detail_section1 .product_left .product_main_image{width: 100%; margin-bottom: 20px;position: sticky; top: 100px;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-gallery-container.active{ display: block;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .thum_images {width: 100%;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-lens-image{height: auto;}
@@ -386,7 +387,7 @@ body.body-white{background-color: #fff !important;}
 
 .product_detail_page{width: 100%;}
 .product_detail_page .product_detail_section1{width: 100%; margin-bottom: 50px; display: flex; flex-wrap: wrap;}
-.product_detail_page .product_detail_section1 .product_left{width: 45%;}
+.product_detail_page .product_detail_section1 .product_left{position: relative; width: 45%;}
 .product_detail_page .product_detail_section1 .product_right{width: 55%; display: flex; flex-wrap: wrap; padding-left: 30px;}
 .product_detail_page .product_detail_section1 .product_right .product_col1{width:70%; padding-right: 20px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2{width:30%;border: 1px solid #dedede;padding: 15px;}

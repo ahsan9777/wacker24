@@ -38,7 +38,7 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 		<section id="content_section">
 			<div class="product_page gerenric_padding">
 				<div class="page_width">
-					<div class="product_inner">
+					<div class="product_inner position_relative">
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
 						<?php include("includes/left_filter.php"); ?>
 						<div class="pd_right">

@@ -20,7 +20,7 @@ if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
 }
 ?>
 <div class="pd_left">
-    <div class="categroy_list">
+    <div class="categroy_list sticky">
         <h2>Category <div class="categroy_close_mb">X</div>
         </h2>
         <div class="categroy_block">

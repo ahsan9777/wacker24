@@ -71,8 +71,8 @@ if (mysqli_num_rows($rs) > 0) {
 			<div class="product_detail_page gerenric_padding">
 				<div class="page_width_1480">
 					<div class="product_detail_section1">
-						<div class="product_left">
-							<div class="product_main_image">
+						<div class="product_left"  >
+							<div class="product_main_image" >
 								<article>
 									<div class="simpleLens-gallery-container" id="demo-1" align="center">
 										<div class="large_image">
@@ -80,10 +80,10 @@ if (mysqli_num_rows($rs) > 0) {
 												<div class="simpleLens-big-image-container"> <a class="simpleLens-lens-image" data-lens-image="getftpimage.php?img=<?php print($pg_mime_source); ?>"> <img src="getftpimage.php?img=<?php print($pg_mime_source); ?>" class="simpleLens-big-image"> </a> </div>
 											</div>
 										</div>
-										<div class="thum_images">
+										<div class="thum_images" >
 											<div class="simpleLens-thumbnails-container">
 												<?php
-												$Query = "SELECT pg_mime_source FROM `products_gallery` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+									 			$Query = "SELECT pg_mime_source FROM `products_gallery` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' AND pg_mime_purpose != 'data_sheet' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
 												$rs = mysqli_query($GLOBALS['conn'], $Query);
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
@@ -132,6 +132,7 @@ if (mysqli_num_rows($rs) > 0) {
 								</div>
 							</div>
 							<div class="product_col2">
+							<div class="sticky">
 								<?php
 									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax FROM `products_bundle_price` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' ORDER BY pbp_lower_bound ASC"; 
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -172,6 +173,7 @@ if (mysqli_num_rows($rs) > 0) {
 											<div class="gerenric_btn">In the shopping lists</div>
 										</a></div>
 								</div>
+							</div>
 							</div>
 						</div>
 					</div>
