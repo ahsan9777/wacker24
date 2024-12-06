@@ -30,23 +30,16 @@
         <div class="header_bottom">
             <div id="logo"><a href="index.php"><img src="images/logo.png" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
-            <div class="header_search">
+            <form class="header_search" name="frm" id="frm" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
-                    <select class="header_select_slt">
-                        <option value="">ALL</option>
-                        <option value="">Organize & Register</option>
-                        <option value="">Papers & Pads</option>
-                        <option value="">Write</option>
-                        <option value="">Gluing & Shipping</option>
-                        <option value="">Presentation & Planning</option>
-                        <option value="">Technology & Accessories</option>
-                        <option value="">ink & toner</option>
-                        <option value="">Useful things in the office</option>
+                    <select class="header_select_slt" name="cat_id" id="cat_id">
+                        <option value="0">ALL</option>
+                        <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $cat_id, "cat_status = '1' AND parent_id = '0'"); ?>
                     </select>
                 </div>
-                <input type="text" class="search_input" placeholder="Suchhbegriff">
+                <input type="text" class="search_input" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" required placeholder="Suchhbegriff">
                 <button class="search_icon"></button>
-            </div>
+            </form>
             <div class="header_account">
                 <ul>
                     <li><a href="javascript:void(0)">

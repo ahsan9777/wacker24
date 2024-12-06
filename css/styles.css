@@ -269,7 +269,7 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_location .fa{font-size: 20px;color: #fffc04; margin-right: 5px;}
 #header_section .header_bottom .header_location span{ font-weight: bold;  margin-left: 5px;}
 #header_section .header_bottom .header_search{width: 43%; display: flex; border-radius: 5px; overflow: hidden; position: relative; background-color: #fff; position: relative;}
-#header_section .header_bottom .header_search .header_select_slt{width: 100%; font-size: 14px; font-weight: 500; padding: 10px; background-color: #ebebeb; border: 0px;height: 40px;}
+#header_section .header_bottom .header_search .header_select_slt{ /*width: 100%;*/ font-size: 14px; font-weight: 500; padding: 10px; background-color: #ebebeb; border: 0px;height: 40px;}
 #header_section .header_bottom .header_search .header_select_slt:focus{outline: none;}
 #header_section .header_bottom .header_search .search_input{width: 100%;  height: 40px; background-color: #fff; border: 0px; padding: 7px 20px 7px 20px;}
 #header_section .header_bottom .header_search .search_input:focus{outline: none;}

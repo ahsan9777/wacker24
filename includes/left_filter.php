@@ -14,7 +14,9 @@ if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         $leve_id = 11;
     }
 } else{
-    $leve_id = $_REQUEST['level_one'];
+    if(!isset($_REQUEST['search_keyword'])){
+        $leve_id = $_REQUEST['level_one'];
+    }
 }
 ?>
 <div class="pd_left">
@@ -29,7 +31,7 @@ if( (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if(mysqli_num_rows($rs) > 0){
                     while($row = mysqli_fetch_object($rs)){
-                        if(isset($_REQUEST['level_one']) || isset($_REQUEST['manf_id'])){
+                        if(isset($_REQUEST['level_one']) || isset($_REQUEST['manf_id']) || isset($_REQUEST['search_keyword'])){
                             $cat_link = "products.php?level_two=".$row->group_id;
                         } elseif(isset($_REQUEST['level_two']) || isset($_REQUEST['level_three'])){
                             $cat_link = "products.php?level_three=".$row->group_id; 

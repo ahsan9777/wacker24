@@ -13,4 +13,6 @@ session_start();
 $page = 0;
 
 $qryStrURL = ""; 
+$search_keyword = "";
+$cat_id = "";
 ?>

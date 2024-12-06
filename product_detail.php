@@ -1,7 +1,7 @@
 <?php
 
 include("includes/php_includes_top.php");
-$Query = "SELECT pro.*, manf.manf_aid, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+$Query = "SELECT pro.*, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -13,7 +13,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_description_long = $row->pro_description_long;
 	$pro_ean = $row->pro_ean;
 	$pro_buyer_id = $row->pro_buyer_id;
-	$manf_aid = $row->manf_aid;
+	$pro_manufacture_aid = $row->pro_manufacture_aid;
 	$pro_delivery_time = $row->pro_delivery_time;
 	$pro_order_unit = $row->pro_order_unit;
 	$pro_count_unit = $row->pro_count_unit;
@@ -106,7 +106,7 @@ if (mysqli_num_rows($rs) > 0) {
 								<h1> <?php print($pro_description_short); ?> </h1>
 								<ul>
 									<li>Bestellnummer: <?php print($supplier_id); ?> </li>
-									<li>Herstellernummer: <?php print($manf_aid); ?></li>
+									<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
 									<li>GTIN: <?php print($pro_ean); ?> </li>
 								</ul>
 								<div class="product_prise price_without_tex"> <?php print(str_replace(".", ",", $pbp_price_without_tax)); ?> € </div>
