@@ -1,4 +1,4 @@
-<footer id="footer_section">
+<footer id="footer_section" <?php print($background_color_one); ?> >
     <div class="page_width">
         <div class="footer_top">
             <div class="footer-col">

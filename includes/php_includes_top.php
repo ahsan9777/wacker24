@@ -9,6 +9,7 @@ $p = new Pager1;
 //$mailer = new Mailer();
 
 session_start();
+//$_SESSION['utype_id'] = 3;
 
 $page = 0;
 

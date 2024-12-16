@@ -71,11 +71,14 @@
 </script>
 <script>
     $(function() {
-        //console.log("switch_click");
+        console.log("switch_click");
+        //$(".switch_click").trigger("click");
         $(".switch_click").click(function() {
             //console.log("class switch_click");
+            let utype_id = 3;
             if ($(this).is(":checked")) {
                 //console.log("if switch_click");
+                utype_id = 4;
                 $("#header_section .header_top").css('background-color', '#4884fc');
                 $("#header_section .header_bottom").css('background-color', '#011f43');
                 $("#navigation_section").css('background-color', '#4884fc');
@@ -91,6 +94,16 @@
                 $(".pbp_price_with_tex").show();
                 $(".price_without_tex").hide();
             }
+            $.ajax({
+				url: 'ajax_calls.php?action=switch_click',
+				method: 'POST',
+                data: {
+					utype_id: utype_id
+				},
+				success: function(response) {
+					//console.log("response = "+response);
+				}
+			});
         });
     });
 </script>

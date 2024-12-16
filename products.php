@@ -76,8 +76,8 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 															</li>
 														</ul>
 													</div>
-													<div class="pd_prise price_without_tex"><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-													<div class="pd_prise pbp_price_with_tex"><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+													<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+													<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 													<div class="pd_btn"><a href="product_detail.html">
 															<div class="gerenric_btn">Add to Cart</div>
 														</a></div>

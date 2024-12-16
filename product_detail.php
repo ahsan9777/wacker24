@@ -109,8 +109,8 @@ if (mysqli_num_rows($rs) > 0) {
 									<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
 									<li>GTIN: <?php print($pro_ean); ?> </li>
 								</ul>
-								<div class="product_prise price_without_tex"> <?php print(str_replace(".", ",", $pbp_price_without_tax)); ?> € </div>
-								<div class="product_prise pbp_price_with_tex"> <?php print(str_replace(".", ",", $pbp_price_amount)); ?> € <span>Each ST 1/ incl. VAT</span> </div>
+								<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?> > <?php print(str_replace(".", ",", $pbp_price_without_tax)); ?> € </div>
+								<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > <?php print(str_replace(".", ",", $pbp_price_amount)); ?> € <span>Each ST 1/ incl. VAT</span> </div>
 								<ul class="product_type">
 									<?php
 										$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' ORDER BY pf_forder ASC"; 
@@ -139,8 +139,8 @@ if (mysqli_num_rows($rs) > 0) {
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 								?>
-								<div class="piece_prise price_without_tex">From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
-								<div class="piece_prise pbp_price_with_tex">From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
+								<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?> >From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
+								<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> >From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
 								<?php
 											}
 										}
@@ -205,8 +205,8 @@ if (mysqli_num_rows($rs) > 0) {
 														</li>
 													</ul>
 												</div>
-												<div class="pd_prise price_without_tex"><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-												<div class="pd_prise pbp_price_with_tex"><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+												<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+												<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 											</div>
 										</div>
 									</div>

@@ -1,11 +1,25 @@
+<?php
+$background_color_one = "";
+$background_color_two = "";
+$pbp_price_with_tex_display = "";
+$price_without_tex_display = "";
+$switch_click_check = "";
+if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
+    $background_color_one = 'style="background-color: rgb(72, 132, 252);"';
+    $background_color_two = 'style="background-color: rgb(1, 31, 67);"';
+    $switch_click_check = "checked";
+    $price_without_tex_display = 'style="display: block;"';
+    $pbp_price_with_tex_display = 'style="display: none;"';
+}
+?>
 <header id="header_section" class="header_sticky">
-    <div class="header_top">
+    <div class="header_top" <?php print($background_color_one); ?> >
         <ul>
             <li>
                 <div class="gerenric_switch">
                     <span>Private Customer</span>
                     <span>
-                        <input class="switch_click" type="checkbox" hidden="hidden" id="username">
+                        <input class="switch_click" type="checkbox" hidden="hidden" id="username" <?php print($switch_click_check); ?>>
                         <label class="switch" for="username"></label>
                     </span>
                 </div>
@@ -27,7 +41,7 @@
         </ul>
     </div>
     <div>
-        <div class="header_bottom">
+        <div class="header_bottom" <?php print($background_color_two); ?>>
             <div id="logo"><a href="index.php"><img src="images/logo.png" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
             <form class="header_search" name="frm" id="frm" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
@@ -99,7 +113,7 @@
                 </ul>
             </div>
         </div>
-        <nav id="navigation_section">
+        <nav id="navigation_section" <?php print($background_color_one); ?>>
             <ul>
                 <li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> All</a></li>
                 <?php

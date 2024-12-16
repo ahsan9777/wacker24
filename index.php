@@ -465,8 +465,8 @@ $page = 1;
 														</li>
 													</ul>
 												</div>
-												<div class="pd_prise price_without_tex" ><?php print(str_replace(".", ",", $row2->pbp_price_without_tax)); ?> €</div>
-												<div class="pd_prise pbp_price_with_tex"><?php print(str_replace(".", ",", $row2->pbp_price_amount)); ?> €</div>
+												<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row2->pbp_price_without_tax)); ?> €</div>
+												<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row2->pbp_price_amount)); ?> €</div>
 											</div>
 										</div>
 									</div>
