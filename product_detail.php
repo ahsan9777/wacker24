@@ -1,7 +1,7 @@
 <?php
 
 include("includes/php_includes_top.php");
-$Query = "SELECT pro.*, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -23,6 +23,11 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_quantity_interval = $row->pro_quantity_interval;
 	$pbp_price_amount = $row->pbp_price_amount;
 	$pbp_price_without_tax = $row->pbp_price_without_tax;
+	$pbp_id = $row->pbp_id;
+	$ci_amount = $pbp_price_amount;
+	if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
+		$ci_amount = $pbp_price_without_tax;
+	}
 	$pg_mime_source = $row->pg_mime_source;
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
@@ -146,19 +151,46 @@ if (mysqli_num_rows($rs) > 0) {
 										}
 									?>
 								<div class="product_vat">VAT included</div>
-								<div class="product_order_title">100 pieces ordered</div>
+								<?php
+								$quantity_lenght = 0; 
+								$Query = "SELECT * FROM products_quantity WHERE supplier_id = '".dbStr(trim($supplier_id))."'";
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if(mysqli_num_rows($rs) > 0){
+									$row = mysqli_fetch_object($rs);
+									$pq_quantity = $row->pq_quantity;
+									$pq_upcomming_quantity = $row->pq_upcomming_quantity;
+									$pq_status = $row->pq_status;
+									if($pq_quantity == 0 && $pq_status == 'true'){
+										$quantity_lenght = $pq_upcomming_quantity;
+										print('<div class="product_order_title"> '.$pq_upcomming_quantity.' Stück bestellt</div>');
+									} elseif($pq_quantity > 0 && $pq_status == 'false'){
+										$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
+										if($quantity_lenght > 500){
+											$quantity_lenght = 500;
+										}
+										print('<div class="product_order_title green"> '.$pq_quantity.' Stück sofort verfügbar</div>');
+									}
+								}
+								?>
+								<!--<div class="product_order_title"> 100 pieces ordered</div>-->
 								<div class="product_order_row">
-									<div class="order_text">Quantity:</div>
-									<div class="order_select">
-										<select class="order_select_input">
-											<option value="">1</option>
-											<option value="">2</option>
-											<option value="">3</option>
-											<option value="">4</option>
-										</select>
+									<div class="product_order_row_inner">
+										<div class="order_text">Quantity:</div>
+										<div class="order_select">
+											<select class="order_select_input" id="ci_qty" name="ci_qty">
+												<?php for($i = 1; $i <= $quantity_lenght; $i++){ ?>
+												<option value="<?php print($i); ?>"> <?php print($i); ?> </option>
+												<?php } ?>
+											</select>
+										</div>
 									</div>
 								</div>
-								<div class="order_btn"><a href="javascript:void(0)">
+								<div class="order_btn">
+									<input type="hidden" id="pro_id" name="pro_id" value="<?php print($pro_id); ?>" >
+									<input type="hidden" id="supplier_id" name="supplier_id" value="<?php print($supplier_id); ?>" >
+									<input type="hidden" id="pbp_id" name="pbp_id" value="<?php print($pbp_id); ?>" >
+									<input type="hidden" id="ci_amount" name="ci_amount" value="<?php print($ci_amount); ?>" >
+									<a class="add_to_card" href="javascript:void(0)">
 										<div class="gerenric_btn">Add to Cart</div>
 									</a></div>
 								<div class="order_btn"><a href="javascript:void(0)">
@@ -321,6 +353,32 @@ if (mysqli_num_rows($rs) > 0) {
 		}
 
 		$(".category_show").toggleClass("category_show_height");
+	});
+
+	$('#ci_qty').on('click', function(){
+		//console.log("ci_qty");
+		let pro_id = $("#pro_id").val();
+		let supplier_id = $("#supplier_id").val();
+		let ci_qty = $("#ci_qty").val();
+		//console.log("ci_qty = "+ci_qty);
+		$.ajax({
+			url: 'ajax_calls.php?action=ci_qty',
+			method: 'POST',
+			data: {
+				pro_id: pro_id,
+				supplier_id: supplier_id,
+				ci_qty: ci_qty
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				//console.log(obj);
+				if(obj.status == 1){
+					$("#pbp_id").val(obj.data.pbp_id);
+					$("#ci_amount").val(obj.data.ci_amount);
+				}
+			}
+		});
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>

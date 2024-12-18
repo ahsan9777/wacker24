@@ -85,6 +85,7 @@
                 $("#footer_section").css('background-color', '#4884fc');
                 $(".pbp_price_with_tex").hide();
                 $(".price_without_tex").show();
+                $(".price_without_tex").show();
             } else {
                 //console.log("else switch_click");
                 $("#header_section .header_top").css('background-color', '#323234');
@@ -94,6 +95,7 @@
                 $(".pbp_price_with_tex").show();
                 $(".price_without_tex").hide();
             }
+
             $.ajax({
 				url: 'ajax_calls.php?action=switch_click',
 				method: 'POST',
@@ -102,6 +104,7 @@
 				},
 				success: function(response) {
 					//console.log("response = "+response);
+                    $("#ci_qty").trigger("click");
 				}
 			});
         });

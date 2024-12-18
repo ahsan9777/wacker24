@@ -47,6 +47,7 @@ h1{ font-size:28px; color:#000; text-align:left; font-weight:normal; margin-bott
 h2{ font-size:22px; color:#000; text-align:left; font-weight:normal; margin-bottom:15px;}
 h3{ font-size:20px; color:#000; text-align:left; font-weight:normal; margin-bottom:15px;}
 a{ color:#000;}
+.green{ color: #008000 !important;}
 
 /*GERENRIC_SECTION_START*/
 .success_message{width: 100%; font-size: 14px; border-radius: 5px; color: #155724; background-color: #d4edda;border-color: #c3e6cb; padding: 15px; border: 5px; border: 1px solid #c3e6cb;}
@@ -387,8 +388,8 @@ body.body-white{background-color: #fff !important;}
 
 .product_detail_page{width: 100%;}
 .product_detail_page .product_detail_section1{width: 100%; margin-bottom: 50px; display: flex; flex-wrap: wrap;}
-.product_detail_page .product_detail_section1 .product_left{position: relative; width: 45%;}
-.product_detail_page .product_detail_section1 .product_right{width: 55%; display: flex; flex-wrap: wrap; padding-left: 30px;}
+.product_detail_page .product_detail_section1 .product_left{position: relative; width: 40%;}
+.product_detail_page .product_detail_section1 .product_right{width: 60%; display: flex; flex-wrap: wrap; padding-left: 30px;}
 .product_detail_page .product_detail_section1 .product_right .product_col1{width:70%; padding-right: 20px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2{width:30%;border: 1px solid #dedede;padding: 15px;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 h1{font-size: 24px; color: #212529; font-weight: 600; margin-bottom: 10px;}
@@ -408,10 +409,12 @@ body.body-white{background-color: #fff !important;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise span{font-weight: bold; font-size: 20px; color: #000;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_vat{font-size: 15px; color: #212529; font-weight: 500; margin-bottom: 25px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_title{font-size: 17px; color: orange; font-weight: 700; margin-bottom: 10px;}
-.product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_row{width: 100%; display: flex; align-items: center; border-bottom: 1px solid #dedede; padding-bottom: 15px; margin-bottom: 20px;}
-.product_detail_page .product_detail_section1 .product_right .product_col2 .order_text{width: 70px; font-size: 15px; padding-right: 5px; color: #212529; font-weight: 400;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_row{width: 100%; border-bottom: 1px solid #dedede; padding-bottom: 15px; margin-bottom: 20px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_row_inner{width: 100%; display: flex; align-items: center; background: #eeeeee; border-radius: 100px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .order_text{width: 70px; font-size: 15px; padding-left: 10px; padding-right: 5px; color: #212529; font-weight: 400;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_select{width: calc(100% - 75px);}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_select_input{width: 100%; font-size: 14px;background: #eeeeee;padding: 6px 10px 6px 10px;border-radius: 100px; border: 0px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .order_select_input:focus{outline: none; border: none;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_btn .gerenric_btn{width: 100%; font-size: 14px; background-color: #ffca44; border-radius: 100px; margin-bottom: 30px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_btn .gerenric_btn:hover{background-color: #eeb31e;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_shippment{width: 100%;}
