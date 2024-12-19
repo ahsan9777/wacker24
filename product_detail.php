@@ -24,10 +24,8 @@ if (mysqli_num_rows($rs) > 0) {
 	$pbp_price_amount = $row->pbp_price_amount;
 	$pbp_price_without_tax = $row->pbp_price_without_tax;
 	$pbp_id = $row->pbp_id;
-	$ci_amount = $pbp_price_amount;
-	if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
-		$ci_amount = $pbp_price_without_tax;
-	}
+	$ci_amount = $pbp_price_without_tax;
+	
 	$pg_mime_source = $row->pg_mime_source;
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
@@ -38,6 +36,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_id_three = $row->cat_id_three;
 	$cat_title_three = $row->cat_title_three;
 }
+
 ?>
 <!doctype html>
 <html lang="de">
@@ -188,8 +187,6 @@ if (mysqli_num_rows($rs) > 0) {
 								<div class="order_btn">
 									<input type="hidden" id="pro_id" name="pro_id" value="<?php print($pro_id); ?>" >
 									<input type="hidden" id="supplier_id" name="supplier_id" value="<?php print($supplier_id); ?>" >
-									<input type="hidden" id="pbp_id" name="pbp_id" value="<?php print($pbp_id); ?>" >
-									<input type="hidden" id="ci_amount" name="ci_amount" value="<?php print($ci_amount); ?>" >
 									<a class="add_to_card" href="javascript:void(0)">
 										<div class="gerenric_btn">Add to Cart</div>
 									</a></div>
@@ -355,14 +352,19 @@ if (mysqli_num_rows($rs) > 0) {
 		$(".category_show").toggleClass("category_show_height");
 	});
 
-	$('#ci_qty').on('click', function(){
-		//console.log("ci_qty");
+	$(".add_to_card").on("click", function(){
+		//console.log("add_to_card");
 		let pro_id = $("#pro_id").val();
 		let supplier_id = $("#supplier_id").val();
 		let ci_qty = $("#ci_qty").val();
-		//console.log("ci_qty = "+ci_qty);
+
+		/*console.log("pro_id: "+pro_id);
+		console.log("supplier_id: "+supplier_id);
+		console.log("pbp_id: "+pbp_id);
+		console.log("ci_amount: "+ci_amount);*/
+
 		$.ajax({
-			url: 'ajax_calls.php?action=ci_qty',
+			url: 'ajax_calls.php?action=add_to_card',
 			method: 'POST',
 			data: {
 				pro_id: pro_id,
@@ -374,8 +376,8 @@ if (mysqli_num_rows($rs) > 0) {
 				const obj = JSON.parse(response);
 				//console.log(obj);
 				if(obj.status == 1){
-					$("#pbp_id").val(obj.data.pbp_id);
-					$("#ci_amount").val(obj.data.ci_amount);
+					$("#header_quantity").text(obj.count+" items");
+					$(".side_cart_click").trigger("click");
 				}
 			}
 		});

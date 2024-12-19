@@ -2295,5 +2295,20 @@ function moveimage($dirName, $id, $inputName){
 	return $mfileName;
 }
 
+function get_pro_price($pro_id, $supplier_id, $ci_qty){
+	$retValue = array();
+	$Query = "SELECT pbp.pbp_id, pbp.pbp_price_amount AS pbp_price_without_tax FROM products_bundle_price AS pbp WHERE pbp.pro_id = '" . dbStr(trim($pro_id)) . "' AND pbp.supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp.pbp_lower_bound BETWEEN 0 AND " . dbStr(trim($ci_qty)) . "";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		while ($rw = mysqli_fetch_object($rs)) {
+			$retValue = array(
+				"pbp_id" => strval($rw->pbp_id),
+				"ci_amount" => strval($rw->pbp_price_without_tax)
+			);
+		}
+	}
+	return $retValue;
+}
+
 
 ?>

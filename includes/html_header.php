@@ -71,7 +71,7 @@
 </script>
 <script>
     $(function() {
-        console.log("switch_click");
+        //console.log("switch_click");
         //$(".switch_click").trigger("click");
         $(".switch_click").click(function() {
             //console.log("class switch_click");
@@ -104,7 +104,6 @@
 				},
 				success: function(response) {
 					//console.log("response = "+response);
-                    $("#ci_qty").trigger("click");
 				}
 			});
         });
@@ -125,6 +124,7 @@
             $(".hdr_side_cart").show();
             $("#container").css('padding-right', '130px');
             $("#logo").css('width', '120px');
+            show_side_cart_data();
         });
         $(".hdr_side_cart .side_bar_close").click(function() {
             $(".hdr_side_cart").hide();

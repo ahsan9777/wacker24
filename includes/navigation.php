@@ -84,29 +84,18 @@ if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
                     </li>
                     <li>
                         <div class="hdr_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
-                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span>0 Items</span>Cart</a></div>
+                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print( isset($_SESSION['header_quantity'])?$_SESSION['header_quantity']:0 ); ?> Items</span>Cart</a></div>
                         <div class="hdr_side_cart">
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">
                                 <div class="subtotal_title">Subtotal</div>
-                                <div class="subtotal_prise">€4.90</div>
-                                <div class="full_width"><a href="product_cart.html">
+                                <div class="subtotal_prise" id="cart_amount">0.00 €</div>
+                                <div class="full_width"><a id="cart_href" href="javascript:void(0)">
                                         <div class="gerenric_btn full_btn">Go to Basket</div>
                                     </a></div>
                             </div>
-                            <div class="side_cart_pd">
-                                <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="javascript:void(0)"><img
-                                                src="images/product_img1.jpg" alt=""></a></div>
-                                    <div class="side_cart_pd_prise">€4.90</div>
-                                    <div class="side_cart_pd_qty">
-                                        <div class="side_pd_qty">
-                                            <input type="number" class="qlt_number" value="1">
-                                        </div>
-                                        <div class="side_pd_delete"><a href="javascript:void(0)"><i
-                                                    class="fa fa-trash"></i></a></div>
-                                    </div>
-                                </div>
+                            <div class="side_cart_pd" id="show_card_body">
+                                
                             </div>
                         </div>
                     </li>
