@@ -15,7 +15,7 @@
 				} else{
                     $("#show_card_body").html(obj.show_card_body);
 					$("#cart_amount").text(obj.cart_amount+" €");
-					$("#cart_href").attr("href", "cart.php");
+					$("#cart_href").attr("href", "javascript:void(0)");
                 }
 			}
 		});

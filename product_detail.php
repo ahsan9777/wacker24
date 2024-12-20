@@ -360,7 +360,6 @@ if (mysqli_num_rows($rs) > 0) {
 
 		/*console.log("pro_id: "+pro_id);
 		console.log("supplier_id: "+supplier_id);
-		console.log("pbp_id: "+pbp_id);
 		console.log("ci_amount: "+ci_amount);*/
 
 		$.ajax({

@@ -89,7 +89,7 @@ if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">
                                 <div class="subtotal_title">Subtotal</div>
-                                <div class="subtotal_prise" id="cart_amount">0.00 €</div>
+                                <div class="subtotal_prise" id="cart_amount">0,00 €</div>
                                 <div class="full_width"><a id="cart_href" href="javascript:void(0)">
                                         <div class="gerenric_btn full_btn">Go to Basket</div>
                                     </a></div>

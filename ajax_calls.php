@@ -100,10 +100,18 @@ if (isset($_REQUEST['action'])) {
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
                         $cart_amount = $cart_amount + $row->ci_total;
+                        $gst = $row->ci_amount * config_gst;
+                        $display_one = "";
+                        $display_two = "";
+                        if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
+                            $display_one = "style = 'display: block;'";
+                            $display_two = "style = 'display: none;'";
+                        }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
                                     <div class="side_cart_pd_image"><a href="javascript:void(0)"><img src="getftpimage.php?img='.$row->pg_mime_source.'" alt=""></a></div>
-                                    <div class="side_cart_pd_prise">'.$row->ci_amount.' €</div>
+                                    <div class="side_cart_pd_prise price_without_tex" '.$display_one.' >'.number_format($row->ci_amount, "2", ",", "").' €</div>
+                                    <div class="side_cart_pd_prise pbp_price_with_tex" '.$display_two.' >'.number_format($row->ci_amount + $gst, "2", ",", "").' €</div>
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
                                             <input type="number" class="qlt_number" value="'.$row->ci_qty.'">
@@ -137,9 +145,9 @@ if (isset($_REQUEST['action'])) {
                         ';
                     }
 
-                    $retValue = array("status" => "1", "message" => "Record found successfully!", "cart_amount" => $cart_amount, "show_card_body" => $show_card_body);
+                    $retValue = array("status" => "1", "message" => "Record found successfully!", "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
                 } else {
-                    $retValue = array("status" => "0", "message" => "Record not found!", "cart_amount" => $cart_amount, "show_card_body" => $show_card_body);
+                    $retValue = array("status" => "0", "message" => "Record not found!", "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
                 }
             } else {
                 $retValue = array("status" => "0", "message" => "Record not found!");

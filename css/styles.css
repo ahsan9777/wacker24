@@ -296,6 +296,7 @@ body.body-white{background-color: #fff !important;}
 .hdr_side_cart .side_cart_pd_row{width: 100%;border-bottom: 1px solid #bbb; padding: 15px;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_image{width: 100%; text-align: center; margin-bottom: 15px;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_prise{width: 100%; font-size: 16px; font-weight: bold; color: #000; text-align: center; margin-bottom: 15px;}
+.hdr_side_cart .side_cart_pd_row .side_cart_pd_prise.price_without_tex{display: none;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty{width: 100%; display:flex;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty .side_pd_qty{width: 60%; padding-right: 5px;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty .side_pd_qty .qlt_number{width: 100%; padding: 5px 5px; border: 1px solid #808080; height: 30px; border-radius: 4px;}
