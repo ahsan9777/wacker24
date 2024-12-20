@@ -485,6 +485,7 @@ body.body-white{background-color: #fff !important;}
 .product_cart .cart_pd_section .cart_pd_detail .cart_pd_option ul li .qlt_number{width: 70px; padding: 5px 10px; border: 1px solid #808080; height: 30px; border-radius: 4px;}
 .product_cart .cart_pd_section .cart_pd_detail .cart_pd_col2{width: 30%; text-align: right; display: flex;}
 .product_cart .cart_pd_section .cart_pd_detail .cart_pd_col2 .cart_price{width: 50%; padding: 5px;font-size: 22px; font-weight: 700;color: #212529; }
+.product_cart .cart_pd_section .cart_pd_detail .cart_pd_col2 .cart_price.price_without_tex{display: none; }
 .product_cart .cart_pd_section .cart_pd_total{width: 100%; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; }
 .product_cart .cart_pd_section .cart_pd_total .cart_note{font-size: 14px; font-weight: 400;color: #212529; padding-right: 10px; }
 .product_cart .cart_pd_section .cart_pd_total .total_prise_text{font-size: 22px; font-weight: 700;color: #212529; text-align: right;} 
@@ -504,13 +505,14 @@ body.body-white{background-color: #fff !important;}
 .product_cart .cart_orderview .cart_prise_orderview ul li .packing_cost{font-size: 11px; font-weight: 400; margin-bottom: 5px;}
 .product_cart .cart_orderview .cart_prise_orderview ul li .cart_prise_lb{width:70%; padding-right: 5px;}
 .product_cart .cart_orderview .cart_prise_orderview ul li .cart_prise_vl{width:30%;}
+.product_cart .cart_orderview .cart_prise_orderview ul li .cart_prise_vl.price_without_tex{ display: none;}
 .product_cart .cart_payment_method{width: 100%; display: none; padding-bottom: 30px;}
 .product_cart .cart_payment_method h4{ font-size: 20px; padding:20px 20px 10px 20px; text-align: left; font-weight: 700; margin-bottom: 0px; color: #212529;}
-.product_cart .cart_payment_method ul{display: flex; flex-wrap: wrap;}
-.product_cart .cart_payment_method ul li{width: 33.333%; list-style-type: none; padding: 15px;}
-.product_cart .cart_payment_method ul li.full_width{width: 100%;}
-.product_cart .cart_payment_method ul li.full_width .gerenric_btn{background-image: linear-gradient(#f1d99d, #ffc226);}
-.product_cart .cart_payment_method ul li.full_width .gerenric_btn:hover{background-image: linear-gradient(#ffc226, #f1d99d);}
+.product_cart .cart_payment_method .cart_box ul{display: flex; flex-wrap: wrap;}
+.product_cart .cart_payment_method .cart_box ul li{width: 33.333%; list-style-type: none; padding: 15px;}
+.product_cart .cart_payment_method .cart_box ul li.full_width{width: 100%;}
+.product_cart .cart_payment_method .gerenric_btn{background-image: linear-gradient(#f1d99d, #ffc226);}
+.product_cart .cart_payment_method .gerenric_btn:hover{background-image: linear-gradient(#ffc226, #f1d99d);}
 .product_cart .cart_payment_method .cart_pyment_radio {display: block;position: relative;cursor: pointer; min-height: 80px; -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
 .product_cart .cart_payment_method .cart_pyment_radio input {opacity: 0;cursor: pointer;}
 .product_cart .cart_payment_method .cart_pyment_radio .checkmark {position: absolute;top: 0;left: 0;width: 100%;background-color: #fff; padding: 3px; border-radius: 3px; border: 2px solid #fff;}
@@ -520,6 +522,12 @@ body.body-white{background-color: #fff !important;}
 .product_cart .cart_payment_method .payment_card_image{width: 100%; height: 65px; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; border-radius: 10px; padding: 5px; margin-bottom: 3px;}
 .product_cart .cart_payment_method .payment_card_image img{display: block; border-radius: 3px;}
 .product_cart .cart_payment_method .payment_card_title {font-size: 10px; text-align: center; color: #000;}
+.product_cart .cart_payment_method .cart_py_field{width: 100%;display: none; padding:20px 20px 10px 20px;}
+.product_cart .cart_payment_method .cart_py_field h4{padding: 0px; margin-bottom: 15px;}
+.product_cart .cart_payment_method .cart_py_field .gerenric_form ul li{margin-bottom: 5px;}
+.product_cart .cart_payment_method .cart_py_field .gerenric_form ul li.dlpy_flex{ display: flex; flex-wrap:wrap;}
+.product_cart .cart_payment_method .cart_py_field .gerenric_form ul li .cart_col{width: 33.333%; padding: 0px 2px;}
+.product_cart .cart_payment_method .pay_btn{padding:0px 20px;}
 .special_price_page{width: 100%;}
 .shopping_list_page{width: 100%;}
 .shopping_list_page .shopping_list_section1{width: 100%;}

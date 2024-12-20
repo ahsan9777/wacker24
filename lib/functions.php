@@ -2310,5 +2310,35 @@ function get_pro_price($pro_id, $supplier_id, $ci_qty){
 	return $retValue;
 }
 
+function get_delivery_charges($total){
+	//echo $total;die();
+	$delivery_charges = array();
+	if($total <= config_condition_courier_amount) {
+		if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
+			$delivery_charges = array(
+				"packing" => 4,
+				"shipping" => 2.99,
+				"tex" => 1.33,
+				"total" => 6.99
+			);
+		} else{
+			$delivery_charges = array(
+				"packing" => 4.76,
+				"shipping" => 3.56,
+				"tex" => 0,
+				"total" => 8.32
+			);
+		}
+	  } else {
+		$delivery_charges = array(
+			"packing" => 0,
+			"shipping" => 0,
+			"tex" => 0,
+			"total" => 0
+		);
+	  }
+	  return $delivery_charges;
+}
+
 
 ?>

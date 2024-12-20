@@ -3,7 +3,17 @@ include("includes/php_includes_top.php");
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
         case 'switch_click':
-            echo $_SESSION['utype_id'] = $_REQUEST['utype_id'];
+            $retValue = array();
+            $_SESSION['utype_id'] = $_REQUEST['utype_id'];
+
+            if(isset($_REQUEST['ci_total']) && $_REQUEST['ci_total'] > 0){
+                $delivery_charges = get_delivery_charges($_REQUEST['ci_total']);
+                $retValue = array("status" => "1", "message" => "Record get successfully", "delivery_charges" => $delivery_charges);
+            } else{
+                $retValue = array("status" => "0", "message" => "Record not found!");
+            }
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
             break;
 
         case 'add_to_card':
@@ -109,7 +119,7 @@ if (isset($_REQUEST['action'])) {
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="javascript:void(0)"><img src="getftpimage.php?img='.$row->pg_mime_source.'" alt=""></a></div>
+                                    <div class="side_cart_pd_image"><a href="product_detail.php?supplier_id='.$row->supplier_id.'"><img src="getftpimage.php?img='.$row->pg_mime_source.'" alt=""></a></div>
                                     <div class="side_cart_pd_prise price_without_tex" '.$display_one.' >'.number_format($row->ci_amount, "2", ",", "").' €</div>
                                     <div class="side_cart_pd_prise pbp_price_with_tex" '.$display_two.' >'.number_format($row->ci_amount + $gst, "2", ",", "").' €</div>
                                     <div class="side_cart_pd_qty">

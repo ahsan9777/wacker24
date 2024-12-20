@@ -4,12 +4,14 @@ $background_color_two = "";
 $pbp_price_with_tex_display = "";
 $price_without_tex_display = "";
 $switch_click_check = "";
+$display_check = 'style="display: none;"';
 if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
     $background_color_one = 'style="background-color: rgb(72, 132, 252);"';
     $background_color_two = 'style="background-color: rgb(1, 31, 67);"';
     $switch_click_check = "checked";
     $price_without_tex_display = 'style="display: block;"';
     $pbp_price_with_tex_display = 'style="display: none;"';
+    $display_check = '';
 }
 ?>
 <header id="header_section" class="header_sticky">
