@@ -13,6 +13,8 @@ session_start();
 
 $page = 0;
 
+$class = ""; 
+$strMSG = ""; 
 $qryStrURL = ""; 
 $search_keyword = "";
 $cat_id = "";

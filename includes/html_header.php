@@ -108,14 +108,19 @@
 				success: function(response) {
 					//console.log("response = "+response);
                     const obj = JSON.parse(response);
-				    //console.log(obj.delivery_charges.tex);
+				    //console.log(obj.delivery_charges.total);
                     if(obj.status == 1){
                         if(obj.delivery_charges.tex > 0){
                             $("#cart_subtotal").show();
                             $("#cart_vat").show();
                         } else{
-                            $("#cart_subtotal").hide();
-                            $("#cart_vat").hide();
+                            if(obj.delivery_charges.total == 0 && obj.utype_id == 4){
+                                $("#cart_subtotal").show();
+                                $("#cart_vat").show();
+                            } else{
+                                $("#cart_subtotal").hide();
+                                $("#cart_vat").hide();
+                            }
                         }
                         let packing = (obj.delivery_charges.packing).toFixed(2)
                         let shipping = (obj.delivery_charges.shipping).toFixed(2)
@@ -123,6 +128,14 @@
                         $("#packing").text("Packaging fee ("+packing.replace(".", ",")+" €)");
                         $("#shipping").text("Shipping costs ("+shipping.replace(".", ",")+" €)");
                         $("#total").text(total.replace(".", ",")+" €");
+                    } else{
+                        if(obj.utype_id == 4){
+                            $("#cart_subtotal").show();
+                            $("#cart_vat").show();
+                        } else{
+                            $("#cart_subtotal").hide();
+                            $("#cart_vat").hide();
+                        }
                     }
                     
 				}

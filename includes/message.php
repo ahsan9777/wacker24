@@ -40,6 +40,10 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-success";
 			$strMSG = "Your request for a change in password has been successfully completed. Please log in to access your account with new password. Please see your email account for a new password credential.";
 			break;
+		case 10:
+			$class = "alert alert-danger";
+			$strMSG = "Record added fail!";
+			break;
 	}
 }
 ?>

@@ -4,13 +4,14 @@ if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
         case 'switch_click':
             $retValue = array();
+            //print_r($_REQUEST);die();
             $_SESSION['utype_id'] = $_REQUEST['utype_id'];
 
             if(isset($_REQUEST['ci_total']) && $_REQUEST['ci_total'] > 0){
                 $delivery_charges = get_delivery_charges($_REQUEST['ci_total']);
-                $retValue = array("status" => "1", "message" => "Record get successfully", "delivery_charges" => $delivery_charges);
+                $retValue = array("status" => "1", "message" => "Record get successfully", "delivery_charges" => $delivery_charges, "utype_id" => $_SESSION['utype_id']);
             } else{
-                $retValue = array("status" => "0", "message" => "Record not found!");
+                $retValue = array("status" => "0", "message" => "Record not found!", "utype_id" => $_SESSION['utype_id']);
             }
             $jsonResults = json_encode($retValue);
             print($jsonResults);
@@ -49,12 +50,13 @@ if (isset($_REQUEST['action'])) {
                         //print_r($get_pro_price);
                         $pbp_id = $get_pro_price['pbp_id'];
                         $ci_amount = $get_pro_price['ci_amount'];
-                        $ci_gross_total = $ci_amount * $ci_qty;
+                        $ci_gross_total = $ci_amount * ($ci_qty + $cart_quantity);
                         $ci_gst = $ci_gross_total * config_gst;
                         $ci_discount = 0;
                         $ci_total = $ci_gross_total + $ci_gst;
 
-                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '".$pbp_id."', ci_amount = '".$ci_amount."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = ci_gross_total + '$ci_gross_total' , ci_gst = ci_gst + '$ci_gst', ci_discount = ci_discount + '$ci_discount', ci_total = ci_total + '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                        //$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '".$pbp_id."', ci_amount = '".$ci_amount."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = ci_gross_total + '$ci_gross_total' , ci_gst = ci_gst + '$ci_gst', ci_discount = ci_discount + '$ci_discount', ci_total = ci_total + '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '".$pbp_id."', ci_amount = '".$ci_amount."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = '$ci_gross_total' , ci_gst = '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
                         $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                         $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                         if ($updated_cart_item == true && $update_cart == true) {

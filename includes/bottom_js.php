@@ -1,4 +1,7 @@
 <script>
+	$('.close').on('click', function(){
+        $('.alert').hide();
+    });
     function show_side_cart_data(){
         //console.log("show_side_cart_data");
         $.ajax({

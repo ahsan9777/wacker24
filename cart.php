@@ -1,4 +1,52 @@
-<?php include("includes/php_includes_top.php"); ?>
+<?php
+ include("includes/php_includes_top.php");
+ if(isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])){
+	//print_r($_REQUEST);die();
+	for($i = 0; $i < count($_REQUEST['ci_id']); $i++){
+		$cart_id = $_SESSION['cart_id'];
+		$Query = "SELECT * FROM cart_items WHERE ci_id = '" . $_REQUEST['ci_id'][$i] . "' ";
+		$rs = mysqli_query($GLOBALS['conn'], $Query);
+		if (mysqli_num_rows($rs) > 0) {
+			$row = mysqli_fetch_object($rs);
+
+			//$cart_quantity = returnName("ci_qty","cart_items", "ci_id", $row->ci_id);
+			$get_pro_price = get_pro_price($row->pro_id, $row->supplier_id, $_REQUEST['ci_qty'][$i]);
+			//print_r($get_pro_price);
+			$pbp_id = $get_pro_price['pbp_id'];
+			$ci_amount = $get_pro_price['ci_amount'];
+			$ci_gross_total = $ci_amount * ($_REQUEST['ci_qty'][$i]);
+			$ci_gst = $ci_gross_total * config_gst;
+			$ci_discount = 0;
+			$ci_total = $ci_gross_total + $ci_gst;
+
+			$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '".$pbp_id."', ci_amount = '".$ci_amount."', ci_qty = '".$_REQUEST['ci_qty'][$i]."',  ci_gross_total =  '$ci_gross_total' , ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+			$update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
+			$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
+			if ($updated_cart_item == true && $update_cart == true) {
+				//echo "success";
+				header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+			} else {
+				header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=10");
+			}
+		}
+	}
+ }
+
+ if(isset($_REQUEST['product_remove'])){
+	echo "product_remove";
+	$Query = "SELECT * FROM `cart_items` WHERE `ci_id` = '".$_REQUEST['ci_id']."'";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if(mysqli_num_rows($rs) > 0){
+		$row = mysqli_fetch_object($rs);
+		mysqli_query($GLOBALS['conn'], "UPDATE cart SET  cart_gross_total = cart_gross_total - '".$row->ci_gross_total."', cart_gst = cart_gst - '".$row->ci_gst."', cart_discount = cart_discount - '".$row->ci_discount."', cart_amount = cart_amount - '".$row->ci_total."' WHERE cart_id = '".$row->cart_id."'") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE `ci_id` = '".$_REQUEST['ci_id']."'") or die(mysqli_error($GLOBALS['conn']));
+		$_SESSION['header_quantity'] = $_SESSION['header_quantity'] - 1;
+		header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
+	}
+}
+
+include("includes/message.php");
+ ?>
 <!doctype html>
 <html>
 <head>
@@ -61,7 +109,10 @@ $(function () {
 		<section id="content_section">
 			<div class="product_cart">
 				<div class="page_width_1480">
-					<div class="product_cart_inner">
+					<?php if ($class != "") { ?>
+					<div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert">×</a></div>
+					<?php } ?>
+					<form class="product_cart_inner" name="frmCart" id="frmCart" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 						<div class="cart_left">
 							<div class="gerenric_white_box">
 								<h2>
@@ -73,6 +124,8 @@ $(function () {
 								</h2>
 								<div class="cart_pd_section">
 									<?php
+									$cart_gross_total = 0;
+									$cart_gst = 0;
 									$cart_amount = 0;
 									$ci_total = 0;
 									$delivery_charges = 0;
@@ -96,11 +149,34 @@ $(function () {
 										<div class="cart_pd_detail">
 											<div class="cart_pd_col1">
 												<div class="cart_pd_title"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><?php print($row->pro_description_short); ?></a></div>
-												<div class="cart_pd_piece">47 pieces immediately available</div>
+												<?php 
+												$pq_quantity = 0; 
+												$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '".dbStr(trim($row->supplier_id))."'";
+												$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+												if(mysqli_num_rows($rs1) > 0){
+													$row1 = mysqli_fetch_object($rs1);
+													$pq_quantity = $row1->pq_quantity;
+													$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+													$pq_status = $row1->pq_status;
+													if($pq_quantity == 0 && $pq_status == 'true'){
+														$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
+
+													} elseif($pq_quantity > 0 && $pq_status == 'false'){
+														$pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;
+													}
+												}
+												?>
+												<div class="cart_pd_piece"> <?php print($pq_quantity); ?>  pieces immediately available</div>
 												<div class="cart_pd_option">
 													<ul>
-														<li><span>Quantity:</span> <span><input type="number" class="qlt_number" value="<?php print($row->ci_qty); ?>"></span></li>
-														<li><a href="javascript:void(0)">Delete</a></li>
+														<li>
+															<span>Quantity:</span>
+															<span>
+																<input type="hidden" name="ci_id[]" id="ci_id" value="<?php print($row->ci_id); ?>">
+																<input type="number" class="qlt_number ci_qty" name="ci_qty[]" id="ci_qty" value="<?php print($row->ci_qty); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 1;} else if(parseFloat(this.value) > <?php print($pq_quantity + $row->ci_qty);?> ){ this.value =<?php print($pq_quantity + $row->ci_qty);?>; return false; } " min="1" max="<?php print($pq_quantity);?>" >
+															</span>
+														</li>
+														<li><a href="<?php print($_SERVER['PHP_SELF']."?product_remove&ci_id=".$row->ci_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');" >Delete</a></li>
 														<li><a href="javascript:void(0)">Share</a></li>
 														<li><a href="javascript:void(0)">Similar Product</a></li>
 													</ul>
@@ -119,10 +195,22 @@ $(function () {
 										}
 									}
 
-									if($delivery_charges['total'] > 0 ){
-										$display = "";
-										$cart_amount = $cart_amount + $delivery_charges['total'] + $delivery_charges['tex'];
-										$schipping_cost_waived = config_condition_courier_amount - $ci_total;
+									$shipping_one = 0; $shipping_two = 0;
+									$delivery_charges_packing = 0;
+									$delivery_charges_shipping = 0;
+									$delivery_charges_total = 0;
+									$delivery_charges_tex = 0;
+									if($count > 0){
+										if($delivery_charges['total'] > 0){
+											$display = "";
+											$shipping_one = 6.99; $shipping_two = 7;
+											$delivery_charges_shipping = $delivery_charges['shipping'];
+											$delivery_charges_packing = $delivery_charges['packing'];
+											$delivery_charges_total = $delivery_charges['total'];
+											$delivery_charges_tex = $delivery_charges['tex'];
+											$cart_amount = $cart_amount + $delivery_charges_total + $delivery_charges_tex;
+											$schipping_cost_waived = config_condition_courier_amount - $ci_total;
+										}
 									}
 									?>
 									<div class="cart_pd_total">
@@ -179,19 +267,19 @@ $(function () {
 										</li>
 										<li>
 											<div class="cart_prise_lb">
-												<div class="packing_cost" id="packing" <?php print($display); ?> >Packaging fee (<?php print(number_format($delivery_charges['packing'], "2", ",", "")); ?> €)</div>
-												<div class="packing_cost" id="shipping" <?php print($display); ?> >Shipping costs (<?php print(number_format($delivery_charges['shipping'], "2", ",", "")); ?> €)</div>
+												<div class="packing_cost" id="packing" <?php print($display); ?> >Packaging fee (<?php print(number_format($delivery_charges_packing, "2", ",", "")); ?> €)</div>
+												<div class="packing_cost" id="shipping" <?php print($display); ?> >Shipping costs (<?php print(number_format($delivery_charges_shipping, "2", ",", "")); ?> €)</div>
 												<div>Shipping & Packaging total:</div>
 											</div>
-											<div class="cart_prise_vl" id="total"> <?php print(number_format($delivery_charges['total'], "2", ",", "")); ?> €</div>
+											<div class="cart_prise_vl" id="total"> <?php print(number_format($delivery_charges_total, "2", ",", "")); ?> €</div>
 										</li>
 										<li id="cart_subtotal" <?php print($display_check); ?> >
 											<div class="cart_prise_lb"><div class="packing_cost">Subtotal</div></div>
-											<div class="cart_prise_vl"><?php print(number_format($cart_gross_total + 6.99, "2", ",", "")); ?> €</div>
+											<div class="cart_prise_vl"><?php print(number_format($cart_gross_total + $shipping_one, "2", ",", "")); ?> €</div>
 										</li>
 										<li id="cart_vat" <?php print($display_check); ?> >
 											<div class="cart_prise_lb"><div class="packing_cost">plus VAT <?php print(config_gst*100); ?>%</div></div>
-											<div class="cart_prise_vl"><?php print(number_format( ($cart_gross_total + 7) * config_gst, "2", ",", "")); ?> €</div>
+											<div class="cart_prise_vl"><?php print(number_format( ($cart_gross_total + $shipping_two) * config_gst, "2", ",", "")); ?> €</div>
 										</li>
 										<li>
 											<div class="cart_prise_lb"><span>Total Amount</span></div>
@@ -285,7 +373,7 @@ $(function () {
 							</div>
 						</div>
 						
-					</div>
+					</form>
 					
 				</div>
 			</div>
@@ -301,4 +389,10 @@ $(function () {
 
 </body>
 <?php include("includes/bottom_js.php"); ?>
+<script>
+	$(".ci_qty").on("change", function(){
+		console.log("ci_qty");
+		$('#frmCart')[0].submit();
+	});
+</script>
 </html>
