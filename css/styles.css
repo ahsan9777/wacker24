@@ -448,7 +448,7 @@ body.body-white{background-color: #fff !important;}
 .product_category .pd_card:hover .pd_detail .pd_title{font-size: 12px;}
 .product_category .pd_card:hover .pd_image_inner{max-width:80px; max-height: 80px; padding: 15px;}
 .login_page{width: 100%;padding: 30px 0px; margin-bottom: 60px;}
-.login_page .login_inner{max-width: 330px; margin: auto;}
+.login_page .login_inner{max-width: 30%; margin: auto;}
 .login_page .login_logo{width: 200px; margin: auto; text-align: center; margin-bottom: 20px;}
 .login_page .login_box{width: 100%; padding: 20px; border-radius: 10px; border: 1px solid #ccc;}
 .login_page .login_box h2{font-size: 28px; font-weight: 500; border-bottom: 1px solid #ccc; padding-bottom: 15px; margin-bottom: 15px; color: #000;}
@@ -457,7 +457,7 @@ body.body-white{background-color: #fff !important;}
 .login_page .new_account_btn {width: 100%; text-align: center;}
 .login_page .new_account_btn .gerenric_btn{ font-size: 15px; font-weight: 400; color: #212529; border: 1px solid #c6c6c6;background-color: #f8f9fa;}
 .login_page .new_account_btn .gerenric_btn:hover{background-color: #dae0e5;}
-.login_page.register_page .login_inner{max-width: 660px; margin: auto;}
+.login_page.register_page .login_inner{max-width: 50%; margin: auto;}
 .product_cart{width: 100%; margin-top: 20px;}
 .product_cart .product_cart_inner{width: 100%; display: flex; flex-wrap: wrap;}
 .product_cart h2{ margin: 0px -20px; display: flex; align-items: center; font-size: 25px;padding:0px 20px 20px 20px; font-weight: 700;border-bottom: 1px solid #dee2e6; }

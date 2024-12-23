@@ -2295,6 +2295,102 @@ function moveimage($dirName, $id, $inputName){
 	return $mfileName;
 }
 
+function PaypalRequest($ord_id, $order_net_amount)
+{
+	//$url = "https://test.vr-pay-ecommerce.de/v1/payments";
+	//$url = "https://vr-pay-ecommerce.de/v1/payments";
+	$url = "".config_payment_url."";
+	//$data = "entityId=".PAYPAL."" .
+	$data = "entityId=8ac7a4ca84e4549a0184e6fc903e14a5" .
+		"&merchantTransactionId=" . $ord_id .
+		"&amount=" . $order_net_amount .
+		"&currency=EUR" .
+		"&paymentBrand=PAYPAL" .
+		"&paymentType=DB" .
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "checkout_order_complete.php?ord_id=" . $ord_id;
+	//  print_r($data);die;
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Authorization:Bearer '.config_authorization_bearer.''
+	));
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$responseData = curl_exec($ch);
+	if (curl_errno($ch)) {
+		return curl_error($ch);
+	}
+	curl_close($ch);
+	return $responseData;
+}
+
+function cardrequest($ord_id, $order_net_amount, $request){
+
+	//$url = "https://vr-pay-ecommerce.de/v1/payments";
+	$url = "".config_payment_url."";
+	$data = "entityId=".$request['entityId'].
+	"&merchantTransactionId=" . $ord_id .
+		"&amount=" . $order_net_amount.
+		"&currency=".$request['currency'] .
+		"&paymentBrand=".$request['brand'] .
+		"&paymentType=DB" .
+		"&card.number=" . $request['cardnumber'] .
+		"&card.holder=" . $request['cardholder'] .
+		"&card.expiryMonth=" . $request['cardmonth'] .
+		"&card.expiryYear=" . $request['cardyear'] .
+		"&card.cvv=" . $request['cvv'] .
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "checkout_order_complete.php?ord_id=" . $ord_id;
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Authorization:Bearer '.config_authorization_bearer.''
+	));
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$responseData = curl_exec($ch);
+	if (curl_errno($ch)) {
+		return curl_error($ch);
+	}
+	curl_close($ch);
+	return $responseData;
+}
+
+function SepaRequest($request){
+
+	$url = "https://vr-pay-ecommerce.de/v1/payments";
+	$data = "entityId=" . SEPA . "" .
+		"&amount=" . number_format($request['amount'], 2) .
+		"&currency=EUR" .
+		"&paymentBrand=DIRECTDEBIT_SEPA" .
+		"&paymentType=DB" .
+		"&bankAccount.iban=" . $request['iban'] .
+		"&bankAccount.country=" . $request['country'] .
+		"&bankAccount.holder=" . $request['name'] .
+		"&bankAccount.mandate.id=" . $request['madateID'] .
+		"&bankAccount.mandate.dateOfSignature=" . $request['madateSignature'];
+	// echo '<pre>';print_r($data);die;
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Authorization:Bearer OGFjZGE0Y2E4ZGNiMzQ3NzAxOGUwYTg1MWVkMjI2YzB8TnFiZEp0TVdnOUZSZldXbg=='
+	));
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$responseData = curl_exec($ch);
+	if (curl_errno($ch)) {
+		return curl_error($ch);
+	}
+	curl_close($ch);
+	return $responseData;
+}
+
 function get_pro_price($pro_id, $supplier_id, $ci_qty){
 	$retValue = array();
 	$Query = "SELECT pbp.pbp_id, pbp.pbp_price_amount AS pbp_price_without_tax FROM products_bundle_price AS pbp WHERE pbp.pro_id = '" . dbStr(trim($pro_id)) . "' AND pbp.supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp.pbp_lower_bound BETWEEN 0 AND " . dbStr(trim($ci_qty)) . "";

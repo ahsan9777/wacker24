@@ -64,22 +64,25 @@ if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
                         <div class="hdr_text">
-                            <a href="javascript:void(0)"><span>Hello Login</span>Account & List <i class="fa fa-caret-down"></i></a>
+                            <a href="javascript:void(0)"><span> <?php print( isset($_SESSION["FullName"])? "Hi, ".$_SESSION["FullName"]: "Hello Login"); ?> </span>Account & List <i class="fa fa-caret-down"></i></a>
                             <div class="account_nav">
                                 <ul>
                                     <li>
-                                        <div class="full_width txt_align_center mb-10"><a href="login_page.html">
-                                                <div class="gerenric_btn">Login</div>
-                                            </a></div>
-                                        <div class="full_width txt_align_center">New Account? <a href="register_page.html"><b>Create One here</b></a></div>
+                                    <?php if(!isset($_SESSION["FullName"])){ ?>
+                                        <div class="full_width txt_align_center mb-10"><a href="login.php"><div class="gerenric_btn">Login</div></a></div>
+                                        <div class="full_width txt_align_center">New Account? <a href="registration.php"><b>Create One here</b></a></div>
+                                    <?php } ?>
                                     </li>
                                     <li><span>My lists</span></li>
-                                    <li>shopping list</li>
+                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "javascript:void(0);": "javascript:void(0);"); ?>"> shopping list </a></li>
                                     <li><span>My Account</span></li>
-                                    <li>Personal Data</li>
-                                    <li>orders</li>
-                                    <li>addresses</li>
+                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "javascript:void(0);": "javascript:void(0);"); ?>"> Personal Data <a href=""></a></li>
+                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "my_order.php": "javascript:void(0);"); ?>"> My Orders </a></li>
+                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "javascript:void(0);": "javascript:void(0);"); ?>"> addresses </a></li>
                                     <li>payment methods</li>
+                                    <?php if(isset($_SESSION["FullName"])){ ?>
+                                    <li><a href="logout.php">Logout</a></li>
+                                    <?php } ?>
                                 </ul>
                             </div>
                         </div>
