@@ -116,7 +116,7 @@ $page = 1;
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="contact_page.html">
+							<a href="contact_us.php">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Contact.svg" alt=""></div>
 									<div class="personal_detail">
