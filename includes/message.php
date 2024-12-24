@@ -44,6 +44,10 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Record added fail!";
 			break;
+		case 11:
+			$class = "alert alert-danger";
+			$strMSG = "Issue in your new and confirm password";
+			break;
 	}
 }
 ?>

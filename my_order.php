@@ -24,7 +24,7 @@ include("includes/php_includes_top.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="javascript:void(0)">My data</a></li>
+						<li><a href="personal_data.php">My personal data</a></li>
 						<li><a href="javascript:void(0)">My Orders</a></li>
 					</ul>
 				</div>

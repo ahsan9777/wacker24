@@ -194,5 +194,26 @@ if (isset($_REQUEST['action'])) {
             print($jsonResults);
 
             break;
+
+        case 'mydata_popup_trigger':
+
+            $Query = "SELECT user_id, user_fname, user_lname, user_phone FROM users WHERE user_id = '".$_SESSION["UID"]."'";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if(mysqli_num_rows($rs) > 0){
+                $retValue = array("status" => "1", "message" => "Get my data");
+                $row = mysqli_fetch_object($rs);
+                    $retValue['data'][] = array(
+                        "user_id" => strval($row->user_id),
+                        "user_fname" => strval($row->user_fname),
+                        "user_lname" => strval($row->user_lname),
+                        "user_phone" => strval($row->user_phone)
+                    );
+            } else{
+                $retValue = array("status" => "0", "message" => "Record not found!");
+            }
+
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
     }
 }
