@@ -74,7 +74,7 @@ if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
                                     <?php } ?>
                                     </li>
                                     <li><span>My lists</span></li>
-                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "javascript:void(0);": "javascript:void(0);"); ?>"> shopping list </a></li>
+                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "shopping_list.php": "javascript:void(0);"); ?>"> shopping list </a></li>
                                     <li><span>My Account</span></li>
                                     <li> <a href="<?php print( isset($_SESSION["FullName"])? "javascript:void(0);": "javascript:void(0);"); ?>"> Personal Data <a href=""></a></li>
                                     <li> <a href="<?php print( isset($_SESSION["FullName"])? "my_order.php": "javascript:void(0);"); ?>"> My Orders </a></li>
