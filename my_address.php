@@ -1,6 +1,14 @@
 <?php
 include("includes/php_includes_top.php");
 $page = 1;
+if(isset($_REQUEST['btnAdd'])){
+
+	$usa_id = getMaximum("user_shipping_address", "usa_id");
+	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_fname, usa_lname, usa_address, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id) VALUES ('".$usa_id."', '".$_SESSION["UID"]."', '".dbStr(trim($_REQUEST['usa_fname']))."',  '".dbStr(trim($_REQUEST['usa_lname']))."', '".dbStr(trim($_REQUEST['usa_address']))."', '".dbStr(trim($_REQUEST['usa_street']))."', '".dbStr(trim($_REQUEST['usa_house_no']))."', '".dbStr(trim($_REQUEST['usa_zipcode']))."', '".dbStr(trim($_REQUEST['usa_contactno']))."', '".dbStr(trim($_REQUEST['countries_id']))."')") or die(mysqli_error($GLOBALS['conn']));
+	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+}
+
+include("includes/message.php");
 ?>
 <!doctype html>
 <html>
@@ -21,59 +29,56 @@ $page = 1;
 					<div class="form_popup_heading">Add new address <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
-						<div class="gerenric_form">
+						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">First name</div>
-											<div class="form_field"><input type="text" class="gerenric_input"></div>
+											<div class="form_field"><input type="text" name="usa_fname" id="usa_fname" class="gerenric_input" required ></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">Last name</div>
-											<div class="form_field"><input type="text" class="gerenric_input"></div>
+											<div class="form_field"><input type="text" name="usa_lname" id="usa_lname" class="gerenric_input"></div>
 										</div>
 									</div>
 								</li>
 								<li>
 									<div class="form_label">Addition</div>
-									<div class="form_field"><input type="text" class="gerenric_input"></div>
+									<div class="form_field"><input type="text" name="usa_address" id="usa_address" class="gerenric_input"></div>
 								</li>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">Street</div>
-											<div class="form_field"><input type="text" class="gerenric_input"></div>
+											<div class="form_field"><input type="text" name="usa_street" id="usa_street" class="gerenric_input" required ></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">house number</div>
-											<div class="form_field"><input type="text" class="gerenric_input"></div>
+											<div class="form_label">House number</div>
+											<div class="form_field"><input type="text" name="usa_house_no" id="usa_house_no" class="gerenric_input" required ></div>
 										</div>
 									</div>
 								</li>
 								<li>
 									<div class="form_label">ZIP / City</div>
 									<div class="form_field">
-										<select class="gerenric_input">
-											<option value="">Select Country</option>
-											<option value="">Pakistan</option>
-											<option value="">India</option>
-										</select>
+										<input type="text" name="usa_zipcode" id="usa_zipcode" class="gerenric_input" required >
+										<!--<select class="gerenric_input" name="zc_id" id="zc_id">
+											<?php FillSelected2("zip_code", "zc_id", "zc_zipcode", "", "zc_id > 0"); ?>
+										</select>-->
 									</div>
 								</li>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">Telefon</div>
-											<div class="form_field"><input type="text" class="gerenric_input"></div>
+											<div class="form_field"><input type="text" name="usa_contactno" id="usa_contactno" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">Land</div>
 											<div class="form_field">
-												<select class="gerenric_input">
-													<option value="">Select Land</option>
-													<option value="">Land</option>
-													<option value="">Land</option>
+												<select class="gerenric_input" name="countries_id" id="countries_id" >
+													<?php FillSelected2("countries", "countries_id", "countries_name", 81, "countries_id > 0"); ?>
 												</select>
 											</div>
 										</div>
@@ -81,12 +86,12 @@ $page = 1;
 								</li>
 								<li class="mt_30">
 									<div class="form_two_button">
-										<button class="gerenric_btn">Aktualisieren</button>
-										<button class="gerenric_btn gray_btn">Abbrechen</button>
+										<button class="gerenric_btn" type="submit" name="btnAdd">Add</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Close</button>
 									</div>
 								</li>
 							</ul>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -114,6 +119,9 @@ $page = 1;
 		<section id="content_section">
 			<div class="my_address_page gerenric_padding">
 				<div class="page_width_1480">
+					<?php if ($class != "") { ?>
+						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+					<?php } ?>
 					<h1>My Addresses</h1>
 					<div class="my_address_section1">
 						<div class="gerenric_address">
@@ -125,51 +133,51 @@ $page = 1;
 									</div>
 								</div>
 							</div>
+							<?php
+							$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE user_id = '".$_SESSION["UID"]."' ";
+							$rs = mysqli_query($GLOBALS['conn'], $Query);
+							if(mysqli_num_rows($rs) > 0){
+								while($row = mysqli_fetch_object($rs)){
+							?>
 							<div class="address_col">
 								<div class="address_card">
 									<div class="address_detail">
 										<h2>Standard address</h2>
 										<ul>
-											<li><span>sayed Kamal</span></li>
-											<li>67112</li>
-											<li>blockfield, 12</li>
-											<li>67112 Mutterstadt</li>
-											<li>Additional information: <span>wacker</span></li>
-											<li>Germany</li>
+											<li><span> <?php print($row->usa_fname." ".$row->usa_lname); ?> </span></li>
+											<li> <?php print($row->usa_street); ?> </li>
+											<li> <?php print($row->usa_house_no); ?> </li>
+											<li> <?php print($row->usa_contactno); ?> </li>
+											<li><?php print($row->usa_zipcode); ?></li>
+											<li><?php print($row->countries_name); ?></li>
+											<li><?php print($row->usa_address); ?></li>
 										</ul>
 									</div>
 								</div>
 							</div>
-							<div class="address_col">
-								<div class="address_card">
-									<div class="address_detail">
-										<h2>Standard address</h2>
-										<ul>
-											<li><span>sayed Kamal</span></li>
-											<li>67112</li>
-											<li>blockfield, 12</li>
-											<li>67112 Mutterstadt</li>
-											<li>Additional information: <span>wacker</span></li>
-											<li>Germany</li>
-										</ul>
-									</div>
-								</div>
-							</div>
+							<?php
+								}
+							}
+							?>
 						</div>
 					</div>
 					<div class="my_address_section2">
 						<div class="gerenric_address full_column">
+							<?php
+							$Query = "SELECT u.*, c.countries_name FROM users AS u LEFT OUTER JOIN countries AS c ON c.countries_id = u.countries_id WHERE u.user_id = '".$_SESSION["UID"]."'";
+							$rs = mysqli_query($GLOBALS['conn'], $Query);
+							if(mysqli_num_rows($rs) > 0){
+								$row = mysqli_fetch_object($rs);
+							?>
 							<div class="address_col">
 								<div class="address_card">
 									<div class="address_detail">
-										<h2>billing address</h2>
+										<h2>Billing address</h2>
 										<ul>
-											<li><span>sayed Kamal</span></li>
-											<li>67112</li>
-											<li>blockfield, 12</li>
-											<li>67112 Mutterstadt</li>
-											<li>Additional information: <span>wacker</span></li>
-											<li>Germany</li>
+										<li><span> <?php print($row->user_fname." ".$row->user_lname); ?> </span></li>
+											<li> <?php print($row->user_phone); ?> </li>
+											<li> <?php print($row->user_name); ?> </li>
+											<li> <?php print($row->countries_name); ?> </li>
 										</ul>
 									</div>
 									<div class="address_remove"><a href="javascript:void(0)">
@@ -177,6 +185,9 @@ $page = 1;
 										</a></div>
 								</div>
 							</div>
+							<?php
+							}
+							?>
 						</div>
 					</div>
 				</div>

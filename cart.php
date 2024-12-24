@@ -10,16 +10,20 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$usa_id = 1;
 	$pm_id = $_REQUEST['pm_id'];
 
-	$Query = "SELECT * FROM `user_shipping_address` WHERE user_id = '" . $user_id . "' AND usa_id ='" . $usa_id . "'";
+	$Query = "SELECT usa.*, u.user_name,  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE user_id = '" . $user_id . "' AND usa_id ='" . $usa_id . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$rw = mysqli_fetch_object($rs);
-		$usa_gender = $rw->usa_gender;
+		$usa_id = $rw->usa_id;
 		$dinfo_fname = $rw->usa_fname;
 		$dinfo_lname = $rw->usa_lname;
-		$dinfo_email = $rw->usa_email;
+		$dinfo_email = $rw->user_name;
 		$dinfo_phone = $rw->usa_contactno;
-		$dinfo_address = $rw->usa_street_house . " " . $rw->usa_address;
+		$dinfo_street = $rw->usa_street;
+		$dinfo_house_no = $rw->usa_house_no;
+		$dinfo_address = $rw->usa_address;
+		$dinfo_countries_id = $rw->countries_id;
+		$dinfo_usa_zipcode = $rw->usa_zipcode;
 	}
 
 	$orders_table_check = 0;
@@ -35,7 +39,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 			$ord_shipping_charges = config_courier_fix_charges;
 		}
 		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '".trim(dbStr($_REQUEST['ord_note']))."', '" . dbStr(trim(date_time)) . "')") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_address) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . dbStr(trim($dinfo_fname)) . "', '" . dbStr(trim($dinfo_lname)) . "', '" . dbStr(trim($dinfo_phone)) . "', '" . dbStr(trim($dinfo_email)) . "', '" . dbStr(trim($dinfo_address)) . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . dbStr(trim($dinfo_fname)) . "', '" . dbStr(trim($dinfo_lname)) . "', '" . dbStr(trim($dinfo_phone)) . "', '" . dbStr(trim($dinfo_email)) . "', '".dbStr(trim($dinfo_street))."', '".dbStr(trim($dinfo_house_no))."', '" . dbStr(trim($dinfo_address)) . "', '".dbStr(trim($dinfo_countries_id))."', '".$dinfo_usa_zipcode."')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
 

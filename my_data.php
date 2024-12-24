@@ -5,7 +5,6 @@ $page = 1;
 $Query = "SELECT u.user_id, u.user_name, u.user_fname, u.user_lname, u.user_phone, ut.utype_name FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id WHERE u.user_id = '".$_SESSION["UID"]."'";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if(mysqli_num_rows($rs) > 0){
-	$retValue = array("status" => "1", "message" => "Get my data");
 	$row = mysqli_fetch_object($rs);
 		
 	$user_id = $row->user_id;
