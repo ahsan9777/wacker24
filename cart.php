@@ -10,7 +10,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$usa_id = 1;
 	$pm_id = $_REQUEST['pm_id'];
 
-	$Query = "SELECT usa.*, u.user_name,  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE user_id = '" . $user_id . "' AND usa_id ='" . $usa_id . "'";
+	$Query = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.user_id = '" . $user_id . "' AND usa.usa_id ='" . $usa_id . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$rw = mysqli_fetch_object($rs);
