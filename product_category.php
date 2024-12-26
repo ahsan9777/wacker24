@@ -34,11 +34,15 @@
 									$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 									if (mysqli_num_rows($rs1) > 0) {
 										while ($row1 = mysqli_fetch_object($rs1)) {
-											$pg_mime_source = explode(',', $row1->pg_mime_source);
+											$pg_mime_source_href = "files/no_img_1.jpg";
+											if(!empty($row1->pg_mime_source)){
+												$pg_mime_source = explode(',', $row1->pg_mime_source);
+												$pg_mime_source_href = "getftpimage.php?img=".$pg_mime_source[0];
+											}
 									?>
 									<div class="pd_card">
 										<div class="pd_image"><a href="products.php?level_two=<?php print($row1->group_id); ?>">
-												<div class="pd_image_inner"><img src="getftpimage.php?img=<?php print($pg_mime_source[0]); ?>" alt=""></div>
+												<div class="pd_image_inner"><img src="<?php print($pg_mime_source_href); ?>" alt=""></div>
 											</a></div>
 										<div class="pd_detail">
 											<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id); ?>"> <?php print($row1->cat_title); ?> </a></div>
