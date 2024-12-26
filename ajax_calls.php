@@ -128,11 +128,11 @@ if (isset($_REQUEST['action'])) {
                                         <div class="side_pd_qty">
                                             <input type="number" class="qlt_number" value="'.$row->ci_qty.'">
                                         </div>
-                                        <div class="side_pd_delete"><a  id = "item_deleted" data-id = "'.$row->ci_id.'" href="javascript:void(0)"><i class="fa fa-trash"></i></a></div>
+                                        <div class="side_pd_delete"><a  class = "item_deleted" data-id = "'.$row->ci_id.'" href="javascript:void(0)"><i class="fa fa-trash"></i></a></div>
                                     </div>
                                 </div>
                                 <script>
-                                $("#item_deleted").on("click", function(){
+                                $(".item_deleted").on("click", function(){
                                     //console.log("item_deleted");
                                     let ci_id = $(this).attr("data-id");
                                     //console.log("ci_id:"+ci_id);
@@ -145,7 +145,7 @@ if (isset($_REQUEST['action'])) {
                                         success: function(response) {
                                             //console.log("response = "+response);
                                             const obj = JSON.parse(response);
-                                            console.log(obj);
+                                            //console.log(obj);
                                             if(obj.status == 1){
                                                 $("#header_quantity").text(obj.count+" items");
                                                 $(".side_cart_click").trigger("click");

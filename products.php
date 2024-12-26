@@ -48,7 +48,7 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 									<?php
 
 									
-									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' ".$whereclause." ";
+									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' ".$whereclause." ";
 									//print($Query);die();
 									$counter = 0;
 									$limit = 24;
@@ -78,7 +78,10 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 													</div>
 													<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
 													<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
-													<div class="pd_btn"><a href="product_detail.html">
+													<div class="pd_btn"><a class="add_to_card" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>" >
+															<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>" >
+															<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>" >
+															<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1" >
 															<div class="gerenric_btn">Add to Cart</div>
 														</a></div>
 												</div>

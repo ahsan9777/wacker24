@@ -8,6 +8,13 @@ if(isset($_REQUEST['btnAdd'])){
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 }
 
+if(isset($_REQUEST['usa_id']) && !empty($_REQUEST['usa_id'])){
+	//print_r($_REQUEST);die();
+	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '0' WHERE user_id = '".$_SESSION["UID"]."'") or die(mysqli_error($GLOBALS['conn']));
+	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '1' WHERE usa_id = '".$_REQUEST['usa_id']."' AND user_id = '".$_SESSION["UID"]."'") or die(mysqli_error($GLOBALS['conn']));
+	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+}
+
 include("includes/message.php");
 ?>
 <!doctype html>
@@ -123,7 +130,7 @@ include("includes/message.php");
 						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 					<?php } ?>
 					<h1>My Addresses</h1>
-					<div class="my_address_section1">
+					<form class="my_address_section1" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 						<div class="gerenric_address">
 							<div class="address_col">
 								<div class="gerenric_add_box form_popup_trigger">
@@ -134,15 +141,15 @@ include("includes/message.php");
 								</div>
 							</div>
 							<?php
-							$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE user_id = '".$_SESSION["UID"]."' ";
+							$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE user_id = '".$_SESSION["UID"]."' ORDER BY usa_defualt DESC";
 							$rs = mysqli_query($GLOBALS['conn'], $Query);
 							if(mysqli_num_rows($rs) > 0){
 								while($row = mysqli_fetch_object($rs)){
 							?>
 							<div class="address_col">
 								<div class="address_card">
-									<div class="address_detail">
-										<h2>Standard address</h2>
+									<div class="address_detail" >
+										<input type="radio" class="usa_id" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>" <?php print( ($row->usa_defualt == 1)?'checked':''); ?> > <h2> <?php print( ($row->usa_defualt == 1)?'Defualt':'Standard'); ?> address</h2>
 										<ul>
 											<li><span> <?php print($row->usa_fname." ".$row->usa_lname); ?> </span></li>
 											<li> <?php print($row->usa_street); ?> </li>
@@ -160,7 +167,7 @@ include("includes/message.php");
 							}
 							?>
 						</div>
-					</div>
+					</form>
 					<div class="my_address_section2">
 						<div class="gerenric_address full_column">
 							<?php
@@ -218,6 +225,11 @@ include("includes/message.php");
 				'overflow': 'inherit'
 			});
 		});
+	});
+
+	$(".usa_id").on('click', function(){
+		//console.log("usa_id");
+		$("#frmaddress").submit();
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>

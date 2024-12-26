@@ -48,6 +48,10 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Issue in your new and confirm password";
 			break;
+		case 12:
+			$class = "alert alert-danger";
+			$strMSG = "Please add the defualt address";
+			break;
 	}
 }
 ?>

@@ -176,7 +176,7 @@ if (mysqli_num_rows($rs) > 0) {
 									<div class="product_order_row_inner">
 										<div class="order_text">Quantity:</div>
 										<div class="order_select">
-											<select class="order_select_input" id="ci_qty" name="ci_qty">
+											<select class="order_select_input" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty">
 												<?php for($i = 1; $i <= $quantity_lenght; $i++){ ?>
 												<option value="<?php print($i); ?>"> <?php print($i); ?> </option>
 												<?php } ?>
@@ -185,9 +185,9 @@ if (mysqli_num_rows($rs) > 0) {
 									</div>
 								</div>
 								<div class="order_btn">
-									<input type="hidden" id="pro_id" name="pro_id" value="<?php print($pro_id); ?>" >
-									<input type="hidden" id="supplier_id" name="supplier_id" value="<?php print($supplier_id); ?>" >
-									<a class="add_to_card" href="javascript:void(0)">
+									<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>" >
+									<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>" >
+									<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
 										<div class="gerenric_btn">Add to Cart</div>
 									</a></div>
 								<div class="order_btn"><a href="javascript:void(0)">
@@ -352,35 +352,7 @@ if (mysqli_num_rows($rs) > 0) {
 		$(".category_show").toggleClass("category_show_height");
 	});
 
-	$(".add_to_card").on("click", function(){
-		//console.log("add_to_card");
-		let pro_id = $("#pro_id").val();
-		let supplier_id = $("#supplier_id").val();
-		let ci_qty = $("#ci_qty").val();
-
-		/*console.log("pro_id: "+pro_id);
-		console.log("supplier_id: "+supplier_id);
-		console.log("ci_amount: "+ci_amount);*/
-
-		$.ajax({
-			url: 'ajax_calls.php?action=add_to_card',
-			method: 'POST',
-			data: {
-				pro_id: pro_id,
-				supplier_id: supplier_id,
-				ci_qty: ci_qty
-			},
-			success: function(response) {
-				//console.log("response = "+response);
-				const obj = JSON.parse(response);
-				//console.log(obj);
-				if(obj.status == 1){
-					$("#header_quantity").text(obj.count+" items");
-					$(".side_cart_click").trigger("click");
-				}
-			}
-		});
-	});
+	
 </script>
 <?php include("includes/bottom_js.php"); ?>
 </html>
