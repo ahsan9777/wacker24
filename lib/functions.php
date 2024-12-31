@@ -173,21 +173,23 @@ function set_permissions($val, $id, $action=0){
 	switch ($val) {
 		case 1:
 			//$ret = '<span class="badge badge-green2">Accepté</span>';
-			$ret = '<div class="btn-group dropdown">';
+			$ret .= '<a class = "btn btn-primary btn-style-light" href="'.$_SERVER['PHP_SELF'].'?btnUnsets=1&id='.$id.$strQry.'">Yes</a>';
+			/*$ret = '<div class="btn-group dropdown">';
 			$ret .= '<button class="btn btn-xs btn-success dropdown-toggle" data-toggle="dropdown">YES &nbsp;<span class="caret"></span></button>';
 			$ret .= '<ul class="dropdown-menu context">';
 			$ret .= '<li><a href="'.$_SERVER['PHP_SELF'].'?btnUnsets=1&type_id='.$id.$strQry.'">NO</a></li>';
 			$ret .= '</ul>';
-			$ret .= '</div>';
+			$ret .= '</div>';*/
 		break;
 		default:
 			//$ret = '<span class="badge badge-orange">Stand By</span>';
-			$ret = '<div class="btn-group dropdown">';
+			$ret .= '<a class = "btn btn-danger btn-style-light" href="'.$_SERVER['PHP_SELF'].'?btnSets=1&id='.$id.$strQry.'">No</a>';
+			/*$ret = '<div class="btn-group dropdown">';
 			$ret .= '<button class="btn btn-xs btn-danger dropdown-toggle" data-toggle="dropdown">NO &nbsp;<span class="caret"></span></button>';
 			$ret .= '<ul class="dropdown-menu context">';
 			$ret .= '<li><a href="'.$_SERVER['PHP_SELF'].'?btnSets=1&type_id='.$id.$strQry.'">YES</a></li>';
 			$ret .= '</ul>';
-			$ret .= '</div>';
+			$ret .= '</div>';*/
 		break;
 	}
 	return $ret;

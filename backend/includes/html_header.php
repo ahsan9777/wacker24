@@ -6,3 +6,38 @@
 <link rel="stylesheet" href="./assets/style/scrollbar.css">
 <link rel="stylesheet" href="./assets/style/responsive.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script>
+    function setAll(){
+	if(frm.chkAll.checked == true){
+		checkAll("frm", "chkstatus[]");
+	}
+	else{
+		clearAll("frm", "chkstatus[]");
+	}
+}
+
+function checkAll(TheForm, Field){
+	var obj = document.forms[TheForm].elements[Field];
+	if(obj.length > 0){
+		for(var i=0; i < obj.length; i++){
+			obj[i].checked = true;
+		}
+	}
+	else{
+		obj.checked = true;
+	}
+}
+
+function clearAll(TheForm, Field){
+	var obj = document.forms[TheForm].elements[Field];
+	if(obj.length > 0){
+		for(var i=0; i < obj.length; i++){
+			obj[i].checked = false;
+		}
+	}
+	else{
+		obj.checked = false;
+	}
+}
+</script>

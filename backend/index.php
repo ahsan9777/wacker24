@@ -1,86 +1,20 @@
+<?php include("../lib/session_head.php"); ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Dashboard</title>
-    <link rel="stylesheet" href="./assets/style/styles.css">
-    <link rel="stylesheet" href="./assets/style/scrollbar.css">
-    <link rel="stylesheet" href="./assets/style/responsive.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <?php include("includes/html_header.php"); ?>
 </head>
 
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <aside class="sidebar">
-
-            <div class="logo">
-                <img src="./assets/images/logo.png" style="width: 100%;" alt="">
-            </div>
-
-            <nav>
-                <ul class="accordion-menu">
-
-                    <li>
-                        <a href="backend-cpanel"><span class="material-icons icon">dashboard</span>
-                            <span class="text">Dashboard</span>
-                        </a>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="#" class="menu-link accordion">
-                            <span class="material-icons icon">category</span>
-                            <span class="text">Kategorien</span>
-                        </a>
-                        <ul class="sub-menu panel">
-                            <li><a href="categoriesManagmentSystem"><span class="text">Hauptkategorien</span></a></li>
-                            <li><a href="subCategoriesOneManagmentSystem"><span class="text">Unterkategorien</span></a></li>
-                            <li><a href="ArtikelTypes"><span class="text">Artikel Types</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" class="menu-link accordion">
-                            <span class="material-icons icon">category</span>
-                            <span class="text">Kategorien</span>
-                        </a>
-                        <ul class="sub-menu panel">
-                            <li><a href="categoriesManagmentSystem"><span class="text">Hauptkategorien</span></a></li>
-                            <li><a href="subCategoriesOneManagmentSystem"><span class="text">Unterkategorien</span></a>
-                            </li>
-                            <li><a href="ArtikelTypes"><span class="text">Artikel Types</span></a></li>
-                        </ul>
-                    </li>
-
-                    <li><a href="usersManagmentSystem"><span class="material-icons icon">face</span> <span
-                                class="text">Kunden</span> </a></li>
-
-            </nav>
-        </aside>
+        <?php include("includes/sidebar.php"); ?>
 
         <!-- Main content -->
         <div class="main-content">
             <!-- Top bar -->
-            <header class="top-bar">
-                <div class="left" style="display: flex; gap: 15px;">
-                    <button class="back-button sidebar-toggle">
-                        <span class="material-icons">menu</span>
-                    </button>
-                    <button class="back-button toggle-sidebar desktop"> <span class="material-icons">first_page</span>
-                    </button>
-                    <span>View Site</span>
-                </div>
-                <div class="right" style="display: flex; gap: 15px;">
-                    <button class="back-button">Dashboard</button>
-                    <button class="back-button">Logout</button>
-                    <span>
-                        <img src="./assets/images/germany.png" width="30px" height="30px" alt="German flag"
-                            class="flag" />
-                    </span>
-
-                </div>
-            </header>
+            <?php include("includes/topbar.php"); ?>
 
             <!-- Content -->
             <section class="content" id="main-content">

@@ -1,18 +1,20 @@
 <?php
+ob_start();
+session_start();
 include("../lib/openCon.php");
 include("../lib/functions.php");
-include("../lib/functions_mail.php");
 
 require_once("../lib/class.pager1.php"); 
 $p = new Pager1;
-
-session_start();
+setcookie("PHPSESSID", "", time() - 3600, "/");
+session_destroy();
 if(!isset($_SESSION['UserID'])) {
-	header("location:index.php");
-	
+    //header("location:index.php");
+
 }
+
 $class = ""; 
-$strMSG = "";
-$FormHead = "";
-$qryStrURL = "";
+$strMSG = ""; 
+$qryStrURL = ""; 
+ob_end_flush();
 ?>
