@@ -1,0 +1,39 @@
+/* Scrollbar Styling */
+.sidebar::-webkit-scrollbar,
+.main-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.main-content::-webkit-scrollbar-track {
+    background: #2c2c2c;
+    border-radius: 20px;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.main-content::-webkit-scrollbar-thumb {
+    background: #C2C4D1;
+    border-radius: 20px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #C2C4D1;
+}
+
+/* For Firefox (using scrollbar-width property) */
+.sidebar,
+.main-content {
+    scrollbar-width: thin;
+    scrollbar-color: #C2C4D1 #2c2c2c;
+    /* Thumb color, Track color */
+}
+
+/* General styling improvements */
+.sidebar {
+    overflow-y: auto;
+}
+
+.main-content {
+    overflow-y: auto;
+}

@@ -8,13 +8,11 @@ $p = new Pager1;
 
 session_start();
 if(!isset($_SESSION['UserID'])) {
-	if($_SERVER['HTTP_HOST']=='localhost:82' || $_SERVER['HTTP_HOST']=='localhost' ){
-		header("location:login.php");
-	} else{
-		header("location: https://paywizelimited.co.uk/admin/login.php");
-	}
+	header("location:index.php");
+	
 }
-
+$class = ""; 
 $strMSG = "";
 $FormHead = "";
+$qryStrURL = "";
 ?>

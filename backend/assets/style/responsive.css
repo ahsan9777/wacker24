@@ -1,0 +1,48 @@
+@media screen and (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        transform: translateX(-100%);
+        z-index: 10;
+    }
+
+    .sidebar.visible {
+        transform: translateX(0);
+    }
+
+    .top-bar {
+        width: 100%;
+        left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        /* Hidden by default on small screens */
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        /* Show sidebar when open */
+    }
+
+    .sidebar-toggle {
+        display: block;
+        /* Show the toggle button on small screens */
+    }
+
+    .main-content {
+        margin-left: 0;
+        /* No left margin when the sidebar is hidden */
+    }
+
+    .desktop {
+        display: none;
+    }
+
+    table {
+        font-size: 14px;
+    }
+}
