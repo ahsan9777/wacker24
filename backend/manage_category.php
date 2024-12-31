@@ -39,7 +39,7 @@ if (isset($_REQUEST['btnUpdate'])) {
     $dirName = "../files/category/";
     $mfileName = $_REQUEST['mfileName'];
     if (!empty($_FILES["mFile"]["name"])) {
-        @unlink("../files/category" . $_REQUEST['mfileName']);
+        @unlink("../files/category/" . $_REQUEST['mfileName']);
         @unlink("../files/category/th/" . $_REQUEST['mfileName']);
         $mfileName = $_REQUEST['cat_id'] . "_" . $_FILES["mFile"]["name"];
         $mfileName = str_replace(" ", "_", strtolower($mfileName));
@@ -216,13 +216,13 @@ include("includes/messages.php");
 
 
                             <div class="search-box">
-                                <label for="">Customer Type</label>
+                                <label for="">Search</label>
                                 <input type="text" class="input_style" placeholder="Search:">
                             </div>
                         </div>
 
                         <div class="table-controls">
-                            <h1>Customers</h1>
+                            <h1>Category</h1>
                             <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
 
                         </div>
@@ -231,7 +231,7 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <th width="300">Banner</th>
+                                        <th width="100">Banner</th>
                                         <th>Title </th>
                                         <th width="150">Show Banner</th>
                                         <th width="150">Show On Home</th>
@@ -304,7 +304,7 @@ include("includes/messages.php");
 
                             <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light">
                             <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light">
-                            <input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">
+                            <!--<input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">-->
                         </form>
 
                     </div>

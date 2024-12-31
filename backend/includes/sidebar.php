@@ -22,11 +22,10 @@ $cu = 'active';
             </li>
 
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_import_category') ? $cu : ''; ?>"><span class="material-icons icon">category</span> <span class="text">Kategorien</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_import_category') ? $c : ''; ?>>
-                    <li><a href="manage_import_category.php"><span class="text">Hauptkategorien</span></a></li>
-                    <li><a href="subCategoriesOneManagmentSystem"><span class="text">Unterkategorien</span></a></li>
-                    <li><a href="ArtikelTypes"><span class="text">Artikel Types</span></a></li>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_category' || $pg == 'manage_sub_category') ? $cu : ''; ?>"><span class="material-icons icon">category</span> <span class="text">Kategorien</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_category' || $pg == 'manage_sub_category') ? $c : ''; ?>>
+                    <li><a href="manage_category.php"><span class="text">Hauptkategorien</span></a></li>
+                    <li><a href="manage_sub_category.php"><span class="text">Unterkategorien</span></a></li>
                 </ul>
             </li>
             
