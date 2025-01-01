@@ -32,6 +32,42 @@ body {
     overflow: hidden;
 }
 
+.login_form{
+    background-color: #1f1f2b;
+    height: 100vh;
+    width: 650px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 80px;
+}
+.login_form .logo{
+    width: 400px;
+}
+.login_form .logo img{
+    width: 100%;
+}
+
+.inner_form_area{
+    width: 100%;
+    background-color: #181821;
+    padding: 20px 50px;
+    border-radius: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login_input{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
 /* Sidebar */
 .sidebar {
     background-color: #1F1F2B;
@@ -496,6 +532,17 @@ th {
     background: rgba(255, 72, 87, .25);
     border: none;
     color: #ff4857;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #4bad48;
+    border-color: #4bad48;
+}
+.btn-success:hover {
+    color: #fff;
+    background-color: #70d16d;
+    border-color: #70d16d;
 }
 
 .pagination {

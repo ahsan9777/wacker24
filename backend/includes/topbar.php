@@ -9,7 +9,7 @@
     </div>
     <div class="right" style="display: flex; gap: 15px;">
         <button class="back-button">Dashboard</button>
-        <button class="back-button">Logout</button>
+        <button class="back-button" onClick="javascript: window.location = 'logout.php'">Logout</button>
         <span>
             <img src="./assets/images/germany.png" width="30px" height="30px" alt="German flag"
                 class="flag" />
