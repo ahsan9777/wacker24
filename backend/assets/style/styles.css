@@ -477,6 +477,7 @@ th {
     -moz-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
+    cursor: pointer;
 }
 
 .btn-xs{
@@ -545,6 +546,41 @@ th {
     border-color: #70d16d;
 }
 
+.btn-success.btn-style-light  {
+    background: rgba(75, 173, 72, .35);
+    border: none;
+    color: #4bad48;
+}
+
+.table-box-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.table-box-body .table-form-group {
+    width: 100%;
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 5px;
+}
+
+.table-form-group input {
+    background: #33334e;
+    color: #ffcf8c;
+    border: none;
+    width: 100px !important;
+    height: 25px;
+    text-align: center;
+}
+
+.numbr.selected{
+    color: #fff;
+}
 .pagination {
     display: inline-block;
     padding-left: 0;

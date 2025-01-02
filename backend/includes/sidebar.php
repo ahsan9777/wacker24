@@ -28,6 +28,12 @@ $cu = 'active';
                     <li><a href="manage_sub_category.php"><span class="text">Unterkategorien</span></a></li>
                 </ul>
             </li>
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_products' || $pg == 'manage_sub_categorys') ? $cu : ''; ?>"><span class="material-icons icon">add</span> <span class="text">Artikel</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_products' || $pg == 'manage_sub_categorys') ? $c : ''; ?>>
+                    <li><a href="manage_products.php"><span class="text">View All Artical</span></a></li>
+                </ul>
+            </li>
             
 
             <li><a href="usersManagmentSystem"><span class="material-icons icon">face</span> <span class="text">Kunden</span> </a></li>

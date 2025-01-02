@@ -33,9 +33,8 @@ if (isset($_REQUEST['btnImport'])) {
         }
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
-}
 
-if (isset($_REQUEST['btnUpdate'])) {
+} elseif (isset($_REQUEST['btnUpdate'])) {
     $dirName = "../files/category/";
     $mfileName = $_REQUEST['mfileName'];
     if (!empty($_FILES["mFile"]["name"])) {
@@ -99,6 +98,7 @@ if (isset($_REQUEST['btnInactive'])) {
     }
 }
 
+//--------------Button Set and Unset --------------------
 if(isset($_REQUEST['action']) && $_REQUEST['action'] == "cat_image_show"){
     if (isset($_REQUEST['btnSets'])) {
         mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_image_show='1' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
