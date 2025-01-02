@@ -1,13 +1,15 @@
 <?php
 include("../lib/session_head.php");
 
-if(isset($_REQUEST['btnUpdateQuantity'])){
-    print_r($_REQUEST);die();
-    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '".dbStr(trim($_REQUEST['pq_quantity']))."', pq_upcomming_quantity = '".dbStr(trim($_REQUEST['pq_upcomming_quantity']))."' WHERE pq_id = '".dbStr(trim($_REQUEST['pq_id']))."' AND supplier_id = '".dbStr(trim($_REQUEST['supplier_id']))."' ") or die(mysqli_error($GLOBALS['conn']));
+if (isset($_REQUEST['btnUpdateQuantity'])) {
+    print_r($_REQUEST);
+    die();
+
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-} elseif(isset($_REQUEST['btnUpdatePrice'])){
-    print_r($_REQUEST);die();
-    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '".dbStr(trim($_REQUEST['pq_quantity']))."', pq_upcomming_quantity = '".dbStr(trim($_REQUEST['pq_upcomming_quantity']))."' WHERE pq_id = '".dbStr(trim($_REQUEST['pq_id']))."' AND supplier_id = '".dbStr(trim($_REQUEST['supplier_id']))."' AND pro_id = '".dbStr(trim($_REQUEST['pro_id']))."' ") or die(mysqli_error($GLOBALS['conn']));
+} elseif (isset($_REQUEST['btnUpdatePrice'])) {
+    print_r($_REQUEST);
+    die();
+    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "' WHERE pq_id = '" . dbStr(trim($_REQUEST['pq_id'])) . "' AND supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "' AND pro_id = '" . dbStr(trim($_REQUEST['pro_id'])) . "' ") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 }
 if (isset($_REQUEST['btnImport'])) {
@@ -220,6 +222,8 @@ include("includes/messages.php");
                 <?php if ($class != "") { ?>
                     <div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert">×</a></div>
                 <?php } ?>
+                <div class="alert alert-success" id="success" style="display: none;"> Record Updated Successfully<a class="close" data-dismiss="alert">×</a></div>
+                <div class="alert alert-danger" style="display: none;"> Record not Updated<a class="close" data-dismiss="alert">×</a></div>
                 <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
                         <h2>
@@ -334,43 +338,46 @@ include("includes/messages.php");
                                                 <td><?php print($row->pro_description_short); ?></td>
                                                 <td>
                                                     <div class="table-box-body">
-                                                        <input type="hidden" name="pro_id" id="pro_id_<?php print($counter); ?>"  value="<?php print($row->pro_id); ?>">
+                                                        <input type="hidden" name="pro_id" id="pro_id_<?php print($counter); ?>" value="<?php print($row->pro_id); ?>">
                                                         <input type="hidden" name="supplier_id" id="supplier_id_<?php print($counter); ?>" value="<?php print($row->supplier_id); ?>">
                                                         <input type="hidden" name="pq_id" id="pq_id_<?php print($counter); ?>" value="<?php print($row->pq_id); ?>">
                                                         <div class="table-form-group">
                                                             <label for="">Auf Lager</label>
-                                                            <input type="number" name="pq_quantity" id="pq_quantity_<?php print($counter); ?>" value="<?php print($row->pq_quantity); ?>">
+                                                            <input type="number" name="pq_quantity" id="pq_quantity_<?php print($counter); ?>" value="<?php print($row->pq_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min = "0" >
                                                         </div>
                                                         <div class="table-form-group">
                                                             <label for="">Online verfügbar</label>
-                                                            <input type="number" name="pq_upcomming_quantity" id="pq_upcomming_quantity_<?php print($counter); ?>" value="<?php print($row->pq_upcomming_quantity); ?>">
+                                                            <input type="number" name="pq_upcomming_quantity" id="pq_upcomming_quantity_<?php print($counter); ?>" value="<?php print($row->pq_upcomming_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min = "0" >
                                                         </div>
                                                         <div class="table-form-group">
                                                             <label for="">&nbsp;</label>
-                                                            <input type="button" name="btnUpdateQuantity" data-id = "<?php print($counter); ?>" class="btn btn-success btn-style-light" value="Update (<?php print(($row->pq_status == "true") ? 'T' : 'F'); ?>)">
+                                                            <input type="button" name="pro_update_quantity" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_quantity" value="Update (<?php print(($row->pq_status == "true") ? 'T' : 'F'); ?>)">
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="table-box-body">
                                                         <?php
+                                                        $counter1 = 0;
                                                         $Query1 = "SELECT * FROM `products_bundle_price` WHERE pro_id = '" . $row->pro_id . "' AND supplier_id = '" . $row->supplier_id . "' ORDER BY pbp_lower_bound ASC";
                                                         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
                                                         if (mysqli_num_rows($rs1) > 0) {
                                                             while ($row1 = mysqli_fetch_object($rs1)) {
+                                                                $counter1++;
                                                         ?>
-                                                            <div class="table-form-group">
-                                                                <input type="hidden" name="pbp_id" id="pbp_id_<?php print($counter); ?>" value="<?php print($row1->pbp_id); ?>">
-                                                                <label for="">Ab <?php print($row1->pbp_lower_bound) ?> </label>
-                                                                <input type="number" name="pbp_price_amount" id="pbp_price_amount_<?php print($counter); ?>" value="<?php print($row1->pbp_price_amount) ?>">
-                                                            </div>
+                                                                <div class="table-form-group">
+                                                                    <input type="hidden" name="pbp_id" id="pbp_id_<?php print($counter); ?>_<?php print($counter1); ?>" value="<?php print($row1->pbp_id); ?>">
+                                                                    <label for="">LB <?php print($row1->pbp_lower_bound) ?> </label>
+                                                                    <input type="number" name="pbp_price_amount[]" id="pbp_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min = "0" value="<?php print($row1->pbp_price_amount) ?>">
+                                                                </div>
                                                         <?php
                                                             }
                                                         }
                                                         ?>
                                                         <div class="table-form-group">
                                                             <label for="">&nbsp;</label>
-                                                            <input type="button" name="btnUpdatePrice" data-id = "<?php print($counter); ?>" class="btn btn-success btn-style-light" value="Update">
+                                                            <input type="hidden" name="pro_update_price_lenght" id="pro_update_price_lenght_<?php print($counter); ?>" value="<?php print($counter1); ?>">
+                                                            <input type="button" name="btnUpdatePrice" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_price" value="Update">
                                                         </div>
                                                     </div>
                                                 </td>
@@ -423,6 +430,80 @@ include("includes/messages.php");
         </div>
     </div>
     <?php include("includes/bottom_js.php"); ?>
+    <script>
+        $(".pro_update_quantity").on("click", function() {
+            //console.log("btnUpdateQuantity");
+            let pro_id = $("#pro_id_" + $(this).attr("data-id")).val();
+            let supplier_id = $("#supplier_id_" + $(this).attr("data-id")).val();
+            let pq_id = $("#pq_id_" + $(this).attr("data-id")).val();
+            let pq_quantity = $("#pq_quantity_" + $(this).attr("data-id")).val();
+            let pq_upcomming_quantity = $("#pq_upcomming_quantity_" + $(this).attr("data-id")).val();
+            //console.log("pro_id: "+pro_id+" supplier_id: "+supplier_id+" pq_id: "+pq_id);
+            $.ajax({
+                url: 'ajax_calls.php?action=pro_update_quantity',
+                method: 'POST',
+                data: {
+                    pro_id: pro_id,
+                    supplier_id: supplier_id,
+                    pq_id: pq_id,
+                    pq_quantity: pq_quantity,
+                    pq_upcomming_quantity: pq_upcomming_quantity
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    //console.log(obj);
+                    if (obj.status == 1) {
+                        $("#pq_quantity_" + $(this).attr("data-id")).val(obj.data[0].pq_quantity);
+                        $("#pq_upcomming_quantity_" + $(this).attr("data-id")).val(obj.data[0].pq_upcomming_quantity);
+                        $("#success").show();
+                        setTimeout(function() {
+                            $("#success").hide();
+                        }, 800);
+                    }
+                }
+            });
+        });
+        $(".pro_update_price").on("click", function() {
+            //console.log("btnUpdateQuantity");
+            let priceData = [];
+            let pro_id = $("#pro_id_" + $(this).attr("data-id")).val();
+            let supplier_id = $("#supplier_id_" + $(this).attr("data-id")).val();
+            let pro_update_price_lenght = $("#pro_update_price_lenght_" + $(this).attr("data-id")).val();
+            for (let i = 1; i <= pro_update_price_lenght; i++) {
+                //console.log("i: "+i);
+                let pbp_id = $("#pbp_id_" + $(this).attr("data-id")+"_"+i).val();
+                let pbp_price_amount = $("#pbp_price_amount_" + $(this).attr("data-id")+"_"+i).val();
+                priceData.push({
+                    pbp_id: pbp_id,
+                    pbp_price_amount: pbp_price_amount
+                });
+            }
+            //let pbp_id = $("#pbp_id_" + $(this).attr("data-id")).val();
+            //let pbp_price_amount = $("#pbp_price_amount_" + $(this).attr("data-id")).val();
+            //console.log("pro_id: "+pro_id+" supplier_id: "+supplier_id+" pbp_id: "+pbp_id+" pbp_price_amount: "+pbp_price_amount);
+            $.ajax({
+                url: 'ajax_calls.php?action=pro_update_price',
+                method: 'POST',
+                data: {
+                    pro_id: pro_id,
+                    supplier_id: supplier_id,
+                    priceData: priceData
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    console.log(obj);
+                    if (obj.status == 1) {
+                        $("#success").show();
+                        setTimeout(function() {
+                            $("#success").hide();
+                        }, 800);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
