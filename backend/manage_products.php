@@ -1,17 +1,6 @@
 <?php
 include("../lib/session_head.php");
 
-if (isset($_REQUEST['btnUpdateQuantity'])) {
-    print_r($_REQUEST);
-    die();
-
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-} elseif (isset($_REQUEST['btnUpdatePrice'])) {
-    print_r($_REQUEST);
-    die();
-    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "' WHERE pq_id = '" . dbStr(trim($_REQUEST['pq_id'])) . "' AND supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "' AND pro_id = '" . dbStr(trim($_REQUEST['pro_id'])) . "' ") or die(mysqli_error($GLOBALS['conn']));
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-}
 if (isset($_REQUEST['btnImport'])) {
     //print_r($_REQUEST);die();
     $xml = simplexml_load_file("lagersortiment_standard.xml") or die("Error: Cannot create object");
