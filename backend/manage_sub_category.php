@@ -5,13 +5,13 @@ if (isset($_REQUEST['btnUpdate'])) {
 
     if (!file_exists("../files/category/" . $_REQUEST['parent_id'])) {
         mkdir("../files/category/" . $_REQUEST['parent_id'], 0777, true);
-        mkdir("../files/category/" . $_REQUEST['parent_id']. "/th/", 0777, true);
+        mkdir("../files/category/" . $_REQUEST['parent_id'] . "/th/", 0777, true);
     }
-    $dirName = "../files/category/".$_REQUEST['parent_id']."/";
+    $dirName = "../files/category/" . $_REQUEST['parent_id'] . "/";
     $mfileName = $_REQUEST['mfileName'];
     if (!empty($_FILES["mFile"]["name"])) {
-        @unlink("../files/category/".$_REQUEST['parent_id']."/". $_REQUEST['mfileName']);
-        @unlink("../files/category/".$_REQUEST['parent_id']."/"."/th/" . $_REQUEST['mfileName']);
+        @unlink("../files/category/" . $_REQUEST['parent_id'] . "/" . $_REQUEST['mfileName']);
+        @unlink("../files/category/" . $_REQUEST['parent_id'] . "/" . "/th/" . $_REQUEST['mfileName']);
         $mfileName = $_REQUEST['cat_id'] . "_" . $_FILES["mFile"]["name"];
         $mfileName = str_replace(" ", "_", strtolower($mfileName));
         if (move_uploaded_file($_FILES['mFile']['tmp_name'], $dirName . $mfileName)) {
@@ -29,7 +29,7 @@ if (isset($_REQUEST['btnUpdate'])) {
             $cat_title_en = $rsMem->cat_title_en;
             $cat_title_de = $rsMem->cat_title_de;
             $mfileName = $rsMem->cat_image;
-            $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/".$parent_id."/". $rsMem->cat_image : "";
+            $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/" . $parent_id . "/" . $rsMem->cat_image : "";
             $cat_keyword = $rsMem->cat_keyword;
             $cat_description = $rsMem->cat_description;
             $formHead = "Update Info";
@@ -82,7 +82,7 @@ include("includes/messages.php");
 </head>
 
 <body>
-    <div class="container">
+    <div class="container_main">
         <!-- Sidebar -->
         <?php include("includes/sidebar.php"); ?>
 
@@ -98,38 +98,34 @@ include("includes/messages.php");
                 <?php } ?>
                 <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
-                        <h2>
+                        <h2 class="text-white">
                             <?php print($formHead); ?> Sub Category
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-
-                            <?php if ($_REQUEST['action'] == 2) { ?>
-                                <div class="input_div">
-                                    <img src="<?php print($mfile_path); ?>" width="100%" alt="">
-                                </div>
-                                <div class="grid_form">
-                                    <div class="input_div">
+                            <div class="row">
+                                <?php if ($_REQUEST['action'] == 2) { ?>
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <img src="<?php print($mfile_path); ?>" width="100%" alt="">
+                                    </div>
+                                    <div class="col-md-6 col-12 mt-3">
                                         <label for="">Title DE</label>
                                         <input type="text" class="input_style" name="cat_title_de" id="cat_title_de" value="<?php print($cat_title_de); ?>" placeholder="Title">
                                     </div>
-                                    <div class="input_div">
+                                    <div class="col-md-6 col-12 mt-3">
                                         <label for="">Title EN</label>
                                         <input type="text" class="input_style" name="cat_title_en" id="cat_title_en" value="<?php print($cat_title_en); ?>" placeholder="Title">
                                     </div>
-                                </div>
-                                <div class="grid_form">
-                                    <div class="input_div">
+
+                                    <div class="col-md-6 col-12 mt-3">
                                         <label for="">Keywords (Seprate Each Keyword With ',' (Car, Bus, Bike))</label>
                                         <input type="text" class="input_style" name="cat_keyword" id="cat_keyword" value="<?php print($cat_keyword); ?>" placeholder="Keywords (Seprate Each Keyword With ',' (Car, Bus, Bike))">
                                     </div>
-                                    <div class="input_div">
+                                    <div class="col-md-6 col-12 mt-3">
                                         <label for="">Meta Description</label>
                                         <input type="text" class="input_style" name="cat_description" id="cat_description" value="<?php print($cat_description); ?>" placeholder="Meta Description">
                                     </div>
-                                </div>
-                                <div class="grid_form">
-                                    <div class="input_div">
-                                        <label for="">Image ( <span class="label_span">Banner Size must be 1200px x 300x</span> )</label>
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for="">Image ( <span class="text-danger fw-bold">Banner Size must be 1200px x 300x</span> )</label>
                                         <div class="">
                                             <label for="file-upload" class="upload-btn">
                                                 <span class="material-icons">cloud_upload</span>
@@ -138,36 +134,32 @@ include("includes/messages.php");
                                             <input id="file-upload" type="file" class="file-input" name="mFile">
                                         </div>
                                     </div>
-                                </div>
-                            <?php } ?>
+                                <?php } ?>
 
-                            <?php if ($_REQUEST['action'] == 2) { ?>
-                                <div class="padding_top_bottom">
-                                    <button class="add-customer" type="submit" name="btnUpdate" id="btnImport">Update</button>
-                                    <input type="hidden" name="mfileName" value="<?php print($mfileName); ?>" />
-                                <?php } else { ?>
-                                    <div class="text_align_center padding_top_bottom">
-                                        <button class="add-customer" type="submit" name="btnImport" id="btnImport">Upload</button>
-                                    <?php } ?>
-                                    <button type="button" name="btnBack" class="add-customer btn-cancel" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
+                                <?php if ($_REQUEST['action'] == 2) { ?>
+                                    <div class="padding_top_bottom">
+                                        <button class="btn btn-primary" type="submit" name="btnUpdate" id="btnImport">Update</button>
+                                        <input type="hidden" name="mfileName" value="<?php print($mfileName); ?>" />
+                                    <?php } else { ?>
+                                        <div class="text_align_center padding_top_bottom">
+                                            <button class="btn btn-primary" type="submit" name="btnImport" id="btnImport">Upload</button>
+                                        <?php } ?>
+                                        <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
+                                        </div>
                                     </div>
-
+                            </div>
                         </form>
                     </div>
                 <?php } else { ?>
+                    <div class="table-controls">
+                        <h1 class="text-white">Sub Category</h1>
+                    </div>
                     <div class="main_table_container">
-                        <div class="table-controls">
-
-
-                            <div class="search-box">
-                                <label for="">Search</label>
+                        <div class="row">
+                            <div class=" col-md-3 col-12 mt-2">
+                                <label for="" class="text-white">Search</label>
                                 <input type="text" class="input_style" placeholder="Search:">
                             </div>
-                        </div>
-
-                        <div class="table-controls">
-                            <h1>Sub Category</h1>
-
                         </div>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
@@ -196,25 +188,25 @@ include("includes/messages.php");
                                             $strClass = 'label  label-danger';
                                             $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
                                             if (!empty($row->cat_image)) {
-                                                $image_path = $GLOBALS['siteURL'] . "files/category/".$row->parent_id."/". $row->cat_image;
+                                                $image_path = $GLOBALS['siteURL'] . "files/category/" . $row->parent_id . "/" . $row->cat_image;
                                             }
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->cat_id); ?>"></td>
-                                                <td><img src="<?php print($image_path); ?>" width=" <?php print(!empty($row->cat_image)? 300 : 100); ?>"></td>
+                                                <td><img src="<?php print($image_path); ?>" width=" <?php print(!empty($row->cat_image) ? 300 : 100); ?>"></td>
                                                 <td><?php print($row->cat_title); ?></td>
                                                 <td><?php print($row->sub_cat_title); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($row->cat_status == 0) {
-                                                        echo '<span class="badge badge-danger">Offline</span>';
+                                                        echo '<span class="btn btn-danger btn-style-light w-auto">Offline</span>';
                                                     } else {
-                                                        echo '<span class="badge badge-success">Live</span>';
+                                                        echo '<span class="btn btn-success btn-style-light w-auto">Live</span>';
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "parent_id=".$row->parent_id."&cat_id=" . $row->cat_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "parent_id=" . $row->parent_id . "&cat_id=" . $row->cat_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                 </td>
                                             </tr>
                                     <?php
@@ -229,7 +221,7 @@ include("includes/messages.php");
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
-                                        <td style="text-align: right;">
+                                        <td style="float: right;">
                                             <ul class="pagination" style="margin: 0px;">
                                                 <?php
                                                 $pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
@@ -241,8 +233,14 @@ include("includes/messages.php");
                                 </table>
                             <?php } ?>
 
-                            <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light">
-                            <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light">
+                            <div class="row">
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                </div>
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                </div>
+                            </div>
                         </form>
 
                     </div>

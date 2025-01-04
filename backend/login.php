@@ -47,28 +47,29 @@ if (isset($_POST['btnLogin'])) {
 <html lang="de">
 
 <head>
-    <?php include("includes/html_header.php"); ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dashboard</title>
+    <link rel="stylesheet" href="./assets/style/styles.css">
+    <link rel="stylesheet" href="./assets/style/scrollbar.css">
+    <link rel="stylesheet" href="./assets/style/responsive.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
 
-        <form class="login_form" role="form" method="post" action="<?php print($_SERVER['PHP_SELF']);?>">
-            <div class="inner_form">
-                <div class="logo"><img src="assets/images/logo.png" alt=""></div>
+    <div class="login-container">
+        <div class="">
+            <img src="./assets/images/logo.png" class="logo"></img>
+            <div class="login-box">
+                <h2>Admin Login Area</h2>
+                <form id="loginForm" role="form" method="post" action="<?php print($_SERVER['PHP_SELF']);?>">
+                    <input class="input_style" type="text" name="user_name" id="user_name" required>
+                    <input class="input_style" type="password" name="user_password" id="user_password" required>
+                    <button type="submit" name="btnLogin" >Get Access</button>
+                </form>
             </div>
-            <div class="inner_form_area">
-                <?php print($strMSG); ?>
-                <h2 class="text_align_center">Admin Login Area</h2>
-                <div class="login_input">
-                    <input class="input_style" type="text" name="user_name" id="user_name">
-                    <input class="input_style" type="password" name="user_password" id="user_password">
-                </div>
-                <div class="text_align_center">
-                    <input type="submit" name="btnLogin" class="btn btn-success" value="Get Access">
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
     <script src="./assets/js/jquery.js"></script>
     <script src="./assets/js/main.js"></script>

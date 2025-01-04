@@ -78,8 +78,3 @@ $(document).ready(function () {
     });
 });
 
-
-document.querySelectorAll('input[type=checkbox][data-toggle="toggle"]').forEach(function (ele) {
-    ele.bootstrapToggle();
-});
-

@@ -3,46 +3,49 @@ include("../lib/session_head.php");
 
 if (isset($_REQUEST['btnImport'])) {
     //print_r($_REQUEST);die();
-    $xml = simplexml_load_file("lagersortiment_standard.xml") or die("Error: Cannot create object");
+    //$xml = simplexml_load_file("lagersortiment_standard.xml") or die("Error: Cannot create object");
+    $xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
     //print('<pre>');
-    //print_r($xml->T_NEW_CATALOG->ARTICLE->ARTICLE_DETAILS);
-    //print_r($xml->T_NEW_CATALOG->ARTICLE->ARTICLE_DETAILS->KEYWORD);
-    //print_r($xml->T_NEW_CATALOG->ARTICLE->ARTICLE_FEATURES);
-    //print_r($xml->T_NEW_CATALOG->ARTICLE->ARTICLE_ORDER_DETAILS);
-    //print_r($xml->T_NEW_CATALOG->ARTICLE->ARTICLE_PRICE_DETAILS->ARTICLE_PRICE[1]);
+    //print_r($xml->T_NEW_CATALOG->PRODUCT);
+    //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_DETAILS);
+    //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_DETAILS->KEYWORD);
+    //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_FEATURES);
+    //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_ORDER_DETAILS);
+    //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_PRICE_DETAILS->PRODUCT_PRICE[1]);
     //print_r($xml->T_NEW_CATALOG->ARTICLE->MIME_INFO->MIME[0]);
-    //print('</pre>');die();
+    //print('</pre>');//die();
     mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0'") or die(mysqli_error($GLOBALS['conn']));
-    foreach ($xml->T_NEW_CATALOG->ARTICLE as $rl) {
+    foreach ($xml->T_NEW_CATALOG->PRODUCT as $rl) {
         //echo $i++." ".$rl->ART_ID.PHP_EOL;
         $pro_uid = 0;
         $pro_id = getMaximum("products", "pro_id");
-        $supplier_id = isset($rl->SUPPLIER_AID) ? $rl->SUPPLIER_AID : '';
-        $pro_description_short = isset($rl->ARTICLE_DETAILS->DESCRIPTION_SHORT) ? $rl->ARTICLE_DETAILS->DESCRIPTION_SHORT : '';
-        $pro_description_long = isset($rl->ARTICLE_DETAILS->DESCRIPTION_LONG) ? $rl->ARTICLE_DETAILS->DESCRIPTION_LONG : '';
-        $pro_ean = isset($rl->ARTICLE_DETAILS->EAN) ? $rl->ARTICLE_DETAILS->EAN : '';
-        $pro_buyer_id = isset($rl->ARTICLE_DETAILS->BUYER_AID) ? $rl->ARTICLE_DETAILS->BUYER_AID : '';
-        $pro_manufacture_aid = isset($rl->ARTICLE_DETAILS->MANUFACTURER_AID) ? $rl->ARTICLE_DETAILS->MANUFACTURER_AID : '';
-        $pro_manufacture_name = isset($rl->ARTICLE_DETAILS->MANUFACTURER_NAME) ? $rl->ARTICLE_DETAILS->MANUFACTURER_NAME : '';
-        $pro_delivery_time = isset($rl->ARTICLE_DETAILS->DELIVERY_TIME) ? $rl->ARTICLE_DETAILS->DELIVERY_TIME : '';
-        $pro_keyword = isset($rl->ARTICLE_DETAILS->KEYWORD) ? $rl->ARTICLE_DETAILS->KEYWORD : ''; //product_keyword
-        //$pro_artical_feature = isset($rl->ARTICLE_FEATURES)?$rl->ARTICLE_FEATURES:'';
-        $pro_referance_feature_group_id = isset($rl->ARTICLE_FEATURES->REFERENCE_FEATURE_GROUP_ID) ? $rl->ARTICLE_FEATURES->REFERENCE_FEATURE_GROUP_ID : '';
-        $pro_feature = isset($rl->ARTICLE_FEATURES->FEATURE) ? $rl->ARTICLE_FEATURES->FEATURE : ''; // product_feature
-        $pro_order_unit = isset($rl->ARTICLE_ORDER_DETAILS->ORDER_UNIT) ? $rl->ARTICLE_ORDER_DETAILS->ORDER_UNIT : '';
-        $pro_count_unit = isset($rl->ARTICLE_ORDER_DETAILS->CONTENT_UNIT) ? $rl->ARTICLE_ORDER_DETAILS->CONTENT_UNIT : '';
-        $pro_no_cu_per_ou = isset($rl->ARTICLE_ORDER_DETAILS->NO_CU_PER_OU) ? $rl->ARTICLE_ORDER_DETAILS->NO_CU_PER_OU : '';
-        $pro_price_quantity = isset($rl->ARTICLE_ORDER_DETAILS->PRICE_QUANTITY) ? $rl->ARTICLE_ORDER_DETAILS->PRICE_QUANTITY : '';
-        $pro_quantity_min = isset($rl->ARTICLE_ORDER_DETAILS->QUANTITY_MIN) ? $rl->ARTICLE_ORDER_DETAILS->QUANTITY_MIN : '';
-        $pro_quantity_interval = isset($rl->ARTICLE_ORDER_DETAILS->QUANTITY_INTERVAL) ? $rl->ARTICLE_ORDER_DETAILS->QUANTITY_INTERVAL : '';
-        $pro_artical_price = isset($rl->ARTICLE_PRICE_DETAILS->ARTICLE_PRICE) ? $rl->ARTICLE_PRICE_DETAILS->ARTICLE_PRICE : ''; //product_bundle_price
-        $pro_gallery = isset($rl->MIME_INFO->MIME) ? $rl->MIME_INFO->MIME : ''; //product_bundle_price
-        /*echo count($pro_gallery);
-            print("<pre>");
-            print_r($pro_gallery);
-            print("pro_price_one = ".$pro_price_one);
-            print("</pre>");//die();*/
-        //print("supplier_id = ".$supplier_id." pro_ean = ".$pro_ean);die();
+        $supplier_id = isset($rl->SUPPLIER_PID) ? $rl->SUPPLIER_PID : '';
+        $pro_description_short = isset($rl->PRODUCT_DETAILS->DESCRIPTION_SHORT) ? $rl->PRODUCT_DETAILS->DESCRIPTION_SHORT : '';
+        $pro_description_long = isset($rl->PRODUCT_DETAILS->DESCRIPTION_LONG) ? $rl->PRODUCT_DETAILS->DESCRIPTION_LONG : '';
+        $pro_ean = isset($rl->PRODUCT_DETAILS->INTERNATIONAL_PID) ? $rl->PRODUCT_DETAILS->INTERNATIONAL_PID : '';
+        $pro_buyer_id = isset($rl->PRODUCT_DETAILS->BUYER_PID) ? $rl->PRODUCT_DETAILS->BUYER_PID : '';
+        $pro_manufacture_aid = isset($rl->PRODUCT_DETAILS->MANUFACTURER_PID) ? $rl->PRODUCT_DETAILS->MANUFACTURER_PID : '';
+        $pro_manufacture_name = isset($rl->PRODUCT_DETAILS->MANUFACTURER_NAME) ? $rl->PRODUCT_DETAILS->MANUFACTURER_NAME : '';
+        $pro_keyword = isset($rl->PRODUCT_DETAILS->KEYWORD) ? $rl->PRODUCT_DETAILS->KEYWORD : ''; //product_keyword
+        $pro_referance_feature_group_id = isset($rl->PRODUCT_FEATURES[0]->REFERENCE_FEATURE_GROUP_ID) ? $rl->PRODUCT_FEATURES[0]->REFERENCE_FEATURE_GROUP_ID : '';
+        $pro_feature = isset($rl->PRODUCT_FEATURES[1]->FEATURE) ? $rl->PRODUCT_FEATURES[1]->FEATURE : ''; // product_feature
+        $referance_feature_group_id = isset($rl->PRODUCT_FEATURES[2]->REFERENCE_FEATURE_GROUP_ID) ? $rl->PRODUCT_FEATURES[2]->REFERENCE_FEATURE_GROUP_ID : '';
+        //print($referance_feature_group_id);die();
+        /*print('<pre>');
+            print_r($pro_feature); 
+            print('</pre>');die(); */
+        $pro_order_unit = isset($rl->PRODUCT_ORDER_DETAILS->ORDER_UNIT) ? $rl->PRODUCT_ORDER_DETAILS->ORDER_UNIT : '';
+        $pro_count_unit = isset($rl->PRODUCT_ORDER_DETAILS->CONTENT_UNIT) ? $rl->PRODUCT_ORDER_DETAILS->CONTENT_UNIT : '';
+        $pro_no_cu_per_ou = isset($rl->PRODUCT_ORDER_DETAILS->NO_CU_PER_OU) ? $rl->PRODUCT_ORDER_DETAILS->NO_CU_PER_OU : '';
+        $pro_price_quantity = isset($rl->PRODUCT_ORDER_DETAILS->PRICE_QUANTITY) ? $rl->PRODUCT_ORDER_DETAILS->PRICE_QUANTITY : '';
+        $pro_quantity_min = isset($rl->PRODUCT_ORDER_DETAILS->QUANTITY_MIN) ? $rl->PRODUCT_ORDER_DETAILS->QUANTITY_MIN : '';
+        $pro_quantity_interval = isset($rl->PRODUCT_ORDER_DETAILS->QUANTITY_INTERVAL) ? $rl->PRODUCT_ORDER_DETAILS->QUANTITY_INTERVAL : '';
+        $pro_artical_price = isset($rl->PRODUCT_PRICE_DETAILS->PRODUCT_PRICE) ? $rl->PRODUCT_PRICE_DETAILS->PRODUCT_PRICE : ''; //product_bundle_price
+        $pro_gallery = isset($rl->MIME_INFO->MIME) ? $rl->MIME_INFO->MIME : ''; //products_gallery
+        $pro_udx_seo_internetbezeichung = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.INTERNETBEZEICHNUNG'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.INTERNETBEZEICHNUNG'} : '';
+        $pro_delivery_time = isset($rl->PRODUCT_LOGISTIC_DETAILS->DELIVERY_TIMES->TIME_SPAN->TIME_VALUE_DURATION) ? $rl->PRODUCT_LOGISTIC_DETAILS->DELIVERY_TIMES->TIME_SPAN->TIME_VALUE_DURATION : '';
+        //print($pg_mime_source = basename($pro_gallery[0]->MIME_SOURCE));die();
+
         $Query1 = "SELECT * FROM manufacture WHERE  manf_name = '" . dbStr(trim($pro_manufacture_name)) . "'";
         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
         if (mysqli_num_rows($rs1) > 0) {
@@ -58,10 +61,11 @@ if (isset($_REQUEST['btnImport'])) {
         if (mysqli_num_rows($rs2) > 0) {
             $row2 = mysqli_fetch_object($rs2);
             $pro_uid = $row2->pro_id;
-            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
+            $pro_id = $row2->pro_id;
+            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
         } else {
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         if (!empty($pro_keyword)) {
@@ -74,20 +78,37 @@ if (isset($_REQUEST['btnImport'])) {
                 mysqli_query($GLOBALS['conn'], "INSERT INTO products_keyword (pk_id, pro_id, supplier_id, pk_title) VALUES ('" . $pk_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pk_title)) . "') ") or die(mysqli_error($GLOBALS['conn']));
             }
         }
+
         if (!empty($pro_feature)) {
             if ($pro_uid > 0) {
                 mysqli_query($GLOBALS['conn'], "DELETE FROM `products_feature` WHERE pro_id = '" . $pro_uid . "' AND supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
             }
             for ($i = 0; $i < count($pro_feature); $i++) {
-                $pf_fname = $pro_feature[$i]->FNAME;
-                $pf_fvalue = $pro_feature[$i]->FVALUE;
-                $pf_forder = $pro_feature[$i]->FORDER;
-                $pf_fvalue_details = isset($pro_feature[$i]->FVALUE_DETAILS) ? $pro_feature[$i]->FVALUE_DETAILS : '';
-                //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
-                $pf_id = getMaximum("products_feature", "pf_id");
-                mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "') ") or die(mysqli_error($GLOBALS['conn']));
+                if ($i > 0) {
+                    $pf_fname = $pro_feature[$i]->FNAME;
+                    $pf_fvalue = $pro_feature[$i]->FVALUE;
+                    $pf_forder = $pro_feature[$i]->FORDER;
+                    $pf_fvalue_details = isset($pro_feature[$i]->FVALUE_DETAILS) ? $pro_feature[$i]->FVALUE_DETAILS : '';
+                    //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
+                    $pf_id = getMaximum("products_feature", "pf_id");
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "') ") or die(mysqli_error($GLOBALS['conn']));
+                }
             }
         }
+
+        if (!empty($referance_feature_group_id)) {
+            if ($pro_uid > 0) {
+                mysqli_query($GLOBALS['conn'], "DELETE FROM `category_map` WHERE cat_id = '" . $referance_feature_group_id . "' AND supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
+            }
+            $art_id = $supplier_id;
+            $catalog_group_id = $referance_feature_group_id;
+            $sub_group_ids = substr($catalog_group_id, 0, 3) . ",";
+            $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
+            //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br><br>");
+
+            mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "')") or die(mysqli_error($GLOBALS['conn']));
+        }
+
         if (!empty($pro_artical_price)) {
             if ($pro_uid > 0) {
                 mysqli_query($GLOBALS['conn'], "DELETE FROM `products_bundle_price` WHERE pro_id = '" . $pro_uid . "' AND supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
@@ -102,20 +123,22 @@ if (isset($_REQUEST['btnImport'])) {
                 mysqli_query($GLOBALS['conn'], "INSERT INTO products_bundle_price (pbp_id, pro_id, supplier_id, pbp_price_amount, pbp_currency, pbp_tax, pbp_lower_bound) VALUES ('" . $pbp_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pbp_price_amount)) . "', '" . dbStr(trim($pbp_currency)) . "', '" . dbStr(trim($pbp_tax)) . "', '" . dbStr(trim($pbp_lower_bound)) . "') ") or die(mysqli_error($GLOBALS['conn']));
             }
         }
+
         if (!empty($pro_gallery)) {
             if ($pro_uid > 0) {
                 mysqli_query($GLOBALS['conn'], "DELETE FROM `products_gallery` WHERE pro_id = '" . $pro_uid . "' AND supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
             }
             for ($i = 0; $i < count($pro_gallery); $i++) {
                 $pg_mime_type = $pro_gallery[$i]->MIME_TYPE;
-                $pg_mime_source = $pro_gallery[$i]->MIME_SOURCE;
+                $pg_mime_source = basename($pro_gallery[$i]->MIME_SOURCE);
+                $pg_mime_source_url = $pro_gallery[$i]->MIME_SOURCE;
                 $pg_mime_description = $pro_gallery[$i]->MIME_DESCR;
                 $pg_mime_alt = $pro_gallery[$i]->MIME_ALT;
                 $pg_mime_purpose = $pro_gallery[$i]->MIME_PURPOSE;
                 $pg_mime_order = $pro_gallery[$i]->MIME_ORDER;
                 //print($i.": pg_mime_type = ".$pg_mime_type." pg_mime_source = ".$pg_mime_source." pg_mime_description = ".$pg_mime_description." pg_mime_alt = ".$pg_mime_alt." pg_mime_order =".$pg_mime_order."<br>");
                 $pg_id = getMaximum("products_gallery", "pg_id");
-                mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_type, pg_mime_source, pg_mime_description, pg_mime_alt, pg_mime_purpose, pg_mime_order) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pg_mime_type)) . "', '" . dbStr(trim($pg_mime_source)) . "', '" . dbStr(trim($pg_mime_description)) . "', '" . dbStr(trim($pg_mime_alt)) . "', '" . dbStr(trim($pg_mime_purpose)) . "', '" . dbStr(trim($pg_mime_order)) . "') ") or die(mysqli_error($GLOBALS['conn']));
+                mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_type, pg_mime_source, pg_mime_source_url, pg_mime_description, pg_mime_alt, pg_mime_purpose, pg_mime_order) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pg_mime_type)) . "', '" . dbStr(trim($pg_mime_source)) . "', '" . dbStr(trim($pg_mime_source_url)) . "', '" . dbStr(trim($pg_mime_description)) . "', '" . dbStr(trim($pg_mime_alt)) . "', '" . dbStr(trim($pg_mime_purpose)) . "', '" . dbStr(trim($pg_mime_order)) . "') ") or die(mysqli_error($GLOBALS['conn']));
             }
         }
 
@@ -197,7 +220,7 @@ include("includes/messages.php");
 </head>
 
 <body>
-    <div class="container">
+    <div class="container_main">
         <!-- Sidebar -->
         <?php include("includes/sidebar.php"); ?>
 
@@ -272,20 +295,19 @@ include("includes/messages.php");
                         </form>
                     </div>
                 <?php } else { ?>
-                    <div class="main_table_container">
+                    <div class="row">
                         <div class="table-controls">
-
-
-                            <div class="search-box">
-                                <label for="">Search</label>
-                                <input type="text" class="input_style" placeholder="Search:">
-                            </div>
-                        </div>
-
-                        <div class="table-controls">
-                            <h1>Artical</h1>
+                            <h1 class="text-white">Artical</h1>
                             <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
 
+                        </div>
+                    </div>
+                    <div class="main_table_container">
+                        <div class="row">
+                            <div class=" col-md-3 col-12 mt-2">
+                                <label for="" class="text-white">Search</label>
+                                <input type="text" class="input_style" placeholder="Search:">
+                            </div>
                         </div>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
@@ -332,15 +354,15 @@ include("includes/messages.php");
                                                         <input type="hidden" name="pq_id" id="pq_id_<?php print($counter); ?>" value="<?php print($row->pq_id); ?>">
                                                         <div class="table-form-group">
                                                             <label for="">Auf Lager</label>
-                                                            <input type="number" name="pq_quantity" id="pq_quantity_<?php print($counter); ?>" value="<?php print($row->pq_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min = "0" >
+                                                            <input type="number" name="pq_quantity" id="pq_quantity_<?php print($counter); ?>" value="<?php print($row->pq_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
                                                         </div>
                                                         <div class="table-form-group">
                                                             <label for="">Online verfügbar</label>
-                                                            <input type="number" name="pq_upcomming_quantity" id="pq_upcomming_quantity_<?php print($counter); ?>" value="<?php print($row->pq_upcomming_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min = "0" >
+                                                            <input type="number" name="pq_upcomming_quantity" id="pq_upcomming_quantity_<?php print($counter); ?>" value="<?php print($row->pq_upcomming_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
                                                         </div>
                                                         <div class="table-form-group">
                                                             <label for="">&nbsp;</label>
-                                                            <input type="button" name="pro_update_quantity" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_quantity" value="Update (<?php print(($row->pq_status == "true") ? 'T' : 'F'); ?>)">
+                                                            <input type="button" name="pro_update_quantity" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light w-auto pro_update_quantity" value="Update (<?php print(($row->pq_status == "true") ? 'T' : 'F'); ?>)">
                                                         </div>
                                                     </div>
                                                 </td>
@@ -357,7 +379,7 @@ include("includes/messages.php");
                                                                 <div class="table-form-group">
                                                                     <input type="hidden" name="pbp_id" id="pbp_id_<?php print($counter); ?>_<?php print($counter1); ?>" value="<?php print($row1->pbp_id); ?>">
                                                                     <label for="">LB <?php print($row1->pbp_lower_bound) ?> </label>
-                                                                    <input type="number" name="pbp_price_amount[]" id="pbp_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min = "0" value="<?php print($row1->pbp_price_amount) ?>">
+                                                                    <input type="number" name="pbp_price_amount[]" id="pbp_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0" value="<?php print($row1->pbp_price_amount) ?>">
                                                                 </div>
                                                         <?php
                                                             }
@@ -373,15 +395,15 @@ include("includes/messages.php");
                                                 <td>
                                                     <?php
                                                     if ($row->pro_status == 0) {
-                                                        echo '<span class="badge badge-danger">Offline</span>';
+                                                        echo '<span class="btn btn-danger w-auto">Offline</span>';
                                                     } else {
-                                                        echo '<span class="badge badge-success">Live</span>';
+                                                        echo '<span class="btn btn-success w-auto">Live</span>';
                                                     }
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light" title="View" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="View" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
                                                 </td>
                                             </tr>
                                     <?php
@@ -396,7 +418,7 @@ include("includes/messages.php");
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
-                                        <td style="text-align: right;">
+                                        <td style="float: right;">
                                             <ul class="pagination" style="margin: 0px;">
                                                 <?php
                                                 $pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
@@ -407,9 +429,14 @@ include("includes/messages.php");
                                     </tr>
                                 </table>
                             <?php } ?>
-
-                            <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light">
-                            <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light">
+                            <div class="row">
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                </div>
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                </div>
+                            </div>
                             <!--<input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">-->
                         </form>
 
@@ -445,10 +472,12 @@ include("includes/messages.php");
                     if (obj.status == 1) {
                         $("#pq_quantity_" + $(this).attr("data-id")).val(obj.data[0].pq_quantity);
                         $("#pq_upcomming_quantity_" + $(this).attr("data-id")).val(obj.data[0].pq_upcomming_quantity);
-                        $("#success").show();
-                        setTimeout(function() {
-                            $("#success").hide();
-                        }, 800);
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Stock updated successfully',
+                            icon: 'success',
+                            position: 'top-right'
+                        });
                     }
                 }
             });
@@ -461,8 +490,8 @@ include("includes/messages.php");
             let pro_update_price_lenght = $("#pro_update_price_lenght_" + $(this).attr("data-id")).val();
             for (let i = 1; i <= pro_update_price_lenght; i++) {
                 //console.log("i: "+i);
-                let pbp_id = $("#pbp_id_" + $(this).attr("data-id")+"_"+i).val();
-                let pbp_price_amount = $("#pbp_price_amount_" + $(this).attr("data-id")+"_"+i).val();
+                let pbp_id = $("#pbp_id_" + $(this).attr("data-id") + "_" + i).val();
+                let pbp_price_amount = $("#pbp_price_amount_" + $(this).attr("data-id") + "_" + i).val();
                 priceData.push({
                     pbp_id: pbp_id,
                     pbp_price_amount: pbp_price_amount
@@ -484,10 +513,12 @@ include("includes/messages.php");
                     const obj = JSON.parse(response);
                     console.log(obj);
                     if (obj.status == 1) {
-                        $("#success").show();
-                        setTimeout(function() {
-                            $("#success").hide();
-                        }, 800);
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Price updated successfully',
+                            icon: 'success',
+                            position: 'top-right'
+                        });
                     }
                 }
             });

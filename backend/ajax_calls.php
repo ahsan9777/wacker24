@@ -3,6 +3,21 @@ include("../lib/openCon.php");
 include("../lib/functions.php");
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
+
+        case 'btn_toggle':
+            $retValue = array();
+            //print_r($_REQUEST);die();
+            $data_update = mysqli_query($GLOBALS['conn'], "UPDATE ".$_REQUEST['table']." SET ".$_REQUEST['set_field']." = '".$_REQUEST['set_field_data']."' WHERE ".$_REQUEST['where_field']." = " . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
+            if($data_update == true){
+                $retValue = array("status" => "1", "message" => "Record Updated successfully");
+            } else{
+                $retValue = array("status" => "0", "message" => "Record not Updated");
+            }
+           
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
         case 'pro_update_quantity':
             $retValue = array();
             //print_r($_REQUEST);die();
