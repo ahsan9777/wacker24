@@ -18,6 +18,7 @@
     <!-- Bootstrap JS -->
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <link href="./assets/style/jquery.toast.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./assets/style/jquery-ui-1.10.3.custom.min.css" />
 
 <script>
     function setAll(){

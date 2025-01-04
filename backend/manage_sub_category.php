@@ -155,12 +155,27 @@ include("includes/messages.php");
                         <h1 class="text-white">Sub Category</h1>
                     </div>
                     <div class="main_table_container">
-                        <div class="row">
-                            <div class=" col-md-3 col-12 mt-2">
-                                <label for="" class="text-white">Search</label>
-                                <input type="text" class="input_style" placeholder="Search:">
+                        <?php
+
+                        $cat_id = 0;
+                        $cat_title = "";
+                        $searchQuery = "";
+
+                        if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
+                            if (!empty($_REQUEST['cat_title'])) {
+                                $cat_id = $_REQUEST['cat_id'];
+                                $cat_title = $_REQUEST['cat_title'];
+                                $searchQuery = " AND sub_cat.cat_id = '" . $_REQUEST['cat_id'] . "'";
+                            }
+                        }
+                        ?>
+                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                            <div class=" col-md-2 col-12 mt-2">
+                                <label for="" class="text-white">Title</label>
+                                <input type="hidden" name="cat_id" id="cat_id" value="<?php print($cat_id); ?>">
+                                <input type="text" class="input_style cat_title" name="cat_title" value="<?php print($cat_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
                             </div>
-                        </div>
+                        </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
                                 <thead>
@@ -175,7 +190,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '0' ORDER BY main_cat.group_id ASC)";
+                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '0' ORDER BY main_cat.group_id ASC) ".$searchQuery." ";
                                     $counter = 0;
                                     $limit = 25;
                                     $start = $p->findStart($limit);
@@ -250,5 +265,32 @@ include("includes/messages.php");
     </div>
     <?php include("includes/bottom_js.php"); ?>
 </body>
+<script>
+    $('input.cat_title').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'ajax_calls.php?action=cat_title&parent_id=1',
+                dataType: "json",
+                data: {
+                    term: request.term
+                },
+                success: function(data) {
+                    response(data);
+
+                }
+            });
+        },
+        minLength: 1,
+        select: function(event, ui) {
+            var cat_id = $("#cat_id");
+            var cat_title = $("#cat_title");
+            $(cat_id).val(ui.item.cat_id);
+            $(cat_title).val(ui.item.value);
+            //frmCat.submit();
+            //return false;
+            //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        }
+    });
+</script>
 
 </html>

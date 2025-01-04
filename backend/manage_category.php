@@ -209,12 +209,27 @@ include("includes/messages.php");
 
                     </div>
                     <div class="main_table_container">
-                        <div class="row">
-                            <div class=" col-md-3 col-12 mt-2">
-                                <label for="" class="text-white">Search</label>
-                                <input type="text" class="input_style" placeholder="Search:">
+                        <?php
+
+                        $cat_id = 0;
+                        $cat_title = "";
+                        $searchQuery = "";
+
+                        if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
+                            if (!empty($_REQUEST['cat_title'])) {
+                                $cat_id = $_REQUEST['cat_id'];
+                                $cat_title = $_REQUEST['cat_title'];
+                                $searchQuery = " AND cat.cat_id = '" . $_REQUEST['cat_id']."'";
+                            }
+                        }
+                        ?>
+                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                            <div class=" col-md-2 col-12 mt-2">
+                                <label for="" class="text-white">Title</label>
+                                <input type="hidden" name="cat_id" id="cat_id" value="<?php print($cat_id); ?>">
+                                <input type="text" class="input_style cat_title" name="cat_title" value="<?php print($cat_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
                             </div>
-                        </div>
+                        </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
                                 <thead>
@@ -231,7 +246,8 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT cat_id, cat_image, cat_title_de AS cat_title, cat_image_show, cat_showhome, cat_showhome_feature, cat_status FROM `category` WHERE parent_id = '0'";
+                                    $Query = "SELECT cat.cat_id, cat.cat_image, cat.cat_title_de AS cat_title, cat.cat_image_show, cat.cat_showhome, cat.cat_showhome_feature, cat.cat_status FROM category AS cat WHERE cat.parent_id = '0' ".$searchQuery." ";
+                                    //print($Query);
                                     $counter = 0;
                                     $limit = 25;
                                     $start = $p->findStart($limit);
@@ -257,7 +273,7 @@ include("includes/messages.php");
                                                 <td>
                                                     <?php
                                                     if ($row->cat_status == 0) {
-                                                        echo '<span class="btn btn-primary btn-style-light w-auto">Offline</span>';
+                                                        echo '<span class="btn btn-danger btn-style-light w-auto">Offline</span>';
                                                     } else {
                                                         echo '<span class="btn btn-success btn-style-light w-auto">Live</span>';
                                                     }
@@ -309,6 +325,31 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
+    $('input.cat_title').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'ajax_calls.php?action=cat_title&parent_id=0',
+                dataType: "json",
+                data: {
+                    term: request.term
+                },
+                success: function(data) {
+                    response(data);
+
+                }
+            });
+        },
+        minLength: 1,
+        select: function(event, ui) {
+            var cat_id = $("#cat_id");
+            var cat_title = $("#cat_title");
+            $(cat_id).val(ui.item.cat_id);
+            $(cat_title).val(ui.item.value);
+            //frmCat.submit();
+            //return false;
+            //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        }
+    });
     $(document).ready(function() {
         // Listen for toggle changes
         $('.cat_image_show').change(function() {
@@ -317,7 +358,7 @@ include("includes/messages.php");
             //console.log("cat_id: "+cat_id)
             if ($(this).prop('checked')) {
                 set_field_data = 1;
-            } 
+            }
             //console.log("set_field_data: "+set_field_data);
             $.ajax({
                 url: 'ajax_calls.php?action=btn_toggle',
@@ -340,7 +381,7 @@ include("includes/messages.php");
                             icon: 'success',
                             position: 'top-right'
                         });
-                    } else if(obj.status == 1 && set_field_data == 0) {
+                    } else if (obj.status == 1 && set_field_data == 0) {
                         $.toast({
                             heading: 'Warning',
                             text: 'Toggle is OFF',
@@ -357,7 +398,7 @@ include("includes/messages.php");
             //console.log("cat_id: "+id)
             if ($(this).prop('checked')) {
                 set_field_data = 1;
-            } 
+            }
             //console.log("set_field_data: "+set_field_data);
             $.ajax({
                 url: 'ajax_calls.php?action=btn_toggle',
@@ -380,7 +421,7 @@ include("includes/messages.php");
                             icon: 'success',
                             position: 'top-right'
                         });
-                    } else if(obj.status == 1 && set_field_data == 0) {
+                    } else if (obj.status == 1 && set_field_data == 0) {
                         $.toast({
                             heading: 'Warning',
                             text: 'Toggle is OFF',
@@ -397,7 +438,7 @@ include("includes/messages.php");
             //console.log("cat_id: "+id)
             if ($(this).prop('checked')) {
                 set_field_data = 1;
-            } 
+            }
             //console.log("set_field_data: "+set_field_data);
             $.ajax({
                 url: 'ajax_calls.php?action=btn_toggle',
@@ -420,7 +461,7 @@ include("includes/messages.php");
                             icon: 'success',
                             position: 'top-right'
                         });
-                    } else if(obj.status == 1 && set_field_data == 0) {
+                    } else if (obj.status == 1 && set_field_data == 0) {
                         $.toast({
                             heading: 'Warning',
                             text: 'Toggle is OFF',
