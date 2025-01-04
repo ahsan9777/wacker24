@@ -60,7 +60,7 @@ if (isset($_POST['btnLogin'])) {
 
     <div class="login-container">
         <div class="">
-            <img src="./assets/images/logo.png" class="logo"></img>
+            <img src="./assets/images/logo.png" class="logo" style="padding: 15px 100px;"></img>
             <div class="login-box">
                 <h2>Admin Login Area</h2>
                 <form id="loginForm" role="form" method="post" action="<?php print($_SERVER['PHP_SELF']);?>">
