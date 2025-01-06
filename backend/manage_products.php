@@ -141,44 +141,34 @@ if (isset($_REQUEST['btnImport'])) {
                 mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_type, pg_mime_source, pg_mime_source_url, pg_mime_description, pg_mime_alt, pg_mime_purpose, pg_mime_order) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pg_mime_type)) . "', '" . dbStr(trim($pg_mime_source)) . "', '" . dbStr(trim($pg_mime_source_url)) . "', '" . dbStr(trim($pg_mime_description)) . "', '" . dbStr(trim($pg_mime_alt)) . "', '" . dbStr(trim($pg_mime_purpose)) . "', '" . dbStr(trim($pg_mime_order)) . "') ") or die(mysqli_error($GLOBALS['conn']));
             }
         }
-
-        //die();
-        //mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_aid) VALUES ('" . $catalog_group_id . "', '" . $art_id . "')") or die(mysqli_error($GLOBALS['conn']));
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
-    $dirName = "../files/category/";
-    $mfileName = $_REQUEST['mfileName'];
-    if (!empty($_FILES["mFile"]["name"])) {
-        @unlink("../files/category/" . $_REQUEST['mfileName']);
-        @unlink("../files/category/th/" . $_REQUEST['mfileName']);
-        $mfileName = $_REQUEST['pro_id'] . "_" . $_FILES["mFile"]["name"];
-        $mfileName = str_replace(" ", "_", strtolower($mfileName));
-        if (move_uploaded_file($_FILES['mFile']['tmp_name'], $dirName . $mfileName)) {
-            createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
-        }
+
+    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "',  pro_description_long='" . dbStr(trim($_REQUEST['pro_description_long'])) . "' WHERE pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    for ($i = 0; $i < count($_REQUEST['pk_id']); $i++) {
+        mysqli_query($GLOBALS['conn'], "UPDATE products_keyword SET pk_title = '" . dbStr(trim($_REQUEST['pk_title'][$i])) . "' WHERE pk_id = '".$_REQUEST['pk_id'][$i]."' AND pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_image='" . $mfileName . "' WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
-        $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM category WHERE pro_id = " . $_REQUEST['pro_id']);
+        $rsM = mysqli_query($GLOBALS['conn'], "SELECT cm.*, cat.cat_title_de AS cat_title, pro.pro_id, pro.pro_description_short, pro.pro_description_long, pg.pg_mime_source_url FROM category_map AS cm LEFT OUTER JOIN category AS cat ON cat.group_id = cm.cat_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE pro.pro_id = '" . $_REQUEST['pro_id'] . "' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "' ");
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
-            $cat_title_en = $rsMem->cat_title_en;
-            $cat_title_de = $rsMem->cat_title_de;
-            $mfileName = $rsMem->cat_image;
-            $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/" . $rsMem->cat_image : "";
-            $cat_keyword = $rsMem->cat_keyword;
-            $cat_description = $rsMem->cat_description;
+            $cat_id = $rsMem->cat_id;
+            $sub_group_ids = explode(",", $rsMem->sub_group_ids);
+            //print_r($sub_group_ids);die();
+
+            $cat_title_one = returnName("cat_title_de AS cat_title", "category", "group_id", $sub_group_ids[0]);
+            $cat_title_two = returnName("cat_title_de AS cat_title", "category", "group_id", $sub_group_ids[1]);
+            $cat_title_three = $rsMem->cat_title;
+            $pro_description_short = $rsMem->pro_description_short;
+            $pro_description_long = $rsMem->pro_description_long;
+            $mfile_path = !empty($rsMem->pg_mime_source_url) ? $rsMem->pg_mime_source_url : "";
+            //$mfile_path = !empty($rsMem->pg_mime_source_url) ? "" : "";
             $formHead = "Update Info";
         }
     } else {
-        $cat_title_en = "";
-        $cat_title_de = "";
-        $mfileName = "";
-        $cat_keyword = "";
-        $cat_description = "";
         $formHead = "Add New";
     }
 }
@@ -238,60 +228,62 @@ include("includes/messages.php");
                 <div class="alert alert-danger" style="display: none;"> Record not Updated<a class="close" data-dismiss="alert">×</a></div>
                 <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
-                        <h2>
-                            <?php print($formHead); ?> Category
+                        <h2 class="text-white">
+                            <?php print($formHead); ?> Product
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-
-                            <?php if ($_REQUEST['action'] == 2) { ?>
-                                <div class="input_div">
-                                    <img src="<?php print($mfile_path); ?>" width="100%" alt="">
+                            <div class="row">
+                                <div class="col-md-12 col-12 mt-3">
+                                    <img src="<?php print($mfile_path); ?>" width="30%" alt="">
                                 </div>
-                                <div class="grid_form">
-                                    <div class="input_div">
-                                        <label for="">Title DE</label>
-                                        <input type="text" class="input_style" name="cat_title_de" id="cat_title_de" value="<?php print($cat_title_de); ?>" placeholder="Title">
-                                    </div>
-                                    <div class="input_div">
-                                        <label for="">Title EN</label>
-                                        <input type="text" class="input_style" name="cat_title_en" id="cat_title_en" value="<?php print($cat_title_en); ?>" placeholder="Title">
-                                    </div>
+                                <div class="col-md-4 col-12 mt-3">
+                                    <label for="">Category ( Group Name One )</label>
+                                    <input type="text" class="input_style" readonly name="cat_title_one" id="cat_title_one" value="<?php print($cat_title_one); ?>" placeholder="Category ( Group Name One )">
                                 </div>
-                                <div class="grid_form">
-                                    <div class="input_div">
-                                        <label for="">Keywords (Seprate Each Keyword With ',' (Car, Bus, Bike))</label>
-                                        <input type="text" class="input_style" name="cat_keyword" id="cat_keyword" value="<?php print($cat_keyword); ?>" placeholder="Keywords (Seprate Each Keyword With ',' (Car, Bus, Bike))">
-                                    </div>
-                                    <div class="input_div">
-                                        <label for="">Meta Description</label>
-                                        <input type="text" class="input_style" name="cat_description" id="cat_description" value="<?php print($cat_description); ?>" placeholder="Meta Description">
-                                    </div>
+                                <div class="col-md-4 col-12 mt-3">
+                                    <label for="">Category ( Group Name Two )</label>
+                                    <input type="text" class="input_style" readonly name="cat_title_two" id="cat_title_two" value="<?php print($cat_title_two); ?>" placeholder="Category ( Group Name Two )">
                                 </div>
-                                <div class="grid_form">
-                                    <div class="input_div">
-                                        <label for="">Image ( <span class="label_span">Banner Size must be 1200px x 300x</span> )</label>
-                                        <div class="">
-                                            <label for="file-upload" class="upload-btn">
-                                                <span class="material-icons">cloud_upload</span>
-                                                <span>Upload Files</span>
-                                            </label>
-                                            <input id="file-upload" type="file" class="file-input" name="mFile">
+                                <div class="col-md-4 col-12 mt-3">
+                                    <label for="">Category ( Group Name Three )</label>
+                                    <input type="text" class="input_style" readonly name="cat_title_three" id="cat_title_three" value="<?php print($cat_title_three); ?>" placeholder="Category ( Group Name Three )">
+                                </div>
+                                <div class="col-md-12 col-12 mt-3">
+                                    <label for="">Short Description</label>
+                                    <input type="text" class="input_style" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Short Description">
+                                </div>
+                                <div class="col-md-12 col-12 mt-3">
+                                    <label for="">Long Description</label>
+                                    <textarea type="text" class="input_style" name="pro_description_long" id="pro_description_long" placeholder="Long Description"> <?php print($pro_description_long); ?> </textarea>
+                                </div>
+                                <?php
+                                $counter = 0;
+                                $Query = "SELECT * FROM `products_keyword` WHERE pro_id = '".$_REQUEST['pro_id']."' AND supplier_id = '".$_REQUEST['supplier_id']."'";
+                                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                                if (mysqli_num_rows($rs) > 0) {
+                                    while ($row = mysqli_fetch_object($rs)) {
+                                        $counter++;
+                                ?>
+                                        <div class="col-md-3 col-12 mt-3">
+                                            <label for="">Keywowd <?php print($counter); ?> </label>
+                                            <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
+                                            <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
+                                        </div>
+                                <?php
+                                    }
+                                }
+                                ?>
+                                <?php if ($_REQUEST['action'] == 2) { ?>
+                                    <div class="padding_top_bottom mt-3">
+                                        <button class="btn btn-primary" type="submit" name="btnUpdate" id="btnImport">Update</button>
+                                    <?php } else { ?>
+                                        <div class="text_align_center padding_top_bottom">
+                                            <button class="btn btn-primary" type="submit" name="btnImport" id="btnImport">Upload</button>
+                                        <?php } ?>
+                                        <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
                                         </div>
                                     </div>
-                                </div>
-                            <?php } ?>
-
-                            <?php if ($_REQUEST['action'] == 2) { ?>
-                                <div class="padding_top_bottom">
-                                    <button class="add-customer" type="submit" name="btnUpdate" id="btnImport">Update</button>
-                                    <input type="hidden" name="mfileName" value="<?php print($mfileName); ?>" />
-                                <?php } else { ?>
-                                    <div class="text_align_center padding_top_bottom">
-                                        <button class="add-customer" type="submit" name="btnImport" id="btnImport">Upload</button>
-                                    <?php } ?>
-                                    <button type="button" name="btnBack" class="add-customer btn-cancel" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
-                                    </div>
-
+                            </div>
                         </form>
                     </div>
                 <?php } else { ?>
@@ -303,12 +295,26 @@ include("includes/messages.php");
                         </div>
                     </div>
                     <div class="main_table_container">
-                        <div class="row">
-                            <div class=" col-md-3 col-12 mt-2">
-                                <label for="" class="text-white">Search</label>
-                                <input type="text" class="input_style" placeholder="Search:">
+                        <?php
+                        $pro_id = 0;
+                        $pro_description_short = "";
+                        $searchQuery = "WHERE 1 = 1";
+
+                        if (isset($_REQUEST['pro_id']) && $_REQUEST['pro_id'] > 0) {
+                            if (!empty($_REQUEST['pro_description_short'])) {
+                                $pro_id = $_REQUEST['pro_id'];
+                                $pro_description_short = $_REQUEST['pro_description_short'];
+                                $searchQuery .= " AND pro.pro_id = '" . $_REQUEST['pro_id'] . "'";
+                            }
+                        }
+                        ?>
+                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                            <div class=" col-md-4 col-12 mt-2">
+                                <label for="" class="text-white">Title</label>
+                                <input type="hidden" name="pro_id" id="pro_id" value="<?php print($pro_id); ?>">
+                                <input type="text" class="input_style pro_description_short" name="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
                             </div>
-                        </div>
+                        </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
                                 <thead>
@@ -326,7 +332,8 @@ include("includes/messages.php");
                                 <tbody>
                                     <?php
                                     //$Query = "SELECT pro.*, pg.pg_mime_source FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE 1";
-                                    $Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id ORDER BY pro.pro_id ASC";
+                                    $Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
+                                    //print($Query);
                                     $counter = 0;
                                     $limit = 50;
                                     $start = $p->findStart($limit);
@@ -402,8 +409,8 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="View" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL']. "product_detail.php?supplier_id=" . $row->supplier_id); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                 </td>
                                             </tr>
                                     <?php
@@ -447,6 +454,31 @@ include("includes/messages.php");
     </div>
     <?php include("includes/bottom_js.php"); ?>
     <script>
+        $('input.pro_description_short').autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: 'ajax_calls.php?action=pro_description_short',
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+
+                    }
+                });
+            },
+            minLength: 1,
+            select: function(event, ui) {
+                var pro_id = $("#pro_id");
+                var pro_description_short = $("#pro_description_short");
+                $(pro_id).val(ui.item.pro_id);
+                $(pro_description_short).val(ui.item.value);
+                //frmCat.submit();
+                //return false;
+                //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+            }
+        });
         $(".pro_update_quantity").on("click", function() {
             //console.log("btnUpdateQuantity");
             let pro_id = $("#pro_id_" + $(this).attr("data-id")).val();

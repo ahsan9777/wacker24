@@ -39,6 +39,24 @@ if (isset($_REQUEST['action'])) {
             print($jsonResults);
             break;
 
+        case 'pro_description_short':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                    $where .= " WHERE pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+                }
+            $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                'pro_id' => strip_tags(html_entity_decode($row->pro_id , ENT_QUOTES, 'UTF-8')),
+                'value' => strip_tags(html_entity_decode($row->pro_description_short, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
+            print($jsonResults);
+            break;
+        
         case 'pro_update_quantity':
             $retValue = array();
             //print_r($_REQUEST);die();
