@@ -104,7 +104,7 @@ if (isset($_REQUEST['btnImport'])) {
             $catalog_group_id = $referance_feature_group_id;
             $sub_group_ids = substr($catalog_group_id, 0, 3) . ",";
             $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
-            //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br><br>");
+            //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
 
             mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "')") or die(mysqli_error($GLOBALS['conn']));
         }
@@ -143,11 +143,51 @@ if (isset($_REQUEST['btnImport'])) {
         }
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+} elseif (isset($_REQUEST['btnImportQuantity'])) {
+    $file = $_FILES['doc_ImportQuantity']['tmp_name'];
+    $ext = pathinfo($_FILES['doc_ImportQuantity']['name'], PATHINFO_EXTENSION);
+    if (in_array($ext, array("csv")) && !empty($file)) {
+        $csvFilePath = $file;
+        $file = fopen($csvFilePath, "r");
+        $i = 0;
+        while (($row = fgetcsv($file)) !== FALSE) {
+            if ($i > 0) {
+                $row_data = explode(";", $row[0]);
+                //print_r($row_data);die();
+                $pq_id = getMaximum("products_quantity", "pq_id");
+                $supplier_id = dbStr(trim($row_data[0]));
+                $pq_quantity = dbStr(trim($row_data[1]));
+                $pq_upcomming_quantity = dbStr(trim($row_data[2]));
+                $pq_status = dbStr(trim($row_data[3]));
+                
+                $Query = "SELECT * FROM products_quantity WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' ";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    $row = mysqli_fetch_object($rs);
+                    $pq_id = $row->pq_id;
+                    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . $pq_quantity . "', pq_upcomming_quantity = '" . $pq_upcomming_quantity . "', pq_status = '".$pq_status."' WHERE pq_id = '".$pq_id."'") or die(mysqli_error($GLOBALS['conn']));
+                } else {
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_quantity (pq_id, supplier_id, pq_quantity, pq_upcomming_quantity, pq_status) VALUES ('" . $pq_id . "', '" . $supplier_id . "', '" . $pq_quantity . "', '" . $pq_upcomming_quantity . "', '" . $pq_status . "')") or die(mysqli_error($GLOBALS['conn']));
+                }   
+            }
+            $i++;
+        }
+        header("Location: " . $_SERVER['PHP_SELF'] . "?file&" . $qryStrURL . "op=1");
+        //print("<br>Completed");
+        //die();
+    } elseif (empty($file)) {
+        $class = "alert alert-info";
+        $strMSG = "Please Select the file";
+    } else {
+        $class = "alert alert-danger";
+        $strMSG = "Plz select the correct file ";
+    }
+    //header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
     mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "',  pro_description_long='" . dbStr(trim($_REQUEST['pro_description_long'])) . "' WHERE pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     for ($i = 0; $i < count($_REQUEST['pk_id']); $i++) {
-        mysqli_query($GLOBALS['conn'], "UPDATE products_keyword SET pk_title = '" . dbStr(trim($_REQUEST['pk_title'][$i])) . "' WHERE pk_id = '".$_REQUEST['pk_id'][$i]."' AND pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE products_keyword SET pk_title = '" . dbStr(trim($_REQUEST['pk_title'][$i])) . "' WHERE pk_id = '" . $_REQUEST['pk_id'][$i] . "' AND pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
@@ -168,6 +208,8 @@ if (isset($_REQUEST['btnImport'])) {
             //$mfile_path = !empty($rsMem->pg_mime_source_url) ? "" : "";
             $formHead = "Update Info";
         }
+    } elseif ($_REQUEST['action'] == 3) {
+        $formHead = "Add Quantity of ";
     } else {
         $formHead = "Add New";
     }
@@ -232,65 +274,80 @@ include("includes/messages.php");
                             <?php print($formHead); ?> Product
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-12 col-12 mt-3">
-                                    <img src="<?php print($mfile_path); ?>" width="30%" alt="">
-                                </div>
-                                <div class="col-md-4 col-12 mt-3">
-                                    <label for="">Category ( Group Name One )</label>
-                                    <input type="text" class="input_style" readonly name="cat_title_one" id="cat_title_one" value="<?php print($cat_title_one); ?>" placeholder="Category ( Group Name One )">
-                                </div>
-                                <div class="col-md-4 col-12 mt-3">
-                                    <label for="">Category ( Group Name Two )</label>
-                                    <input type="text" class="input_style" readonly name="cat_title_two" id="cat_title_two" value="<?php print($cat_title_two); ?>" placeholder="Category ( Group Name Two )">
-                                </div>
-                                <div class="col-md-4 col-12 mt-3">
-                                    <label for="">Category ( Group Name Three )</label>
-                                    <input type="text" class="input_style" readonly name="cat_title_three" id="cat_title_three" value="<?php print($cat_title_three); ?>" placeholder="Category ( Group Name Three )">
-                                </div>
-                                <div class="col-md-12 col-12 mt-3">
-                                    <label for="">Short Description</label>
-                                    <input type="text" class="input_style" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Short Description">
-                                </div>
-                                <div class="col-md-12 col-12 mt-3">
-                                    <label for="">Long Description</label>
-                                    <textarea type="text" class="input_style" name="pro_description_long" id="pro_description_long" placeholder="Long Description"> <?php print($pro_description_long); ?> </textarea>
-                                </div>
-                                <?php
-                                $counter = 0;
-                                $Query = "SELECT * FROM `products_keyword` WHERE pro_id = '".$_REQUEST['pro_id']."' AND supplier_id = '".$_REQUEST['supplier_id']."'";
-                                $rs = mysqli_query($GLOBALS['conn'], $Query);
-                                if (mysqli_num_rows($rs) > 0) {
-                                    while ($row = mysqli_fetch_object($rs)) {
-                                        $counter++;
-                                ?>
+                            <?php if ($_REQUEST['action'] == 2) { ?>
+                                <div class="row">
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <img class="rounded" src="<?php print($mfile_path); ?>" width="30%" alt="">
+                                    </div>
+                                    <div class="col-md-4 col-12 mt-3">
+                                        <label for="">Category ( Group Name One )</label>
+                                        <input type="text" class="input_style" readonly name="cat_title_one" id="cat_title_one" value="<?php print($cat_title_one); ?>" placeholder="Category ( Group Name One )">
+                                    </div>
+                                    <div class="col-md-4 col-12 mt-3">
+                                        <label for="">Category ( Group Name Two )</label>
+                                        <input type="text" class="input_style" readonly name="cat_title_two" id="cat_title_two" value="<?php print($cat_title_two); ?>" placeholder="Category ( Group Name Two )">
+                                    </div>
+                                    <div class="col-md-4 col-12 mt-3">
+                                        <label for="">Category ( Group Name Three )</label>
+                                        <input type="text" class="input_style" readonly name="cat_title_three" id="cat_title_three" value="<?php print($cat_title_three); ?>" placeholder="Category ( Group Name Three )">
+                                    </div>
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <label for="">Short Description</label>
+                                        <input type="text" class="input_style" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Short Description">
+                                    </div>
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <label for="">Long Description</label>
+                                        <textarea type="text" class="input_style" name="pro_description_long" id="pro_description_long" placeholder="Long Description"> <?php print($pro_description_long); ?> </textarea>
+                                    </div>
+                                    <?php
+                                    $counter = 0;
+                                    $Query = "SELECT * FROM `products_keyword` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+                                    $rs = mysqli_query($GLOBALS['conn'], $Query);
+                                    if (mysqli_num_rows($rs) > 0) {
+                                        while ($row = mysqli_fetch_object($rs)) {
+                                            $counter++;
+                                    ?>
                                         <div class="col-md-3 col-12 mt-3">
                                             <label for="">Keywowd <?php print($counter); ?> </label>
                                             <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
                                             <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
                                         </div>
                                 <?php
+                                        }
                                     }
-                                }
-                                ?>
+                                } elseif ($_REQUEST['action'] == 3) { ?>
+                                <div class="col-md-12 col-12 mt-3">
+                                        <label for="">File</label>
+                                        <div class="">
+                                            <label for="file-upload" class="upload-btn">
+                                                <span class="material-icons">cloud_upload</span>
+                                                <span>Upload Files</span>
+                                            </label>
+                                            <input id="file-upload" type="file" class="file-input" name="doc_ImportQuantity">
+                                        </div>
+                                    </div>
+                                <?php }?>
                                 <?php if ($_REQUEST['action'] == 2) { ?>
                                     <div class="padding_top_bottom mt-3">
                                         <button class="btn btn-primary" type="submit" name="btnUpdate" id="btnImport">Update</button>
                                     <?php } else { ?>
-                                        <div class="text_align_center padding_top_bottom">
-                                            <button class="btn btn-primary" type="submit" name="btnImport" id="btnImport">Upload</button>
+                                        <div class=" <?php print( ($_REQUEST['action'] == 1)? 'text_align_center' : ''); ?> mt-3">
+                                            <button class="btn btn-primary" type="submit" name=" <?php print( ($_REQUEST['action'] == 1)? 'btnImport' : 'btnImportQuantity'); ?>" id="btnImport">Upload</button>
                                         <?php } ?>
                                         <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
                                         </div>
                                     </div>
-                            </div>
+                                </div>
                         </form>
                     </div>
                 <?php } else { ?>
                     <div class="row">
                         <div class="table-controls">
                             <h1 class="text-white">Artical</h1>
-                            <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
+                            <div class="d-flex gap-1">
+                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
+                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
+                            </div>
 
                         </div>
                     </div>
@@ -409,7 +466,7 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL']. "product_detail.php?supplier_id=" . $row->supplier_id); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'] . "product_detail.php?supplier_id=" . $row->supplier_id); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                 </td>
                                             </tr>

@@ -3,8 +3,8 @@
 //ini_set('session.gc_maxlifetime', $sessTime);
 //ini_set('session.gc_probability', 1);
 //ini_set('session.gc_divisor', 1);
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
 if($_SERVER['HTTP_HOST']=='localhost:82'){
 	$dbServer   = "localhost";
 	$dbDatabase = "gac_2024_wacker24";

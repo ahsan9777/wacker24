@@ -13,8 +13,8 @@ if(!isset($_SESSION['UserID'])) {
 
 }
 
+$formHead = ""; 
 $class = ""; 
 $strMSG = ""; 
 $qryStrURL = ""; 
-ob_end_flush();
 ?>
