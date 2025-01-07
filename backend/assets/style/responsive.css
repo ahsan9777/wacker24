@@ -46,3 +46,9 @@
         font-size: 14px;
     }
 }
+
+@media screen and (max-width: 1024px) and (min-width: 240px) {
+    .col-md-2-half {
+        max-width: 100%;
+    }
+}

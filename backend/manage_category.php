@@ -97,32 +97,6 @@ if (isset($_REQUEST['btnInactive'])) {
     }
 }
 
-//--------------Button Set and Unset --------------------
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == "cat_image_show") {
-    if (isset($_REQUEST['btnSets'])) {
-        mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_image_show='1' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
-        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-    } elseif (isset($_REQUEST['btnUnsets'])) {
-        mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_image_show='0' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
-        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-    }
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == "cat_showhome") {
-    if (isset($_REQUEST['btnSets'])) {
-        mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_showhome='1' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
-        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-    } elseif (isset($_REQUEST['btnUnsets'])) {
-        mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_showhome='0' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
-        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-    }
-} elseif (isset($_REQUEST['action']) && $_REQUEST['action'] == "cat_showhome_feature") {
-    if (isset($_REQUEST['btnSets'])) {
-        mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_showhome_feature='1' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
-        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-    } elseif (isset($_REQUEST['btnUnsets'])) {
-        mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_showhome_feature='0' WHERE cat_id =" . $_REQUEST['id']) or die(mysqli_error($GLOBALS['conn']));
-        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-    }
-}
 include("includes/messages.php");
 
 ?>

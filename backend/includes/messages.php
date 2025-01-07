@@ -14,8 +14,8 @@ if(isset($_REQUEST['op'])){
             $class = " alert alert-danger ";
              break;
 		case 4:
-			$class = "notification success";
-			$strMSG = "Please Select Checkbox to Add or Subtract Credits";
+			$class = "alert alert-info";
+			$strMSG = "The user already exists against the following username and type";
 			break;
 		case 5:
 			$class = "alert alert-success";
@@ -38,10 +38,6 @@ if(isset($_REQUEST['op'])){
 			$strMSG = "Your request for a change in password has been successfully completed. Please log in to access your account with new password.";
 			break;
 		case 10:
-			$class = "alert alert-danger";
-			$strMSG = "The record already exists against the following username";
-			break;
-		case 11:
 			$class = "alert alert-info";
 			$strMSG = "Please check the image format otherwise online convert the image extension with a jpeg";
 			break;

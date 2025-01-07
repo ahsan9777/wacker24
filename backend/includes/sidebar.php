@@ -16,9 +16,7 @@ $cu = 'active';
         <ul class="accordion-menu">
 
             <li>
-                <a href="index.php"><span class="material-icons icon">dashboard</span>
-                    <span class="text">Dashboard</span>
-                </a>
+                <a href="index.php"><span class="material-icons icon">dashboard</span><span class="text">Dashboard</span></a>
             </li>
 
             <li class="menu-item">
@@ -36,7 +34,9 @@ $cu = 'active';
             </li>
             
 
-            <li><a href="usersManagmentSystem"><span class="material-icons icon">face</span> <span class="text">Kunden</span> </a></li>
+            <li>
+                <a href="manage_users.php"><span class="material-icons icon">face</span> <span class="text">Kunden</span> </a>
+            </li>
 
     </nav>
 </aside>
