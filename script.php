@@ -3,6 +3,7 @@ include("includes/php_includes_top.php");
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
         case 'brand':
+            die();
             $Query = "SELECT * FROM wacker_brand ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
@@ -19,7 +20,7 @@ if (isset($_REQUEST['action'])) {
                         echo "File renamed successfully.";
                     } else {
                         echo "File renaming failed.";
-                    }*/die();
+                    }*/
                     $brand_id = getMaximum("brands", "brand_id");
                     mysqli_query($GLOBALS['conn'], "INSERT INTO brands (brand_id, cat_id, brand_name, brand_image) VALUES ('".$brand_id."', '".$brand_category."', '".$brand_name."', '".$brand_logo."')") or die(mysqli_error($GLOBALS['conn']));
                     print("extension: ".$extension." brand_name: ".$brand_name ." brand_logo: ".$brand_logo."<br>");

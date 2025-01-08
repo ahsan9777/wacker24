@@ -1147,6 +1147,22 @@ function FillMultiple($Table, $IDField, $TextField, $SelTbl, $Field1, $Field2, $
 		}
 	}
 }
+
+function FillMultiple2($Table, $IDField, $TextField, $WHERE, $per_type)
+{
+	$arr = explode(",", $per_type);
+	$Query = "SELECT $IDField,$TextField from $Table WHERE $WHERE";
+	$nResult = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($nResult) > 0) {
+		while ($row = mysqli_fetch_row($nResult)) {
+			if (in_array($row[0], $arr)) {
+				print("<option value=\"$row[0]\" selected>$row[1]</option>");
+			} else {
+				print("<option value=\"$row[0]\">$row[1]</option>");
+			}
+		}
+	}
+}
 function FillSelected_Parent($Table, $IDField, $TextField, $ID, $parentField){   
 	$strQuery="SELECT $IDField, $TextField FROM $Table WHERE $parentField = 0";
 	$nResult =mysqli_query($GLOBALS['conn'], $strQuery);

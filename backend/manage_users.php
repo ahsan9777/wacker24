@@ -248,7 +248,7 @@ include("includes/messages.php");
                                         <th>Created</th>
                                         <th class="text-end">Payment Methods</th>
                                         <th width="50">Status</th>
-                                        <th width="50">Action</th>
+                                        <th width="150">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -304,6 +304,7 @@ include("includes/messages.php");
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Special Price" onClick="javascript: window.location = '<?php print("manage_special_price.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">payments</span></button>
                                                 </td>
                                             </tr>
                                     <?php

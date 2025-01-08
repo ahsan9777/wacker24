@@ -15,7 +15,7 @@ if(isset($_REQUEST['op'])){
              break;
 		case 4:
 			$class = "alert alert-info";
-			$strMSG = "The user already exists against the following username and type";
+			$strMSG = "Dear Admin, This record already exists in database";
 			break;
 		case 5:
 			$class = "alert alert-success";

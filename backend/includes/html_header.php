@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="./assets/style/styles.css">
     <link rel="stylesheet" href="./assets/style/scrollbar.css">
     <link rel="stylesheet" href="./assets/style/responsive.css">
+	<!-- SELECT2 -->
+    <link rel="stylesheet" type="text/css" href="./assets/js/select2/select2.min.css" />
     <!-- <link rel="stylesheet" href="./assets/style/toggle.css"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -20,6 +22,7 @@
     <script src="./assets/js/bootstrap.bundle.min.js"></script>
     <link href="./assets/style/jquery.toast.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="./assets/style/jquery-ui-1.10.3.custom.min.css" />
+	
 
 <script>
     function setAll(){

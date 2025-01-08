@@ -113,5 +113,38 @@ if (isset($_REQUEST['action'])) {
             print($jsonResults);
             break;
 
+        case 'level_one':
+            //print_r($_REQUEST);die();
+            $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title FROM category AS cat WHERE cat.parent_id = '" . dbStr(trim($_REQUEST['level_one_id'])) . "' ORDER BY cat.cat_id ASC";
+            //print($Query);die();
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                echo "<option value='0'>N/A</option>";
+                while ($row = mysqli_fetch_object($rs)) {
+                    if($row->group_id == $_REQUEST['level_two_id']){
+                        echo "<option selected value=".$row->group_id."  > ".$row->cat_title." </option>";
+                    } else{
+                        echo "<option value=".$row->group_id."  > ".$row->cat_title." </option>";
+                    }
+                }
+            } else {
+                echo "<option value=''>No record found!</option>";
+            }
+            break;
+
+        case 'level_two':
+            //print_r($_REQUEST);die();
+            $Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id WHERE FIND_IN_SET('" . dbStr(trim($_REQUEST['level_two_id'])) . "', cm.sub_group_ids) ORDER BY pro.pro_id ASC";
+            //print($Query);die();
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    echo "<option value='$row->supplier_id'>$row->pro_description_short</option>";
+                }
+            } else {
+                echo "<option value=''>No record found!</option>";
+            }
+            break;
+
         }
 }
