@@ -25,6 +25,7 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($json);
             print($jsonResults);
             break;
+
         case 'btn_toggle':
             $retValue = array();
             //print_r($_REQUEST);die();
@@ -56,7 +57,7 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($json);
             print($jsonResults);
             break;
-        
+
         case 'pro_update_quantity':
             $retValue = array();
             //print_r($_REQUEST);die();
@@ -74,6 +75,7 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;
+
         case 'pro_update_price':
             //print_r($_REQUEST);
             $retValue = array();
@@ -90,6 +92,24 @@ if (isset($_REQUEST['action'])) {
             }
            
             $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'brand_name':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                    $where .= " WHERE brand_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+                }
+            $Query = "SELECT brand_id, brand_name FROM brand " . $where . " ORDER BY brand_id  LIMIT 0,20";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                'brand_id' => strip_tags(html_entity_decode($row->brand_id , ENT_QUOTES, 'UTF-8')),
+                'value' => strip_tags(html_entity_decode($row->brand_name, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
             print($jsonResults);
             break;
 

@@ -37,6 +37,9 @@ $cu = 'active';
             <li>
                 <a href="manage_users.php"><span class="material-icons icon">face</span> <span class="text">Kunden</span> </a>
             </li>
+            <li>
+                <a href="manage_brands.php"><span class="material-icons icon">star</span> <span class="text">Marken</span> </a>
+            </li>
 
     </nav>
 </aside>
