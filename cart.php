@@ -63,7 +63,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 			unset($_SESSION['sess_id']);
 			unset($_SESSION['ci_id']);
 			unset($_SESSION['header_quantity']);
-			if ($pm_id == 3) {
+			if ($pm_id == 1) {
 				header('Location: my_order.php?op=2');
 			}
 		}
@@ -402,7 +402,7 @@ include("includes/message.php");
 										<ul>
 											<li>
 												<label class="cart_pyment_radio" id="card_click_show">
-													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="2">
+													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="3">
 													<span class="checkmark">
 														<div class="payment_card">
 															<div class="payment_card_image"><img src="images/teba.jpg" alt=""></div>
@@ -413,7 +413,7 @@ include("includes/message.php");
 											</li>
 											<li>
 												<label class="cart_pyment_radio" id="card_click_hide">
-													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="2">
+													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="4">
 													<span class="checkmark">
 														<div class="payment_card">
 															<div class="payment_card_image"><img src="images/mastercard.jpg" alt=""></div>
@@ -424,7 +424,7 @@ include("includes/message.php");
 											</li>
 											<li>
 												<label class="cart_pyment_radio">
-													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="1">
+													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="2">
 													<span class="checkmark">
 														<div class="payment_card">
 															<div class="payment_card_image"><img src="images/payPal.jpg" alt=""></div>
@@ -446,7 +446,7 @@ include("includes/message.php");
 											</li>
 											<li>
 												<label class="cart_pyment_radio">
-													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="3" checked>
+													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="1" checked>
 													<span class="checkmark">
 														<div class="payment_card">
 															<div class="payment_card_image"><img src="images/invoice_payment_icon.png" alt=""></div>

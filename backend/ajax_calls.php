@@ -146,5 +146,19 @@ if (isset($_REQUEST['action'])) {
             }
             break;
 
+        case 'get_product_list':
+            //print_r($_REQUEST);die();
+            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short FROM products AS pro WHERE pro.pro_status > 0 ORDER BY pro.pro_id ASC";
+            //print($Query);die();
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    echo "<option value='$row->supplier_id'>$row->pro_description_short</option>";
+                }
+            } else {
+                echo "<option value=''>No record found!</option>";
+            }
+            break;
+
         }
 }

@@ -2,18 +2,31 @@
 include("../lib/session_head.php");
 
 if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
-    $qryStrURL .= "user_id=".$_REQUEST['user_id']."&";
+    $qryStrURL .= "user_id=" . $_REQUEST['user_id'] . "&";
 }
-if (isset($_REQUEST['btnAdd'])) {
+if (isset($_REQUEST['btnAdd_shoppinglist'])) {
+    //print_r($_REQUEST);die();
+    $Query = "SELECT * FROM shopping_list WHERE user_id = '" . dbStr(trim($_REQUEST['user_id'])) . "' AND sl_title LIKE '%" . dbStr(trim($_REQUEST['sl_title'])) . "%'";
+    $rs = mysqli_query($GLOBALS['conn'], $Query);
+    if (mysqli_num_rows($rs) > 0) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=4");
+    } else {
+
+        $sl_id = getMaximum("shopping_list", "sl_id");
+        mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES ('" . $sl_id . "', '" . dbStr(trim($_REQUEST['user_id'])) . "', '" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
+        header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=1");
+    }
+
+} elseif (isset($_REQUEST['btnAdd'])) {
     $supplier_id = "";
-    if(isset($_REQUEST['supplier_id'])){
-        for($i = 0; $i < count($_REQUEST['supplier_id']); $i++){
-            $supplier_id .= $_REQUEST['supplier_id'][$i].",";
+    if (isset($_REQUEST['supplier_id'])) {
+        for ($i = 0; $i < count($_REQUEST['supplier_id']); $i++) {
+            $supplier_id .= $_REQUEST['supplier_id'][$i] . ",";
         }
         $supplier_id = rtrim($supplier_id, ",");
     }
     //print_r($_REQUEST);die();
-    $Query = "SELECT * FROM user_special_price WHERE user_id = '".dbStr(trim($_REQUEST['user_id']))."' AND level_one_id ='" . dbStr(trim($_REQUEST['level_one_id'])) . "' AND level_two_id ='" . dbStr(trim($_REQUEST['level_two_id'])) . "' AND supplier_id ='" . dbStr(trim($supplier_id)) . "'";
+    $Query = "SELECT * FROM user_special_price WHERE user_id = '" . dbStr(trim($_REQUEST['user_id'])) . "' AND level_one_id ='" . dbStr(trim($_REQUEST['level_one_id'])) . "' AND level_two_id ='" . dbStr(trim($_REQUEST['level_two_id'])) . "' AND supplier_id ='" . dbStr(trim($supplier_id)) . "'";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
 
@@ -21,12 +34,12 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
 
         $usp_id = getMaximum("user_special_price", "usp_id");
-        mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, user_id, level_one_id, level_two_id, supplier_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '".dbStr(trim($_REQUEST['user_id']))."', '" . dbStr(trim($_REQUEST['level_one_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'])) . "', '" . dbStr(trim($supplier_id)) . "', '".dbStr(trim($_REQUEST['usp_price_type']))."', '".dbStr(trim($_REQUEST['usp_discounted_value']))."', '".$_SESSION["UserID"]."', '".date_time."')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, user_id, level_one_id, level_two_id, supplier_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '" . dbStr(trim($_REQUEST['user_id'])) . "', '" . dbStr(trim($_REQUEST['level_one_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'])) . "', '" . dbStr(trim($supplier_id)) . "', '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
-    mysqli_query($GLOBALS['conn'], "UPDATE user_special_price SET usp_price_type = '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', usp_discounted_value = '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', usp_updatedby = '" . $_SESSION["UserID"] . "', usp_udate = '".date_time."' WHERE usp_id=" . $_REQUEST['usp_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE user_special_price SET usp_price_type = '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', usp_discounted_value = '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', usp_updatedby = '" . $_SESSION["UserID"] . "', usp_udate = '" . date_time . "' WHERE usp_id=" . $_REQUEST['usp_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -112,6 +125,32 @@ include("includes/messages.php");
             <!-- Top bar -->
             <?php include("includes/topbar.php"); ?>
 
+            <!-- Button trigger modal -->
+            <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Launch demo modal
+            </button>-->
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form class="modal-content" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 text-black" id="exampleModalLabel">Add Shopping List</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-md-12 col-12 mt-3">
+                                <label for="" class="text-black">Title</label>
+                                <input type="text" class="form-control" name="sl_title" id="sl_title" value="" required placeholder="Title">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name="btnAdd_shoppinglist" class="btn btn-primary">Add</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <!-- Content -->
             <section class="content" id="main-content">
                 <?php if ($class != "") { ?>
@@ -124,49 +163,30 @@ include("includes/messages.php");
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
-                            <?php if ($_REQUEST['action'] == 1) { ?>
-                                <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Category</label>
-                                    <select class="input_style" name="level_one_id" id="level_one_id">
-                                        <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title ", $level_one_id, "cat_status > 0 AND parent_id = '0'"); ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Sub Category</label>
-                                    <select class="input_style" name="level_two_id" id="level_two_id">
-                                        <?php
-                                        if ($_REQUEST['action'] == 2) {
-                                            FillSelected2("category", "group_id", "cat_title_de AS cat_title ", $level_two_id, "cat_status > 0 AND parent_id > 0");
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-12 col-12 mt-3">
-                                    <label for="">Title</label>
-                                    <select name="supplier_id[]" id="supplier_id" multiple class="input_style multiple_select">
-                                        <?php
-                                        //FillSelected2("products", "pro_id", "pro_description_short", "", "pro_status > 0 AND pro_id IN (1,2,3,4)"); 
-                                        if ($_REQUEST['action'] == 2) {
-                                            FillMultiple2("products", "supplier_id", "pro_description_short", "1=1", "$supplier_id");
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                                <?php } ?>
-                                <div class="col-md-12 col-12 mt-3">
-                                    <div class="d-flex gap-2 mt-3">
-                                        <div class="d-flex gap-2">
-                                            <label for="">Percentage: </label>
-                                            <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print( ($usp_price_type == 0)? 'checked' : '' ); ?> >
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <label for="">Fix: </label>
-                                            <input type="radio" name="usp_price_type" id="usp_price_type" value="1" <?php print( ($usp_price_type == 1)? 'checked' : '' ); ?>>
-                                        </div>
+                                <?php if ($_REQUEST['action'] == 1) { ?>
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for="">Shoping List</label>
+                                        <select class="input_style" name="sl_id" id="sl_id">
+                                            <?php FillSelected2("shopping_list", "sl_id", "sl_title", $level_one_id, "sl_id > 0"); ?>
+                                        </select>
                                     </div>
-                                    <label for="">Value</label>
-                                    <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
-                                </div>
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for=""> &nbsp;</label>
+                                        <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new" style="width: 41%;" data-bs-toggle="modal" data-bs-target="#exampleModal"><span class="material-icons icon">add</span> <span class="text">Add New Shopping LIst</span></a>
+                                    </div>
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <label for="">Product</label>
+                                        <select name="supplier_id[]" id="supplier_id" multiple class="input_style multiple_select">
+                                            <?php
+                                            if ($_REQUEST['action'] == 2) {
+                                                FillMultiple2("products", "supplier_id", "pro_description_short", "1=1", "$supplier_id");
+                                            } else {
+                                                //FillSelected2("products", "pro_id", "pro_description_short", "", "pro_status > 0");
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                <?php } ?>
 
                                 <div class="col-md-12 col-12 mt-3">
                                     <button class="btn btn-primary" type="submit" name="<?php print(($_REQUEST['action'] == 1) ? 'btnAdd' : 'btnUpdate'); ?>">Upload</button>
@@ -183,7 +203,7 @@ include("includes/messages.php");
                         </div>
                     </div>
                     <div class="main_table_container">
-                    
+
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
                                 <thead>
@@ -200,7 +220,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, (SELECT GROUP_CONCAT(pro.pro_description_short) FROM products AS pro WHERE FIND_IN_SET(pro.supplier_id, usp.supplier_id)) AS pro_title, ( SELECT GROUP_CONCAT(pbp.pbp_price_amount) FROM products_bundle_price AS pbp WHERE FIND_IN_SET(pbp.supplier_id, usp.supplier_id) AND pbp.pbp_lower_bound = '1') AS pro_actual_price FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id WHERE usp.user_id = '".$_REQUEST['user_id']."' ORDER BY usp.usp_id ASC ";
+                                    $Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, (SELECT GROUP_CONCAT(pro.pro_description_short) FROM products AS pro WHERE FIND_IN_SET(pro.supplier_id, usp.supplier_id)) AS pro_title, ( SELECT GROUP_CONCAT(pbp.pbp_price_amount) FROM products_bundle_price AS pbp WHERE FIND_IN_SET(pbp.supplier_id, usp.supplier_id) AND pbp.pbp_lower_bound = '1') AS pro_actual_price FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id WHERE usp.user_id = '" . $_REQUEST['user_id'] . "' ORDER BY usp.usp_id ASC ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -213,40 +233,40 @@ include("includes/messages.php");
                                             $counter++;
                                             $strClass = 'label  label-danger';
                                             $title = "";
-                                            if(!empty($row->cat_title)){
-                                                $title .= "<strong class = 'text-white'>Category : </strong> ".$row->cat_title."<br>";
+                                            if (!empty($row->cat_title)) {
+                                                $title .= "<strong class = 'text-white'>Category : </strong> " . $row->cat_title . "<br>";
                                             }
-                                            if(!empty($row->sub_cat_title)){
-                                                $title .= "<strong class = 'text-white'>Sub Category : </strong> ".$row->sub_cat_title."<br>";
+                                            if (!empty($row->sub_cat_title)) {
+                                                $title .= "<strong class = 'text-white'>Sub Category : </strong> " . $row->sub_cat_title . "<br>";
                                             }
-                                            if(!empty($row->pro_title)){
+                                            if (!empty($row->pro_title)) {
                                                 $pro_title = explode(",", $row->pro_title);
-                                                for($i = 0; $i < count($pro_title); $i++){
-                                                    $title .= "<strong class = 'text-white'>Title ".($i + 1)." : </strong> ".$pro_title[$i]."<br>";
+                                                for ($i = 0; $i < count($pro_title); $i++) {
+                                                    $title .= "<strong class = 'text-white'>Title " . ($i + 1) . " : </strong> " . $pro_title[$i] . "<br>";
                                                 }
                                             }
                                             $pro_price = "";
                                             $pro_price_after_discount = "";
-                                            if(!empty($row->pro_actual_price)){
+                                            if (!empty($row->pro_actual_price)) {
                                                 $pro_actual_price = explode(",", $row->pro_actual_price);
-                                                for($i = 0; $i < count($pro_actual_price); $i++){
-                                                    $pro_price .= "<strong class = 'text-white'>".($i + 1)." : </strong> ".str_replace(".", ",", $pro_actual_price[$i])."<br>";
-                                                    $price_after_discount = 0; 
-                                                    if($row->usp_price_type == 0){
+                                                for ($i = 0; $i < count($pro_actual_price); $i++) {
+                                                    $pro_price .= "<strong class = 'text-white'>" . ($i + 1) . " : </strong> " . str_replace(".", ",", $pro_actual_price[$i]) . "<br>";
+                                                    $price_after_discount = 0;
+                                                    if ($row->usp_price_type == 0) {
                                                         $discount = 0;
-                                                        $discount = ($pro_actual_price[$i] * $row->usp_discounted_value) / 100; 
-                                                        $price_after_discount = number_format( ($pro_actual_price[$i] - $discount), "2", ",", ""); 
-                                                    } else{
-                                                        $price_after_discount = number_format( ($pro_actual_price[$i] - $row->usp_discounted_value), "2", ",", "");
+                                                        $discount = ($pro_actual_price[$i] * $row->usp_discounted_value) / 100;
+                                                        $price_after_discount = number_format(($pro_actual_price[$i] - $discount), "2", ",", "");
+                                                    } else {
+                                                        $price_after_discount = number_format(($pro_actual_price[$i] - $row->usp_discounted_value), "2", ",", "");
                                                     }
-                                                    $pro_price_after_discount .= "<strong class = 'text-white'>".($i + 1)." : </strong> ".$price_after_discount."<br>";
+                                                    $pro_price_after_discount .= "<strong class = 'text-white'>" . ($i + 1) . " : </strong> " . $price_after_discount . "<br>";
                                                 }
                                             }
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->usp_id); ?>"></td>
                                                 <td><?php print($title); ?></td>
-                                                <td><?php print( ($row->usp_price_type == 0) ? 'Percentage Price' : 'Fixed Price' ); ?></td>
+                                                <td><?php print(($row->usp_price_type == 0) ? 'Percentage Price' : 'Fixed Price'); ?></td>
                                                 <td><?php print($row->usp_discounted_value); ?></td>
                                                 <td><?php print($pro_price); ?></td>
                                                 <td><?php print($pro_price_after_discount); ?></td>
@@ -333,50 +353,25 @@ include("includes/messages.php");
             //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
         }
     });
-    <?php if(isset($_REQUEST['action']) && $_REQUEST['action'] == 1){?>
-        $(window).load(function () {
-        $("#level_one_id").trigger("click");
+
+    $(window).load(function () {
+        $("#sl_id").trigger("click");
     });
-    <?php } ?>
-    
-    $("#level_one_id").on("click", function() {
-        var level_one_id = $("#level_one_id").val();
-        var level_two_id = <?php print($level_two_id); ?>;
+
+    $("#sl_id").on("click", function() {
         $("#supplier_id option:selected").removeAttr("selected");
         $(".select2-search-choice").remove();
         $.ajax({
             type: "POST",
-            url: "ajax_calls.php?action=level_one",
-            data: {
-                level_one_id: level_one_id,
-                level_two_id: level_two_id
-            },
-            success: function(data) {
-                //console.log(data);
-                $("#level_two_id").html(data);
-                //$("#level_two_id").trigger("click");
-            }
-        });
-
-    });
-
-    $("#level_two_id").on("click", function() {
-        var level_two_id = $("#level_two_id").val();
-        $("#supplier_id option:selected").removeAttr("selected");
-        $(".select2-search-choice").remove();
-        $.ajax({
-            type: "POST",
-            url: "ajax_calls.php?action=level_two",
-            data: {
-                level_two_id: level_two_id
-            },
+            url: "ajax_calls.php?action=get_product_list",
             success: function(data) {
                 //console.log(data);
                 $("#supplier_id").html(data);
+                //$("#level_two_id").trigger("click");
             }
         });
-
     });
+
 </script>
 
 </html>

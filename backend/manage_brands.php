@@ -7,7 +7,7 @@ if (isset($_REQUEST['btnAdd'])) {
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
 
-        $cat_id = $_REQUEST['cat_id'];
+        $group_id = $_REQUEST['group_id'];
         $brand_name = $_REQUEST['brand_name'];
         $mfile_path = "";
         $class = "alert alert-danger";
@@ -25,7 +25,7 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "INSERT INTO brands (brand_id, cat_id, brand_name, brand_image) VALUES ('" . $brand_id . "', '" . dbStr(trim($_REQUEST['cat_id'])) . "', '" . dbStr(trim($_REQUEST['brand_name'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO brands (brand_id, group_id, brand_name, brand_image) VALUES ('" . $brand_id . "', '" . dbStr(trim($_REQUEST['group_id'])) . "', '" . dbStr(trim($_REQUEST['brand_name'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -41,21 +41,21 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE brands SET cat_id = '" . dbStr(trim($_REQUEST['cat_id'])) . "', brand_name = '" . dbStr(trim($_REQUEST['brand_name'])) . "', brand_image = '" . $mfileName . "' WHERE brand_id=" . $_REQUEST['brand_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE brands SET group_id = '" . dbStr(trim($_REQUEST['group_id'])) . "', brand_name = '" . dbStr(trim($_REQUEST['brand_name'])) . "', brand_image = '" . $mfileName . "' WHERE brand_id=" . $_REQUEST['brand_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
         $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM brands WHERE brand_id = " . $_REQUEST['brand_id']);
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
-            $cat_id = $rsMem->cat_id;
+            $group_id = $rsMem->group_id;
             $brand_name = $rsMem->brand_name;
             $mfileName = $rsMem->brand_image;
             $mfile_path = !empty($rsMem->brand_image) ? $GLOBALS['siteURL'] . "files/brands/" . $rsMem->brand_image : "";
             $formHead = "Update Info";
         }
     } else {
-        $cat_id = 0;
+        $group_id = 0;
         $brand_name = "";
         $mfileName = "";
         $mfile_path = "";
@@ -144,8 +144,8 @@ include("includes/messages.php");
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Category</label>
-                                    <select name="cat_id" class="input_style" id="cat_id">
-                                        <?php FillSelected2("category", "cat_id", "cat_title_de AS cat_title ", $cat_id, "cat_status > 0 AND parent_id = '0'"); ?>
+                                    <select name="group_id" class="input_style" id="group_id">
+                                        <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title ", $group_id, "cat_status > 0 AND parent_id = '0'"); ?>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
@@ -207,7 +207,7 @@ include("includes/messages.php");
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th width="100">Logo</th>
-                                        <th>Title</th>
+                                        <th width="150">Title</th>
                                         <th>Category </th>
                                         <th width="50">Status</th>
                                         <th width="50">Action</th>
@@ -215,7 +215,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT bra.*, cat.cat_title_de AS cat_title FROM brands AS bra LEFT OUTER JOIN category AS cat ON cat.cat_id = bra.cat_id " . $searchQuery . " ";
+                                    $Query = "SELECT bra.*, cat.cat_title_de AS cat_title FROM brands AS bra LEFT OUTER JOIN category AS cat ON cat.group_id = bra.group_id " . $searchQuery . " ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;

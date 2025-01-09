@@ -40,6 +40,9 @@ $cu = 'active';
             <li>
                 <a href="manage_brands.php"><span class="material-icons icon">star</span> <span class="text">Marken</span> </a>
             </li>
+            <li>
+                <a href="manage_orders.php"><span class="material-icons icon">inventory</span> <span class="text">Auftragsverwaltung</span> </a>
+            </li>
 
     </nav>
 </aside>
