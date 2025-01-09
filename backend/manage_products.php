@@ -260,7 +260,13 @@ include("includes/messages.php");
         <div class="main-content">
             <!-- Top bar -->
             <?php include("includes/topbar.php"); ?>
-
+            <div class="img-popup">
+                <img src="" alt="Popup Image">
+                <div class="close-btn">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
             <!-- Content -->
             <section class="content" id="main-content">
                 <?php if ($class != "") { ?>
@@ -377,7 +383,7 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="10"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <!--<th width="100">Image</th>-->
+                                        <th width="100">Image</th>
                                         <th width="100">Artical Id</th>
                                         <th>Title </th>
                                         <th style="text-align: right; width: 256px">Stock</th>
@@ -388,8 +394,8 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    //$Query = "SELECT pro.*, pg.pg_mime_source FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE 1";
-                                    $Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
+                                    $Query = "SELECT pro.*, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
+                                    //$Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 50;
@@ -402,13 +408,18 @@ include("includes/messages.php");
                                             $counter++;
                                             $strClass = 'label  label-danger';
                                             $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
-                                            /*if (!empty($row->pg_mime_source)) {
-                                                $image_path = "../getftpimage.php?img=" . $row->pg_mime_source;
-                                            }*/
+                                            
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pro_id); ?>"></td>
                                                 <!--<td><img src="<?php print($image_path); ?>" width=" <?php print(!empty($row->cat_image) ? 300 : 100); ?>"></td>-->
+                                                <td>
+                                                    <div class="popup_container">
+                                                        <div class="container__img-holder">
+                                                            <img src="<?php print($row->pg_mime_source_url); ?>">
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td><?php print($row->supplier_id); ?></td>
                                                 <td><?php print($row->pro_description_short); ?></td>
                                                 <td>
