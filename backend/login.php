@@ -1,7 +1,7 @@
 <?php
 ob_start();
 include("../lib/openCon.php");
-include("../lib/functions_mail.php");
+include("../lib/functions.php");
 session_start();
 //print(md5("admin"));
 //DIE();
@@ -14,33 +14,38 @@ if (isset($_POST['btnLogin'])) {
 
         $usernameError = null;
         $passwordError = null;
-        $password = md5($_POST['user_password']);
+        $password = trim($_POST['user_password']);
         //$password=$_POST['mem_password'];
-        $username = $_POST['user_name'];
+        $username = dbStr(trim($_POST['user_name']));
         $valid = true;
         if (empty($username)) {
             $usernameError = 'Please enter user Name';
             $valid = false;
         }
         if ($valid) {
-            $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE user_password='$password' AND user_name='$username' AND utype_id IN (2,3)") or die(mysqli_error($GLOBALS['conn']));
+            $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE user_name='$username' AND utype_id IN (2,3)") or die(mysqli_error($GLOBALS['conn']));
             if (mysqli_num_rows($rs) > 0) {
                 $row = mysqli_fetch_object($rs);
-                if ($row->utype_id == 1) {
-                    $_SESSION["isAdmin"] = 1;
+                if (password_verify($password, $row->user_password)) {
+                    if ($row->utype_id == 1) {
+                        $_SESSION["isAdmin"] = 1;
+                    } else {
+                        $_SESSION["isAdmin"] = 0;
+                    }
+                    $_SESSION["UserID"] = $row->user_id;
+                    $_SESSION["UserName"] = $row->user_name;
+                    $_SESSION["UType"] = $row->utype_id;
+                    header("location:index.php");
                 } else {
-                    $_SESSION["isAdmin"] = 0;
+                    $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password</div>';
                 }
-                $_SESSION["UserID"] = $row->user_id;
-                $_SESSION["UserName"] = $row->user_name;
-                $_SESSION["UType"] = $row->utype_id;
-                header("location:index.php");
             } else {
                 $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password</div>';
             }
         }
     }
 }
+echo $strMSG;
 
 ?>
 <!DOCTYPE html>
@@ -50,7 +55,7 @@ if (isset($_POST['btnLogin'])) {
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="./assets/images/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Dashboard</title>
+    <title>Wacker 24 Backend Control Panel</title>
     <link rel="stylesheet" href="./assets/style/styles.css">
     <link rel="stylesheet" href="./assets/style/scrollbar.css">
     <link rel="stylesheet" href="./assets/style/responsive.css">
@@ -64,10 +69,10 @@ if (isset($_POST['btnLogin'])) {
             <img src="./assets/images/logo.png" class="logo" style="padding: 15px 100px;"></img>
             <div class="login-box">
                 <h2>Admin Login Area</h2>
-                <form id="loginForm" role="form" method="post" action="<?php print($_SERVER['PHP_SELF']);?>">
+                <form id="loginForm" role="form" method="post" action="<?php print($_SERVER['PHP_SELF']); ?>">
                     <input class="input_style" type="text" name="user_name" id="user_name" required>
                     <input class="input_style" type="password" name="user_password" id="user_password" required>
-                    <button type="submit" name="btnLogin" >Get Access</button>
+                    <button type="submit" name="btnLogin">Get Access</button>
                 </form>
             </div>
         </div>

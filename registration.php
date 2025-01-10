@@ -65,7 +65,7 @@ if (isset($_REQUEST['btn_registration'])) {
 			} else{
 				$user_id = getMaximum("users", "user_id");
 				$user_verification_code = md5($user_id.date("Ymdhis"));
-				mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id, user_confirmation) VALUES ('" . $user_id . "','" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(trim(md5($_REQUEST['user_password']))) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "', '".$user_verification_code."')") or die(mysqli_error($GLOBALS['conn']));
+				mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id, user_confirmation) VALUES ('" . $user_id . "','" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(password_hash(trim($_REQUEST['user_password']), PASSWORD_BCRYPT)) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "', '".$user_verification_code."')") or die(mysqli_error($GLOBALS['conn']));
 				$class = "alert alert-success";
 				$strMSG = "Dear Cuctomer, <br>
 				your account has been created successfully. Please <a href='login.php'>log in</a> to your account  and enjoy our services";
