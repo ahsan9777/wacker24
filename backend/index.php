@@ -120,7 +120,7 @@
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_orders.php">
+                        <a class="text-decoration-none" href="manage_users.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
                                     <i class="material-icons icon fs-3">face</i>
@@ -134,8 +134,8 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_orders.php">
+                    <div class="col-md-2-half col-12 mt-3 cart"> 
+                        <a class="text-decoration-none" href="manage_users.php?utype_id=3">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
                                     <i class="material-icons icon fs-3">person</i>
@@ -150,7 +150,7 @@
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_users.php?utype_id=4">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
                                     <i class="material-icons icon fs-3">business</i>

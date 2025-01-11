@@ -8,9 +8,9 @@ $searchQuery = "";
 
 if (isset($_REQUEST['btnAdd'])) {
     //print_r($_REQUEST);die();
-    $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id = '".dbStr(trim($_REQUEST['utype_id']))."'";
-	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if (mysqli_num_rows($rs) > 0) {
+    $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id = '" . dbStr(trim($_REQUEST['utype_id'])) . "'";
+    $rs = mysqli_query($GLOBALS['conn'], $Query);
+    if (mysqli_num_rows($rs) > 0) {
 
         $utype_id = $_REQUEST['utype_id'];
         $user_company_name = $_REQUEST['user_company_name'];
@@ -23,9 +23,9 @@ if (isset($_REQUEST['btnAdd'])) {
         $user_confirm_password = $_REQUEST['user_confirm_password'];
         $countries_id = $_REQUEST['countries_id'];
         $class = "alert alert-danger";
-		$strMSG = "Dear Admin, This account already exists against the user name and type!";
-    } else{
-        if($_REQUEST['user_password'] != $_REQUEST['user_confirm_password']){
+        $strMSG = "Dear Admin, This account already exists against the user name and type!";
+    } else {
+        if ($_REQUEST['user_password'] != $_REQUEST['user_confirm_password']) {
 
             $utype_id = $_REQUEST['utype_id'];
             $user_company_name = $_REQUEST['user_company_name'];
@@ -40,20 +40,20 @@ if (isset($_REQUEST['btnAdd'])) {
 
             $class = "alert alert-danger";
             $strMSG = "Dear Admin, confirmation does not match!";
-        } else{
+        } else {
             $user_id = getMaximum("users", "user_id");
-            mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, utype_id, user_company_name, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id) VALUES ('" . $user_id . "', '".dbStr(trim($_REQUEST['utype_id']))."', '".dbStr(trim($_REQUEST['user_company_name']))."', '" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(trim(md5($_REQUEST['user_password']))) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, utype_id, user_company_name, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id) VALUES ('" . $user_id . "', '" . dbStr(trim($_REQUEST['utype_id'])) . "', '" . dbStr(trim($_REQUEST['user_company_name'])) . "', '" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(trim(md5($_REQUEST['user_password']))) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
             header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
         }
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
-    $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id = '".dbStr(trim($_REQUEST['utype_id']))."' AND user_id != '".dbStr(trim($_REQUEST['user_id']))."'";
+    $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id = '" . dbStr(trim($_REQUEST['utype_id'])) . "' AND user_id != '" . dbStr(trim($_REQUEST['user_id'])) . "'";
     //print($Query);die();
-	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if (mysqli_num_rows($rs) > 0) {
-        header("Location: " . $_SERVER['PHP_SELF'] . "?action=2&user_id=".$_REQUEST['user_id']."&op=4");
-    } else{
-        mysqli_query($GLOBALS['conn'], "UPDATE users SET user_company_name = '" . dbStr(trim($_REQUEST['user_company_name'])) . "',  user_fname='" . dbStr(trim($_REQUEST['user_fname'])) . "', user_lname = '" . dbStr(trim($_REQUEST['user_lname'])) . "', gen_id = '" . dbStr(trim($_REQUEST['gen_id'])) . "', user_phone = '".dbStr(trim($_REQUEST['user_phone']))."', countries_id = '".dbStr(trim($_REQUEST['countries_id']))."' WHERE user_id=" . $_REQUEST['user_id']) or die(mysqli_error($GLOBALS['conn']));
+    $rs = mysqli_query($GLOBALS['conn'], $Query);
+    if (mysqli_num_rows($rs) > 0) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?action=2&user_id=" . $_REQUEST['user_id'] . "&op=4");
+    } else {
+        mysqli_query($GLOBALS['conn'], "UPDATE users SET user_company_name = '" . dbStr(trim($_REQUEST['user_company_name'])) . "',  user_fname='" . dbStr(trim($_REQUEST['user_fname'])) . "', user_lname = '" . dbStr(trim($_REQUEST['user_lname'])) . "', gen_id = '" . dbStr(trim($_REQUEST['gen_id'])) . "', user_phone = '" . dbStr(trim($_REQUEST['user_phone'])) . "', countries_id = '" . dbStr(trim($_REQUEST['countries_id'])) . "' WHERE user_id=" . $_REQUEST['user_id']) or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
     }
 } elseif (isset($_REQUEST['action'])) {
@@ -139,7 +139,7 @@ include("includes/messages.php");
                 <?php if ($class != "") { ?>
                     <div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert">×</a></div>
                 <?php } ?>
-                <?php if (isset($_REQUEST['action'])) {?>
+                <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
                         <h2 class="text-white">
                             <?php print($formHead); ?> User
@@ -167,32 +167,32 @@ include("includes/messages.php");
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Gender</label>
                                     <select name="gen_id" class="input_style" id="gen_id">
-                                        <option value="1" <?php print(($gen_id == '1')?'selected':'');?> > Male </option>
-                                        <option value="2" <?php print(($gen_id == '2')?'selected':'');?> > Female </option>
-                                        <option value="3" <?php print(($gen_id == '3')?'selected':'');?> > Other </option>
+                                        <option value="1" <?php print(($gen_id == '1') ? 'selected' : ''); ?>> Male </option>
+                                        <option value="2" <?php print(($gen_id == '2') ? 'selected' : ''); ?>> Female </option>
+                                        <option value="3" <?php print(($gen_id == '3') ? 'selected' : ''); ?>> Other </option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Email</label>
                                     <input type="email" <?php print($readonly); ?> class="input_style" required name="user_name" id="user_name" value="<?php print($user_name); ?>" placeholder="Email">
                                 </div>
-                                <?php if ($_REQUEST['action'] == 1) {?>
-                                <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Password</label>
-                                    <input type="password" class="input_style" required name="user_password" id="user_password" value="<?php print($user_password); ?>" placeholder="Password">
-                                    <div class="d-flex gap-2 mt-3">
-                                        <label for="">Show Password: </label>
-                                        <input type="checkbox" name="show_password" id="show_password">
+                                <?php if ($_REQUEST['action'] == 1) { ?>
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for="">Password</label>
+                                        <input type="password" class="input_style" required name="user_password" id="user_password" value="<?php print($user_password); ?>" placeholder="Password">
+                                        <div class="d-flex gap-2 mt-3">
+                                            <label for="">Show Password: </label>
+                                            <input type="checkbox" name="show_password" id="show_password">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Confirm Password</label>
-                                    <input type="password" class="input_style" required name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" placeholder="Confirm Password">
-                                    <div class="d-flex gap-2 mt-3">
-                                        <label for="">Show Confirm Password: </label>
-                                        <input type="checkbox" name="show_confirm_password" id="show_confirm_password">
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for="">Confirm Password</label>
+                                        <input type="password" class="input_style" required name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" placeholder="Confirm Password">
+                                        <div class="d-flex gap-2 mt-3">
+                                            <label for="">Show Confirm Password: </label>
+                                            <input type="checkbox" name="show_confirm_password" id="show_confirm_password">
+                                        </div>
                                     </div>
-                                </div>
                                 <?php } ?>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Contact No</label>
@@ -221,6 +221,7 @@ include("includes/messages.php");
                         <?php
 
                         $user_id = 0;
+                        $utype_id = 0;
                         $user_full_name = "";
 
                         if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
@@ -230,12 +231,24 @@ include("includes/messages.php");
                                 $searchQuery = " AND u.user_id = '" . $_REQUEST['user_id'] . "'";
                             }
                         }
+
+                        if (isset($_REQUEST['utype_id']) && $_REQUEST['utype_id'] > 0) {
+                            $utype_id = $_REQUEST['utype_id'];
+                            $searchQuery = " AND u.utype_id = '" . $_REQUEST['utype_id'] . "'";
+                        }
                         ?>
-                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row flex-row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-3 col-12 mt-2">
                                 <label for="" class="text-white">Title</label>
                                 <input type="hidden" name="user_id" id="user_id" value="<?php print($user_id); ?>">
                                 <input type="text" class="input_style user_full_name" name="user_full_name" value="<?php print($user_full_name); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                            </div>
+                            <div class=" col-md-2 col-12 mt-2">
+                                <label for="" class="text-white">Type</label>
+                                <select name="utype_id" id="utype_id" class="input_style" onchange="javascript: frmCat.submit();">
+                                    <option value="0">N/A</option>
+                                    <?php FillSelected2("user_type", "utype_id", "utype_name", $utype_id, "utype_id IN (3, 4)"); ?>
+                                </select>
                             </div>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -243,9 +256,9 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <th width="180" >Name</th>
+                                        <th width="180">Name</th>
                                         <th>User Name </th>
-                                        <th>Zip Code</th>
+                                        <th width="95">Zip Code</th>
                                         <th>Street</th>
                                         <th width="200">Type</th>
                                         <th width="180">Created</th>
@@ -308,7 +321,12 @@ include("includes/messages.php");
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                     <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Special Price" onClick="javascript: window.location = '<?php print("manage_special_price.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">payments</span></button>
-                                                    <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="User Order" onClick="javascript: window.location = '<?php print("manage_user_orders.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">shopping_cart</span></button>
+                                                    <?php
+                                                    $user_order_count = TotalRecords("ord_id", "orders", "WHERE user_id = '" . $row->user_id . "' ");
+                                                    if ($user_order_count > 0) {
+                                                    ?>
+                                                        <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="User Order" onClick="javascript: window.location = '<?php print("manage_user_orders.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">shopping_cart</span></button>
+                                                    <?php } ?>
                                                     <!--<button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="Add Product List" onClick="javascript: window.location = '<?php print("manage_add_product_list.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">add</span></button>-->
                                                 </td>
                                             </tr>
