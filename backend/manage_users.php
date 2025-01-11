@@ -275,10 +275,10 @@ include("includes/messages.php");
                                                 <td><?php print($row->usa_street); ?></td>
                                                 <td>
                                                     <?php
-                                                    if ($row->utype_id == 1) {
-                                                        echo '<span class="btn btn-warning btn-style-light w-auto">' . rtrim($row->utype_name, 'Customer') . '</span>';
+                                                    if ($row->utype_id == 4) {
+                                                        echo '<span class="btn btn-success btn-style-light w-auto">' . $row->utype_name . '</span>';
                                                     } else {
-                                                        echo '<span class="btn btn-primary btn-style-light w-auto">' . rtrim($row->utype_name, 'Customer') . '</span>';
+                                                        echo '<span class="btn btn-primary btn-style-light w-auto">' . $row->utype_name . '</span>';
                                                     }
                                                     ?>
                                                 </td>
