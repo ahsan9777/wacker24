@@ -17,3 +17,13 @@
 
     </div>
 </header>
+
+<!-- Image popup code start -->
+<div class="img-popup">
+    <img src="" alt="Popup Image">
+    <div class="close-btn">
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</div>
+<!-- Image popup code end -->

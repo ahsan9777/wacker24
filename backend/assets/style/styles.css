@@ -800,6 +800,7 @@ button:hover {
     justify-content: center;
     align-items: center;
     display: none;
+    z-index: 9999999999;
 }
 
 .img-popup img {

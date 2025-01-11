@@ -260,13 +260,7 @@ include("includes/messages.php");
         <div class="main-content">
             <!-- Top bar -->
             <?php include("includes/topbar.php"); ?>
-            <div class="img-popup">
-                <img src="" alt="Popup Image">
-                <div class="close-btn">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-            </div>
+            
             <!-- Content -->
             <section class="content" id="main-content">
                 <?php if ($class != "") { ?>
@@ -349,7 +343,7 @@ include("includes/messages.php");
                 <?php } else { ?>
                     <div class="row">
                         <div class="table-controls">
-                            <h1 class="text-white">Artical</h1>
+                            <h1 class="text-white">Artical Management</h1>
                             <div class="d-flex gap-1">
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>

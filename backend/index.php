@@ -82,7 +82,7 @@
                 </h2>
                 <div class="row mt-3 column-gap-4">
                     <div class="col-md-5 col-12 mt-3 cart ">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_users.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
                                     <i class="material-icons icon fs-3">shopping_cart</i>
@@ -90,7 +90,7 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Artikel</label>
-                                        <h2>35665</h2>
+                                        <h2><?php print(TotalRecords("pro_id", "products", "WHERE 1 = 1"));?></h2>
                                     </div>
                                 </div>
 
@@ -98,7 +98,7 @@
                         </a>
                     </div>
                     <div class="col-md-5 col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_products.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
                                     <i class="material-icons icon fs-3">inventory</i>
@@ -106,17 +106,21 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Bestellungen</label>
-                                        <h2>181</h2>
+                                        <h2><?php print(TotalRecords("ord_id", "orders", "WHERE 1 = 1"));?></h2>
                                     </div>
-                                    <div class="cart_text_right">
-                                        <p>2 ausstehend</p>
-                                    </div>
+                                    <?php $order_pending_count = TotalRecords("ord_id", "orders", "WHERE ord_delivery_status = '0' ");
+                                    if($order_pending_count > 0){
+                                    ?>
+                                    <a href="manage_orders.php" class="cart_text_right text-decoration-none">
+                                        <p> <?php print($order_pending_count); ?> ausstehend</p>
+                                    </a>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_orders.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
                                     <i class="material-icons icon fs-3">face</i>
@@ -124,14 +128,14 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Benutzer</label>
-                                        <h2>103</h2>
+                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE 1 = 1"));?></h2>
                                     </div>
                                 </div>
                             </div>
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_orders.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
                                     <i class="material-icons icon fs-3">person</i>
@@ -139,7 +143,7 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Privatkunde</label>
-                                        <h2>17</h2>
+                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id = '3'"));?></h2>
                                     </div>
                                 </div>
                             </div>
@@ -154,37 +158,7 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Geschäftskunde</label>
-                                        <h2>86</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
-                            <div class="cart_body">
-                                <div class="cart_icon btn btn-xs btn-primary btn-style-light">
-                                    <i class="material-icons icon fs-3">category</i>
-                                </div>
-                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
-                                    <div class="cart_text_left">
-                                        <label for="">Hauptkategorien</label>
-                                        <h2>10</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
-                            <div class="cart_body">
-                                <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-3">category</i>
-                                </div>
-                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
-                                    <div class="cart_text_left">
-                                        <label for="">Unterkategorien</label>
-                                        <h2>115</h2>
+                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id = '4'"));?></h2>
                                     </div>
                                 </div>
                             </div>
@@ -206,6 +180,37 @@
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
+                        <a class="text-decoration-none" href="manage_category.php">
+                            <div class="cart_body">
+                                <div class="cart_icon btn btn-xs btn-primary btn-style-light">
+                                    <i class="material-icons icon fs-3">category</i>
+                                </div>
+                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
+                                    <div class="cart_text_left">
+                                        <label for="">Hauptkategorien</label>
+                                        <h2><?php print(TotalRecords("cat_id", "category", "WHERE parent_id = '0'"));?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-2-half col-12 mt-3 cart">
+                        <a class="text-decoration-none" href="manage_category.php">
+                            <div class="cart_body">
+                                <div class="cart_icon btn btn-xs btn-warning btn-style-light">
+                                    <i class="material-icons icon fs-3">category</i>
+                                </div>
+                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
+                                    <div class="cart_text_left">
+                                        <label for="">Unterkategorien</label>
+                                        <h2><?php print(TotalRecords("cat_id", "category", "WHERE parent_id > '0'"));?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-2-half col-12 mt-3 cart">
                         <a class="text-decoration-none" href="javascript:void(0)">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
@@ -221,7 +226,7 @@
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_brands.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
                                     <i class="material-icons icon fs-3">star</i>
@@ -229,7 +234,7 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Marken</label>
-                                        <h2>150</h2>
+                                        <h2><?php print(TotalRecords("brand_id", "brands", "WHERE 1 = 1"));?></h2>
                                     </div>
                                 </div>
                             </div>

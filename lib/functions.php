@@ -1242,10 +1242,13 @@ function FillSelected_AgentLead($Table, $IDField, $TextField, $ID){
 	}
 }
 
-function TotalRecords($Table, $condition){
-	 $strQuery = "SELECT * FROM $Table $condition";
+function TotalRecords($fiels, $Table, $condition){
+	
+	$strQuery = "SELECT COUNT($fiels) AS count FROM $Table $condition";
+	//print($strQuery);
 	$nResult = mysqli_query($GLOBALS['conn'], $strQuery);
-	return mysqli_num_rows($nResult);
+	$row = mysqli_fetch_object($nResult);
+	return $row->count;
 }
 function TotalRecords2($Table, $condition,$ID){
     $strQuery = "SELECT * FROM $Table $condition Where ".$ID."";

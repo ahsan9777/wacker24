@@ -178,7 +178,7 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Category</h1>
+                        <h1 class="text-white">Category Management</h1>
                         <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
 
                     </div>
@@ -239,7 +239,13 @@ include("includes/messages.php");
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->cat_id); ?>"></td>
-                                                <td><img src="<?php print($image_path); ?>" width=" <?php print(!empty($row->cat_image) ? 300 : 100); ?>"></td>
+                                                <td>
+                                                    <div class="popup_container" style="width: <?php print(!empty($row->cat_image) ? '300px' : '100px'); ?>">
+                                                        <div class="container__img-holder">
+                                                            <img src="<?php print($image_path); ?>" >
+                                                        </div>
+                                                    </div>    
+                                                </td>
                                                 <td><?php print($row->cat_title); ?></td>
                                                 <td> <input type="checkbox" class="cat_image_show" id="cat_image_show" data-id="<?php print($row->cat_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->cat_image_show == 1) ? 'checked' : ''); ?>> </td>
                                                 <td> <input type="checkbox" class="cat_showhome" id="cat_showhome" data-id="<?php print($row->cat_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->cat_showhome == 1) ? 'checked' : ''); ?>> </td>

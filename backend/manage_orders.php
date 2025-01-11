@@ -1,11 +1,30 @@
 <?php
 include("../lib/session_head.php");
 
+
+$ref = "manage_orders.php";
+if (isset($_SERVER['HTTP_REFERER'])) {
+    $ref = $_SERVER['HTTP_REFERER'];
+}
+$searchQuery = "WHERE 1 = 1";
+if(isset($user_id) && $user_id > 0){
+	$user_id = $user_id;
+    $searchQuery .= " AND ord.user_id = '".$user_id."'";
+} else{
+    $user_id = 0;
+    $pHead = "Order Management";
+}
+
 if (isset($_REQUEST['show'])) {
     $qryStrURL .= "show&";
 }
 if (isset($_REQUEST['ord_id']) && gettype($_REQUEST['ord_id']) != "array" && $_REQUEST['ord_id'] > 0) {
     $qryStrURL .= "ord_id=" . $_REQUEST['ord_id'] . "&";
+}
+
+if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
+
+    $qryStrURL .= "user_id=".$_REQUEST['user_id']."&";
 }
 
 
@@ -89,14 +108,7 @@ include("includes/messages.php");
         <div class="main-content">
             <!-- Top bar -->
             <?php include("includes/topbar.php"); ?>
-
-            <div class="img-popup">
-                <img src="" alt="Popup Image">
-                <div class="close-btn">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-            </div>
+            
             <!-- Content -->
             <section class="content" id="main-content">
                 <?php if ($class != "") { ?>
@@ -194,7 +206,7 @@ include("includes/messages.php");
                                     <?php
                                         }
                                     } else {
-                                        print('<tr><td colspan="100%" align="center">No record found!</td></tr>');
+                                        print('<tr><td colspan="100%" class="text-center" >No record found!</td></tr>');
                                     }
                                     ?>
                                 </tbody>
@@ -256,7 +268,7 @@ include("includes/messages.php");
                                     <?php
                                         }
                                     } else {
-                                        print('<tr><td colspan="100%" align="center">No record found!</td></tr>');
+                                        print('<tr><td colspan="100%" class="text-center">No record found!</td></tr>');
                                     }
                                     ?>
                                 </tbody>
@@ -266,31 +278,42 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Order</h1>
+                        <h1 class="text-white"><?php print($pHead); ?></h1>
                         <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
 
                     </div>
                     <div class="main_table_container">
                         <?php
 
-                        $ord_id = 0;
-                        $cat_title = "";
-                        $searchQuery = "";
+                        $ord_id = "";
+                        $order_user_id = "";
+                        $order_user_title = "";
 
                         if (isset($_REQUEST['ord_id']) && $_REQUEST['ord_id'] > 0) {
-                            if (!empty($_REQUEST['cat_title'])) {
+                            
                                 $ord_id = $_REQUEST['ord_id'];
-                                $cat_title = $_REQUEST['cat_title'];
-                                $searchQuery = " AND cat.ord_id = '" . $_REQUEST['ord_id'] . "'";
+                                $searchQuery .= " AND ord.ord_id = '" . $_REQUEST['ord_id'] . "'";
+                        }
+                        if (isset($_REQUEST['order_user_id']) && $_REQUEST['order_user_id'] > 0) {
+                            if (!empty($_REQUEST['order_user_title'])) {
+                                $order_user_id = $_REQUEST['order_user_id'];
+                                $order_user_title = $_REQUEST['order_user_title'];
+                                $searchQuery .= " AND ord.user_id = '" . $_REQUEST['order_user_id'] . "'";
                             }
                         }
                         ?>
-                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row flex-row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-2 col-12 mt-2">
-                                <label for="" class="text-white">Title</label>
-                                <input type="hidden" name="ord_id" id="ord_id" value="<?php print($ord_id); ?>">
-                                <input type="text" class="input_style cat_title" name="cat_title" value="<?php print($cat_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                                <label for="" class="text-white">Order ID</label>
+                                <input type="number" class="input_style ord_id" name="ord_id" value="<?php print($ord_id); ?>" placeholder="Order ID:" autocomplete="off" onchange="javascript: frmCat.submit();">
                             </div>
+                            <?php if(!isset($_REQUEST['user_id'])){?>
+                            <div class=" col-md-3 col-12 mt-2">
+                                <label for="" class="text-white">Title</label>
+                                <input type="hidden" name="order_user_id" id="order_user_id" value="<?php print($order_user_id); ?>">
+                                <input type="text" class="input_style order_user_title" name="order_user_title" value="<?php print($order_user_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                            </div>
+                            <?php } ?>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
@@ -309,10 +332,10 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_address, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_address, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status ".$searchQuery." ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $counter = 0;
-                                    $limit = 25;
+                                    $limit = 50;
                                     $start = $p->findStart($limit);
                                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
                                     $pages = $p->findPages($count, $limit);
@@ -387,7 +410,7 @@ include("includes/messages.php");
                                     <?php
                                         }
                                     } else {
-                                        print('<tr><td colspan="100%" align="center">No record found!</td></tr>');
+                                        print('<tr><td colspan="100%" class="text-center">No record found!</td></tr>');
                                     }
                                     ?>
                                 </tbody>
@@ -428,10 +451,10 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
-    $('input.cat_title').autocomplete({
+    $('input.ord_id').autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: 'ajax_calls.php?action=cat_title&parent_id=0',
+                url: 'ajax_calls.php?action=ord_id&user_id=<?php print($user_id); ?>',
                 dataType: "json",
                 data: {
                     term: request.term
@@ -445,12 +468,35 @@ include("includes/messages.php");
         minLength: 1,
         select: function(event, ui) {
             var ord_id = $("#ord_id");
-            var cat_title = $("#cat_title");
-            $(ord_id).val(ui.item.ord_id);
-            $(cat_title).val(ui.item.value);
+            $(ord_id).val(ui.item.value);
             //frmCat.submit();
             //return false;
             //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        }
+    });
+
+    $('input.order_user_title').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'ajax_calls.php?action=order_user_title',
+                dataType: "json",
+                data: {
+                    term: request.term
+                },
+                success: function(data) {
+                    response(data);
+
+                }
+            });
+        },
+        minLength: 1,
+        select: function(event, ui) {
+            var order_user_id = $("#order_user_id");
+            var order_user_title = $("#order_user_title");
+            $(order_user_id).val(ui.item.order_user_id);
+            $(order_user_title).val(ui.item.value);
+            //frmCat.submit();
+            //return false;
         }
     });
 </script>

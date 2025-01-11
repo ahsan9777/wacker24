@@ -95,18 +95,75 @@ if (isset($_REQUEST['action'])) {
             print($jsonResults);
             break;
 
+        case 'user_full_name':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                    $where .= " WHERE u.utype_id IN (3,4) AND (u.user_fname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR u.user_lname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR ut.utype_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%')";
+                }
+            $Query = "SELECT u.user_id, CONCAT(u.user_fname, ' ', u.user_lname, ' ( ',ut.utype_name,' )') full_name FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id " . $where . " ORDER BY u.user_id  LIMIT 0,20";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                'user_id' => strip_tags(html_entity_decode($row->user_id , ENT_QUOTES, 'UTF-8')),
+                'value' => strip_tags(html_entity_decode($row->full_name, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
+            print($jsonResults);
+            break;
+
         case 'brand_name':
             $json = array();
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
                     $where .= " WHERE brand_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
                 }
-            $Query = "SELECT brand_id, brand_name FROM brand " . $where . " ORDER BY brand_id  LIMIT 0,20";
+            $Query = "SELECT brand_id, brand_name FROM brands " . $where . " ORDER BY brand_id  LIMIT 0,20";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
                 'brand_id' => strip_tags(html_entity_decode($row->brand_id , ENT_QUOTES, 'UTF-8')),
                 'value' => strip_tags(html_entity_decode($row->brand_name, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
+            print($jsonResults);
+            break;
+
+        case 'ord_id':
+            $json = array();
+            $where = "WHERE 1 = 1";
+            if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
+                    $where .= " AND user_id = '" . dbStr(trim($_REQUEST['user_id'])) . "'";
+                }
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                    $where .= " AND ord_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
+                }
+            $Query = "SELECT ord_id FROM orders " . $where . " ORDER BY ord_id  LIMIT 0,20";
+            //print($Query);
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                    'value' => strip_tags(html_entity_decode($row->ord_id, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
+            print($jsonResults);
+            break;
+
+        case 'order_user_title':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                $where .= " WHERE ut.utype_id IN (3,4) AND (u.user_fname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR u.user_lname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR ut.utype_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%')";
+                }
+            $Query = "SELECT DISTINCT(u.user_id), CONCAT(u.user_fname, ' ', u.user_lname, ' ( ',ut.utype_name,' )') full_name FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id INNER JOIN orders AS ord ON ord.user_id = u.user_id " . $where . " ORDER BY u.user_id  LIMIT 0,20";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                    'order_user_id' => strip_tags(html_entity_decode($row->user_id, ENT_QUOTES, 'UTF-8')),
+                    'value' => strip_tags(html_entity_decode($row->full_name, ENT_QUOTES, 'UTF-8'))
                 );
             }
             $jsonResults = json_encode($json);

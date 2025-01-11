@@ -2,6 +2,10 @@
 include("../lib/session_head.php");
 $formHead = "Add New";
 
+
+$searchQuery = "";
+
+
 if (isset($_REQUEST['btnAdd'])) {
     //print_r($_REQUEST);die();
     $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id = '".dbStr(trim($_REQUEST['utype_id']))."'";
@@ -209,7 +213,7 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Users</h1>
+                        <h1 class="text-white">Users Management</h1>
                         <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
 
                     </div>
@@ -217,22 +221,21 @@ include("includes/messages.php");
                         <?php
 
                         $user_id = 0;
-                        $cat_title = "";
-                        $searchQuery = "";
+                        $user_full_name = "";
 
                         if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
-                            if (!empty($_REQUEST['cat_title'])) {
+                            if (!empty($_REQUEST['user_full_name'])) {
                                 $user_id = $_REQUEST['user_id'];
-                                $cat_title = $_REQUEST['cat_title'];
-                                $searchQuery = " AND cat.user_id = '" . $_REQUEST['user_id'] . "'";
+                                $user_full_name = $_REQUEST['user_full_name'];
+                                $searchQuery = " AND u.user_id = '" . $_REQUEST['user_id'] . "'";
                             }
                         }
                         ?>
                         <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
-                            <div class=" col-md-2 col-12 mt-2">
+                            <div class=" col-md-3 col-12 mt-2">
                                 <label for="" class="text-white">Title</label>
                                 <input type="hidden" name="user_id" id="user_id" value="<?php print($user_id); ?>">
-                                <input type="text" class="input_style cat_title" name="cat_title" value="<?php print($cat_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                                <input type="text" class="input_style user_full_name" name="user_full_name" value="<?php print($user_full_name); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
                             </div>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -240,15 +243,15 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <th>Name</th>
+                                        <th width="180" >Name</th>
                                         <th>User Name </th>
                                         <th>Zip Code</th>
                                         <th>Street</th>
-                                        <th>Type</th>
-                                        <th>Created</th>
-                                        <th class="text-end">Payment Methods</th>
+                                        <th width="200">Type</th>
+                                        <th width="180">Created</th>
+                                        <th class="text-end" width="190">Payment Methods</th>
                                         <th width="50">Status</th>
-                                        <th width="120">Action</th>
+                                        <th width="150">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -278,7 +281,7 @@ include("includes/messages.php");
                                                     if ($row->utype_id == 4) {
                                                         echo '<span class="btn btn-success btn-style-light w-auto">' . $row->utype_name . '</span>';
                                                     } else {
-                                                        echo '<span class="btn btn-primary btn-style-light w-auto">' . $row->utype_name . '</span>';
+                                                        echo '<span class="btn btn-primary btn-style-light w-auto">' . $row->utype_name  . '</span>';
                                                     }
                                                     ?>
                                                 </td>
@@ -305,6 +308,7 @@ include("includes/messages.php");
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                     <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Special Price" onClick="javascript: window.location = '<?php print("manage_special_price.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">payments</span></button>
+                                                    <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="User Order" onClick="javascript: window.location = '<?php print("manage_user_orders.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">shopping_cart</span></button>
                                                     <!--<button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="Add Product List" onClick="javascript: window.location = '<?php print("manage_add_product_list.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">add</span></button>-->
                                                 </td>
                                             </tr>
@@ -351,10 +355,10 @@ include("includes/messages.php");
 </body>
 
 <script>
-    $('input.cat_title').autocomplete({
+    $('input.user_full_name').autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: 'ajax_calls.php?action=cat_title&parent_id=0',
+                url: 'ajax_calls.php?action=user_full_name',
                 dataType: "json",
                 data: {
                     term: request.term
@@ -368,9 +372,9 @@ include("includes/messages.php");
         minLength: 1,
         select: function(event, ui) {
             var user_id = $("#user_id");
-            var cat_title = $("#cat_title");
+            var user_full_name = $("#user_full_name");
             $(user_id).val(ui.item.user_id);
-            $(cat_title).val(ui.item.value);
+            $(user_full_name).val(ui.item.value);
             //frmCat.submit();
             //return false;
             //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );

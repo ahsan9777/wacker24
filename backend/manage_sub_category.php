@@ -152,7 +152,7 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Sub Category</h1>
+                        <h1 class="text-white">Sub Category Management</h1>
                     </div>
                     <div class="main_table_container">
                         <?php
@@ -208,7 +208,13 @@ include("includes/messages.php");
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->cat_id); ?>"></td>
-                                                <td><img src="<?php print($image_path); ?>" width=" <?php print(!empty($row->cat_image) ? 300 : 100); ?>"></td>
+                                                <td>
+                                                    <div class="popup_container" style="width: <?php print(!empty($row->cat_image) ? '300px' : '100px'); ?>">
+                                                        <div class="container__img-holder">
+                                                            <img src="<?php print($image_path); ?>" >
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td><?php print($row->cat_title); ?></td>
                                                 <td><?php print($row->sub_cat_title); ?></td>
                                                 <td>
