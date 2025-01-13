@@ -107,22 +107,6 @@ if (isset($_REQUEST['btnOrderby'])) {
     }
 }
 
-//--------------Button Delete--------------------
-if (isset($_REQUEST['btnDelete'])) {
-    if (isset($_REQUEST['chkstatus'])) {
-        for ($i = 0; $i < count($_REQUEST['chkstatus']); $i++) {
-            
-            DeleteFileWithThumb("pm_image", "payment_method", "pm_id ", $_REQUEST['chkstatus'][$i], "../files/payment_method/th/", "EMPTY");
-            DeleteFileWithThumb("pm_image", "payment_method", "pm_id ", $_REQUEST['chkstatus'][$i], "../files/payment_method/", "EMPTY");
-            mysqli_query($GLOBALS['conn'], "DELETE FROM payment_method WHERE pm_id = " . $_REQUEST['chkstatus'][$i]) or die(mysqli_error($_REQUEST['conn']));
-        }
-      $class = "alert alert-success";
-      $strMSG = "Record(s) deleted successfully";
-    } else {
-        $class = " alert alert-info ";
-        $strMSG = "Please check atleast one checkbox";
-    }
-}
 
 include("includes/messages.php");
 
@@ -286,9 +270,6 @@ include("includes/messages.php");
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
                                     <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
-                                </div>
-                                <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnDelete" value="Delete" class="btn btn-danger btn-style-light w-100" onclick="return confirm('Are you sure you want to delete selected item(s)?');" >
                                 </div>
                             </div>
                         </form>

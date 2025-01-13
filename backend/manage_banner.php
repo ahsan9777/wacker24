@@ -141,7 +141,7 @@ include("includes/messages.php");
                 <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
                         <h2 class="text-white">
-                            <?php print($formHead); ?> Payment Method
+                            <?php print($formHead); ?> Banner
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
@@ -182,7 +182,7 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Payment Method Management</h1>
+                        <h1 class="text-white">Banner Management</h1>
                         <div class="d-flex gap-1">
                             <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
                         </div>
