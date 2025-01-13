@@ -190,7 +190,7 @@ if (isset($_REQUEST['action'])) {
 
         case 'level_two':
             //print_r($_REQUEST);die();
-            $Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id WHERE FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr(trim($_REQUEST['level_two_id'])) : dbStr(trim($_REQUEST['level_one_id']))) . "', cm.sub_group_ids) ORDER BY pro.pro_id ASC";
+            $Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id WHERE FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr(trim($_REQUEST['level_two_id'])) : dbStr(trim($_REQUEST['level_one_id ']))) . "', cm.sub_group_ids) ORDER BY pro.pro_id ASC";
             //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {

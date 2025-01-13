@@ -130,7 +130,6 @@ include("includes/messages.php");
                                         <th>Payment Status</th>
                                         <th>Delivery Status</th>
                                         <th>Order Status</th>
-                                        <th width="50">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -199,9 +198,6 @@ include("includes/messages.php");
                                                     }
                                                     ?>
                                                 </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
-                                                </td>
                                             </tr>
                                     <?php
                                         }
@@ -218,7 +214,7 @@ include("includes/messages.php");
                     <div class="table-controls mt-3">
                         <h1 class="text-white">Order Detail</h1>
                         <!--<a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>-->
-                        <a href="javascript:void(0);" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>
+                        <a target="_blank" href="order_invoice.php?ord_id=<?php print($_REQUEST['ord_id']); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>
 
                     </div>
                     <div class="main_table_container">
