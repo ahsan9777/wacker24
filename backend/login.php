@@ -6,7 +6,6 @@ session_start();
 //print(md5("admin"));
 //DIE();
 $strMSG = "";
-$strMSG1 = "";
 if (isset($_POST['btnLogin'])) {
 
     if (!empty($_POST)) {
@@ -23,7 +22,7 @@ if (isset($_POST['btnLogin'])) {
             $valid = false;
         }
         if ($valid) {
-            $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE user_name='$username' AND utype_id IN (2,3)") or die(mysqli_error($GLOBALS['conn']));
+            $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE user_name='$username' AND utype_id IN (1,2)") or die(mysqli_error($GLOBALS['conn']));
             if (mysqli_num_rows($rs) > 0) {
                 $row = mysqli_fetch_object($rs);
                 if (password_verify($password, $row->user_password)) {
@@ -37,15 +36,14 @@ if (isset($_POST['btnLogin'])) {
                     $_SESSION["UType"] = $row->utype_id;
                     header("location:index.php");
                 } else {
-                    $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password</div>';
+                    $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password <a class="close" data-dismiss="alert">×</a></div>';
                 }
             } else {
-                $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password</div>';
+                $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password <a class="close" data-dismiss="alert">×</a></div>';
             }
         }
     }
 }
-echo $strMSG;
 
 ?>
 <!DOCTYPE html>
@@ -69,6 +67,7 @@ echo $strMSG;
             <img src="./assets/images/logo.png" class="logo" style="padding: 15px 100px;"></img>
             <div class="login-box">
                 <h2>Admin Login Area</h2>
+                <?php print($strMSG); ?>
                 <form id="loginForm" role="form" method="post" action="<?php print($_SERVER['PHP_SELF']); ?>">
                     <input class="input_style" type="text" name="user_name" id="user_name" required>
                     <input class="input_style" type="password" name="user_password" id="user_password" required>
@@ -79,6 +78,11 @@ echo $strMSG;
     </div>
     <script src="./assets/js/jquery.js"></script>
     <script src="./assets/js/main.js"></script>
+    <script>
+        $('.close').on('click', function() {
+            $('.alert').hide();
+        });
+    </script>
 </body>
 
 </html>
