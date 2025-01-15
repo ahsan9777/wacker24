@@ -14,6 +14,14 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 	$whereclause = "WHERE FIND_IN_SET(" . $_REQUEST['level_two'] . ", cm.sub_group_ids)";
 	$qryStrURL .= "level_two=".$_REQUEST['level_two']."&";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['level_two']);
+	if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+		$cat_id_one = $cat_title_one = returnName("parent_id", "category", "group_id", $_REQUEST['level_two']);
+		$special_price = user_special_price("level_two", $_REQUEST['level_two']);
+		if (!$special_price) {
+			$special_price = user_special_price("level_one", $cat_id_one);
+		}
+	}
+	//print_r($special_price);
 }
 ?>
 <!doctype html>

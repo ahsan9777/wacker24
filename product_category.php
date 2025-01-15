@@ -1,4 +1,10 @@
-<?php include("includes/php_includes_top.php"); ?>
+<?php
+include("includes/php_includes_top.php");
+if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+	$special_price = user_special_price("level_one", $_REQUEST['level_one']);
+}
+//print_r($special_price);
+?>
 <!doctype html>
 <html lang="de">
 
@@ -35,33 +41,33 @@
 									if (mysqli_num_rows($rs1) > 0) {
 										while ($row1 = mysqli_fetch_object($rs1)) {
 											$pg_mime_source_href = "files/no_img_1.jpg";
-											if(!empty($row1->pg_mime_source)){
+											if (!empty($row1->pg_mime_source)) {
 												$pg_mime_source = explode(',', $row1->pg_mime_source);
-												$pg_mime_source_href = "getftpimage.php?img=".$pg_mime_source[0];
+												$pg_mime_source_href = "getftpimage.php?img=" . $pg_mime_source[0];
 											}
 									?>
-									<div class="pd_card">
-										<div class="pd_image"><a href="products.php?level_two=<?php print($row1->group_id); ?>">
-												<div class="pd_image_inner"><img src="<?php print($pg_mime_source_href); ?>" alt=""></div>
-											</a></div>
-										<div class="pd_detail">
-											<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id); ?>"> <?php print($row1->cat_title); ?> </a></div>
-											<ul>
-											<?php
-												$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.parent_id = '".$row1->group_id."' ORDER BY  RAND() LIMIT 0,3";
-												//print($Query2);die();
-												$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
-												if (mysqli_num_rows($rs2) > 0) {
-													while ($row2 = mysqli_fetch_object($rs2)) {
-												?>
-												<li><a href="products.php?level_three=<?php print($row2->group_id); ?>"> <?php print($row2->cat_title); ?> </a></li>
-												<?php 
-													}
-												}
-												?>
-											</ul>
-										</div>
-									</div>
+											<div class="pd_card">
+												<div class="pd_image"><a href="products.php?level_two=<?php print($row1->group_id); ?>">
+														<div class="pd_image_inner"><img src="<?php print($pg_mime_source_href); ?>" alt=""></div>
+													</a></div>
+												<div class="pd_detail">
+													<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id); ?>"> <?php print($row1->cat_title); ?> </a></div>
+													<ul>
+														<?php
+														$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' ORDER BY  RAND() LIMIT 0,3";
+														//print($Query2);die();
+														$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+														if (mysqli_num_rows($rs2) > 0) {
+															while ($row2 = mysqli_fetch_object($rs2)) {
+														?>
+																<li><a href="products.php?level_three=<?php print($row2->group_id); ?>"> <?php print($row2->cat_title); ?> </a></li>
+														<?php
+															}
+														}
+														?>
+													</ul>
+												</div>
+											</div>
 									<?php
 										}
 									}
@@ -95,8 +101,8 @@
 																	</li>
 																</ul>
 															</div>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 														</div>
 													</div>
 												</div>
@@ -135,8 +141,8 @@
 																	</li>
 																</ul>
 															</div>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 														</div>
 													</div>
 												</div>
@@ -175,8 +181,8 @@
 																	</li>
 																</ul>
 															</div>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 														</div>
 													</div>
 												</div>
@@ -215,8 +221,8 @@
 																	</li>
 																</ul>
 															</div>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 														</div>
 													</div>
 												</div>

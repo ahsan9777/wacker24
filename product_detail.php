@@ -9,6 +9,7 @@ if (mysqli_num_rows($rs) > 0) {
 
 	$pro_id = $row->pro_id;
 	$supplier_id = $row->supplier_id;
+	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
 	$pro_description_short = $row->pro_description_short;
 	$pro_description_long = $row->pro_description_long;
 	$pro_ean = $row->pro_ean;
@@ -25,7 +26,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pbp_price_without_tax = $row->pbp_price_without_tax;
 	$pbp_id = $row->pbp_id;
 	$ci_amount = $pbp_price_without_tax;
-	
+
 	$pg_mime_source = $row->pg_mime_source;
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
@@ -37,6 +38,18 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_title_three = $row->cat_title_three;
 }
 
+if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+	$special_price = user_special_price("supplier_id", $supplier_id);
+
+	if (!$special_price) {
+		$special_price = user_special_price("level_two", $cat_id_two);
+	}
+
+	if (!$special_price) {
+		$special_price = user_special_price("level_one", $cat_id_one);
+	}
+}
+//print_r($special_price);
 ?>
 <!doctype html>
 <html lang="de">
@@ -75,8 +88,8 @@ if (mysqli_num_rows($rs) > 0) {
 			<div class="product_detail_page gerenric_padding">
 				<div class="page_width_1480">
 					<div class="product_detail_section1">
-						<div class="product_left"  >
-							<div class="product_main_image" >
+						<div class="product_left">
+							<div class="product_main_image">
 								<article>
 									<div class="simpleLens-gallery-container" id="demo-1" align="center">
 										<div class="large_image">
@@ -84,15 +97,15 @@ if (mysqli_num_rows($rs) > 0) {
 												<div class="simpleLens-big-image-container"> <a class="simpleLens-lens-image" data-lens-image="getftpimage.php?img=<?php print($pg_mime_source); ?>"> <img src="getftpimage.php?img=<?php print($pg_mime_source); ?>" class="simpleLens-big-image"> </a> </div>
 											</div>
 										</div>
-										<div class="thum_images" >
+										<div class="thum_images">
 											<div class="simpleLens-thumbnails-container">
 												<?php
-									 			$Query = "SELECT pg_mime_source FROM `products_gallery` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' AND pg_mime_purpose != 'data_sheet' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+												$Query = "SELECT pg_mime_source FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
 												$rs = mysqli_query($GLOBALS['conn'], $Query);
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
 												?>
-													<a href="javascript:voild(0)" class="simpleLens-thumbnail-wrapper" data-lens-image="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" data-big-image="getftpimage.php?img=<?php print($row->pg_mime_source); ?>"> <img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>"> </a>
+														<a href="javascript:voild(0)" class="simpleLens-thumbnail-wrapper" data-lens-image="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" data-big-image="getftpimage.php?img=<?php print($row->pg_mime_source); ?>"> <img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>"> </a>
 												<?php
 													}
 												}
@@ -107,28 +120,29 @@ if (mysqli_num_rows($rs) > 0) {
 						</div>
 						<div class="product_right">
 							<div class="product_col1">
-								<h1> <?php print($pro_description_short); ?> </h1>
+								<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
+								<h4> <?php print($pro_description_short); ?> </h4>
 								<ul>
 									<li>Bestellnummer: <?php print($supplier_id); ?> </li>
 									<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
 									<li>GTIN: <?php print($pro_ean); ?> </li>
 								</ul>
-								<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?> > <?php print(str_replace(".", ",", $pbp_price_without_tax)); ?> € </div>
-								<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > <?php print(str_replace(".", ",", $pbp_price_amount)); ?> € <span>Each ST 1/ incl. VAT</span> </div>
+								<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(str_replace(".", ",", $pbp_price_without_tax)); ?> € </div>
+								<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(str_replace(".", ",", $pbp_price_amount)); ?> € <span>Each ST 1/ incl. VAT</span> </div>
 								<ul class="product_type">
 									<?php
-										$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' ORDER BY pf_forder ASC"; 
-										$rs = mysqli_query($GLOBALS['conn'], $Query);
-										if (mysqli_num_rows($rs) > 0) {
-											while ($row = mysqli_fetch_object($rs)) {
+									$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pf_forder ASC";
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										while ($row = mysqli_fetch_object($rs)) {
 									?>
-									<li>
-										<div class="product_label"><?php print($row->pf_fname); ?>:</div>
-										<div class="product_value"><?php print($row->pf_fvalue); ?></div>
-									</li>
+											<li>
+												<div class="product_label"><?php print($row->pf_fname); ?>:</div>
+												<div class="product_value"><?php print($row->pf_fvalue); ?></div>
+											</li>
 									<?php
-											}
 										}
+									}
 									?>
 								</ul>
 								<div class="product_info">
@@ -136,73 +150,74 @@ if (mysqli_num_rows($rs) > 0) {
 								</div>
 							</div>
 							<div class="product_col2">
-							<div class="sticky">
-								<?php
-									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax FROM `products_bundle_price` WHERE pro_id = '".$pro_id."' AND supplier_id = '".$_REQUEST['supplier_id']."' ORDER BY pbp_lower_bound ASC"; 
+								<div class="sticky">
+									<?php
+									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax FROM `products_bundle_price` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound ASC";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
-								?>
-								<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?> >From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
-								<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> >From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
-								<?php
-											}
-										}
 									?>
-								<div class="product_vat">VAT included</div>
-								<?php
-								$quantity_lenght = 0; 
-								$Query = "SELECT * FROM products_quantity WHERE supplier_id = '".dbStr(trim($supplier_id))."'";
-								$rs = mysqli_query($GLOBALS['conn'], $Query);
-								if(mysqli_num_rows($rs) > 0){
-									$row = mysqli_fetch_object($rs);
-									$pq_quantity = $row->pq_quantity;
-									$pq_upcomming_quantity = $row->pq_upcomming_quantity;
-									$pq_status = $row->pq_status;
-									if($pq_quantity == 0 && $pq_status == 'true'){
-										$quantity_lenght = $pq_upcomming_quantity;
-										print('<div class="product_order_title"> '.$pq_upcomming_quantity.' Stück bestellt</div>');
-									} elseif($pq_quantity > 0 && $pq_status == 'false'){
-										$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
-										if($quantity_lenght > 500){
-											$quantity_lenght = 500;
+											<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
+											<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
+									<?php
 										}
-										print('<div class="product_order_title green"> '.$pq_quantity.' Stück sofort verfügbar</div>');
 									}
-								}
-								?>
-								<!--<div class="product_order_title"> 100 pieces ordered</div>-->
-								<div class="product_order_row">
-									<div class="product_order_row_inner">
-										<div class="order_text">Quantity:</div>
-										<div class="order_select">
-											<select class="order_select_input" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty">
-												<?php for($i = 1; $i <= $quantity_lenght; $i++){ ?>
-												<option value="<?php print($i); ?>"> <?php print($i); ?> </option>
-												<?php } ?>
-											</select>
+									?>
+									<div class="product_vat">VAT included</div>
+									<?php
+									$quantity_lenght = 0;
+									$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										$row = mysqli_fetch_object($rs);
+										$pq_quantity = $row->pq_quantity;
+										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
+										$pq_status = $row->pq_status;
+										if ($pq_quantity == 0 && $pq_status == 'true') {
+											$quantity_lenght = $pq_upcomming_quantity;
+											print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
+										} elseif ($pq_quantity > 0 && $pq_status == 'false') {
+											$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
+											if ($quantity_lenght > 500) {
+												$quantity_lenght = 500;
+											}
+											print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+										}
+									}
+									?>
+									<!--<div class="product_order_title"> 100 pieces ordered</div>-->
+									<div class="product_order_row">
+										<div class="product_order_row_inner">
+											<div class="order_text">Quantity:</div>
+											<div class="order_select">
+												<select class="order_select_input" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty">
+													<?php for ($i = 1; $i <= $quantity_lenght; $i++) { ?>
+														<option value="<?php print($i); ?>"> <?php print($i); ?> </option>
+													<?php } ?>
+												</select>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="order_btn">
-									<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>" >
-									<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>" >
-									<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
-										<div class="gerenric_btn">Add to Cart</div>
-									</a></div>
-								<div class="order_btn"><a href="javascript:void(0)">
-										<div class="gerenric_btn">Buy Now</div>
-									</a></div>
-								<div class="product_shippment">
-									<div class="shippment_text"><span>Shipment</span> Wacker 24</div>
-									<div class="shippment_text"><a href="javascript:void(0)"><i class="fa fa-map-marker" aria-hidden="true"></i>
-											<div class="location_text location_trigger">Update Delivery to Location</div>
+									<div class="order_btn">
+										<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>">
+										<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>">
+										<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
+											<div class="gerenric_btn">Add to Cart</div>
+										</a>
+									</div>
+									<div class="order_btn"><a href="javascript:void(0)">
+											<div class="gerenric_btn">Buy Now</div>
 										</a></div>
-									<div class="shippment_btn"><a href="javascript:void(0)">
-											<div class="gerenric_btn">In the shopping lists</div>
-										</a></div>
+									<div class="product_shippment">
+										<div class="shippment_text"><span>Shipment</span> Wacker 24</div>
+										<div class="shippment_text"><a href="javascript:void(0)"><i class="fa fa-map-marker" aria-hidden="true"></i>
+												<div class="location_text location_trigger">Update Delivery to Location</div>
+											</a></div>
+										<div class="shippment_btn"><a href="javascript:void(0)">
+												<div class="gerenric_btn">In the shopping lists</div>
+											</a></div>
+									</div>
 								</div>
-							</div>
 							</div>
 						</div>
 					</div>
@@ -212,36 +227,36 @@ if (mysqli_num_rows($rs) > 0) {
 								<h2>Similar products</h2>
 								<div class="gerenric_slider">
 									<?php
-									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '".$cat_id_three."' ORDER BY  RAND() LIMIT 0,12";
+									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 									//print($Query);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 									?>
-									<div>
-										<div class="pd_card">
-											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" alt=""></a></div>
-											<div class="pd_detail">
-												<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
-												<div class="pd_rating">
-													<ul>
-														<li>
-															<div class="fa fa-star"></div>
-															<div class="fa fa-star"></div>
-															<div class="fa fa-star"></div>
-															<div class="fa fa-star"></div>
-															<div class="fa fa-star"></div>
-														</li>
-													</ul>
+											<div>
+												<div class="pd_card">
+													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" alt=""></a></div>
+													<div class="pd_detail">
+														<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+														<div class="pd_rating">
+															<ul>
+																<li>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																</li>
+															</ul>
+														</div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+													</div>
 												</div>
-												<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-												<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
 											</div>
-										</div>
-									</div>
 									<?php
-											}
 										}
+									}
 									?>
 								</div>
 								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
@@ -351,8 +366,7 @@ if (mysqli_num_rows($rs) > 0) {
 
 		$(".category_show").toggleClass("category_show_height");
 	});
-
-	
 </script>
 <?php include("includes/bottom_js.php"); ?>
+
 </html>

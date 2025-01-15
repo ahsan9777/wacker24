@@ -2457,5 +2457,30 @@ function get_delivery_charges($total){
 	  return $delivery_charges;
 }
 
+function user_special_price($parameter, $value){
+	$searchWhere = "";
+	$special_price = array();
+    if ($parameter ==  "supplier_id") {
+        $searchWhere = "AND supplier_id = '" . dbStr(trim($value)) . "'";
+    } elseif ($parameter ==  "level_two") {
+        $searchWhere = "AND supplier_id = '' AND level_two_id = '" . dbStr(trim($value)) . "'";
+    } elseif ($parameter ==  "level_one") {
+		$searchWhere = "AND supplier_id = '' AND level_two_id = '0' AND level_one_id = '" . dbStr(trim($value)) . "'";
+    }
+    if (!empty($searchWhere)) {
+        $Query = "SELECT * FROM `user_special_price` WHERE usp_status = '1' AND user_id = '3' " . $searchWhere . "";
+        //print($Query);
+        $rs = mysqli_query($GLOBALS['conn'], $Query);
+        if (mysqli_num_rows($rs) > 0) {
+            $row = mysqli_fetch_object($rs);
+            $special_price = array(
+				"usp_price_type" => $row->usp_price_type,
+				"usp_discounted_value" => $row->usp_discounted_value
+			);
+        }
+    }
+	return $special_price;
+}
+
 
 ?>

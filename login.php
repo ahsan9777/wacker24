@@ -17,6 +17,7 @@ if (isset($_REQUEST['btn_login'])) {
 	$usernameError = null;
 	$passwordError = null;
 	$password = trim($_REQUEST['user_password']);
+	//echo password_hash($password, PASSWORD_BCRYPT);
 	$username = dbStr(trim($_REQUEST['user_name']));
 	$valid = true;
 	if (empty($username)) {
@@ -28,7 +29,7 @@ if (isset($_REQUEST['btn_login'])) {
 	if ($valid) {
 
 		//$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id = '" . $utype_id . "' AND user_password='" . $password . "' AND user_name='" . $username . "' AND status_id = '1' AND gen_id = '".$gen_id."'") or die(mysqli_error($GLOBALS['conn']));
-		$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE user_name='" . $username . "' AND status_id = '1'") or die(mysqli_error($GLOBALS['conn']));
+		$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '1'") or die(mysqli_error($GLOBALS['conn']));
 		if (mysqli_num_rows($rs) > 0) {
 			$row = mysqli_fetch_object($rs);
 			if (password_verify($password, $row->user_password)) {
@@ -88,6 +89,9 @@ if (isset($_REQUEST['btn_login'])) {
 					<div class="login_logo"><a href="index.php"><img src="images/register_logo.png" alt=""></a></div>
 					<div class="login_box">
 						<h2>Login</h2>
+						<?php if ($class != "") { ?>
+							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+						<?php } ?>
 						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
