@@ -5,13 +5,13 @@ if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
     $qryStrURL .= "user_id=" . $_REQUEST['user_id'] . "&";
 }
 if (isset($_REQUEST['btnAdd'])) {
-    
+
     //print_r($_REQUEST);die();
     $Query = "SELECT * FROM user_special_price WHERE user_id = '" . dbStr(trim($_REQUEST['user_id'])) . "' AND level_one_id ='" . dbStr(trim($_REQUEST['level_one_id'])) . "' AND level_two_id ='" . dbStr(trim($_REQUEST['level_two_id'])) . "' AND supplier_id ='" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
         $row = mysqli_fetch_object($rs);
-        mysqli_query($GLOBALS['conn'], "UPDATE user_special_price SET usp_price_type = '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', usp_discounted_value = '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', usp_updatedby = '" . $_SESSION["UserID"] . "', usp_udate = '" . date_time . "' WHERE usp_id= '" . $row->usp_id."' ") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE user_special_price SET usp_price_type = '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', usp_discounted_value = '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', usp_updatedby = '" . $_SESSION["UserID"] . "', usp_udate = '" . date_time . "' WHERE usp_id= '" . $row->usp_id . "' ") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=4");
     } else {
 
@@ -25,7 +25,7 @@ if (isset($_REQUEST['btnAdd'])) {
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
-        $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM user_special_price WHERE usp_id = " . $_REQUEST['usp_id']);
+        $rsM = mysqli_query($GLOBALS['conn'], "SELECT usp.*, pbp.pbp_price_amount, pg.pg_mime_source_url FROM user_special_price AS usp LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = usp.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = usp.supplier_id AND pbp.pbp_lower_bound = '1' WHERE usp_id = " . $_REQUEST['usp_id']);
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
             $level_one_id = $rsMem->level_one_id;
@@ -33,6 +33,16 @@ if (isset($_REQUEST['btnAdd'])) {
             $supplier_id = $rsMem->supplier_id;
             $usp_price_type = $rsMem->usp_price_type;
             $usp_discounted_value = $rsMem->usp_discounted_value;
+            $pg_mime_source_url = $rsMem->pg_mime_source_url;
+            $pbp_price_amount = $rsMem->pbp_price_amount;
+
+            $usp_discounted_price = 0;
+            if($usp_price_type > 0){
+                $usp_discounted_price = number_format(($pbp_price_amount - $usp_discounted_value), "2", ".", "");
+            } else{
+                $percentage_value = ($pbp_price_amount * $usp_discounted_value) / 100;
+                $usp_discounted_price = number_format(($pbp_price_amount - $percentage_value), "2", ".", "");
+            }
             $formHead = "Update Info";
         }
     } else {
@@ -119,7 +129,50 @@ include("includes/messages.php");
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
-                                <?php if ($_REQUEST['action'] == 1) { ?>
+                                <?php if ($_REQUEST['action'] == 2) {  if(empty($supplier_id)) {?>
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <div class="d-flex gap-2 mt-3">
+                                            <div class="d-flex gap-2">
+                                                <label for="">Percentage: </label>
+                                                <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <label for="">Fix: </label>
+                                                <input type="radio" name="usp_price_type" id="usp_price_typ" value="1" <?php print(($_REQUEST['action'] == 2 && $usp_price_type == 1) ? 'checked' : ''); ?>>
+                                            </div>
+                                        </div>
+                                        <label for="">Value</label>
+                                        <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                    </div>
+                                    <?php } else { ?>
+                                    <div class="row" >
+                                        <div class="col-md-2 col-12 mt-3">
+                                            <img src="<?php print($pg_mime_source_url); ?>" alt="" width="110">
+                                        </div>
+                                        <div class="col-md-4 col-12 mt-3">
+                                            <div class="d-flex gap-2 mt-3">
+                                                <div class="d-flex gap-2">
+                                                    <label for="">Percentage: </label>
+                                                    <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <label for="">Fix: </label>
+                                                    <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="1" <?php print(($usp_price_type == 1) ? 'checked' : ''); ?>>
+                                                </div>
+                                            </div>
+                                            <label for="">Value</label>
+                                            <input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                        </div>
+                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
+                                            <label for="">Price</label>
+                                            <input type="number" readonly class="input_style pbp_price_amount" name="pbp_price_amount" id="pbp_price_amount" value="<?php print($pbp_price_amount); ?>" placeholder="Price">
+                                        </div>
+                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
+                                            <label for="">Discounted Price</label>
+                                            <input type="number" readonly class="input_style usp_discounted_price" name="usp_discounted_price" id="usp_discounted_price" value="<?php print($usp_discounted_price); ?>" placeholder="Discounted Price">
+                                        </div>
+                                    </div>
+                                <?php } } else { ?>
                                     <div class="col-md-6 col-12 mt-3">
                                         <label for="">Category</label>
                                         <select class="input_style" name="level_one_id" id="level_one_id">
@@ -138,49 +191,7 @@ include("includes/messages.php");
                                         <input type="text" class="input_style special_price_pro_title" name="special_price_pro_title" id="special_price_pro_title" value="" placeholder="Title:" autocomplete="off">
                                     </div>
                                     <div class="row" id="special_price_product_data">
-                                        
-                                    </div>
-                                <?php } else { ?>
-                                    <div class="col-md-12 col-12 mt-3" id="category_price">
-                                        <div class="d-flex gap-2 mt-3">
-                                            <div class="d-flex gap-2">
-                                                <label for="">Percentage: </label>
-                                                <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
-                                            </div>
-                                            <div class="d-flex gap-2">
-                                                <label for="">Fix: </label>
-                                                <input type="radio" name="usp_price_type" id="usp_price_typ" value="1" <?php print(($_REQUEST['action'] == 2 && $usp_price_type == 1) ? 'checked' : ''); ?>>
-                                            </div>
-                                        </div>
-                                        <label for="">Value</label>
-                                        <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
-                                    </div>
-                                    <div class="row" id="product_price" style="display: none;">
-                                        <div class="col-md-2 col-12 mt-3">
-                                            <img src="../files/A011860H.jpg" alt="" width="110">
-                                        </div>
-                                        <div class="col-md-4 col-12 mt-3">
-                                            <div class="d-flex gap-2 mt-3">
-                                                <div class="d-flex gap-2">
-                                                    <label for="">Percentage: </label>
-                                                    <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
-                                                </div>
-                                                <div class="d-flex gap-2">
-                                                    <label for="">Fix: </label>
-                                                    <input type="radio" name="usp_price_type" id="usp_price_type" value="1" <?php print(($usp_price_type == 1) ? 'checked' : ''); ?>>
-                                                </div>
-                                            </div>
-                                            <label for="">Value</label>
-                                            <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
-                                        </div>
-                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
-                                            <label for="">Price</label>
-                                            <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Price">
-                                        </div>
-                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
-                                            <label for="">Discounted Price</label>
-                                            <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Discounted Price">
-                                        </div>
+
                                     </div>
                                 <?php } ?>
                                 <div class="col-md-12 col-12 mt-3">
@@ -236,25 +247,24 @@ include("includes/messages.php");
                                                 $title .= "<strong class = 'text-white'>Sub Category : </strong> " . $row->sub_cat_title . "<br>";
                                             }
                                             if (!empty($row->pro_title)) {
-                                                
-                                                    $title .= "<strong class = 'text-white'>Title : </strong> " . $row->pro_title . "<br>";
-                                                
+
+                                                $title .= "<strong class = 'text-white'>Title : </strong> " . $row->pro_title . "<br>";
                                             }
                                             $pro_price = "";
                                             $pro_price_after_discount = "";
                                             if (!empty($row->pro_actual_price)) {
                                                 $pro_actual_price = $row->pro_actual_price;
-                                               
-                                                    $pro_price .=  str_replace(".", ",", $pro_actual_price) . "<br>";
-                                                    $price_after_discount = 0;
-                                                    if ($row->usp_price_type == 0) {
-                                                        $discount = 0;
-                                                        $discount = ($pro_actual_price * $row->usp_discounted_value) / 100;
-                                                        $price_after_discount = number_format(($pro_actual_price - $discount), "2", ",", "");
-                                                    } else {
-                                                        $price_after_discount = number_format(($pro_actual_price - $row->usp_discounted_value), "2", ",", "");
-                                                    }
-                                                    $pro_price_after_discount .= $price_after_discount . "<br>";
+
+                                                $pro_price .=  str_replace(".", ",", $pro_actual_price) . "<br>";
+                                                $price_after_discount = 0;
+                                                if ($row->usp_price_type == 0) {
+                                                    $discount = 0;
+                                                    $discount = ($pro_actual_price * $row->usp_discounted_value) / 100;
+                                                    $price_after_discount = number_format(($pro_actual_price - $discount), "2", ",", "");
+                                                } else {
+                                                    $price_after_discount = number_format(($pro_actual_price - $row->usp_discounted_value), "2", ",", "");
+                                                }
+                                                $pro_price_after_discount .= $price_after_discount . "<br>";
                                             }
                                     ?>
                                             <tr>
@@ -342,7 +352,7 @@ include("includes/messages.php");
                 $("#supplier_id").val(0);
                 $("#special_price_pro_title").val("");
                 //$("#special_price_product_data").empty();
-                
+
                 const obj = JSON.parse(data);
                 //console.log(obj);
                 if (obj.status == 1) {
