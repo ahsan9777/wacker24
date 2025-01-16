@@ -18,4 +18,5 @@ $strMSG = "";
 $qryStrURL = ""; 
 $search_keyword = "";
 $cat_id = "";
+$special_price = array();
 ?>

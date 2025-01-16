@@ -2482,5 +2482,16 @@ function user_special_price($parameter, $value){
 	return $special_price;
 }
 
+function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_value){
+		$usp_discounted_price = 0;
+		if ($usp_price_type > 0) {
+			$usp_discounted_price = number_format(($pbp_price_amount - $usp_discounted_value), "2", ".", "");
+		} else {
+			$percentage_value = ($pbp_price_amount * $usp_discounted_value) / 100;
+			$usp_discounted_price = number_format(($pbp_price_amount - $percentage_value), "2", ".", "");
+		}
+	return $usp_discounted_price;
+}
+
 
 ?>

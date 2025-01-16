@@ -37,9 +37,9 @@ if (isset($_REQUEST['btnAdd'])) {
             $pbp_price_amount = $rsMem->pbp_price_amount;
 
             $usp_discounted_price = 0;
-            if($usp_price_type > 0){
+            if ($usp_price_type > 0) {
                 $usp_discounted_price = number_format(($pbp_price_amount - $usp_discounted_value), "2", ".", "");
-            } else{
+            } else {
                 $percentage_value = ($pbp_price_amount * $usp_discounted_value) / 100;
                 $usp_discounted_price = number_format(($pbp_price_amount - $percentage_value), "2", ".", "");
             }
@@ -129,50 +129,56 @@ include("includes/messages.php");
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
-                                <?php if ($_REQUEST['action'] == 2) {  if(empty($supplier_id)) {?>
-                                    <div class="col-md-12 col-12 mt-3">
-                                        <div class="d-flex gap-2 mt-3">
-                                            <div class="d-flex gap-2">
-                                                <label for="">Percentage: </label>
-                                                <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
-                                            </div>
-                                            <div class="d-flex gap-2">
-                                                <label for="">Fix: </label>
-                                                <input type="radio" name="usp_price_type" id="usp_price_typ" value="1" <?php print(($_REQUEST['action'] == 2 && $usp_price_type == 1) ? 'checked' : ''); ?>>
-                                            </div>
-                                        </div>
-                                        <label for="">Value</label>
-                                        <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
-                                    </div>
-                                    <?php } else { ?>
-                                    <div class="row" >
-                                        <div class="col-md-2 col-12 mt-3">
-                                            <img src="<?php print($pg_mime_source_url); ?>" alt="" width="110">
-                                        </div>
-                                        <div class="col-md-4 col-12 mt-3">
+                                <?php if ($_REQUEST['action'] == 2) {
+                                    if (empty($supplier_id)) { ?>
+                                        <div class="col-md-12 col-12 mt-3">
                                             <div class="d-flex gap-2 mt-3">
                                                 <div class="d-flex gap-2">
                                                     <label for="">Percentage: </label>
-                                                    <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
+                                                    <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
                                                 </div>
                                                 <div class="d-flex gap-2">
                                                     <label for="">Fix: </label>
-                                                    <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="1" <?php print(($usp_price_type == 1) ? 'checked' : ''); ?>>
+                                                    <input type="radio" name="usp_price_type" id="usp_price_typ" value="1" <?php print(($_REQUEST['action'] == 2 && $usp_price_type == 1) ? 'checked' : ''); ?>>
                                                 </div>
                                             </div>
                                             <label for="">Value</label>
-                                            <input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                            <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
                                         </div>
-                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
-                                            <label for="">Price</label>
-                                            <input type="number" readonly class="input_style pbp_price_amount" name="pbp_price_amount" id="pbp_price_amount" value="<?php print($pbp_price_amount); ?>" placeholder="Price">
+                                    <?php } else { ?>
+                                        <div class="row">
+                                            <div class="col-md-2 col-12 mt-3">
+                                                <div class="popup_container" style="width: 110px;">
+                                                    <div class="container__img-holder">
+                                                        <img src="<?php print($pg_mime_source_url); ?>" alt="" width="110">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-12 mt-3">
+                                                <div class="d-flex gap-2 mt-3">
+                                                    <div class="d-flex gap-2">
+                                                        <label for="">Percentage: </label>
+                                                        <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
+                                                    </div>
+                                                    <div class="d-flex gap-2">
+                                                        <label for="">Fix: </label>
+                                                        <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="1" <?php print(($usp_price_type == 1) ? 'checked' : ''); ?>>
+                                                    </div>
+                                                </div>
+                                                <label for="">Value</label>
+                                                <input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                            </div>
+                                            <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
+                                                <label for="">Price</label>
+                                                <input type="number" readonly class="input_style pbp_price_amount" name="pbp_price_amount" id="pbp_price_amount" value="<?php print($pbp_price_amount); ?>" placeholder="Price">
+                                            </div>
+                                            <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
+                                                <label for="">Discounted Price</label>
+                                                <input type="number" readonly class="input_style usp_discounted_price" name="usp_discounted_price" id="usp_discounted_price" value="<?php print($usp_discounted_price); ?>" placeholder="Discounted Price">
+                                            </div>
                                         </div>
-                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
-                                            <label for="">Discounted Price</label>
-                                            <input type="number" readonly class="input_style usp_discounted_price" name="usp_discounted_price" id="usp_discounted_price" value="<?php print($usp_discounted_price); ?>" placeholder="Discounted Price">
-                                        </div>
-                                    </div>
-                                <?php } } else { ?>
+                                    <?php }
+                                } else { ?>
                                     <div class="col-md-6 col-12 mt-3">
                                         <label for="">Category</label>
                                         <select class="input_style" name="level_one_id" id="level_one_id">

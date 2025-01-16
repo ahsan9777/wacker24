@@ -131,8 +131,10 @@ body.body-white{background-color: #fff !important;}
 .gerenric_product .pd_detail .pd_rating ul li{ list-style-type: none;}
 .gerenric_product .pd_detail .pd_rating ul li .fa{ color: #ffc107; margin-right: 2px; font-size: 17px;}
 .gerenric_product .pd_detail .pd_del_price{ font-size: 20px; color: #5a5a5a; font-weight: 500; margin-bottom: 6px;}
-.gerenric_product .pd_detail .pd_prise{ font-size: 25px; color: #B12704; font-weight: 500; margin-bottom: 10px;}
+.gerenric_product .pd_detail .pd_prise{ font-size: 22px; color: #B12704; font-weight: 500; margin-bottom: 10px;}
 .gerenric_product .pd_detail .pd_prise.price_without_tex{ display: none;}
+.gerenric_product .pd_detail .pd_prise .pd_prise_discount{ color: green; font-size: 20px;}
+.gerenric_product .pd_detail .pd_prise .pd_prise_discount_value{ font-size: 16px;}
 .gerenric_product .pd_detail .pd_btn .gerenric_btn{width: 100%; min-width: inherit; margin-bottom: 20px; border-radius: 100px; font-weight: normal; font-size: 14px;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image{width: 100%; margin-bottom: 20px;position: sticky; top: 100px;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-gallery-container.active{ display: block;}
@@ -404,8 +406,12 @@ body.body-white{background-color: #fff !important;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 .product_prise{font-size: 26px; margin-top: 30px; margin-bottom: 30px; color: #B12704;font-weight: 600;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 .product_prise.price_without_tex{display: none;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 .product_prise span{color: #212529; font-size: 12px; text-decoration: underline;}
+.product_detail_page .product_detail_section1 .product_right .product_col1 .product_prise .pd_prise_discount{ color: green; font-size: 22px; text-decoration: none;}
+.product_detail_page .product_detail_section1 .product_right .product_col1 .product_prise .pd_prise_discount_value{ color: green; font-size: 18px; text-decoration: none;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 p{font-size: 15px; color: #212529; font-weight: 400; }
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise{font-size: 18px; color: #212529; font-weight: 600; margin-bottom: 15px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise .pd_prise_discount{ color: green; font-size: 16px; }
+.product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise .pd_prise_discount_value{ color: green; font-size: 14px; }
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise.price_without_tex{display: none;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise span{font-weight: bold; font-size: 20px; color: #000;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_vat{font-size: 15px; color: #212529; font-weight: 500; margin-bottom: 25px;}

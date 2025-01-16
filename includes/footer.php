@@ -1,4 +1,4 @@
-<footer id="footer_section" <?php print($background_color_one); ?> >
+<footer id="footer_section" <?php print($background_color_one); ?>>
     <div class="page_width">
         <div class="footer_top">
             <div class="footer-col">
@@ -38,32 +38,26 @@
                 </ul>
             </div>
             <div class="footer-col">
-                <h2>payment methods</h2>
+                <h2>Payment Methods</h2>
                 <div class="footer_payment_method">
-                    <div class="payment_card">
-                        <div class="payment_card_image"><img src="images/amExpress.jpg" alt=""></div>
-                        <div class="payment_card_title">American Express</div>
-                    </div>
-                    <div class="payment_card">
-                        <div class="payment_card_image"><img src="images/mastercard.jpg" alt=""></div>
-                        <div class="payment_card_title">Mastercard</div>
-                    </div>
-                    <div class="payment_card">
-                        <div class="payment_card_image"><img src="images/payPal.jpg" alt=""></div>
-                        <div class="payment_card_title">PayPal</div>
-                    </div>
-                    <div class="payment_card">
-                        <div class="payment_card_image"><img src="images/teba.jpg" alt=""></div>
-                        <div class="payment_card_title">Teba</div>
-                    </div>
-                    <div class="payment_card">
-                        <div class="payment_card_image"><img src="images/visa.jpg" alt=""></div>
-                        <div class="payment_card_title">Visa</div>
-                    </div>
-                    <div class="payment_card">
-                        <div class="payment_card_image"><img src="images/sepa.jpg" alt=""></div>
-                        <div class="payment_card_title">Sepa</div>
-                    </div>
+                    <?php
+                    $Query = "SELECT pm.pm_id, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
+                    $rs = mysqli_query($GLOBALS['conn'], $Query);
+                    if (mysqli_num_rows($rs) > 0) {
+                        while ($row = mysqli_fetch_object($rs)) {
+                            $pm_image_href = "files/no_img_1.jpg";
+                            if (!empty($row->pm_image)) {
+                                $pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
+                            }
+                    ?>
+                            <div class="payment_card">
+                                <div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>" ></div>
+                                <div class="payment_card_title"><?php print($row->pm_title) ?></div>
+                            </div>
+                    <?php
+                        }
+                    }
+                    ?>
                 </div>
             </div>
         </div>

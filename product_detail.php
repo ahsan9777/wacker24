@@ -1,7 +1,7 @@
 <?php
 
 include("includes/php_includes_top.php");
-$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -27,7 +27,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pbp_id = $row->pbp_id;
 	$ci_amount = $pbp_price_without_tax;
 
-	$pg_mime_source = $row->pg_mime_source;
+	$pg_mime_source_url = $row->pg_mime_source_url;
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
 	$cat_id_one = $sub_group_ids[1];
@@ -48,8 +48,8 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 	if (!$special_price) {
 		$special_price = user_special_price("level_one", $cat_id_one);
 	}
+	//print_r($special_price);
 }
-//print_r($special_price);
 ?>
 <!doctype html>
 <html lang="de">
@@ -94,18 +94,18 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 									<div class="simpleLens-gallery-container" id="demo-1" align="center">
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a class="simpleLens-lens-image" data-lens-image="getftpimage.php?img=<?php print($pg_mime_source); ?>"> <img src="getftpimage.php?img=<?php print($pg_mime_source); ?>" class="simpleLens-big-image"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a class="simpleLens-lens-image" data-lens-image="<?php print($pg_mime_source_url); ?>"> <img src="<?php print($pg_mime_source_url); ?>" class="simpleLens-big-image"> </a> </div>
 											</div>
 										</div>
 										<div class="thum_images">
 											<div class="simpleLens-thumbnails-container">
 												<?php
-												$Query = "SELECT pg_mime_source FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+												$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
 												$rs = mysqli_query($GLOBALS['conn'], $Query);
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
 												?>
-														<a href="javascript:voild(0)" class="simpleLens-thumbnail-wrapper" data-lens-image="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" data-big-image="getftpimage.php?img=<?php print($row->pg_mime_source); ?>"> <img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>"> </a>
+														<a href="javascript:voild(0)" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print($row->pg_mime_source_url); ?>" data-big-image="<?php print($row->pg_mime_source_url); ?>"> <img src="<?php print($row->pg_mime_source_url); ?>"> </a>
 												<?php
 													}
 												}
@@ -127,8 +127,13 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 									<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
 									<li>GTIN: <?php print($pro_ean); ?> </li>
 								</ul>
-								<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(str_replace(".", ",", $pbp_price_without_tax)); ?> € </div>
-								<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(str_replace(".", ",", $pbp_price_amount)); ?> € <span>Each ST 1/ incl. VAT</span> </div>
+								<?php if (!empty($special_price)) { ?>
+									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Each ST 1/ incl. VAT</span> </span>"); ?> </div>
+								<?php } else { ?>
+									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $pbp_price_without_tax)); ?>€</div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $pbp_price_amount)); ?>€ <span>Each ST 1/ incl. VAT</span></div>
+								<?php } ?>
 								<ul class="product_type">
 									<?php
 									$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pf_forder ASC";
@@ -156,10 +161,15 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
+											if (!empty($special_price)) {
 									?>
-											<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
-											<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del>" . $pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del>" . $pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> "); ?> </div>
+											<?php } else { ?>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
 									<?php
+											}
 										}
 									}
 									?>
@@ -227,15 +237,24 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 								<h2>Similar products</h2>
 								<div class="gerenric_slider">
 									<?php
-									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 									//print($Query);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
+											if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+												$cat_id_two = substr($cat_id_three, 0, 3);
+            									$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
+												$special_price = user_special_price("level_two", $cat_id_two);
+												if (!$special_price) {
+													$special_price = user_special_price("level_one", $cat_id_one);
+												}
+												//print_r($special_price);
+											}
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" alt=""></a></div>
+													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print($row->pg_mime_source_url); ?>" alt=""></a></div>
 													<div class="pd_detail">
 														<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
@@ -249,8 +268,13 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 																</li>
 															</ul>
 														</div>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?> €</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</div>
+														<?php if(!empty($special_price)) { ?>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print( "<del>".$row->pbp_price_without_tax."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value'])."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print( "<del>".$row->pbp_price_amount."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'])."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
+														<?php } else { ?>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
+														<?php } ?>
 													</div>
 												</div>
 											</div>
