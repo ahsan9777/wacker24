@@ -2495,7 +2495,8 @@ function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_va
 
 function cat_min_pbp_price_amount($sub_group_ids){
 	$pbp_price_amount = 0;
-	$Query = "SELECT cm.*, pbp.*, MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('".$sub_group_ids."', cm.sub_group_ids)";
+	//$Query = "SELECT cm.*, pbp.*, MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('".$sub_group_ids."', cm.sub_group_ids)";
+	$Query = "SELECT  MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('".$sub_group_ids."', cm.sub_group_ids)";
 	//print($Query);die();
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {

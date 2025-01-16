@@ -378,8 +378,8 @@ include("includes/messages.php");
                 //console.log(obj);
                 if (obj.status == 1) {
                     category_price_data();
-                    cat_min_pbp_price_amount();
                     $("#level_two_id").html(obj.level_one_data);
+                    cat_min_pbp_price_amount();
                 }
             }
         });
@@ -397,7 +397,7 @@ include("includes/messages.php");
     function cat_min_pbp_price_amount() {
         let level_one_id = $("#level_one_id").val();
         let level_two_id = $("#level_two_id").val();
-        //console.log("supplier_id: " + supplier_id);
+        //console.log("level_one_id: " + level_one_id+" level_two_id: "+level_two_id);
         $.ajax({
             type: "POST",
             url: "ajax_calls.php?action=cat_min_pbp_price_amount",

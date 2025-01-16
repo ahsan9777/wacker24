@@ -198,7 +198,8 @@ if (isset($_REQUEST['action'])) {
         case 'cat_min_pbp_price_amount':
             //print_r($_REQUEST);die();
             $retValue = array();
-            $Query = "SELECT cm.*, pbp.*, MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr(trim($_REQUEST['level_two_id'])) : dbStr(trim($_REQUEST['level_one_id']))) . "', cm.sub_group_ids)";
+            //$Query = "SELECT cm.*, pbp.*, MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr($_REQUEST['level_two_id']) : dbStr($_REQUEST['level_one_id'])) . "', cm.sub_group_ids)";
+            $Query = "SELECT  MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr($_REQUEST['level_two_id']) : dbStr($_REQUEST['level_one_id'])) . "', cm.sub_group_ids)";
             //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
