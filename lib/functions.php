@@ -2463,9 +2463,9 @@ function user_special_price($parameter, $value){
     if ($parameter ==  "supplier_id") {
         $searchWhere = "AND supplier_id = '" . dbStr(trim($value)) . "'";
     } elseif ($parameter ==  "level_two") {
-        $searchWhere = "AND supplier_id = '' AND level_two_id = '" . dbStr(trim($value)) . "'";
+        $searchWhere = "AND supplier_id = '0' AND level_two_id = '" . dbStr(trim($value)) . "'";
     } elseif ($parameter ==  "level_one") {
-		$searchWhere = "AND supplier_id = '' AND level_two_id = '0' AND level_one_id = '" . dbStr(trim($value)) . "'";
+		$searchWhere = "AND supplier_id = '0' AND level_two_id = '0' AND level_one_id = '" . dbStr(trim($value)) . "'";
     }
     if (!empty($searchWhere)) {
         $Query = "SELECT * FROM `user_special_price` WHERE usp_status = '1' AND user_id = '3' " . $searchWhere . "";
@@ -2491,6 +2491,20 @@ function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_va
 			$usp_discounted_price = number_format(($pbp_price_amount - $percentage_value), "2", ".", "");
 		}
 	return $usp_discounted_price;
+}
+
+function cat_min_pbp_price_amount($sub_group_ids){
+	$pbp_price_amount = 0;
+	$Query = "SELECT cm.*, pbp.*, MIN(pbp.pbp_price_amount) AS cat_min_pbp_price_amount FROM category_map AS cm LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE FIND_IN_SET('".$sub_group_ids."', cm.sub_group_ids)";
+	//print($Query);die();
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		$row = mysqli_fetch_object($rs);
+
+		$pbp_price_amount = $row->cat_min_pbp_price_amount;
+	}
+
+	return $pbp_price_amount;
 }
 
 

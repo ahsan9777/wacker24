@@ -36,6 +36,13 @@ if (isset($_REQUEST['btnAdd'])) {
             $pg_mime_source_url = $rsMem->pg_mime_source_url;
             $pbp_price_amount = $rsMem->pbp_price_amount;
 
+            if (empty($supplier_id)) {
+                if ($level_two_id > 0) {
+                    $pbp_price_amount = cat_min_pbp_price_amount($level_two_id);
+                } elseif ($level_one_id) {
+                    $pbp_price_amount = cat_min_pbp_price_amount($level_one_id);
+                }
+            }
             $usp_discounted_price = 0;
             if ($usp_price_type > 0) {
                 $usp_discounted_price = number_format(($pbp_price_amount - $usp_discounted_value), "2", ".", "");
@@ -131,19 +138,27 @@ include("includes/messages.php");
                             <div class="row">
                                 <?php if ($_REQUEST['action'] == 2) {
                                     if (empty($supplier_id)) { ?>
-                                        <div class="col-md-12 col-12 mt-3">
+                                        <div class="col-md-6 col-12 mt-3">
                                             <div class="d-flex gap-2 mt-3">
                                                 <div class="d-flex gap-2">
                                                     <label for="">Percentage: </label>
-                                                    <input type="radio" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
+                                                    <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="0" <?php print(($usp_price_type == 0) ? 'checked' : ''); ?>>
                                                 </div>
                                                 <div class="d-flex gap-2">
                                                     <label for="">Fix: </label>
-                                                    <input type="radio" name="usp_price_type" id="usp_price_typ" value="1" <?php print(($_REQUEST['action'] == 2 && $usp_price_type == 1) ? 'checked' : ''); ?>>
+                                                    <input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_typ" value="1" <?php print(($_REQUEST['action'] == 2 && $usp_price_type == 1) ? 'checked' : ''); ?>>
                                                 </div>
                                             </div>
                                             <label for="">Value</label>
-                                            <input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                            <input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                        </div>
+                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
+                                            <label for="">Price</label>
+                                            <input type="number" readonly class="input_style pbp_price_amount" name="pbp_price_amount" id="pbp_price_amount" value="<?php print($pbp_price_amount); ?>" placeholder="Price">
+                                        </div>
+                                        <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
+                                            <label for="">Discounted Price</label>
+                                            <input type="number" readonly class="input_style usp_discounted_price" name="usp_discounted_price" id="usp_discounted_price" value="<?php print($usp_discounted_price); ?>" placeholder="Discounted Price">
                                         </div>
                                     <?php } else { ?>
                                         <div class="row">
@@ -363,19 +378,44 @@ include("includes/messages.php");
                 //console.log(obj);
                 if (obj.status == 1) {
                     category_price_data();
+                    cat_min_pbp_price_amount();
                     $("#level_two_id").html(obj.level_one_data);
                 }
             }
         });
 
     });
+
     $("#level_two_id").on("click", function() {
         $("#supplier_id").val(0);
         $("#special_price_pro_title").val("");
         $("#special_price_pro_title").val("");
         category_price_data();
+        cat_min_pbp_price_amount();
     });
 
+    function cat_min_pbp_price_amount() {
+        let level_one_id = $("#level_one_id").val();
+        let level_two_id = $("#level_two_id").val();
+        //console.log("supplier_id: " + supplier_id);
+        $.ajax({
+            type: "POST",
+            url: "ajax_calls.php?action=cat_min_pbp_price_amount",
+            data: {
+                level_one_id: level_one_id,
+                level_two_id: level_two_id
+            },
+            success: function(data) {
+                //console.log(data);
+                const obj = JSON.parse(data);
+                //console.log(obj);
+                if (obj.status == 1) {
+                    $("#pbp_price_amount").val(obj.data[0].pbp_price_amount);
+                }
+            }
+        });
+
+    };
 
     $('input.special_price_pro_title').autocomplete({
         source: function(request, response) {
@@ -409,7 +449,7 @@ include("includes/messages.php");
     });
 
     function special_price_product_data(supplier_id) {
-        console.log("supplier_id: " + supplier_id);
+        //console.log("supplier_id: " + supplier_id);
         $.ajax({
             type: "POST",
             url: "ajax_calls.php?action=special_price_product_data",
@@ -427,7 +467,8 @@ include("includes/messages.php");
             }
         });
 
-    };
+    }
+
 
     $(".usp_price_type").on("click", function() {
         //console.log("usp_price_type");
@@ -458,23 +499,59 @@ include("includes/messages.php");
     });
 
     function category_price_data() {
-        let category_price_data = '<div class="col-md-12 col-12 mt-3" id="category_price">';
+        let category_price_data = '<div class="col-md-6 col-12 mt-3" id="category_price">';
         category_price_data += '<div class="d-flex gap-2 mt-3">';
         category_price_data += '<div class="d-flex gap-2">';
         category_price_data += '<label for="">Percentage: </label>';
-        category_price_data += '<input type="radio" name="usp_price_type" id="usp_price_type" value="0" checked >';
+        category_price_data += '<input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_type" value="0" checked >';
         category_price_data += '</div>';
         category_price_data += '<div class="d-flex gap-2">';
         category_price_data += '<label for="">Fix: </label>';
-        category_price_data += '<input type="radio" name="usp_price_type" id="usp_price_typ" value="1">';
+        category_price_data += '<input type="radio" class="usp_price_type" name="usp_price_type" id="usp_price_typ" value="1">';
         category_price_data += '</div>';
         category_price_data += '</div>';
         category_price_data += '<label for="">Value</label>';
-        category_price_data += '<input type="number" class="input_style" name="usp_discounted_value" id="usp_discounted_value" value="" required placeholder="Value">';
+        category_price_data += '<input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="0" required placeholder="Value">';
+        category_price_data += '</div>';
+        category_price_data += '<div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">';
+        category_price_data += '<label for="">Price</label>';
+        category_price_data += '<input type="number" readonly class="input_style pbp_price_amount" name="pbp_price_amount" id="pbp_price_amount" value="" placeholder="Price">';
+        category_price_data += '</div>';
+        category_price_data += '<div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">';
+        category_price_data += '<label for="">Discounted Price</label>';
+        category_price_data += '<input type="number" readonly class="input_style usp_discounted_price" name="usp_discounted_price" id="usp_discounted_price" value="0" placeholder="Discounted Price">';
         category_price_data += '</div>';
 
         $("#special_price_product_data").empty();
         $("#special_price_product_data").html(category_price_data);
+
+        $(".usp_price_type").on("click", function() {
+            //console.log("usp_price_type");
+            $(".usp_discounted_value").trigger("keyup");
+        });
+        $(".usp_discounted_value").on("keyup", function() {
+
+            let usp_price_type = $("input[name='usp_price_type']:checked").val();
+            let usp_discounted_value = $("#usp_discounted_value").val();
+            let pbp_price_amount = $("#pbp_price_amount").val();
+            let usp_discounted_price = 0;
+            let percentage = 0;
+            //console.log("usp_discounted_value: " + usp_discounted_value + " usp_price_type: " + usp_price_type + " pbp_price_amount: " + pbp_price_amount);
+            if (usp_discounted_value > 0) {
+                if (usp_price_type == 1) {
+                    if (parseFloat(usp_discounted_value) <= parseFloat(pbp_price_amount)) {
+                        usp_discounted_price = (pbp_price_amount - usp_discounted_value).toFixed(2);
+                    } else {
+                        $("#usp_discounted_value").val(0);
+                        usp_discounted_price = 0;
+                    }
+                } else {
+                    percentage = (pbp_price_amount * usp_discounted_value) / 100;
+                    usp_discounted_price = (pbp_price_amount - percentage).toFixed(2);
+                }
+            }
+            $("#usp_discounted_price").val(usp_discounted_price);
+        });
     }
 </script>
 
