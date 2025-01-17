@@ -129,7 +129,7 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 								</ul>
 								<?php if (!empty($special_price)) { ?>
 									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Each ST 1/ incl. VAT</span> </span>"); ?> </div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Each ST 1/ incl. VAT</span> </span>"); ?> </div>
 								<?php } else { ?>
 									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $pbp_price_without_tax)); ?>€</div>
 									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $pbp_price_amount)); ?>€ <span>Each ST 1/ incl. VAT</span></div>
@@ -164,7 +164,7 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 											if (!empty($special_price)) {
 									?>
 												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> "); ?> </div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> "); ?> </div>
 											<?php } else { ?>
 												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
 												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
@@ -211,6 +211,8 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 									<div class="order_btn">
 										<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>">
 										<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>">
+										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print( (!empty($special_price))? $special_price['usp_price_type'] : '0' ); ?>">
+										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print( (!empty($special_price))? $special_price['usp_discounted_value'] : '0' ); ?>">
 										<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
 											<div class="gerenric_btn">Add to Cart</div>
 										</a>

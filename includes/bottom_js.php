@@ -7,6 +7,8 @@
 		//console.log("add_to_card");
 		let pro_id = $("#pro_id_"+$(this).attr("data-id")).val();
 		let supplier_id = $("#supplier_id_"+$(this).attr("data-id")).val();
+		let ci_discount_type = $("#ci_discount_type_"+$(this).attr("data-id")).val();
+		let ci_discount_value = $("#ci_discount_value_"+$(this).attr("data-id")).val();
 		let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
 
 		/*console.log("pro_id: "+pro_id);
@@ -19,6 +21,8 @@
 			data: {
 				pro_id: pro_id,
 				supplier_id: supplier_id,
+				ci_discount_type: ci_discount_type,
+				ci_discount_value: ci_discount_value,
 				ci_qty: ci_qty
 			},
 			success: function(response) {

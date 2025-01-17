@@ -2482,13 +2482,19 @@ function user_special_price($parameter, $value){
 	return $special_price;
 }
 
-function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_value){
+function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_value, $with_tax_price = 0){
 		$usp_discounted_price = 0;
+		if($with_tax_price == 1){
+			$pbp_price_amount = ($pbp_price_amount / (1 + config_gst));
+		}
 		if ($usp_price_type > 0) {
 			$usp_discounted_price = number_format(($pbp_price_amount - $usp_discounted_value), "2", ".", "");
 		} else {
 			$percentage_value = ($pbp_price_amount * $usp_discounted_value) / 100;
 			$usp_discounted_price = number_format(($pbp_price_amount - $percentage_value), "2", ".", "");
+		}
+		if($with_tax_price == 1){
+			$usp_discounted_price = number_format(($usp_discounted_price * (1 + config_gst)), "2", ".", "");
 		}
 	return $usp_discounted_price;
 }
