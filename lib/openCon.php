@@ -37,6 +37,8 @@ if(mysqli_num_rows($rs) > 0){
 		define('config_metakey', $row->config_metakey);
 		define('config_metades', $row->config_metades);
 		define('config_gst', $row->config_gst);
+		define('config_payment_url', $row->config_payment_url);
+		define('config_authorization_bearer', $row->config_authorization_bearer);
 		define('config_condition_courier_amount', $row->config_condition_courier_amount);
 		define('config_courier_fix_charges', $row->config_courier_fix_charges);
 		define('config_ftp_img', $row->config_ftp_img);

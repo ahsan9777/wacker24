@@ -5,11 +5,15 @@ if (isset($_REQUEST['btn_checkout'])) {
 	//print_r($_REQUEST);die();
 	$user_id = 0;
 	$ord_id = 0;
+	$entityId = "";
 	$order_net_amount = 0;
 	$user_id = $_SESSION['UID'];
 	$usa_id = $_REQUEST['usa_id'];
 	$pm_id = $_REQUEST['pm_id'];
-
+	if ($pm_id > 1) {
+		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+	}
+	//print_r($entityId);die();
 	if (isset($_REQUEST['usa_id']) && $_REQUEST['usa_id'] > 0) {
 
 		$Query = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.user_id = '" . $user_id . "' AND usa.usa_id ='" . $usa_id . "'";
@@ -40,6 +44,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 			if ($row1->cart_gross_total <= config_condition_courier_amount) {
 				$ord_shipping_charges = config_courier_fix_charges;
 			}
+			$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
 			mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '" . trim(dbStr($_REQUEST['ord_note'])) . "', '" . dbStr(trim(date_time)) . "')") or die(mysqli_error($GLOBALS['conn']));
 			mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . dbStr(trim($dinfo_fname)) . "', '" . dbStr(trim($dinfo_lname)) . "', '" . dbStr(trim($dinfo_phone)) . "', '" . dbStr(trim($dinfo_email)) . "', '" . dbStr(trim($dinfo_street)) . "', '" . dbStr(trim($dinfo_house_no)) . "', '" . dbStr(trim($dinfo_address)) . "', '" . dbStr(trim($dinfo_countries_id)) . "', '" . $dinfo_usa_zipcode . "')") or die(mysqli_error($GLOBALS['conn']));
 			$orders_table_check = 1;
@@ -66,6 +71,25 @@ if (isset($_REQUEST['btn_checkout'])) {
 			if ($pm_id == 1) {
 				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 				header('Location: my_order.php?op=2');
+			} elseif ($pm_id == 2) {
+				//$PaypalResponseData = "";
+				$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
+				$paypalresponseData = json_decode($paypalrequest);
+
+				$ord_payment_transaction_id = $paypalresponseData->id;
+				$ord_payment_short_id = $paypalresponseData->descriptor;
+				$ord_payment_info_detail = $paypalrequest;
+				/*print("<pre>");
+				print_r($PaypalResponseData);
+				print("</pre>");die();*/
+				$parameters = "";
+				if ($paypalresponseData->resultDetails->AcquirerResponse == 'Success') {
+					foreach ($paypalresponseData->redirect->parameters as $key => $value) {
+						$parameters .=  $value->name . "=" . $value->value . "&";
+					}
+					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '".dbStr(trim($ord_payment_transaction_id))."', ord_payment_short_id = '".dbStr(trim($ord_payment_short_id))."', ord_payment_info_detail = '".dbStr(trim($ord_payment_info_detail))."', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters);
+				}
 			}
 		}
 	} else {
@@ -325,6 +349,7 @@ include("includes/message.php");
 									<div><textarea class="gerenric_input gerenric_textarea" name="ord_note" id="ord_note"></textarea></div>
 								</div>
 							</div>
+							<?php if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) { ?>
 							<div class="cart_delivery">
 								<?php
 								$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa_defualt = '1' AND user_id = '" . $_SESSION["UID"] . "' ";
@@ -371,6 +396,7 @@ include("includes/message.php");
 								}
 								?>
 							</div>
+							<?php } ?>
 						</div>
 						<div class="cart_right">
 							<div class="cart_orderview">
@@ -451,15 +477,15 @@ include("includes/message.php");
 										<div class="gerenric_form">
 											<ul>
 												<li>
-													<div class="form_field"><input type="text" class="gerenric_input" placeholder="Card Number"></div>
+													<div class="form_field"><input type="text" class="gerenric_input" name="cardnumber" id="cardnumber" placeholder="Card Number"></div>
 												</li>
 												<li>
-													<div class="form_field"><input type="text" class="gerenric_input" placeholder="Card HolderName"></div>
+													<div class="form_field"><input type="text" class="gerenric_input" name="cardholder" id="cardholder" placeholder="Card HolderName"></div>
 												</li>
 												<li class="dlpy_flex">
-													<div class="cart_col"><input type="text" class="gerenric_input" placeholder="12"></div>
-													<div class="cart_col"><input type="text" class="gerenric_input" placeholder="2028"></div>
-													<div class="cart_col"><input type="text" class="gerenric_input" placeholder="CCV"></div>
+													<div class="cart_col"><input type="text" class="gerenric_input" name="cardmonth" id="cardmonth" placeholder="12"></div>
+													<div class="cart_col"><input type="text" class="gerenric_input" name="cardyear" id="cardyear" placeholder="2028"></div>
+													<div class="cart_col"><input type="text" class="gerenric_input" name="cvv" id="cvv" placeholder="CCV"></div>
 												</li>
 											</ul>
 										</div>

@@ -2316,19 +2316,19 @@ function moveimage($dirName, $id, $inputName){
 	return $mfileName;
 }
 
-function PaypalRequest($ord_id, $order_net_amount)
+function PaypalRequest($entityId, $ord_id, $order_net_amount)
 {
 	//$url = "https://test.vr-pay-ecommerce.de/v1/payments";
 	//$url = "https://vr-pay-ecommerce.de/v1/payments";
 	$url = "".config_payment_url."";
 	//$data = "entityId=".PAYPAL."" .
-	$data = "entityId=8ac7a4ca84e4549a0184e6fc903e14a5" .
+	$data = "entityId=".$entityId."".
 		"&merchantTransactionId=" . $ord_id .
 		"&amount=" . $order_net_amount .
 		"&currency=EUR" .
 		"&paymentBrand=PAYPAL" .
 		"&paymentType=DB" .
-		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "checkout_order_complete.php?ord_id=" . $ord_id;
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "my_order.php?op=2";
 	//  print_r($data);die;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
@@ -2362,7 +2362,7 @@ function cardrequest($ord_id, $order_net_amount, $request){
 		"&card.expiryMonth=" . $request['cardmonth'] .
 		"&card.expiryYear=" . $request['cardyear'] .
 		"&card.cvv=" . $request['cvv'] .
-		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "checkout_order_complete.php?ord_id=" . $ord_id;
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "my_order.php?op=2";
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);

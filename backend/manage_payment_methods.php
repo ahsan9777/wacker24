@@ -25,7 +25,7 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "INSERT INTO payment_method (pm_id, pm_title_de, pm_title_en, pm_entity_id, pm_image) VALUES ('" . $pm_id . "', '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', '".dbStr(trim($_REQUEST['pm_entity_id']))."', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO payment_method (pm_id, pm_title_de, pm_title_en, pm_currency, pm_brand_name, pm_entity_id, pm_show_detail, pm_image) VALUES ('" . $pm_id . "', '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', '".dbStr(trim($_REQUEST['pm_currency']))."', '".dbStr(trim($_REQUEST['pm_brand_name']))."', '".dbStr(trim($_REQUEST['pm_entity_id']))."', '".dbStr(trim($_REQUEST['pm_show_detail']))."', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -41,7 +41,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE payment_method SET pm_title_de = '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', pm_title_en = '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', pm_entity_id = '".dbStr(trim($_REQUEST['pm_entity_id']))."', pm_image = '" . $mfileName . "' WHERE pm_id= '" . $_REQUEST['pm_id']."'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE payment_method SET pm_title_de = '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', pm_title_en = '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', pm_currency = '".dbStr(trim($_REQUEST['pm_currency']))."', pm_brand_name = '".dbStr(trim($_REQUEST['pm_brand_name']))."', pm_entity_id = '".dbStr(trim($_REQUEST['pm_entity_id']))."', pm_show_detail = '".dbStr(trim($_REQUEST['pm_show_detail']))."', pm_image = '" . $mfileName . "' WHERE pm_id= '" . $_REQUEST['pm_id']."'") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -49,18 +49,22 @@ if (isset($_REQUEST['btnAdd'])) {
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
             $pm_title_de = $rsMem->pm_title_de;
-            $pm_title_de = $rsMem->pm_title_de;
             $pm_title_en = $rsMem->pm_title_en;
+            $pm_currency = $rsMem->pm_currency;
+            $pm_brand_name = $rsMem->pm_brand_name;
             $pm_entity_id = $rsMem->pm_entity_id;
+            $pm_show_detail = $rsMem->pm_show_detail;
             $mfileName = $rsMem->pm_image;
             $mfile_path = !empty($rsMem->pm_image) ? $GLOBALS['siteURL'] . "files/payment_method/" . $rsMem->pm_image : "";
             $formHead = "Update Info";
         }
     } else {
-        $pm_title_de = 0;
         $pm_title_de = "";
         $pm_title_en = "";
+        $pm_currency = "";
+        $pm_brand_name = "";
         $pm_entity_id = "";
+        $pm_show_detail = "";
         $mfileName = "";
         $mfile_path = "";
         $formHead = "Add New";
@@ -151,9 +155,21 @@ include("includes/messages.php");
                                     <label for="">Title EN</label>
                                     <input type="text" class="input_style" name="pm_title_en" id="pm_title_en" value="<?php print($pm_title_en); ?>" placeholder="Title EN">
                                 </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Currency</label>
+                                    <input type="text" class="input_style" name="pm_currency" id="pm_currency" value="<?php print($pm_currency); ?>" placeholder="Currency">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Brand</label>
+                                    <input type="text" class="input_style" name="pm_brand_name" id="pm_brand_name" value="<?php print($pm_brand_name); ?>" placeholder="Brand Name">
+                                </div>
                                 <div class="col-md-12 col-12 mt-3">
                                     <label for="">Entity ID</label>
                                     <input type="text" class="input_style" name="pm_entity_id" id="pm_entity_id" value="<?php print($pm_entity_id); ?>" placeholder="Entity ID">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Show payment detail: </label>
+                                    <input type="checkbox" class="usp_price_type" name="pm_show_detail" id="pm_show_detail" value="1" <?php print(($pm_show_detail == 1) ? 'checked' : ''); ?>>
                                 </div>
                                 <div class="col-md-12 col-12 mt-3">
                                     <label for="">Logo</label>
