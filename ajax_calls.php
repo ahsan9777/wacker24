@@ -130,10 +130,12 @@ if (isset($_REQUEST['action'])) {
         case 'show_side_cart_data':
             if (isset($_SESSION['cart_id'])) {
                 $show_card_body = "";
+                $count = 0;
                 $cart_amount = 0;
                 $Query = "SELECT ci.*, pg.pg_mime_source FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
+                    $_SESSION['header_quantity'] = $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);
                     while ($row = mysqli_fetch_object($rs)) {
                         $cart_amount = $cart_amount + $row->ci_total;
                         $gst = $row->ci_amount * config_gst;
@@ -189,9 +191,9 @@ if (isset($_REQUEST['action'])) {
                         ';
                     }
 
-                    $retValue = array("status" => "1", "message" => "Record found successfully!", "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
+                    $retValue = array("status" => "1", "message" => "Record found successfully!", "count" => $count, "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
                 } else {
-                    $retValue = array("status" => "0", "message" => "Record not found!", "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
+                    $retValue = array("status" => "0", "message" => "Record not found!", "count" => $count, "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
                 }
             } else {
                 $retValue = array("status" => "0", "message" => "Record not found!");
