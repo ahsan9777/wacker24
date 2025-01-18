@@ -252,7 +252,15 @@ include("includes/messages.php");
                                                 </td>
                                                 <td><?php print($row->supplier_id); ?></td>
                                                 <td><?php print($row->pro_description_short); ?></td>
-                                                <td><?php print(str_replace(".", ",", $row->oi_amount)); ?>€</td>
+                                                <td>
+                                                    <?php
+                                                    if($row->oi_discount_value > 0){
+                                                        print("<del class = 'text-danger fs-6'>".number_format($row->pbp_price_amount * (1 + config_gst), "2", ",", "")."€</del><br> <span class = 'text-success'>".str_replace(".", ",", $row->oi_amount)."€ ".$row->oi_discount_value.( ($row->oi_discount_type > 0)? '€' : '%' )."</span>" );
+                                                    } else{
+                                                        print(str_replace(".", ",", $row->oi_amount)."€");
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td><?php print($row->oi_qty); ?></td>
                                                 <td><?php print(str_replace(".", ",", $row->oi_gross_total)); ?>€</td>
                                                 <td><?php print(str_replace(".", ",", $row->oi_gst)); ?>€</td>
@@ -285,7 +293,7 @@ include("includes/messages.php");
                         $order_user_id = "";
                         $order_user_title = "";
 
-                        if (isset($_REQUEST['ord_id']) && $_REQUEST['ord_id'] > 0) {
+                        if (isset($_REQUEST['ord_id']) && in_array(gettype($_REQUEST['ord_id']), array("integer", "double")) && $_REQUEST['ord_id'] > 0) {
                             
                                 $ord_id = $_REQUEST['ord_id'];
                                 $searchQuery .= " AND ord.ord_id = '" . $_REQUEST['ord_id'] . "'";

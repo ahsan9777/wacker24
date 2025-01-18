@@ -51,7 +51,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 			while ($row2 = mysqli_fetch_object($rs2)) {
 				$ci_id = $row2->ci_id;
 				$oi_id = getMaximum("order_items", "oi_id");
-				mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '".$row2->pbp_price_amount."', '" . $row2->ci_amount . "', '".$row2->ci_discounted_amount."','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst . "', '".$row2->ci_discount_type."', '".$row2->ci_discount_value."', '".$row2->ci_discount."', '".$row2->ci_total."')") or die(mysqli_error($GLOBALS['conn']));
+				mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
 				$order_items_table_check = 1;
 			}
 		}
@@ -64,7 +64,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 			unset($_SESSION['ci_id']);
 			unset($_SESSION['header_quantity']);
 			if ($pm_id == 1) {
-				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id."' ") or die(mysqli_error($GLOBALS['conn']));
+				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 				header('Location: my_order.php?op=2');
 			}
 		}
@@ -91,19 +91,19 @@ if (isset($_REQUEST['btn_checkout'])) {
 				$ci_discount_value = $row->ci_discount_value;
 				$ci_discounted_amount = 0;
 				$ci_discount = 0;
-				if($ci_discount_value > 0){
+				if ($ci_discount_value > 0) {
 					$ci_discounted_amount_gross = 0;
 					$ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value);
 					$ci_discounted_amount = $pbp_price_amount - $ci_amount;
-					
-					$ci_discounted_amount_gross = $ci_discounted_amount * ($_REQUEST['ci_qty'][$i]); 
-					$ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * config_gst); 
+
+					$ci_discounted_amount_gross = $ci_discounted_amount * ($_REQUEST['ci_qty'][$i]);
+					$ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * config_gst);
 				}
 				$ci_gross_total = $ci_amount * ($_REQUEST['ci_qty'][$i]);
 				$ci_gst = $ci_gross_total * config_gst;
 				$ci_total = $ci_gross_total + $ci_gst;
 
-				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '".$pbp_price_amount."', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '".$ci_discounted_amount."', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total' , ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total' , ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
 				$update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
 				$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
 				if ($updated_cart_item == true && $update_cart == true) {
@@ -276,16 +276,16 @@ include("includes/message.php");
 														</div>
 													</div>
 													<div class="cart_pd_col2">
-														<?php if($row->ci_discount_value > 0){?>
-															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?> > <del><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</del> <span class="pd_prise_discount" > <?php print(str_replace(".", ",", $row->ci_amount)); ?> € </span></div>
-														<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > <del><?php print(number_format($row->pbp_price_amount + $gst_orignal, "2", ",", "")); ?> €</del> <span class="pd_prise_discount" > <?php print(number_format($row->ci_amount + $gst, "2", ",", "")); ?> € </span> </div>
-															<?php } else{ ?>
-														<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?> > <?php print(str_replace(".", ",", $row->ci_amount)); ?> €</div>
-														<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > <?php print(number_format($row->ci_amount + $gst, "2", ",", "")); ?> €</div>
+														<?php if ($row->ci_discount_value > 0) { ?>
+															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <del class="orignal_price"><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</del> <br> <span class="pd_prise_discount"> <?php print(str_replace(".", ",", $row->ci_amount) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%')); ?> </span></div>
+															<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <del class="orignal_price"><?php print(number_format($row->pbp_price_amount + $gst_orignal, "2", ",", "")); ?> €</del> <br> <span class="pd_prise_discount"> <?php print(number_format($row->ci_amount + $gst, "2", ",", "") . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%')); ?> </span> </div>
+														<?php } else { ?>
+															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(str_replace(".", ",", $row->ci_amount)); ?> €</div>
+															<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(number_format($row->ci_amount + $gst, "2", ",", "")); ?> €</div>
 														<?php } ?>
 
-														<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?> > <?php print(str_replace(".", ",", $row->ci_gross_total)); ?> €</div>
-														<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > <?php print(str_replace(".", ",", $row->ci_total)); ?> €</div>
+														<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(str_replace(".", ",", $row->ci_gross_total)); ?> €</div>
+														<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(str_replace(".", ",", $row->ci_total)); ?> €</div>
 													</div>
 												</div>
 											</div>
@@ -419,7 +419,7 @@ include("includes/message.php");
 									<div class="cart_box">
 										<h4>Please click on your payment method</h4>
 										<ul>
-										<?php
+											<?php
 											$Query = "SELECT pm.pm_id, pm.pm_show_detail, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
 											$rs = mysqli_query($GLOBALS['conn'], $Query);
 											if (mysqli_num_rows($rs) > 0) {
@@ -429,18 +429,18 @@ include("includes/message.php");
 														$pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
 													}
 											?>
-											<li>
-												<label class="cart_pyment_radio <?php print( ($row->pm_show_detail > 0)? 'card_click_show' :  'card_click_hide') ?>">
-													<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print( ($row->pm_id == 1)? 'checked' :  '') ?>>
-													<span class="checkmark">
-														<div class="payment_card">
-															<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>" ></div>
-															<div class="payment_card_title"><?php print($row->pm_title) ?></div>
-														</div>
-													</span>
-												</label>
-											</li>
-											<?php 
+													<li>
+														<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
+															<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 1) ? 'checked' :  '') ?>>
+															<span class="checkmark">
+																<div class="payment_card">
+																	<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
+																	<div class="payment_card_title"><?php print($row->pm_title) ?></div>
+																</div>
+															</span>
+														</label>
+													</li>
+											<?php
 												}
 											}
 											?>

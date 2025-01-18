@@ -137,17 +137,25 @@ if (isset($_REQUEST['action'])) {
                     while ($row = mysqli_fetch_object($rs)) {
                         $cart_amount = $cart_amount + $row->ci_total;
                         $gst = $row->ci_amount * config_gst;
+                        $gst_orignal = $row->pbp_price_amount * config_gst;
                         $display_one = "";
                         $display_two = "";
                         if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
                             $display_one = "style = 'display: block;'";
                             $display_two = "style = 'display: none;'";
                         }
+                        $cart_price_data = "";
+                        if ($row->ci_discount_value > 0) {
+                            $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" '.$display_one.' > <del class="orignal_price"> '.str_replace(".", ",", $row->pbp_price_amount).' €</del> <br> <span class="pd_prise_discount"> '.str_replace(".", ",", $row->ci_amount) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? "€" : "%").' </span></div>';
+                            $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" '.$display_two.' > <del class="orignal_price"> '.number_format($row->pbp_price_amount + $gst_orignal, "2", ",", "").' €</del> <br> <span class="pd_prise_discount"> '.number_format($row->ci_amount + $gst, "2", ",", "") . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%').' </span> </div>';
+                        } else {
+                            $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" '.$display_one.' >'.number_format($row->ci_amount, "2", ",", "").' €</div>';
+                            $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" '.$display_two.' >'.number_format($row->ci_amount + $gst, "2", ",", "").' €</div>';
+                        }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
                                     <div class="side_cart_pd_image"><a href="product_detail.php?supplier_id='.$row->supplier_id.'"><img src="getftpimage.php?img='.$row->pg_mime_source.'" alt=""></a></div>
-                                    <div class="side_cart_pd_prise price_without_tex" '.$display_one.' >'.number_format($row->ci_amount, "2", ",", "").' €</div>
-                                    <div class="side_cart_pd_prise pbp_price_with_tex" '.$display_two.' >'.number_format($row->ci_amount + $gst, "2", ",", "").' €</div>
+                                    '.$cart_price_data.'
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
                                             <input type="number" class="qlt_number" value="'.$row->ci_qty.'">
