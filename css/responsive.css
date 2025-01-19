@@ -50,7 +50,7 @@
     #banner_section .banner_inner{height: auto;}
     #banner_section video{ width: 100%; height: auto;}
     #banner_section .banner_image img{height: auto;}
-    #banner_section .slick-prev, #banner_section .slick-next{width: 35px; height: 35px;}
+    #banner_section .slick-prev, #banner_section .slick-next{width: 35px; height: 35px; top: 120px;}
     #banner_section .slick-prev::after, #banner_section .slick-next::after{font-size: 24px !important;}
     #banner_section .slick-prev{left: 15px;}
     #banner_section .slick-next{right: 15px;}

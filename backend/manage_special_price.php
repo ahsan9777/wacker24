@@ -1,13 +1,25 @@
 <?php
 include("../lib/session_head.php");
 
-if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
+$searchQuery = "";
+//$searchQuery = "WHERE 1 = 1";
+if (isset($user_id) && $user_id == 0) {
+    $user_id = $user_id;
+    $utype_where = " utype_id IN (1,2)";
+} else {
+    $user_id = $_REQUEST['user_id'];
+    $pHead = "User Special Price Management";
     $qryStrURL .= "user_id=" . $_REQUEST['user_id'] . "&";
 }
+
+/*if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
+    $qryStrURL .= "user_id=" . $_REQUEST['user_id'] . "&";
+}*/
 if (isset($_REQUEST['btnAdd'])) {
 
     //print_r($_REQUEST);die();
-    $Query = "SELECT * FROM user_special_price WHERE user_id = '" . dbStr(trim($_REQUEST['user_id'])) . "' AND level_one_id ='" . dbStr(trim($_REQUEST['level_one_id'])) . "' AND level_two_id ='" . dbStr(trim($_REQUEST['level_two_id'])) . "' AND supplier_id ='" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
+    //$Query = "SELECT * FROM user_special_price WHERE user_id = '" . dbStr(trim($_REQUEST['user_id'])) . "' AND level_one_id ='" . dbStr(trim($_REQUEST['level_one_id'])) . "' AND level_two_id ='" . dbStr(trim($_REQUEST['level_two_id'])) . "' AND supplier_id ='" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
+    $Query = "SELECT * FROM user_special_price WHERE user_id = '" . dbStr(trim($user_id)) . "' AND level_one_id ='" . dbStr(trim($_REQUEST['level_one_id'])) . "' AND level_two_id ='" . dbStr(trim($_REQUEST['level_two_id'])) . "' AND supplier_id ='" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
         $row = mysqli_fetch_object($rs);
@@ -16,6 +28,7 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
 
         $usp_id = getMaximum("user_special_price", "usp_id");
+        //mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, user_id, level_one_id, level_two_id, supplier_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '" . dbStr(trim($user_id)) . "', '" . dbStr(trim($_REQUEST['level_one_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, user_id, level_one_id, level_two_id, supplier_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '" . dbStr(trim($_REQUEST['user_id'])) . "', '" . dbStr(trim($_REQUEST['level_one_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['usp_price_type'])) . "', '" . dbStr(trim($_REQUEST['usp_discounted_value'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
@@ -224,7 +237,7 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Special Price</h1>
+                        <h1 class="text-white"> <?php print($pHead); ?> </h1>
                         <div class="d-flex gap-1">
                             <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
                         </div>
@@ -248,7 +261,7 @@ include("includes/messages.php");
                                 <tbody>
                                     <?php
                                     //$Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, (SELECT GROUP_CONCAT(pro.pro_description_short) FROM products AS pro WHERE FIND_IN_SET(pro.supplier_id, usp.supplier_id)) AS pro_title, ( SELECT GROUP_CONCAT(pbp.pbp_price_amount) FROM products_bundle_price AS pbp WHERE FIND_IN_SET(pbp.supplier_id, usp.supplier_id) AND pbp.pbp_lower_bound = '1') AS pro_actual_price FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id WHERE usp.user_id = '" . $_REQUEST['user_id'] . "' ORDER BY usp.usp_id ASC ";
-                                    $Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, pro.pro_description_short AS pro_title, pbp.pbp_price_amount AS pro_actual_price   FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = usp.supplier_id AND pbp.pbp_lower_bound = '1' WHERE usp.user_id = '" . $_REQUEST['user_id'] . "' ORDER BY usp.usp_id ASC ";
+                                    $Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, pro.pro_description_short AS pro_title, pbp.pbp_price_amount AS pro_actual_price   FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = usp.supplier_id AND pbp.pbp_lower_bound = '1' WHERE usp.user_id = '".$user_id."' ORDER BY usp.usp_id ASC ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -311,7 +324,7 @@ include("includes/messages.php");
                                     <?php
                                         }
                                     } else {
-                                        print('<tr><td colspan="100%" align="center">No record found!</td></tr>');
+                                        print('<tr><td class = "text-center" colspan="100%" align="center">No record found!</td></tr>');
                                     }
                                     ?>
                                 </tbody>
