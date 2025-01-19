@@ -16,7 +16,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "INSERT INTO banners (ban_id, ban_heading, ban_details, ban_file) VALUES ('" . $ban_id . "', '" . dbStr(trim($_REQUEST['ban_heading'])) . "', '" . dbStr(trim($_REQUEST['ban_details'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO banners (ban_id, ban_heading_color, ban_detail_color, ban_heading_en, ban_heading_de, ban_details_en, ban_details_de, ban_file) VALUES ('" . $ban_id . "', '".dbStr(trim($_REQUEST['ban_heading_color']))."', '".dbStr(trim($_REQUEST['ban_detail_color']))."', '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -31,25 +31,31 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE banners SET ban_heading = '" . dbStr(trim($_REQUEST['ban_heading'])) . "', ban_details = '" . dbStr(trim($_REQUEST['ban_details'])) . "', ban_file = '" . $mfileName . "' WHERE ban_id= '" . $_REQUEST['ban_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE banners SET ban_heading_color = '".dbStr(trim($_REQUEST['ban_heading_color']))."', ban_detail_color = '".dbStr(trim($_REQUEST['ban_detail_color']))."', ban_heading_en = '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', ban_heading_de = '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', ban_details_en = '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', ban_details_de = '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', ban_file = '" . $mfileName . "' WHERE ban_id= '" . $_REQUEST['ban_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
         $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM banners WHERE ban_id = " . $_REQUEST['ban_id']);
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
-            $ban_heading = $rsMem->ban_heading;
-            $ban_details = $rsMem->ban_details;
-            $ban_details = $rsMem->ban_details;
+            $ban_heading_color = $rsMem->ban_heading_color;
+            $ban_detail_color = $rsMem->ban_detail_color;
+            $ban_heading_en = $rsMem->ban_heading_en;
+            $ban_heading_de = $rsMem->ban_heading_de;
+            $ban_details_en = $rsMem->ban_details_en;
+            $ban_details_de = $rsMem->ban_details_de;
             $mfileName = $rsMem->ban_file;
             $mfile_path = !empty($rsMem->ban_file) ? $GLOBALS['siteURL'] . "files/banners/" . $rsMem->ban_file : "";
             $ext = pathinfo($mfile_path, PATHINFO_EXTENSION);
             $formHead = "Update Info";
         }
     } else {
-        $ban_heading = "";
-        $ban_details = "";
-        $pm_entity_id = "";
+        $ban_heading_color = "";
+        $ban_detail_color = "";
+        $ban_heading_en = "";
+        $ban_heading_de = "";
+        $ban_details_en = "";
+        $ban_details_de = "";
         $mfileName = "";
         $mfile_path = "";
         $formHead = "Add New";
@@ -153,12 +159,28 @@ include("includes/messages.php");
                                     <?php } ?>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Heading</label>
-                                    <input type="text" class="input_style" name="ban_heading" id="ban_heading" value="<?php print($ban_heading); ?>" placeholder="Heading">
+                                    <label for="">Heading Color (Like: #fff)</label>
+                                    <input type="text" class="input_style" name="ban_heading_color" id="ban_heading_color" value="<?php print($ban_heading_color); ?>" placeholder="Heading Color (Like: #fff)">
                                 </div>
-                                <div class="col-md-12 col-12 mt-3">
-                                    <label for="">Detail</label>
-                                    <textarea type="text" class="input_style" name="ban_details" id="ban_details" placeholder="Detail"> <?php print($ban_details); ?> </textarea>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Detail Color (Like: #fff)</label>
+                                    <input type="text" class="input_style" name="ban_detail_color" id="ban_detail_color" value="<?php print($ban_detail_color); ?>" placeholder="Detail Color (Like: #fff)">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Heading EN</label>
+                                    <input type="text" class="input_style" name="ban_heading_en" id="ban_heading_en" value="<?php print($ban_heading_en); ?>" placeholder="Heading EN">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Heading DE</label>
+                                    <input type="text" class="input_style" name="ban_heading_de" id="ban_heading_de" value="<?php print($ban_heading_de); ?>" placeholder="Heading DE">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Detail EN</label>
+                                    <textarea rows="3" type="text" class="input_style" name="ban_details_en" id="ban_details_en" placeholder="Detail EN"> <?php print($ban_details_en); ?> </textarea>
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Detail DE</label>
+                                    <textarea rows="3" type="text" class="input_style" name="ban_details_de" id="ban_details_de" placeholder="Detail DE"> <?php print($ban_details_de); ?> </textarea>
                                 </div>
                                 <div class="col-md-12 col-12 mt-3">
                                     <label for="">File</label>
@@ -235,8 +257,8 @@ include("includes/messages.php");
                                                         </div>
                                                     <?php } ?>
                                                 </td>
-                                                <td><?php print($row->ban_heading); ?></td>
-                                                <td><?php print($row->ban_details); ?></td>
+                                                <td><?php print($row->ban_heading_en); ?></td>
+                                                <td><?php print($row->ban_details_en); ?></td>
                                                 <td>
                                                     <input type="hidden" name="ban_id[]" id="ban_id" value="<?php print($row->ban_id); ?>">
                                                     <input type="number" class="input_style" name="ban_order[]" id="ban_order" value="<?php print($row->ban_order); ?>">
@@ -302,10 +324,10 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
-    $('input.ban_details').autocomplete({
+    $('input.ban_details_en').autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: 'ajax_calls.php?action=ban_details',
+                url: 'ajax_calls.php?action=ban_details_en',
                 dataType: "json",
                 data: {
                     term: request.term
@@ -319,9 +341,9 @@ include("includes/messages.php");
         minLength: 1,
         select: function(event, ui) {
             var ban_id = $("#ban_id");
-            var ban_details = $("#ban_details");
+            var ban_details_en = $("#ban_details_en");
             $(ban_id).val(ui.item.ban_id);
-            $(ban_details).val(ui.item.value);
+            $(ban_details_en).val(ui.item.value);
             //frmCat.submit();
             //return false;
             //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
