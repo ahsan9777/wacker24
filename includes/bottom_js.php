@@ -1,7 +1,37 @@
+
 <script>
 	$('.close').on('click', function(){
         $('.alert').hide();
     });
+	$("#level_one").on("change", function(){
+		$("#pro_id").val(0);
+        $("#search_keyword").val("");
+	});
+	$('input.search_keyword').autocomplete({
+            source: function(request, response) {
+				let level_one = $("#level_one").val();
+                $.ajax({
+                    url: 'ajax_calls.php?action=search_keyword&level_one='+level_one+'',
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+
+                    }
+                });
+            },
+            minLength: 1,
+            select: function(event, ui) {
+                var pro_id = $("#pro_id");
+                var search_keyword = $("#search_keyword");
+                $(pro_id).val(ui.item.pro_id);
+                $(search_keyword).val(ui.item.value);
+                //frmCat.submit();
+                //return false;
+            }
+        });
 
 	$(".add_to_card").on("click", function(){
 		//console.log("add_to_card");

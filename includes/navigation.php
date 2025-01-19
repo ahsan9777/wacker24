@@ -48,12 +48,13 @@ if(isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4){
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
             <form class="header_search" name="frm" id="frm" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
-                    <select class="header_select_slt" name="cat_id" id="cat_id">
+                    <select class="header_select_slt" name="level_one" id="level_one">
                         <option value="0">ALL</option>
                         <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $cat_id, "cat_status = '1' AND parent_id = '0'"); ?>
                     </select>
                 </div>
-                <input type="text" class="search_input" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" required placeholder="Suchhbegriff">
+                <input type="hidden" name="pro_id" id="pro_id" value="0">
+                <input type="text" class="search_input search_keyword" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" placeholder="Suchhbegriff" autocomplete="off">
                 <button class="search_icon"></button>
             </form>
             <div class="header_account">

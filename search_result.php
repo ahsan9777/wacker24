@@ -2,20 +2,21 @@
 include("includes/php_includes_top.php");
 
 //print_r($_REQUEST);die();
-$heading_title = "Search ";
+$heading_title = "";
 
-if(isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])){
-	$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
-	$heading_title .= "Keyword : ".$_REQUEST['search_keyword'].";";
-	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";
-	$search_keyword = $_REQUEST['search_keyword'];
+if(isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0){
+	$whereclause = "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(".dbStr(trim($_REQUEST['level_one'])).", cm.sub_group_ids)) ";
+	$heading_title .= "Category : ".returnName("cat_title_de AS cat_title", "category", "group_id",$_REQUEST['level_one']);
+	$qryStrURL .= "level_one=".$_REQUEST['level_one']."&";
+	$cat_id = $_REQUEST['level_one'];
 }
 
-if(isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0){
-	$whereclause = "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(".dbStr(trim($_REQUEST['cat_id'])).", cm.sub_group_ids)) ";
-	$heading_title .= " Category : ".returnName("cat_title_de AS cat_title", "category", "group_id",$_REQUEST['cat_id']).";";
-	$qryStrURL .= "cat_id=".$_REQUEST['cat_id']."&";
-	$cat_id = $_REQUEST['cat_id'];
+if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['pro_id'])) && $_REQUEST['pro_id'] > 0){
+	//$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
+	$whereclause = "pro.pro_id = '".dbStr(trim($_REQUEST['pro_id']))."'";
+	$heading_title .= "<br>Keyword : ".$_REQUEST['search_keyword'];
+	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";
+	$search_keyword = $_REQUEST['search_keyword'];
 }
 
 

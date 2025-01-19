@@ -11,7 +11,9 @@
 <link rel="stylesheet" href="css/jquery-ui.css">
 <link href="css/responsive.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="./backend/assets/style/jquery-ui-1.10.3.custom.min.css" />
 <script src="js/jquery-2.2.0.min.js"></script>
+<script src="./backend/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.simpleGallery.js"></script>
 <script type="text/javascript" src="js/jquery.simpleLens.js"></script>
