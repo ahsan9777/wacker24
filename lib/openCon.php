@@ -33,15 +33,19 @@ $Query = "SELECT * FROM site_config";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if(mysqli_num_rows($rs) > 0){
 	while ($row = mysqli_fetch_object($rs)) {
+		define('config_sitename', $row->config_sitename);
 		define('config_sitetitle', $row->config_sitetitle);
 		define('config_metakey', $row->config_metakey);
 		define('config_metades', $row->config_metades);
-		define('config_gst', $row->config_gst);
+		define('config_email', $row->config_email);
+		define('config_phone', $row->config_phone);
+		define('config_gst', ($row->config_gst / 100));
 		define('config_payment_url', $row->config_payment_url);
 		define('config_authorization_bearer', $row->config_authorization_bearer);
 		define('config_condition_courier_amount', $row->config_condition_courier_amount);
 		define('config_courier_fix_charges', $row->config_courier_fix_charges);
 		define('config_ftp_img', $row->config_ftp_img);
+		define('config_site_logo', $GLOBALS['siteURL'] . "files/" .$row->config_site_logo);
 	}
 }
 

@@ -9,7 +9,7 @@ $cu = 'active';
 <aside class="sidebar">
 
     <div class="logo">
-        <img src="./assets/images/logo.png" style="width: 100%;" alt="">
+        <img src="<?php print(config_site_logo)?>" style="width: 100%;" alt="">
     </div>
 
     <nav>
@@ -48,9 +48,10 @@ $cu = 'active';
                 <a href="manage_admin_users.php" title="Benutzerverwaltung Management" ><span class="material-icons icon">admin_panel_settings</span><span class="text">Benutzerverwaltung</span></a>
             </li>
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_banner') ? $cu : ''; ?>"><span class="material-icons icon">settings</span> <span class="text">Seiteneinstellungen</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_banner') ? $c : ''; ?>>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_banner' || $pg == 'manage_site_setting') ? $cu : ''; ?>"><span class="material-icons icon">settings</span> <span class="text">CMS</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_banner' || $pg == 'manage_site_setting') ? $c : ''; ?>>
                     <li><a href="manage_banner.php" title="Banner Management" ><span class="text" >Banner</span></a></li>
+                    <li><a href="manage_site_setting.php" title="Site Setting Management" ><span class="text" >Site Setting</span></a></li>
                 </ul>
             </li>
             <li>

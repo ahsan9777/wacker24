@@ -5,7 +5,7 @@
         </button>
         <a class="back-button toggle-sidebar desktop" href="javascript:void(0);"> <span class="material-icons">first_page</span>
         </a>
-        <a class="back-button" href="javascript:void(0);">View Site</a>
+        <a class="back-button" target="_blank" href="<?php print($GLOBALS['siteURL']); ?>">View Site</a>
     </div>
     <div class="right" style="display: flex; gap: 15px;">
         <a class="back-button" href="javascript:void(0);">Dashboard</a>
