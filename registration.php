@@ -7,6 +7,9 @@ $strMSG = "";
 $class = "";
 $lotti_player_popup = "";
 
+$utype_id = 3;
+$user_company_name = "";
+$user_tax_no = "";
 $user_fname = "";
 $user_lname = "";
 $gen_id = 1;
@@ -15,12 +18,28 @@ $user_name = "";
 $user_password = "";
 $user_confirm_password = "";
 $countries_id = 81;
+$field = "";
+$value = "";
+$input_display = 'style="display: none;"';
 
 if (isset($_REQUEST['btn_registration'])) {
 	//print_r($_REQUEST);die();
-	$Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "'";
+	if (isset($_REQUEST['user_company_name']) && !empty($_REQUEST['user_company_name'])) {
+		$user_company_name = $_REQUEST['user_company_name'];
+		$field .= ", user_company_name";
+		$value .= ", '" . dbStr(trim($_REQUEST['user_company_name'])) . "'";
+		$input_display = "";
+	}
+	if (isset($_REQUEST['user_tax_no']) && !empty($_REQUEST['user_tax_no'])) {
+		$user_tax_no = $_REQUEST['user_tax_no'];
+		$field .= ", user_tax_no";
+		$value .= ", '" . dbStr(trim($_REQUEST['user_tax_no'])) . "'";
+		$input_display = "";
+	}
+	$Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id ='" . dbStr(trim($_REQUEST['utype_id'])) . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
+		$utype_id = $_REQUEST['utype_id'];
 		$user_fname = $_REQUEST['user_fname'];
 		$user_lname = $_REQUEST['user_lname'];
 		$gen_id = $_REQUEST['gen_id'];
@@ -34,6 +53,7 @@ if (isset($_REQUEST['btn_registration'])) {
                     This account already exists against the user name!";
 	} else {
 		if ($_REQUEST['user_password'] != $_REQUEST['user_confirm_password']) {
+			$utype_id = $_REQUEST['utype_id'];
 			$user_fname = $_REQUEST['user_fname'];
 			$user_lname = $_REQUEST['user_lname'];
 			$gen_id = $_REQUEST['gen_id'];
@@ -42,14 +62,15 @@ if (isset($_REQUEST['btn_registration'])) {
 			$user_password = $_REQUEST['user_password'];
 			$user_confirm_password = $_REQUEST['user_confirm_password'];
 			$countries_id = $_REQUEST['countries_id'];
-			
+
 			$class = "alert alert-danger";
 			$strMSG = "Dear Cuctomer, <br>
                     Passwords does not match!";
 		} else {
 
-			if($_REQUEST['confirm_code'] != $_REQUEST['reconfirm_code']){
+			if ($_REQUEST['confirm_code'] != $_REQUEST['reconfirm_code']) {
 
+				$utype_id = $_REQUEST['utype_id'];
 				$user_fname = $_REQUEST['user_fname'];
 				$user_lname = $_REQUEST['user_lname'];
 				$gen_id = $_REQUEST['gen_id'];
@@ -62,10 +83,16 @@ if (isset($_REQUEST['btn_registration'])) {
 				$class = "alert alert-danger";
 				$strMSG = "Dear Cuctomer, <br>
                     	confirmation does not match!";
-			} else{
+			} else {
 				$user_id = getMaximum("users", "user_id");
-				$user_verification_code = md5($user_id.date("Ymdhis"));
-				mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id, user_confirmation) VALUES ('" . $user_id . "','" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(password_hash(trim($_REQUEST['user_password']), PASSWORD_BCRYPT)) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "', '".$user_verification_code."')") or die(mysqli_error($GLOBALS['conn']));
+				$user_verification_code = md5($user_id . date("Ymdhis"));
+				mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, utype_id, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id, user_confirmation " . $field . ") VALUES ('" . $user_id . "', '" . dbStr(trim($_REQUEST['utype_id'])) . "', '" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(password_hash(trim($_REQUEST['user_password']), PASSWORD_BCRYPT)) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "', '" . $user_verification_code . "' " . $value . ")") or die(mysqli_error($GLOBALS['conn']));
+				$utype_id = 3;
+				$user_company_name = "";
+				$user_tax_no = "";
+				$field = "";
+				$value = "";
+				$input_display = 'style="display: none;"';
 				$class = "alert alert-success";
 				$strMSG = "Dear Cuctomer, <br>
 				your account has been created successfully. Please <a href='login.php'>log in</a> to your account  and enjoy our services";
@@ -110,12 +137,24 @@ include("includes/message.php");
 								<li>
 									<div class="tab_radio_button">
 										<div class="tab_radio_col">
-											<input type="radio" id="private_customer" name="utype_id" value="3" checked>
+											<input type="radio" class="utype_id" id="private_customer" name="utype_id" value="3" <?php print(($utype_id == 3) ? "checked" : ""); ?>>
 											<label for="private_customer">Private customer</label>
 										</div>
 										<div class="tab_radio_col">
-											<input type="radio" id="business_customer" name="utype_id" value="4">
+											<input type="radio" class="utype_id" id="business_customer" name="utype_id" value="4" <?php print(($utype_id == 4) ? "checked" : ""); ?>>
 											<label for="business_customer">Business customer</label>
+										</div>
+									</div>
+								</li>
+								<li id="user_company_input" <?php print($input_display); ?>>
+									<div class="form_row">
+										<div class="form_left">
+											<div class="form_label">Firma *</div>
+											<div class="form_field"><input type="text" name="user_company_name" id="user_company_name" value="<?php print($user_company_name); ?>" class="gerenric_input"></div>
+										</div>
+										<div class="form_right">
+											<div class="form_label">USt-IdNr *</div>
+											<div class="form_field"><input type="text" name="user_tax_no" id="user_tax_no" value="<?php print($user_tax_no); ?>" class="gerenric_input"></div>
 										</div>
 									</div>
 								</li>
@@ -123,9 +162,9 @@ include("includes/message.php");
 									<div class="form_label">Salutation</div>
 									<div class="form_field">
 										<select class="gerenric_input" name="gen_id" id="gen_id">
-											<option value="1" <?php print( ($gen_id == 1)? 'checked' : '' ); ?> >Herr</option>
-											<option value="2" <?php print( ($gen_id == 2)? 'checked' : '' ); ?> >Frau</option>
-											<option value="3" <?php print( ($gen_id == 3)? 'checked' : '' ); ?> >Keine</option>
+											<option value="1" <?php print(($gen_id == 1) ? 'checked' : ''); ?>>Herr</option>
+											<option value="2" <?php print(($gen_id == 2) ? 'checked' : ''); ?>>Frau</option>
+											<option value="3" <?php print(($gen_id == 3) ? 'checked' : ''); ?>>Keine</option>
 										</select>
 									</div>
 								</li>
@@ -133,11 +172,11 @@ include("includes/message.php");
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">First name *</div>
-											<div class="form_field"><input type="text" name="user_fname" id="user_fname" value="<?php print($user_fname); ?>" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="text" name="user_fname" id="user_fname" value="<?php print($user_fname); ?>" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">Last name *</div>
-											<div class="form_field"><input type="text" name="user_lname" id="user_lname" value="<?php print($user_lname); ?>" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="text" name="user_lname" id="user_lname" value="<?php print($user_lname); ?>" class="gerenric_input" required></div>
 										</div>
 									</div>
 								</li>
@@ -145,11 +184,11 @@ include("includes/message.php");
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">Password *</div>
-											<div class="form_field"><input type="password" name="user_password" id="user_password" value="<?php print($user_password); ?>" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="password" name="user_password" id="user_password" value="<?php print($user_password); ?>" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">Repeat your password *</div>
-											<div class="form_field"><input type="password" name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="password" name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" class="gerenric_input" required></div>
 										</div>
 									</div>
 								</li>
@@ -170,8 +209,8 @@ include("includes/message.php");
 										<div class="form_left">
 											<div class="form_label">Country</div>
 											<div class="form_field">
-												<select class="gerenric_input" name="countries_id" id="countries_id" >
-												<?php FillSelected2("countries", "countries_id", "countries_name ", $countries_id, "countries_id > 0"); ?>
+												<select class="gerenric_input" name="countries_id" id="countries_id">
+													<?php FillSelected2("countries", "countries_id", "countries_name ", $countries_id, "countries_id > 0"); ?>
 												</select>
 											</div>
 										</div>
@@ -180,11 +219,11 @@ include("includes/message.php");
 								<li>
 									<?php
 									$digits = 4;
-									$confirm_code = rand(pow(10, $digits-1), pow(10, $digits)-1);
+									$confirm_code = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
 									?>
 									<div class="form_label">Please enter confirmation code: <span class="code_text"><?php print($confirm_code); ?></span></div>
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
-									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" ></div>
+									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off"></div>
 								</li>
 								<li class="mt_30"><input type="checkbox" required> I have read the privacy policy | <a href="javascript:void(0)">Privacy Policy</a></li>
 								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Register Now</button></li>
@@ -215,8 +254,24 @@ include("includes/message.php");
 
 </body>
 <script>
-	$('.close').on('click', function(){
-        $('.alert').hide();
-    });
+	$('.close').on('click', function() {
+		$('.alert').hide();
+	});
 </script>
+<script>
+	$(".utype_id").on("click", function() {
+		let utype_id = $("input[name='utype_id']:checked").val();
+		//console.log("utype_id: "+utype_id);
+		if (utype_id == 4) {
+			$("#user_company_name").attr("required", true);
+			$("#user_tax_no").attr("required", true);
+			$('#user_company_input').show();
+		} else {
+			$("#user_company_name").attr("required", false);
+			$("#user_tax_no").attr("required", false);
+			$('#user_company_input').hide();
+		}
+	});
+</script>
+
 </html>
