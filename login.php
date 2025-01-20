@@ -38,6 +38,7 @@ if (isset($_REQUEST['btn_login'])) {
 				$_SESSION["FirstName"] = $row->user_fname;
 				$_SESSION["FullName"] = $row->user_fname . " " . $row->user_lname;
 				$_SESSION["Utype"] = $row->utype_id;
+				$_SESSION["utype_id"] = $row->utype_id;
 
 				//echo $ref_check[0];die();
 				if ($ref == $GLOBALS['siteURL'] . "login.php" || $ref == $GLOBALS['siteURL'] . "register.php" || $ref_check[0] == $GLOBALS['siteURL'] . "account_verification.php") {
