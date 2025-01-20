@@ -126,7 +126,7 @@ include("includes/message.php");
 		<section class="login_page register_page">
 			<div class="page_width">
 				<div class="login_inner">
-					<div class="login_logo"><a href="index.php"><img src="images/register_logo.png" alt=""></a></div>
+					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<form class="login_box" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 						<h2>Register</h2>
 						<?php if ($class != "") { ?>

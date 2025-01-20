@@ -86,7 +86,7 @@ if (isset($_REQUEST['btn_login'])) {
 		<section class="login_page">
 			<div class="page_width">
 				<div class="login_inner">
-					<div class="login_logo"><a href="index.php"><img src="images/register_logo.png" alt=""></a></div>
+					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<div class="login_box">
 						<h2>Login</h2>
 						<?php if ($class != "") { ?>
