@@ -17,7 +17,11 @@
 <script src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery.simpleGallery.js"></script>
 <script type="text/javascript" src="js/jquery.simpleLens.js"></script>
-
+<style>
+    .ui-widget.ui-widget-content{
+        z-index: 9999999 !important;
+    }
+</style>
 <script>
     $(document).ready(function(){
         $('#demo-1 .simpleLens-thumbnails-container img').simpleGallery({
