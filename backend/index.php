@@ -82,7 +82,7 @@
                 </h2>
                 <div class="row mt-3 column-gap-4">
                     <div class="col-md-5 col-12 mt-3 cart ">
-                        <a class="text-decoration-none" href="manage_users.php">
+                        <a class="text-decoration-none" href="manage_products.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
                                     <i class="material-icons icon fs-3">shopping_cart</i>
@@ -98,7 +98,7 @@
                         </a>
                     </div>
                     <div class="col-md-5 col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_products.php">
+                        <a class="text-decoration-none" href="manage_orders.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
                                     <i class="material-icons icon fs-3">inventory</i>
@@ -195,7 +195,7 @@
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_category.php">
+                        <a class="text-decoration-none" href="manage_sub_category.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
                                     <i class="material-icons icon fs-3">category</i>

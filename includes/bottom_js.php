@@ -28,7 +28,7 @@
                 var search_keyword = $("#search_keyword");
                 $(pro_id).val(ui.item.pro_id);
                 $(search_keyword).val(ui.item.value);
-                //frmCat.submit();
+                frm_search.submit();
                 //return false;
             }
         });

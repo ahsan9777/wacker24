@@ -17,6 +17,12 @@ if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	$heading_title .= "<br>Keyword : ".$_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";
 	$search_keyword = $_REQUEST['search_keyword'];
+} elseif( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))){
+	$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
+	//$whereclause = "pro.pro_id = '".dbStr(trim($_REQUEST['pro_id']))."'";
+	$heading_title .= "<br>Keyword : ".$_REQUEST['search_keyword'];
+	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";
+	$search_keyword = $_REQUEST['search_keyword'];
 }
 
 

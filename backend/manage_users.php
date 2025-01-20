@@ -400,7 +400,7 @@ include("includes/messages.php");
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                     <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Change Password" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=3&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">key</span></button>
                                                     <?php if ($utype_id > 0) { ?>
-                                                        <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto mt-2" title="Special Price" onClick="javascript: window.location = '<?php print("manage_special_price.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">payments</span></button>
+                                                        <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto mt-2" title="Special Price" onClick="javascript: window.location = '<?php print("manage_special_price.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">sell</span></button>
                                                     <?php } ?>
                                                     <?php
                                                     $user_order_count = TotalRecords("ord_id", "orders", "WHERE user_id = '" . $row->user_id . "' ");
@@ -489,7 +489,7 @@ include("includes/messages.php");
             var user_full_name = $("#user_full_name");
             $(user_id).val(ui.item.user_id);
             $(user_full_name).val(ui.item.value);
-            //frmCat.submit();
+            frmCat.submit();
             //return false;
             //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
         }

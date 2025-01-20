@@ -47,7 +47,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
         <div class="header_bottom" <?php print($background_color_two); ?>>
             <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo)?>" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
-            <form class="header_search" name="frm" id="frm" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
+            <form class="header_search" name="frm_search" id="frm_search" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
                     <select class="header_select_slt" name="level_one" id="level_one">
                         <option value="0">ALL</option>

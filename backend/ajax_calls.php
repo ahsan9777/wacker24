@@ -102,7 +102,7 @@ if (isset($_REQUEST['action'])) {
             $json = array();
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                $where .= " WHERE u.utype_id IN (3,4) AND (u.user_fname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR u.user_lname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR ut.utype_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%')";
+                $where .= " WHERE u.utype_id IN (3,4) AND (u.user_fname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR u.user_lname LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR ut.utype_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR u.user_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%')";
             }
             $Query = "SELECT u.user_id, CONCAT(u.user_fname, ' ', u.user_lname, ' ( ',ut.utype_name,' )') full_name FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id " . $where . " ORDER BY u.user_id  LIMIT 0,20";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
