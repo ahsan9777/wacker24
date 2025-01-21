@@ -21,7 +21,8 @@ if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";*/
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))){
-	$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
+	//$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%' ";
+	$whereclause = " pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '6' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
 	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
 	$Sidefilter_brandSubQuery = "(SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
 	$Sidefilter_brandwhere = "IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
