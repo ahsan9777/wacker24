@@ -19,7 +19,9 @@
 <script type="text/javascript" src="js/jquery.simpleLens.js"></script>
 <style>
     .ui-widget.ui-widget-content{
-        z-index: 9999999 !important;
+        z-index: 9999999;
+        padding: 20px 10px;
+        font-size: 18px;
     }
 </style>
 <script>

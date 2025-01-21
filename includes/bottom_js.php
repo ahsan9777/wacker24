@@ -24,9 +24,9 @@
             },
             minLength: 1,
             select: function(event, ui) {
-                var pro_id = $("#pro_id");
+                var supplier_id = $("#supplier_id");
                 var search_keyword = $("#search_keyword");
-                $(pro_id).val(ui.item.pro_id);
+                $(supplier_id).val(ui.item.supplier_id);
                 $(search_keyword).val(ui.item.value);
                 frm_search.submit();
                 //return false;

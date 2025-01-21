@@ -54,7 +54,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
                         <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $cat_id, "cat_status = '1' AND parent_id = '0'"); ?>
                     </select>
                 </div>
-                <input type="hidden" name="pro_id" id="pro_id" value="0">
+                <input type="hidden" name="supplier_id" id="supplier_id" value="0">
                 <input type="text" class="search_input search_keyword" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" placeholder="Suchhbegriff" autocomplete="off">
                 <button class="search_icon"></button>
             </form>

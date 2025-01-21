@@ -3,6 +3,7 @@ include("includes/php_includes_top.php");
 
 //print_r($_REQUEST);die();
 $heading_title = "";
+$Sidefilter_where = "";
 
 if(isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0){
 	$whereclause = "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(".dbStr(trim($_REQUEST['level_one'])).", cm.sub_group_ids)) ";
@@ -11,14 +12,19 @@ if(isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0){
 	$cat_id = $_REQUEST['level_one'];
 }
 
-if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['pro_id'])) && $_REQUEST['pro_id'] > 0){
+if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0){
 	//$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
-	$whereclause = "pro.pro_id = '".dbStr(trim($_REQUEST['pro_id']))."'";
+	$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['supplier_id']))."'";
+	header("Location: ".$GLOBALS['siteURL']. "product_detail.php?supplier_id=".$_REQUEST['supplier_id']);
+	/*$Sidefilter_where = "pf.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
 	$heading_title .= "<br>Keyword : ".$_REQUEST['search_keyword'];
-	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";
+	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";*/
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))){
 	$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
+	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
+	$Sidefilter_brandSubQuery = "(SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
+	$Sidefilter_brandwhere = "IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
 	//$whereclause = "pro.pro_id = '".dbStr(trim($_REQUEST['pro_id']))."'";
 	$heading_title .= "<br>Keyword : ".$_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";
@@ -51,8 +57,8 @@ if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 				<div class="page_width">
 					<div class="product_inner">
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
-						<?php include("includes/left_filter.php"); ?>
-						<div class="pd_right">
+						<?php include("includes/searchPage_left_filter.php"); ?>
+						<div class="pd_right" >
 							<div class="gerenric_product">
 								<h2> <?php print(rtrim($heading_title, ";")); ?> </h2>
 								<div class="gerenric_product_inner">
@@ -215,13 +221,13 @@ if( (isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 </script>
 <script>
 	$(".show-more").click(function() {
-		if ($(".category_show, .list_checkbox_hide").hasClass("category_show_height")) {
+		if ($("#category_show_"+$(this).attr('data-id')+", #list_checkbox_hide_"+$(this).attr('data-id')+" ").hasClass("category_show_height")) {
 			$(this).text("(Show Less)");
 		} else {
 			$(this).text("(Show More)");
 		}
 
-		$(".category_show, .list_checkbox_hide").toggleClass("category_show_height");
+		$("#category_show_"+$(this).attr('data-id')+", #list_checkbox_hide_"+$(this).attr('data-id')+"").toggleClass("category_show_height");
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>

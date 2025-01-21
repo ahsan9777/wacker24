@@ -26,7 +26,7 @@ if (isset($_REQUEST['action'])) {
                 }
                 $where .= " AND ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' )";
             }
-            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short FROM products AS pro " . $where . " ORDER BY pro.pro_id  LIMIT 0,30";
+            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short FROM products AS pro " . $where . " ORDER BY pro.pro_id  LIMIT 0,20";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
