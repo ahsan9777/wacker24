@@ -365,11 +365,11 @@ include("includes/messages.php");
                             }
                         }
                         ?>
-                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row" name="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-4 col-12 mt-2">
                                 <label for="" class="text-white">Title</label>
                                 <input type="hidden" name="pro_id" id="pro_id" value="<?php print($pro_id); ?>">
-                                <input type="text" class="input_style pro_description_short" name="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                                <input type="text" class="input_style pro_description_short" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
                             </div>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -392,7 +392,7 @@ include("includes/messages.php");
                                     //$Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //print($Query);
                                     $counter = 0;
-                                    $limit = 50;
+                                    $limit = 25;
                                     $start = $p->findStart($limit);
                                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
                                     $pages = $p->findPages($count, $limit);
@@ -536,7 +536,7 @@ include("includes/messages.php");
                 var pro_description_short = $("#pro_description_short");
                 $(pro_id).val(ui.item.pro_id);
                 $(pro_description_short).val(ui.item.value);
-                //frmCat.submit();
+                frm_search.submit();
                 //return false;
                 //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
             }

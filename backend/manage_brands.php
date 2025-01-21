@@ -194,11 +194,11 @@ include("includes/messages.php");
                             }
                         }
                         ?>
-                        <form class="row" name="frmCat" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row" name="frm_search" id="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-2 col-12 mt-2">
                                 <label for="" class="text-white">Title</label>
                                 <input type="hidden" name="brand_id" id="brand_id" value="<?php print($brand_id); ?>">
-                                <input type="text" class="input_style brand_name" name="brand_name" value="<?php print($brand_name); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                                <input type="text" class="input_style brand_name" name="brand_name" id="brand_name" value="<?php print($brand_name); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
                             </div>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -315,7 +315,7 @@ include("includes/messages.php");
             var brand_name = $("#brand_name");
             $(brand_id).val(ui.item.brand_id);
             $(brand_name).val(ui.item.value);
-            //frmCat.submit();
+            frm_search.submit();
             //return false;
             //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
         }
