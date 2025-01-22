@@ -185,12 +185,12 @@ include("includes/messages.php");
                                 <input type="text" class="input_style" name="config_appointment_heading_en" id="config_appointment_heading_en" value="<?php print($config_appointment_heading_en); ?>" placeholder="Heading EN">
                             </div>
                             <div class="col-md-6 col-12 mt-3">
-                                <label for="config_ftp_img">Detal DE</label>
-                                <textarea rows="6" class="input_style" name="config_appointment_detail_de" id="config_appointment_detail_de" placeholder="Detali DE"><?php print($config_appointment_detail_de); ?></textarea>
+                                <label for="config_ftp_img">Detail DE</label>
+                                <textarea rows="6" class="input_style" name="config_appointment_detail_de" id="config_appointment_detail_de" placeholder="Detail DE"><?php print($config_appointment_detail_de); ?></textarea>
                             </div>
                             <div class="col-md-6 col-12 mt-3">
-                                <label for="config_ftp_img">Detal EN</label>
-                                <textarea rows="6" class="input_style" name="config_appointment_detail_en" id="config_appointment_detail_en" placeholder="Detali EN"><?php print($config_appointment_detail_en); ?></textarea>
+                                <label for="config_ftp_img">Detail EN</label>
+                                <textarea rows="6" class="input_style" name="config_appointment_detail_en" id="config_appointment_detail_en" placeholder="Detail EN"><?php print($config_appointment_detail_en); ?></textarea>
                             </div>
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="">Logo</label>
