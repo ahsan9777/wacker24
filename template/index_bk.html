@@ -1,0 +1,1594 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<title>Wacker 24</title>
+	<link href="css/styles.css" rel="stylesheet" type="text/css" />
+	<link href="css/slick-theme.css" rel="stylesheet" type="text/css" />
+	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
+	<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+	<script src="js/jquery-2.2.0.min.js"></script>
+	<script>
+		function blinker() {
+			$('.nav_sale').fadeOut(500);
+			$('.nav_sale').fadeIn(500);
+		}
+		setInterval(blinker, 1000);
+	</script>
+	<script>
+		$(() => {
+
+			//On Scroll Functionality
+			$(window).scroll(() => {
+				var windowTop = $(window).scrollTop();
+				windowTop > 10 ? $('.header_sticky').addClass('headersticky') : $('.header_sticky').removeClass('headersticky');
+			});
+
+			//Click Logo To Scroll To Top
+			$('#scroll_top').on('click', () => {
+				$('html,body').animate({
+					scrollTop: 0
+				}, 500);
+			});
+
+			//Smooth Scrolling Using Navigation Menu
+
+			$('a[href*="#"]').on('click', function (e) {
+				$('html,body').animate({
+					scrollTop: $($(this).attr('href')).offset().top - 15/*Fixed header k liye is ko uncomment krna hai*/
+				}, 500);
+				e.preventDefault();
+			});
+
+			//Toggle Menu
+			$('.all_menu').on('click', () => {
+				$('.all_menu').toggleClass('closeMenu');
+				$('.nav_submenu').toggleClass('showMenu');
+
+				$('.nav_overlay, .submenu_close').on('click', () => {
+					$('.nav_submenu').removeClass('showMenu');
+					$('.nav_submenu').removeClass('closeMenu');
+				});
+			});
+		}); 
+	</script>
+	<script>
+		$(function () {
+			$(".switch_click").click(function () {
+				if ($(this).is(":checked")) {
+					$("#header_section .header_top").css('background-color', '#4884fc');
+					$("#header_section .header_bottom").css('background-color', '#011f43');
+					$("#navigation_section").css('background-color', '#4884fc');
+					$("#footer_section").css('background-color', '#4884fc');
+				} else {
+					$("#header_section .header_top").css('background-color', '#323234');
+					$("#header_section .header_bottom").css('background-color', '#cc0f19');
+					$("#navigation_section").css('background-color', '#323234');
+					$("#footer_section").css('background-color', '#323234');
+				}
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function () {
+			$(".side_cart_click").click(function () {
+				$(".hdr_side_cart").show();
+				$("#container").css('padding-right', '130px');
+				$("#logo").css('width', '120px');
+			});
+			$(".hdr_side_cart .side_bar_close").click(function () {
+				$(".hdr_side_cart").hide();
+				$("#container").css('padding-right', '0px');
+				$("#logo").css('width', '150px');
+			});
+
+		});
+	</script>
+
+</head>
+
+<body>
+	<div id="container" align="center">
+
+		<!--LOCATION_POPUP_START-->
+		<div class="location_popup">
+			<div class="inner_popup">
+				<div class="location_content">
+					<div class="location_heading">Choose your location <div class="location_close"><i
+								class="fa fa-times"></i></div>
+					</div>
+					<div class="location_content_inner">
+						<p>Delivery options and delivery speeds may vary for different locations</p>
+						<div class="popup_btn"><a href="javascript:void(0)">
+								<div class="gerenric_btn full_btn">Sign in to see your addresses</div>
+							</a></div>
+						<div class="or_text">
+							<div class="or_text_inner">or enter a postal code in Germany</div>
+						</div>
+						<div class="popup_apply_div">
+							<input type="text" class="input_apply">
+							<input type="button" class="gerenric_btn" value="Apply">
+						</div>
+						<div class="or_text">
+							<div class="or_text_inner">or deliver outside Germany</div>
+						</div>
+						<div class="popup_select_box">
+							<select class="select_input">
+								<option value="">Pakistan</option>
+								<option value="">Germany</option>
+								<option value="">India</option>
+							</select>
+						</div>
+						<div class="popup_btn_done">
+							<div class="gerenric_btn">Done</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--LOCATION_POPUP_END-->
+
+		<!--HEADER_SECTION_START-->
+		<header id="header_section">
+			<div class="header_top">
+				<ul>
+					<li>
+						<div class="gerenric_switch">
+							<span>Private Customer</span>
+							<span>
+								<input class="switch_click"" type="checkbox" hidden="hidden" id="username">
+								<label class="switch" for="username"></label>
+							</span>
+						</div>
+					</li>
+					<li>Business Customer</li>
+				</ul>
+				<ul>
+					<li><a href="javascript:void(0)">About Wacker 24</a></li>
+					<li><a href="contact_page.html">Contact</a></li>
+					<li>
+						<div class="header_language">
+							<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png"
+										alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
+							<ul>
+								<li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
+								<li><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="header_sticky">
+				<div class="header_bottom">
+					<div id="logo"><a href="index.html"><img src="images/logo.png" alt=""></a></div>
+					<div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i>
+						Versand <span>Germany</span></div>
+					<div class="header_search">
+						<div class="header_select">
+							<select class="header_select_slt">
+								<option value="">ALL</option>
+								<option value="">Organize & Register</option>
+								<option value="">Papers & Pads</option>
+								<option value="">Write</option>
+								<option value="">Gluing & Shipping</option>
+								<option value="">Presentation & Planning</option>
+								<option value="">Technology & Accessories</option>
+								<option value="">ink & toner</option>
+								<option value="">Useful things in the office</option>
+							</select>
+						</div>
+						<input type="text" class="search_input" placeholder="Suchhbegriff">
+						<button class="search_icon"></button>
+					</div>
+					<div class="header_account">
+						<ul>
+							<li><a href="javascript:void(0)">
+									<div class="appointment_booking"><i class="fa fa-check-square-o"
+											aria-hidden="true"></i> appointment booking</div>
+								</a></li>
+							<li>
+								<div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
+								<div class="hdr_text">
+									<a href="javascript:void(0)"><span>Hello Login</span>Account & List <i
+											class="fa fa-caret-down"></i></a>
+									<div class="account_nav">
+										<ul>
+											<li>
+												<div class="full_width txt_align_center mb-10"><a
+														href="login_page.html">
+														<div class="gerenric_btn">Login</div>
+													</a></div>
+												<div class="full_width txt_align_center">New Account? <a
+														href="register_page.html"><b>Create One here</b></a></div>
+											</li>
+											<li><span>My lists</span></li>
+											<li>shopping list</li>
+											<li><span>My Account</span></li>
+											<li>Personal Data</li>
+											<li>orders</li>
+											<li>addresses</li>
+											<li>payment methods</li>
+										</ul>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="hdr_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
+								<div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span>0 Items</span>Cart</a></div>
+								<div class="hdr_side_cart">
+									<div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
+									<div class="side_cart_subtotal">
+										<div class="subtotal_title">Subtotal</div>
+										<div class="subtotal_prise">€4.90</div>
+										<div class="full_width"><a href="product_cart.html">
+												<div class="gerenric_btn full_btn">Go to Basket</div>
+											</a></div>
+									</div>
+									<div class="side_cart_pd">
+										<div class="side_cart_pd_row">
+											<div class="side_cart_pd_image"><a href="javascript:void(0)"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="side_cart_pd_prise">€4.90</div>
+											<div class="side_cart_pd_qty">
+												<div class="side_pd_qty">
+													<input type="number" class="qlt_number" value="1">
+												</div>
+												<div class="side_pd_delete"><a href="javascript:void(0)"><i
+															class="fa fa-trash"></i></a></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<nav id="navigation_section">
+					<ul>
+						<li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> All</a></li>
+						<li><a href="product_category.html">Organize & Register</a></li>
+						<li><a href="product_category.html">Papers & Pads</a></li>
+						<li><a href="product_category.html">Write</a></li>
+						<li><a href="product_category.html">Gluing & Shipping</a></li>
+						<li><a href="product_category.html">Presentation & Planning</a></li>
+						<li><a href="product_category.html">Technology & Accessories</a></li>
+						<li><a href="product_category.html">Ink & toner</a></li>
+						<li><a href="product_category.html">Useful things in the office</a></li>
+						<li><a href="product_category.html">Satchel</a></li>
+						<li><a href="product_category.html" class="nav_sale">Sales & Offers</a></li>
+					</ul>
+					<div class="nav_submenu">
+						<div class="nav_submenu_logo"><a href="index.html"><img src="images/logo.png" alt=""></a>
+							<div class="submenu_close"><i class="fa fa-close"></i> </div>
+						</div>
+						<ul>
+							<li><a href="product_category.html">Organize & Register</a></li>
+							<li><a href="product_category.html">Papers & Pads</a></li>
+							<li><a href="product_category.html">Write</a></li>
+							<li><a href="product_category.html">Gluing & Shipping</a></li>
+							<li><a href="product_category.html">Presentation & Planning</a></li>
+							<li><a href="product_category.html">Technology & Accessories</a></li>
+							<li><a href="product_category.html">Ink & toner</a></li>
+							<li><a href="product_category.html">Useful things in the office</a></li>
+							<li><a href="product_category.html">Satchel</a></li>
+						</ul>
+						<div class="nav_overlay"></div>
+					</div>
+
+				</nav>
+
+			</div>
+		</header>
+		<!--HEADER_SECTION_END-->
+
+		<!--BANNER_SECTION_START-->
+		<section id="banner_section">
+			<div class="page_width_1480">
+				<div class="banner_inner">
+					<div class="banner_slider">
+						<div>
+							<div class="banner_detail">
+								<h2>Comfort with style!</h2>
+								<p>Office furniture that inspires. Create an inspiring workplace with furniture that
+									combines comfort and style.</p>
+								<div class="full_width"><a href="javascript:void(0)">
+										<div class="gerenric_btn black_btn">Buy Now</div>
+									</a></div>
+							</div>
+							<video autoplay loop>
+								<source src="images/banner/video_1.mp4" type="video/mp4">
+							</video>
+						</div>
+						<div>
+							<div class="banner_detail">
+								<h2>Comfort with style!</h2>
+								<p>Office furniture that inspires. Create an inspiring workplace with furniture that
+									combines comfort and style.</p>
+								<div class="full_width"><a href="javascript:void(0)">
+										<div class="gerenric_btn black_btn">Buy Now</div>
+									</a></div>
+							</div>
+							<div class="banner_image"><img src="images/banner/banner_img1.jpg" alt=""></div>
+						</div>
+						<div>
+							<div class="banner_detail detail_white">
+								<h2>Comfort with style!</h2>
+								<p>Office furniture that inspires. Create an inspiring workplace with furniture that
+									combines comfort and style.</p>
+								<div class="full_width"><a href="javascript:void(0)">
+										<div class="gerenric_btn yellow_btn">Buy Now</div>
+									</a></div>
+							</div>
+							<video autoplay loop>
+								<source src="images/banner/video_2.mp4" type="video/mp4">
+							</video>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--BANNER_SECTION_END-->
+
+		<!--CONTENT_SECTION_START-->
+		<section id="content_section">
+			<div class="home_page">
+				<div class="page_width_1480">
+					<div class="hm_section_1">
+						<div class="gerenric_product_category">
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Organize & Register</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Papers & Pads</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Write</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Gluing & Shipping</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Presentation & Planning</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Technology & Accessories</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">ink & toner</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="pd_ctg_block">
+								<div class="pd_ctg_heading">Useful things in the office</div>
+								<div class="pd_ctg_row">
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img1.jpg" alt=""></div>
+											<div class="pd_ctg_title">punch</div>
+										</a>
+									</div>
+									<div class="pd_ctg_card">
+										<a href="product_category.html">
+											<div class="pd_ctg_image"><img src="images/product_img2.jpg" alt=""></div>
+											<div class="pd_ctg_title">staplers & accessories</div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="hm_section_2">
+						<div class="gerenric_white_box">
+							<div class="gerenric_product full_column">
+								<h2 class="pd_heading">Best-selling products</h2>
+								<div class="gerenric_slider">
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+							</div>
+						</div>
+						<div class="gerenric_white_box">
+							<div class="gerenric_product full_column">
+								<h2>Satchel</h2>
+								<div class="gerenric_slider">
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+							</div>
+						</div>
+						<div class="gerenric_white_box">
+							<div class="gerenric_product full_column">
+								<h2>Popular Products in Presentation & Planning</h2>
+								<div class="gerenric_slider">
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+						</div>
+						<div class="gerenric_white_box">
+							<div class="gerenric_product full_column">
+								<h2>Popular Products in Organizing & Registering</h2>
+								<div class="gerenric_slider">
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img1.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410
+														+500 staples/500 nails</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">270.20€</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="pd_card">
+											<div class="pd_image"><a href="product_detail.html"><img
+														src="images/product_img2.jpg" alt=""></a></div>
+											<div class="pd_detail">
+												<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy
+														Camou</a></h5>
+												<div class="pd_rating">
+													<ul>
+														<li>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+															<div class="fa fa-star"></div>
+														</li>
+													</ul>
+												</div>
+												<div class="pd_prise">12.60€</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+						</div>
+						<div class="gerenric_white_box">
+							<div class="hm_register">
+								<div class="full_width txt_align_center"><a href="login_page.html">
+										<div class="gerenric_btn">Login</div>
+									</a></div>
+								<p>New to Wacker24? <a href="register_page.html">Create here</a></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="hm_section_3">
+					<div class="gerenric_white_box">
+						<h2 class="txt_align_center">Top Manufacturers & Brands</h2>
+						<div class="hm_brand_logo">
+							<div class="brand_slider">
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/25282870117.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/28907443919.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/343640116.jpg" alt=""></div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/89018368172.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/25282870117.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/28907443919.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/343640116.jpg" alt=""></div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/89018368172.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/25282870117.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/28907443919.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/343640116.jpg" alt=""></div>
+										</a></div>
+								</div>
+								<div>
+									<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_item"><img src="images/brand/89018368172.jpg" alt="">
+											</div>
+										</a></div>
+								</div>
+							</div>
+						</div>
+						<div class="brand_btn"><a href="javascript:void(0)">
+								<div class="gerenric_btn">Show All</div>
+							</a></div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--CONTENT_SECTION_END-->
+
+		<!--FOOTER_SECTION_START-->
+		<div id="scroll_top">Back to top</div>
+		<footer id="footer_section">
+			<div class="page_width">
+				<div class="footer_top">
+					<div class="footer-col">
+						<h2>About Wacker</h2>
+						<ul>
+							<li><a href="javascript:void(0)">About Us</a></li>
+							<li><a href="javascript:void(0)">Data protection</a></li>
+							<li><a href="javascript:void(0)">Terms and Conditions</a></li>
+							<li><a href="javascript:void(0)">Partner</a></li>
+							<li><a href="javascript:void(0)">Wacker and the Environment</a></li>
+							<li><a href="javascript:void(0)">Imprint</a></li>
+							<li><a href="javascript:void(0)">Cancellation policy</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>Service</h2>
+						<ul>
+							<li><a href="javascript:void(0)">Disposal of old devices</a></li>
+							<li><a href="javascript:void(0)">Return of used batteries</a></li>
+							<li><a href="javascript:void(0)">Return of packaging material</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>Discover More</h2>
+						<ul>
+							<li><a href="javascript:void(0)">Copy Shop</a></li>
+							<li><a href="javascript:void(0)">Test</a></li>
+							<li><a href="javascript:void(0)">DHL parcel shop</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>Contact & Directions</h2>
+						<ul>
+							<li><a href="javascript:void(0)">Contact form</a></li>
+							<li><a href="javascript:void(0)">Opening hours</a></li>
+							<li><a href="javascript:void(0)">Directions</a></li>
+						</ul>
+					</div>
+					<div class="footer-col">
+						<h2>payment methods</h2>
+						<div class="footer_payment_method">
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/amExpress.jpg" alt=""></div>
+								<div class="payment_card_title">American Express</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/mastercard.jpg" alt=""></div>
+								<div class="payment_card_title">Mastercard</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/payPal.jpg" alt=""></div>
+								<div class="payment_card_title">PayPal</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/teba.jpg" alt=""></div>
+								<div class="payment_card_title">Teba</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/visa.jpg" alt=""></div>
+								<div class="payment_card_title">Visa</div>
+							</div>
+							<div class="payment_card">
+								<div class="payment_card_image"><img src="images/sepa.jpg" alt=""></div>
+								<div class="payment_card_title">Sepa</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer_bottom">
+					<div class="footer_btm_left">
+						<div class="social_medial">
+							<ul>
+								<li><a href="javascript:void(0)"><img src="images/youtube_icon.png" alt=""></a></li>
+								<li><a href="javascript:void(0)"><img src="images/facebook_icon.png" alt=""></a></li>
+								<li><a href="javascript:void(0)"><img src="images/twitter_icon.png" alt=""></a></li>
+								<li><a href="javascript:void(0)"><img src="images/instagram_icon.png" alt=""></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="footer_btm_right">
+						<button class="subscribe_newsletter_btn">Subscribe to Newsletter</button>
+					</div>
+
+				</div>
+				<div class="footer_logo"><a href="index.html"><img src="images/logo.png" alt=""></a></div>
+			</div>
+		</footer>
+		<!--FOOTER_SECTION_END-->
+
+	</div>
+
+</body>
+<script src="js/slick.js"></script>
+<script type="text/javascript">
+	$(".banner_slider").slick({
+		dots: false,
+		infinite: true,
+		slidesToShow: 1,
+		autoplay: true,
+		autoplaySpeed: 3000,
+		slidesToScroll: 1,
+	});
+	$(".gerenric_slider").slick({
+		slidesToShow: 6,
+		slidesToScroll: 1,
+		autoplay: true,
+		dots: false,
+		autoplaySpeed: 2000,
+		infinite: true,
+		responsive: [
+
+			{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 650,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1
+				}
+			}
+		]
+	});
+	$(".brand_slider").slick({
+		slidesToShow: 10,
+		slidesToScroll: 1,
+		autoplay: true,
+		dots: false,
+		autoplaySpeed: 2000,
+		infinite: true,
+		responsive: [
+			{
+				breakpoint: 1200,
+				settings: {
+					slidesToShow: 6,
+					slidesToScroll: 1
+				}
+			},
+			{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 650,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1
+				}
+			}
+		]
+	});
+
+</script>
+<script>
+	$(window).load(function () {
+		/*2 popup 1 hide 1 show*/
+		$(".location_trigger").click(function () { $('.location_popup').show(); $('.location_popup').resize(); $('body').css({ 'overflow': 'hidden' }); });
+		$('.location_close').click(function () { $('.location_popup').hide(); $('body').css({ 'overflow': 'inherit' }); });
+
+	});
+
+</script>
+
+</html>

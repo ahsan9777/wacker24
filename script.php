@@ -30,8 +30,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'user_data':
-            print("user_data");
-            die();
+            print("user_data");die();
             $counter = 0;
             $Query = "SELECT * FROM wacker_users ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -71,8 +70,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'user_address_data':
-            print("user_address_data");
-            die();
+            print("user_address_data");die();
             $counter = 0;
             $Query = "SELECT * FROM addressbook ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -81,6 +79,7 @@ if (isset($_REQUEST['action'])) {
                     $id = $row->id;
                     $usa_street = $row->street;
                     $usa_house_no = $row->house;
+                    $usa_zipcode = $row->location;
                     $countries_id = 162;
                     $usa_contactno = $row->phone;
                     $old_user_id = $row->user_id;
@@ -90,7 +89,7 @@ if (isset($_REQUEST['action'])) {
                     $usa_additional_info = $row->additional_info;
 
                     $usa_id = getMaximum("user_shipping_address", "usa_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_street, usa_house_no, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_defualt, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '" . $usa_street . "', '" . $usa_house_no . "', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_defualt . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_street, usa_house_no, usa_zipcode, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_defualt, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '" . $usa_street . "', '" . $usa_house_no . "', '".$usa_zipcode."', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_defualt . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record added: " . $counter);

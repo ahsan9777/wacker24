@@ -314,7 +314,7 @@ include("includes/messages.php");
                                 </div>
                                 <div class=" col-md-2 col-12 mt-2">
                                     <label for="" class="text-white">Type</label>
-                                    <select name="utype_id" id="utype_id" class="input_style" onchange="javascript: frmCat.submit();">
+                                    <select name="utype_id" id="utype_id" class="input_style" onchange="javascript: frm_search.submit();">
                                         <option value="0">N/A</option>
                                         <?php FillSelected2("user_type", "utype_id", "utype_name", $utype_id, $utype_where); ?>
                                     </select>
@@ -326,8 +326,8 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <th width="150">Name</th>
-                                        <th>User Name </th>
+                                        <th width="150">Customer Id </th>
+                                        <th width="300">User Info </th>
                                         <?php if ($utype_id > 0) { ?>
                                             <th width="95">Zip Code</th>
                                             <th>Street</th>
@@ -355,12 +355,19 @@ include("includes/messages.php");
                                         while ($row = mysqli_fetch_object($rs)) {
                                             $counter++;
                                             $strClass = 'label  label-danger';
+                                            $user_company_name = "";
+                                            if(!empty($row->user_company_name) && $row->utype_id == 4){
+                                                $user_company_name = '<span class="btn btn-warning btn-style-light w-auto mb-2 d-flex align-items-center gap-1" style="font-size: 12px;"><span class="material-icons icon material-xs">apartment</span> <span>'.$row->user_company_name.' </span></span>';
+                                            }
 
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->user_id); ?>"></td>
-                                                <td><?php print($row->user_fname . " " . $row->user_lname); ?></td>
-                                                <td><?php print($row->user_name); ?></td>
+                                                <td>
+                                                    <input type="hidden" name="user_id" id="user_id_<?php print($row->user_id); ?>" value="<?php print($row->user_id); ?>">
+                                                    <input type="number" data-id="<?php print($row->user_id); ?>" class="input_style customer_id" name="customer_id" id="customer_id_<?php print($row->user_id); ?>" value="<?php print($row->customer_id); ?>">
+                                                </td>
+                                                <td><?php print($user_company_name. $row->user_fname . " " . $row->user_lname."<br>".$row->user_name); ?></td>
                                                 <?php if ($utype_id > 0) { ?>
                                                     <td><?php print($row->usa_zipcode); ?></td>
                                                     <td><?php print($row->usa_street); ?></td>
@@ -496,6 +503,43 @@ include("includes/messages.php");
     });
     $(document).ready(function() {
         // Listen for toggle changes
+        
+        $('.customer_id').change(function() {
+            let id = $("#user_id_"+$(this).attr('data-id')).val();
+            let set_field_data = $("#customer_id_"+$(this).attr('data-id')).val();
+            //console.log("user_id: "+user_id+" customer_id: "+customer_id);
+           $.ajax({
+                url: 'ajax_calls.php?action=btn_toggle',
+                method: 'POST',
+                data: {
+                    table: "users",
+                    set_field: "customer_id",
+                    set_field_data: set_field_data,
+                    where_field: "user_id",
+                    id: id
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    console.log(obj);
+                    if (obj.status == 1 && set_field_data > 0) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Record updated successfully!',
+                            icon: 'success',
+                            position: 'top-right'
+                        });
+                    } else if (obj.status == 1 && set_field_data == 0) {
+                        $.toast({
+                            heading: 'Warning',
+                            text: 'Record empty successfully!',
+                            icon: 'warning',
+                            position: 'top-right'
+                        });
+                    }
+                }
+            });
+        });
         $('.user_invoice_payment').change(function() {
             let id = $(this).attr('data-id');
             let set_field_data = 0;

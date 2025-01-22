@@ -43,7 +43,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
             </li>
         </ul>
     </div>
-    <div>
+    <div class="header_sticky">
         <div class="header_bottom" <?php print($background_color_two); ?>>
             <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo)?>" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
@@ -482,6 +482,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
         <?php } ?>
     </div>
 </header>
+<div class="header_overlay"></div>
 <script>
     $(function() {
         //console.log("switch_click");

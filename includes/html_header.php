@@ -128,3 +128,24 @@
 	  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
 });
 </script>
+
+<script>
+	$(document).ready(function(){
+	  $("#header_section .header_bottom .header_search .search_input").click(function(){
+		$(".header_overlay").show();
+		$("#header_section .header_bottom .header_search").css("border", "2px solid yellow");
+		$("#header_section .header_bottom .header_search .header_select_slt").css("border", "0px solid yellow");
+	  });
+	  $(".header_overlay").click(function(){
+		$(".header_overlay").hide();
+		$("#header_section .header_bottom .header_search").css("border", "0px solid yellow");
+		$("#header_section .header_bottom .header_search .header_select_slt").css("border", "0px solid yellow");
+	  });
+	  $("#header_section .header_bottom .header_search .header_select_slt").click(function(){
+		$(".header_overlay").show();
+		$("#header_section .header_bottom .header_search .header_select_slt").css("border", "2px solid yellow");
+		$("#header_section .header_bottom .header_search").css("border", "0px solid yellow");
+		});
+		
+	});
+</script>

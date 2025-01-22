@@ -1,5 +1,14 @@
 
 <script>
+	$('#header_section .header_bottom .header_search .header_select_slt').change(function(){
+	var text = $(this).find('option:selected').text()
+	var $aux = $('<select/>').append($('<option/>').text(text))
+	$(this).after($aux)
+	$(this).width($aux.width())
+	$aux.remove()
+	}).change()
+</script>
+<script>
 	$('.close').on('click', function(){
         $('.alert').hide();
     });

@@ -186,9 +186,9 @@ body.body-white{background-color: #fff !important;}
 .gerenric_range .ui-slider-handle + span {background:#cc0f19;}
 .gerenric_range .ui-slider-horizontal .ui-slider-handle{top: -6px;}
 .location_popup{background:rgba(0,0,0,0.7);cursor:pointer;display:none;height:100%; padding: 20px 0px; overflow-y: auto;  position:fixed; left: 0px; top: 0px; text-align:center; width:100%;z-index:9999999;}
-.location_popup > .inner_popup{max-width: 375px; margin: auto; height: 100%; display:flex !important;align-items: center; left:0%;right:0%;position: relative;  }
+.location_popup > .inner_popup{max-width: 375px;  border-radius: 10px;background-color: #fff; margin: auto; display:block !important;top:50px;left:0%;right:0%;position: absolute;  }
 .location_trigger{cursor: pointer}
-.location_content{width: 100%; background-color: #fff; border-radius: 10px;}
+.location_content{width: 100%;}
 .location_content .location_heading{width: 100%;padding: 15px 20px; border-radius: 8px 8px 0px 0px; font-size: 16px; text-align: left; color: #000; font-weight: bold; position: relative;  border-bottom: 1px solid #d5d9d9;background-color: #f0f2f2;}
 .location_content .location_heading .location_close{position: absolute; top: 16px; right: 20px; cursor: pointer;}
 .location_content .location_content_inner{width: 100%; padding: 20px;}
@@ -239,8 +239,7 @@ body.body-white{background-color: #fff !important;}
 /*GERENRIC_SECTION_END*/
 
 /*HEADER_SECTION_START*/
-.header_overlay{width: 100%; height: 100%; display: none;z-index: 9999; background-color: rgba(0, 0, 0, 0.60); position: fixed;top: 0px; left: 0px;}
-#header_section{width: 100%;position: relative;z-index: 99999; -webkit-transition: all 0.3s;transition: all 0.3s; }
+#header_section{width: 100%; -webkit-transition: all 0.3s;transition: all 0.3s; }
 #header_section .header_top{width: 100%; display: flex; flex-wrap: wrap;justify-content: space-between; padding: 0px 20px; background-color: #323234;}
 #header_section .header_top ul{display: flex; align-items: center;}
 #header_section .header_top ul li{list-style-type: none; margin-left: 10px; font-size: 13px; color: #fff;}
@@ -270,15 +269,11 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_account ul li .hdr_text{width: calc(100% - 30px); font-size: 14px; color: #fff; font-weight: 600; text-align: left; padding-left: 5px;}
 #header_section .header_bottom .header_account ul li .hdr_text span{display: block; font-weight: 500; color: #fffc04; font-size: 12px;}
 #header_section .header_bottom .header_account ul li .hdr_text a{color: #fff;}
-#header_section .header_bottom .header_account ul li::after{width: 100%; min-height: 40px; top: -9px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
-#header_section .header_bottom .header_account ul li:hover::after{display: block;}
-#header_section .header_bottom .header_location{font-size: 12px; position: relative; padding: 0px 5px; color: #fff; display: flex; align-items: center;}
+#header_section .header_bottom .header_location{font-size: 12px;padding: 0px 5px; color: #fff; display: flex; align-items: center;}
 #header_section .header_bottom .header_location .fa{font-size: 20px;color: #fffc04; margin-right: 5px;}
 #header_section .header_bottom .header_location span{ font-weight: bold;  margin-left: 5px;}
-#header_section .header_bottom .header_location::after{width: 100%; height: 40px; top: -15px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
-#header_section .header_bottom .header_location:hover::after{display: block;}
 #header_section .header_bottom .header_search{width: 43%; display: flex; border-radius: 5px; overflow: hidden; position: relative; background-color: #fff; position: relative;}
-#header_section .header_bottom .header_search .header_select_slt{ width: 100px; font-size: 14px; font-weight: 500; padding: 10px; background-color: #ebebeb; border: 0px;height: 40px;}
+#header_section .header_bottom .header_search .header_select_slt{ /*width: 100%;*/ font-size: 14px; font-weight: 500; padding: 10px; background-color: #ebebeb; border: 0px;height: 40px;}
 #header_section .header_bottom .header_search .header_select_slt:focus{outline: none;}
 #header_section .header_bottom .header_search .search_input{width: 100%;  height: 40px; background-color: #fff; border: 0px; padding: 7px 20px 7px 20px;}
 #header_section .header_bottom .header_search .search_input:focus{outline: none;}
@@ -293,7 +288,6 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_account ul li .account_nav ul li.account_hdr{ margin-top: 15px; }
 #header_section .header_bottom .header_account ul li .mb-10{margin-bottom: 10px;}
 #header_section .header_bottom .header_account ul li:hover .account_nav{display: block;}
-#header_section .header_bottom .header_account ul li .account_nav ul li::after{display: none !important;}
 .hdr_side_cart{width: 130px;-webkit-transition: all 0.3s;transition: all 0.3s; display: none; background-color: #fff;border-left: 1px solid #bbb; height: 100vh; overflow-y: auto; top: 0px; position: fixed; z-index: 999; right: 0px;}
 .hdr_side_cart .side_bar_close{position: absolute; left: 10px; top: 5px; font-size: 15px; font-weight: bold;color: #000; cursor: pointer;}
 .hdr_side_cart .side_cart_subtotal{width: 100%;border-bottom: 1px solid #bbb; padding: 15px; }
@@ -312,10 +306,8 @@ body.body-white{background-color: #fff !important;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty .side_pd_qty .qlt_number{width: 100%; padding: 5px 5px; border: 1px solid #808080; height: 30px; border-radius: 4px;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty .side_pd_delete{width: 40%;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty .side_pd_delete a{width: 100%; height: 30px; border-radius: 5px; display: flex; justify-content: center; align-items: center; border: 1px solid #bbb;}
-#logo{width: 150px; position: relative;}
+#logo{width: 150px;}
 #logo img{display: block;}
-#logo::after{width: 100%; height: 40px; top: -15px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
-#logo:hover::after{display: block;}
 #navigation_section{width: 100%;background-color: #323234; padding: 5px 0px;}
 #navigation_section ul{display: flex; flex-wrap: wrap; padding: 0px 15px;}
 #navigation_section ul li{ list-style-type: none;}
