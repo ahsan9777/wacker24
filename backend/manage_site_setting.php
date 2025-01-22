@@ -22,6 +22,14 @@ if (isset($_REQUEST['btnUpdate'])) {
     config_condition_courier_amount = '" . dbStr(trim($_REQUEST['config_condition_courier_amount'])) . "', 
     config_courier_fix_charges = '" . dbStr(trim($_REQUEST['config_courier_fix_charges'])) . "', 
     config_ftp_img = '" . dbStr(trim($_REQUEST['config_ftp_img'])) . "', 
+    config_appointment_regular_opening = '" . dbStr(trim($_REQUEST['config_appointment_regular_opening'])) . "', 
+    config_appointment_regular_closing = '" . dbStr(trim($_REQUEST['config_appointment_regular_closing'])) . "', 
+    config_appointment_saturday_opening = '" . dbStr(trim($_REQUEST['config_appointment_saturday_opening'])) . "', 
+    config_appointment_saturday_closing = '" . dbStr(trim($_REQUEST['config_appointment_saturday_closing'])) . "', 
+    config_appointment_heading_de = '" . dbStr(trim($_REQUEST['config_appointment_heading_de'])) . "', 
+    config_appointment_heading_en = '" . dbStr(trim($_REQUEST['config_appointment_heading_en'])) . "', 
+    config_appointment_detail_de = '" . dbStr(trim($_REQUEST['config_appointment_detail_de'])) . "', 
+    config_appointment_detail_en = '" . dbStr(trim($_REQUEST['config_appointment_detail_en'])) . "', 
     config_site_logo = '" . $mfileName . "'") 
 or die(mysqli_error($GLOBALS['conn']));
 
@@ -49,6 +57,14 @@ if (mysqli_num_rows($rsM) > 0) {
     $config_condition_courier_amount = $rsMem->config_condition_courier_amount;
     $config_courier_fix_charges = $rsMem->config_courier_fix_charges;
     $config_ftp_img = $rsMem->config_ftp_img;
+    $config_appointment_regular_opening = $rsMem->config_appointment_regular_opening;
+    $config_appointment_regular_closing = $rsMem->config_appointment_regular_closing;
+    $config_appointment_saturday_opening = $rsMem->config_appointment_saturday_opening;
+    $config_appointment_saturday_closing = $rsMem->config_appointment_saturday_closing;
+    $config_appointment_heading_de = $rsMem->config_appointment_heading_de;
+    $config_appointment_heading_en = $rsMem->config_appointment_heading_en;
+    $config_appointment_detail_de = $rsMem->config_appointment_detail_de;
+    $config_appointment_detail_en = $rsMem->config_appointment_detail_en;
     $mfileName = $rsMem->config_site_logo;
     $mfile_path = !empty($rsMem->config_site_logo) ? $GLOBALS['siteURL'] . "files/" . $rsMem->config_site_logo : "";
     $formHead = "Update Info";
@@ -140,6 +156,41 @@ include("includes/messages.php");
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="config_ftp_img">FTP Image URL</label>
                                 <input type="text" class="input_style" name="config_ftp_img" id="config_ftp_img" value="<?php print($config_ftp_img); ?>" placeholder="FTP Image">
+                            </div>
+                            <div class="col-md-12 col-12 mt-3 border-bottom">
+                                <h2 class="text-start text-white">Appointment</h2>
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Regular opening hours</label>
+                                <input type="time" class="input_style" name="config_appointment_regular_opening" id="config_appointment_regular_opening" value="<?php print($config_appointment_regular_opening); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Regular closing hours</label>
+                                <input type="time" class="input_style" name="config_appointment_regular_closing" id="config_appointment_regular_closing" value="<?php print($config_appointment_regular_closing); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Saturday opening hours</label>
+                                <input type="time" class="input_style" name="config_appointment_saturday_opening" id="config_appointment_saturday_opening" value="<?php print($config_appointment_saturday_opening); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Saturday closing hours</label>
+                                <input type="time" class="input_style" name="config_appointment_saturday_closing" id="config_appointment_saturday_closing" value="<?php print($config_appointment_saturday_closing); ?>">
+                            </div>
+                            <div class="col-md-6 col-12 mt-3">
+                                <label for="config_ftp_img">Heading DE</label>
+                                <input type="text" class="input_style" name="config_appointment_heading_de" id="config_appointment_heading_de" value="<?php print($config_appointment_heading_de); ?>" placeholder="Heading DE">
+                            </div>
+                            <div class="col-md-6 col-12 mt-3">
+                                <label for="config_ftp_img">Heading EN</label>
+                                <input type="text" class="input_style" name="config_appointment_heading_en" id="config_appointment_heading_en" value="<?php print($config_appointment_heading_en); ?>" placeholder="Heading EN">
+                            </div>
+                            <div class="col-md-6 col-12 mt-3">
+                                <label for="config_ftp_img">Detal DE</label>
+                                <textarea rows="6" class="input_style" name="config_appointment_detail_de" id="config_appointment_detail_de" placeholder="Detali DE"><?php print($config_appointment_detail_de); ?></textarea>
+                            </div>
+                            <div class="col-md-6 col-12 mt-3">
+                                <label for="config_ftp_img">Detal EN</label>
+                                <textarea rows="6" class="input_style" name="config_appointment_detail_en" id="config_appointment_detail_en" placeholder="Detali EN"><?php print($config_appointment_detail_en); ?></textarea>
                             </div>
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="">Logo</label>
