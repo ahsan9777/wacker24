@@ -14,7 +14,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "INSERT INTO appointment_schedule (as_id, ac_id, as_duration, as_delay, as_remote, as_title_de, as_title_en, as_detail_de, as_detail_en, as_image) VALUES ('" . $as_id . "', '" . dbStr(trim($_REQUEST['ac_id'])) . "',  '" . dbStr(trim($_REQUEST['as_duration'])) . "', '" . dbStr(trim($_REQUEST['as_delay'])) . "', '".dbStr(trim($_REQUEST['as_remote']))."', '" . dbStr(trim($_REQUEST['as_title_de'])) . "', '" . dbStr(trim($_REQUEST['as_title_en'])) . "', '" . dbStr(trim($_REQUEST['as_detail_de'])) . "', '" . dbStr(trim($_REQUEST['as_detail_en'])) . "', '" . dbStr(trim($mfileName)) . "')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO appointment_schedule (as_id, ac_id, as_duration, as_delay, as_remote, as_title_de, as_title_en, as_detail_de, as_detail_en, as_image) VALUES ('" . $as_id . "', '" . dbStr(trim($_REQUEST['ac_id'])) . "',  '" . dbStr(trim($_REQUEST['as_duration'])) . "', '" . dbStr(trim($_REQUEST['as_delay'])) . "', '" . dbStr(trim($_REQUEST['as_remote'])) . "', '" . dbStr(trim($_REQUEST['as_title_de'])) . "', '" . dbStr(trim($_REQUEST['as_title_en'])) . "', '" . dbStr(trim($_REQUEST['as_detail_de'])) . "', '" . dbStr(trim($_REQUEST['as_detail_en'])) . "', '" . dbStr(trim($mfileName)) . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -29,7 +29,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE appointment_schedule SET  ac_id = '" . dbStr(trim($_REQUEST['ac_id'])) . "',  as_duration = '" . dbStr(trim($_REQUEST['as_duration'])) . "',  as_delay = '" . dbStr(trim($_REQUEST['as_delay'])) . "',  as_remote = '".dbStr(trim($_REQUEST['as_remote']))."', as_title_de = '" . dbStr(trim($_REQUEST['as_title_de'])) . "', as_title_en = '" . dbStr(trim($_REQUEST['as_title_en'])) . "', as_detail_de = '" . dbStr(trim($_REQUEST['as_detail_de'])) . "', as_detail_en = '" . dbStr(trim($_REQUEST['as_detail_en'])) . "', as_image = '" . dbStr(trim($mfileName)) . "' WHERE as_id=" . $_REQUEST['as_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE appointment_schedule SET  ac_id = '" . dbStr(trim($_REQUEST['ac_id'])) . "',  as_duration = '" . dbStr(trim($_REQUEST['as_duration'])) . "',  as_delay = '" . dbStr(trim($_REQUEST['as_delay'])) . "',  as_remote = '" . dbStr(trim($_REQUEST['as_remote'])) . "', as_title_de = '" . dbStr(trim($_REQUEST['as_title_de'])) . "', as_title_en = '" . dbStr(trim($_REQUEST['as_title_en'])) . "', as_detail_de = '" . dbStr(trim($_REQUEST['as_detail_de'])) . "', as_detail_en = '" . dbStr(trim($_REQUEST['as_detail_en'])) . "', as_image = '" . dbStr(trim($mfileName)) . "' WHERE as_id=" . $_REQUEST['as_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -137,6 +137,9 @@ include("includes/messages.php");
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
+                                <div class="col-md-12 col-12 mt-3">
+                                    <img src="<?php print($mfile_path); ?>" width="20%" alt="">
+                                </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Category</label>
                                     <select class="input_style" name="ac_id" id="ac_id">
@@ -172,8 +175,8 @@ include("includes/messages.php");
                                 <div class="col-md-2 col-12 mt-3">
                                     <label for="">Remote</label>
                                     <select class="input_style" name="as_remote" id="as_remote">
-                                        <option value="0" <?php print( ($as_remote == 0) ? 'selected' : '' ); ?> >No</option>
-                                        <option value="1" <?php print( ($as_remote == 1) ? 'selected' : '' ); ?> >Yes</option>
+                                        <option value="0" <?php print(($as_remote == 0) ? 'selected' : ''); ?>>No</option>
+                                        <option value="1" <?php print(($as_remote == 1) ? 'selected' : ''); ?>>Yes</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
@@ -186,11 +189,11 @@ include("includes/messages.php");
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Detail DE</label>
-                                    <textarea rows="5" required type="text" class="input_style" name="as_detail_de" id="as_detail_de" placeholder="Detail DE"> <?php print($as_detail_de); ?> </textarea>
+                                    <textarea rows="12" required type="text" class="input_style" name="as_detail_de" id="as_detail_de" placeholder="Detail DE"> <?php print($as_detail_de); ?> </textarea>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Detail EN</label>
-                                    <textarea rows="5" type="text" class="input_style" name="as_detail_en" id="as_detail_en" placeholder="Detail DE"> <?php print($as_detail_en); ?> </textarea>
+                                    <textarea rows="12" type="text" class="input_style" name="as_detail_en" id="as_detail_en" placeholder="Detail DE"> <?php print($as_detail_en); ?> </textarea>
                                 </div>
                                 <div class="col-md-12 col-12 mt-3">
                                     <label for="">File</label>
@@ -370,4 +373,5 @@ include("includes/messages.php");
         });
     });
 </script>
+
 </html>
