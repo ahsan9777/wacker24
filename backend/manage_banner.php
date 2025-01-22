@@ -16,7 +16,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "INSERT INTO banners (ban_id, ban_heading_color, ban_detail_color, ban_heading_en, ban_heading_de, ban_details_en, ban_details_de, ban_file) VALUES ('" . $ban_id . "', '".dbStr(trim($_REQUEST['ban_heading_color']))."', '".dbStr(trim($_REQUEST['ban_detail_color']))."', '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO banners (ban_id, ban_heading_color, ban_detail_color, ban_link, ban_background_color, ban_text_color, ban_button_show, ban_heading_en, ban_heading_de, ban_details_en, ban_details_de, ban_file) VALUES ('" . $ban_id . "', '" . dbStr(trim($_REQUEST['ban_heading_color'])) . "', '" . dbStr(trim($_REQUEST['ban_detail_color'])) . "', '" . dbStr(trim($_REQUEST['ban_link'])) . "', '" . dbStr(trim($_REQUEST['ban_background_color'])) . "', '" . dbStr(trim($_REQUEST['ban_text_color'])) . "', '" . dbStr(trim($_REQUEST['ban_button_show'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -31,7 +31,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE banners SET ban_heading_color = '".dbStr(trim($_REQUEST['ban_heading_color']))."', ban_detail_color = '".dbStr(trim($_REQUEST['ban_detail_color']))."', ban_heading_en = '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', ban_heading_de = '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', ban_details_en = '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', ban_details_de = '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', ban_file = '" . $mfileName . "' WHERE ban_id= '" . $_REQUEST['ban_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE banners SET ban_heading_color = '" . dbStr(trim($_REQUEST['ban_heading_color'])) . "', ban_detail_color = '" . dbStr(trim($_REQUEST['ban_detail_color'])) . "', ban_link = '" . dbStr(trim($_REQUEST['ban_link'])) . "', ban_background_color = '" . dbStr(trim($_REQUEST['ban_background_color'])) . "', ban_text_color = '" . dbStr(trim($_REQUEST['ban_text_color'])) . "', ban_button_show = '" . dbStr(trim($_REQUEST['ban_button_show'])) . "', ban_heading_en = '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', ban_heading_de = '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', ban_details_en = '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', ban_details_de = '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', ban_file = '" . $mfileName . "' WHERE ban_id= '" . $_REQUEST['ban_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -40,6 +40,10 @@ if (isset($_REQUEST['btnAdd'])) {
             $rsMem = mysqli_fetch_object($rsM);
             $ban_heading_color = $rsMem->ban_heading_color;
             $ban_detail_color = $rsMem->ban_detail_color;
+            $ban_button_show = $rsMem->ban_button_show;
+            $ban_link = $rsMem->ban_link;
+            $ban_background_color = $rsMem->ban_background_color;
+            $ban_text_color = $rsMem->ban_text_color;
             $ban_heading_en = $rsMem->ban_heading_en;
             $ban_heading_de = $rsMem->ban_heading_de;
             $ban_details_en = $rsMem->ban_details_en;
@@ -52,6 +56,10 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $ban_heading_color = "";
         $ban_detail_color = "";
+        $ban_button_show = "";
+        $ban_link = "";
+        $ban_background_color = "";
+        $ban_text_color = "";
         $ban_heading_en = "";
         $ban_heading_de = "";
         $ban_details_en = "";
@@ -167,6 +175,18 @@ include("includes/messages.php");
                                     <input type="text" class="input_style" name="ban_detail_color" id="ban_detail_color" value="<?php print($ban_detail_color); ?>" placeholder="Detail Color (Like: #fff)">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Button Link</label>
+                                    <input type="text" class="input_style ban_link" name="ban_link" id="ban_link" value="<?php print($ban_link); ?>" placeholder="Button Link">
+                                </div>
+                                <div class="col-md-3 col-12 mt-3">
+                                    <label for="">Button Background Color (Like: #fff)</label>
+                                    <input type="text" required class="input_style ban_background_color" name="ban_background_color" id="ban_background_color" value="<?php print($ban_background_color); ?>" placeholder="Button Background Color (Like: #fff)">
+                                </div>
+                                <div class="col-md-3 col-12 mt-3">
+                                    <label for="">Button Text Color (Like: #fff)</label>
+                                    <input type="text" required class="input_style ban_text_color" name="ban_text_color" id="ban_text_color" value="<?php print($ban_text_color); ?>" placeholder="Button Text Color (Like: #fff)">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
                                     <label for="">Heading EN</label>
                                     <input type="text" class="input_style" name="ban_heading_en" id="ban_heading_en" value="<?php print($ban_heading_en); ?>" placeholder="Heading EN">
                                 </div>
@@ -219,6 +239,7 @@ include("includes/messages.php");
                                         <th>Heading</th>
                                         <th>Detail</th>
                                         <th width="100">Order By </th>
+                                        <th width="120">Button Show</th>
                                         <th width="50">Status</th>
                                         <th width="50">Action</th>
                                     </tr>
@@ -263,6 +284,7 @@ include("includes/messages.php");
                                                     <input type="hidden" name="ban_id[]" id="ban_id" value="<?php print($row->ban_id); ?>">
                                                     <input type="number" class="input_style" name="ban_order[]" id="ban_order" value="<?php print($row->ban_order); ?>">
                                                 </td>
+                                                <td> <input type="checkbox" class="ban_button_show" id="ban_button_show" data-id="<?php print($row->ban_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->ban_button_show == 1) ? 'checked' : ''); ?>> </td>
                                                 <td>
                                                     <?php
                                                     if ($row->ban_status == 0) {
@@ -324,6 +346,46 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
+    $('.ban_button_show').change(function() {
+        let id = $(this).attr('data-id');
+        let set_field_data = 0;
+        //console.log("cat_id: "+cat_id)
+        if ($(this).prop('checked')) {
+            set_field_data = 1;
+        }
+        //console.log("set_field_data: "+set_field_data);
+        $.ajax({
+            url: 'ajax_calls.php?action=btn_toggle',
+            method: 'POST',
+            data: {
+                table: "banners",
+                set_field: "ban_button_show",
+                set_field_data: set_field_data,
+                where_field: "ban_id",
+                id: id
+            },
+            success: function(response) {
+                //console.log("response = "+response);
+                const obj = JSON.parse(response);
+                console.log(obj);
+                if (obj.status == 1 && set_field_data == 1) {
+                    $.toast({
+                        heading: 'Success',
+                        text: 'Toggle is ON',
+                        icon: 'success',
+                        position: 'top-right'
+                    });
+                } else if (obj.status == 1 && set_field_data == 0) {
+                    $.toast({
+                        heading: 'Warning',
+                        text: 'Toggle is OFF',
+                        icon: 'warning',
+                        position: 'top-right'
+                    });
+                }
+            }
+        });
+    });
     $('input.ban_details_en').autocomplete({
         source: function(request, response) {
             $.ajax({
