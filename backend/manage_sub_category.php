@@ -233,7 +233,7 @@ include("includes/messages.php");
                                     <?php
                                         }
                                     } else {
-                                        print('<tr><td colspan="100%" align="center">No record found!</td></tr>');
+                                        print('<tr><td colspan="100%" class="text-center">No record found!</td></tr>');
                                     }
                                     ?>
                                 </tbody>

@@ -32,6 +32,12 @@ $cu = 'active';
                     <li><a href="manage_sales_system.php" title="Sales System Management"><span class="text">Sales System</span></a></li>
                 </ul>
             </li>
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_sales_system') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_sales_system') ? $c : ''; ?>>
+                    <li><a href="manage_appointment_category.php" title="Category Management"><span class="text">Category</span></a></li>
+                </ul>
+            </li>
             
 
             <li>
