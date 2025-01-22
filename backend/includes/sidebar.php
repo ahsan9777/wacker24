@@ -33,9 +33,10 @@ $cu = 'active';
                 </ul>
             </li>
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_sales_system') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_sales_system') ? $c : ''; ?>>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule') ? $c : ''; ?>>
                     <li><a href="manage_appointment_category.php" title="Category Management"><span class="text">Category</span></a></li>
+                    <li><a href="manage_appointment_schedule.php" title="Schedule Management"><span class="text">Schedule</span></a></li>
                 </ul>
             </li>
             
