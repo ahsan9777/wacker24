@@ -270,8 +270,8 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_account ul li .hdr_text{width: calc(100% - 30px); font-size: 14px; color: #fff; font-weight: 600; text-align: left; padding-left: 5px;}
 #header_section .header_bottom .header_account ul li .hdr_text span{display: block; font-weight: 500; color: #fffc04; font-size: 12px;}
 #header_section .header_bottom .header_account ul li .hdr_text a{color: #fff;}
-#header_section .header_bottom .header_account ul li::after{width: 100%; min-height: 40px; top: -9px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
-#header_section .header_bottom .header_account ul li:hover::after{display: block;}
+#header_section .header_bottom .header_account ul li a::after{width: 100%; min-height: 40px; top: -9px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
+#header_section .header_bottom .header_account ul li a:hover::after{display: block;}
 #header_section .header_bottom .header_location{font-size: 12px; position: relative; padding: 0px 5px; color: #fff; display: flex; align-items: center;}
 #header_section .header_bottom .header_location .fa{font-size: 20px;color: #fffc04; margin-right: 5px;}
 #header_section .header_bottom .header_location span{ font-weight: bold;  margin-left: 5px;}
@@ -314,8 +314,8 @@ body.body-white{background-color: #fff !important;}
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_qty .side_pd_delete a{width: 100%; height: 30px; border-radius: 5px; display: flex; justify-content: center; align-items: center; border: 1px solid #bbb;}
 #logo{width: 150px; position: relative;}
 #logo img{display: block;}
-#logo::after{width: 100%; height: 40px; top: -15px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
-#logo:hover::after{display: block;}
+#logo a::after{width: 100%; height: 40px; top: -15px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
+#logo a:hover::after{display: block;}
 #navigation_section{width: 100%;background-color: #323234; padding: 5px 0px;}
 #navigation_section ul{display: flex; flex-wrap: wrap; padding: 0px 15px;}
 #navigation_section ul li{ list-style-type: none;}
@@ -600,6 +600,49 @@ body.body-white{background-color: #fff !important;}
 .my_data_page .my_data_box .my_data_block .data_detail h3{color: #343a40; font-size: 18px; font-weight: 700; margin-bottom: 10px;}
 .my_data_page .my_data_box .my_data_block .data_detail p{color: #343a40; font-size: 14px; font-weight: 400; margin-bottom: 0px;}
 .my_data_page .my_data_box .my_data_block .data_button{width: 35px; height: 35px; display: flex; align-items: center; cursor: pointer; background-color: #cc0f19;  position: absolute; right: 0px; justify-content: center; font-size: 20px; color: #fff; border-radius: 4px;}
+.about_page{width: 100%;}
+.about_page .about_inner{width: 100%; border-radius: 3px;padding: 30px 20px;border: 1px solid rgba(0, 0, 0, .125);box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05);background-color: #fff;}
+.about_page .about_block{width: 100%; margin-bottom: 20px;}
+.about_page .about_block .about_row{width: 100%; border-bottom: 1px solid #d0d0d0; padding-bottom: 15px; margin-bottom: 20px;}
+.about_page .about_block .about_row:last-child{border-bottom: 0px; padding-bottom: 0px; margin-bottom: 0px;}
+.about_page .about_block .about_year{width: 100%; height: 1px; display: flex; align-items: center; position: relative; justify-content: center; margin: 30px 0px; background-color:  #273445;}
+.about_page .about_block .about_year_inner{display: inline-flex; position: absolute; background-color: #ffc107; color: #273445; border-radius: 10px; border: 1px solid #273445; padding: 3px 15px; font-size: 22px; font-weight: 500;}
+.about_page .about_block .about_block_heading{width: 100%;background-color: #273445; margin-bottom: 20px; text-align: center; border-radius: 100px; font-size: 20px; color: #fff; font-weight: bold; padding: 10px 15px;}
+.about_page .about_block p{font-size: 14px;color: #273445;font-weight: 400; margin-bottom: 20px;}
+.about_page .about_block ul {margin-bottom: 20px;}
+.about_page .about_block ul li{list-style-type: none; margin-bottom: 6px; font-size: 14px;color: #273445;font-weight: 400;}
+.about_page .about_block ul li span{font-weight: bold;}
+.about_page .about_block .about_br{width: 100%; display: flex; flex-wrap: wrap;}
+.about_page .about_block .about_br .about_image{width: 450px;}
+.about_page .about_block .about_br .about_image img{width: 100%;}
+.about_page .about_block .about_br .about_detail{width: calc(100% - 450px); padding-left: 20px;}
+.appointment_booking{width: 100%;}
+.appointment_booking .appointment_inner{width: 100%; border-radius: 3px;padding: 30px 20px;border: 1px solid rgba(0, 0, 0, .125);box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.05);background-color: #fff;}
+.appointment_booking h3{font-size: 25px;color: #000;font-weight: bold; margin-bottom: 10px;}
+.appointment_booking h4{font-size: 15px;color: #000;font-weight: 400; margin-bottom: 20px;border-bottom: 1px solid #d0d0d0; padding-bottom: 15px; }
+.appointment_booking .appointment_row{margin: 0px -10px; display: flex; flex-wrap: wrap;}
+.appointment_booking .appointment_row .appointment_col{width: 50%;padding: 10px;}
+.appointment_booking .appointment_row .appointment_card{width: 100%; display: flex; border: 1px solid #d0d0d0; border-radius: 10px; padding: 15px;}
+.appointment_booking .appointment_row .appointment_card .appintment_image{width: 110px;}
+.appointment_booking .appointment_row .appointment_card .appintment_detail{width: calc(100% - 110px); padding-left: 20px;}
+.appointment_booking .appointment_row .appointment_card h2{font-size: 20px;color: #000;font-weight: bold; margin-bottom: 10px;}
+.appointment_booking .appointment_row .appointment_card .appointment_time{display: inline-flex; background-color: #70ad7e; border-radius: 3px; padding: 3px 5px; font-size: 13px;color: #fff;font-weight: 400; margin-bottom: 10px;}
+.appointment_booking .appointment_row .appointment_card p{font-size: 15px;color: #000;font-weight: 400; margin-bottom: 20px;}
+.appointment_date_booking{width: 100%;}
+.appointment_date_booking h2{font-size: 25px;color: #000;font-weight: bold; margin-bottom: 20px;}
+.appointment_date_booking h2.text_center{text-align: center !important;}
+.appointment_date_booking .appointment_section1{margin: 0px -8px;display: flex; flex-wrap: wrap;}
+.appointment_date_booking .appointment_section1 .appointment_col{width: 33.333%; padding: 8px;}
+.appointment_date_booking .appointment_section1 .appointment_card{width:100%;min-height: 350px; border: 1px solid #d0d0d0; border-radius: 10px; padding: 15px;}
+.appointment_date_booking .appointment_section1 .appointment_card ul{display: flex; flex-wrap: wrap; margin: 0px -2px;}
+.appointment_date_booking .appointment_section1 .appointment_card ul li{list-style-type: none;width: calc(33.333% - 6px); cursor: pointer; margin: 3px; border: 1px solid #d0d0d0; font-size: 14px;color: #333; text-align: center; border-radius: 3px; padding:10px 5px;}
+.appointment_date_booking .appointment_section1 .appointment_card ul li.active_time{color: #70ad7e; box-shadow: inset 0px -1px 0px #70ad7e;border: 1px solid #70ad7e; background-color: #70ad7e21;}
+.appointment_date_booking .appointment_section1 .appointment_card .appointment_image{width: 100%; margin-bottom: 15px;}
+.appointment_date_booking .appointment_section1 .appointment_card .appointment_image img{width: 100%; height: 200px; object-fit: cover;}
+.appointment_date_booking .appointment_section1 .appointment_card p{font-size: 15px;color: #000;font-weight: 500;text-align: center; margin-bottom: 10px;}
+.appointment_date_booking .appointment_section1 .appointment_card .appointment_time{display: inline-flex; margin-bottom: 30px; background-color: #70ad7e; border-radius: 3px; padding: 3px 5px; font-size: 13px;color: #fff;font-weight: 400; }
+.appointment_date_booking .appointment_section2{width:100%; margin-top: 20px; border: 1px solid #d0d0d0; border-radius: 10px; padding: 15px;}
+
 .contact_page{width: 100%;}
 .contact_page .contact_inner{width: 100%; display: flex;flex-wrap: wrap;}
 .contact_page h2{font-size: 20px; color: #000; font-weight: bold; margin-bottom: 20px;}
@@ -712,3 +755,10 @@ body.body-white{background-color: #fff !important;}
 .alert-success {color: #155724;background-color: #d4edda;border-color: #c3e6cb;}
 .alert-danger {color: #721c24;background-color: #f8d7da;border-color: #f5c6cb;}
 .close{float: right;cursor: pointer;}
+
+.ui-datepicker{width: auto !important; padding: 10px !important;}
+.ui-datepicker td span, .ui-datepicker td a{padding: 8px !important;}
+.ui-datepicker-prev span, 
+.ui-datepicker-next span{display:none;}
+.ui-datepicker-prev:after{content:"<";font-size:18px;float:left;margin-left:6px; margin-top: 4px; cursor:pointer;}
+.ui-datepicker-next:after{content:">";float:right;font-size:18px;margin-right:6px;cursor:pointer;  margin-top: 4px;}

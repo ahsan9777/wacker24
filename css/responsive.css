@@ -87,6 +87,10 @@
     .my_order_page .my_order_box .order_place_bar .place_col{width: 50%;}
     .my_order_page .my_order_box .order_place_bar .place_col:last-child{width: 100%;text-align: center;}
     .my_personal_page .my_personal_card{width: calc(50% - 40px);}
+    .about_page .about_block .about_br .about_image{width: 250px;}
+    .about_page .about_block .about_br .about_detail{width: calc(100% - 250px); }
+    .appointment_booking .appointment_row .appointment_col{width: 100%;}
+    .appointment_date_booking .appointment_section1 .appointment_col{width: 50%; padding: 8px;}
     .contact_page .contact_col{width: 100%; padding: 0px; margin-bottom: 20px;}
     .contact_block h3{font-size: 18px;}
     #footer_section .footer_top h2{margin-bottom: 10px;}
@@ -110,6 +114,15 @@
     .my_order_page .my_order_box .my_order_box_inner .order_detail{width: calc(100% - 0px); padding-left: 0px;}
     .my_personal_page .my_personal_inner{margin: 0px;}
     .my_personal_page .my_personal_card{width: calc(100% - 0px); margin: 10px 0px;}
+    .about_page .about_block .about_br .about_image{width: 100%;}
+    .about_page .about_block .about_br .about_detail{width: calc(100% - 0px); }
+    .appointment_booking h3{font-size: 22px;}
+    .appointment_booking .appointment_row .appointment_card h2{font-size: 18px;}
+    .appointment_booking .appointment_row .appointment_card p{font-size: 14px;}
+    .appointment_booking .appointment_row .appointment_card .appintment_image{width: 70px;}
+    .appointment_booking .appointment_row .appointment_card .appintment_detail{width: calc(100% - 70px); }
+    .appointment_date_booking .appointment_section1 .appointment_col{width: 100%; padding: 8px;}
+    .appointment_date_booking .appointment_section1 .appointment_card{min-height: auto;}
     #footer_section .footer_top{margin-bottom: 0px;}
     #footer_section .footer_top .footer-col{width: 100%;}
     #footer_section .footer_top .footer_payment_method{width: 250px;}

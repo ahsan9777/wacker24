@@ -313,10 +313,10 @@ include("includes/messages.php");
 
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
                                 </div>
                                 <!--<div class=" col-md-1 col-12 mt-2">
                                     <input type="submit" name="btnDelete" value="Delete" class="btn btn-danger btn-style-light w-100" onclick="return confirm('Are you sure you want to delete selected item(s)?');">

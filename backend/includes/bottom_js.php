@@ -68,3 +68,105 @@
         });
     });
 </script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('.ckeditor_one'), {
+            toolbar: {
+                items: [
+                    'heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'undo', 'redo' // Exclude 'imageUpload' or 'image'
+                ]
+            },
+            removePlugins: ['blockQuote', 'Image', 'ImageToolbar', 'ImageUpload', 'ImageCaption', 'MediaEmbed'],
+        })
+        .then(editor => {
+            editor.ui.view.editable.element.style.height = '300px'; // Directly adjust height
+            editor.ui.view.editable.element.style.color = 'black';
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    ClassicEditor
+        .create(document.querySelector('.ckeditor_two'), {
+            toolbar: {
+                items: [
+                    'heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'undo', 'redo' // Exclude 'imageUpload' or 'image'
+                ]
+            },
+            removePlugins: ['blockQuote', 'Image', 'ImageToolbar', 'ImageUpload', 'ImageCaption', 'MediaEmbed'],
+        })
+        .then(editor => {
+            editor.ui.view.editable.element.style.height = '300px'; // Directly adjust height
+            editor.ui.view.editable.element.style.color = 'black';
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+        ClassicEditor
+            .create(document.querySelector('.ckeditor_one_de'), {
+                toolbar: {
+                    items: [
+                        'heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'undo', 'redo' // Exclude 'imageUpload' or 'image'
+                    ]
+                },
+                removePlugins: ['blockQuote', 'Image', 'ImageToolbar', 'ImageUpload', 'ImageCaption', 'MediaEmbed'],
+            })
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '300px'; // Directly adjust height
+                editor.ui.view.editable.element.style.color = 'black';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+            
+        ClassicEditor
+            .create(document.querySelector('.ckeditor_one_en'), {
+                toolbar: {
+                    items: [
+                        'heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'undo', 'redo' // Exclude 'imageUpload' or 'image'
+                    ]
+                },
+                removePlugins: ['blockQuote', 'Image', 'ImageToolbar', 'ImageUpload', 'ImageCaption', 'MediaEmbed'],
+            })
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '300px'; // Directly adjust height
+                editor.ui.view.editable.element.style.color = 'black';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('.ckeditor_two_de'), {
+                toolbar: {
+                    items: [
+                        'heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'undo', 'redo' // Exclude 'imageUpload' or 'image'
+                    ]
+                },
+                removePlugins: ['blockQuote', 'Image', 'ImageToolbar', 'ImageUpload', 'ImageCaption', 'MediaEmbed'],
+            })
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '300px'; // Directly adjust height
+                editor.ui.view.editable.element.style.color = 'black';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('.ckeditor_two_en'), {
+                toolbar: {
+                    items: [
+                        'heading', 'bold', 'italic', 'bulletedList', 'numberedList', 'undo', 'redo' // Exclude 'imageUpload' or 'image'
+                    ]
+                },
+                removePlugins: ['blockQuote', 'Image', 'ImageToolbar', 'ImageUpload', 'ImageCaption', 'MediaEmbed'],
+            })
+            .then(editor => {
+                editor.ui.view.editable.element.style.height = '300px'; // Directly adjust height
+                editor.ui.view.editable.element.style.color = 'black';
+            })
+            .catch(error => {
+                console.error(error);
+            });
+</script>

@@ -1,0 +1,18 @@
+<div class="col-md-12 col-12 mt-3">
+    <label for="">Detail DE</label>
+    <textarea rows="5" type="text" class="input_style ckeditor_one_de" name="csec_content_one_de" id="csec_content_one_de" placeholder="Detail DE"> <?php print($csec_content_one_de); ?> </textarea>
+</div>
+<div class="col-md-12 col-12 mt-3">
+    <label for="">Detail EN</label>
+    <textarea rows="5" type="text" class="input_style ckeditor_one_en" name="csec_content_one_en" id="csec_content_one_en" placeholder="Detail EN"> <?php print($csec_content_one_en); ?> </textarea>
+</div>
+<div class="col-md-12 col-12 mt-3">
+    <label for="">File</label>
+    <div class="">
+        <label for="file-upload" class="upload-btn">
+            <span class="material-icons">cloud_upload</span>
+            <span>Upload Files</span>
+        </label>
+        <input id="file-upload" type="file" class="file-input" name="mFile">
+    </div>
+</div>
