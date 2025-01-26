@@ -31,7 +31,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
         </ul>
         <ul>
             <li><a href="javascript:void(0)">About Wacker 24</a></li>
-            <li><a href="contact_page.html">Contact</a></li>
+            <li><a href="contact_us.php">Contact</a></li>
             <li>
                 <div class="header_language">
                     <div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>

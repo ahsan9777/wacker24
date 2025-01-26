@@ -1,40 +1,39 @@
 <footer id="footer_section" <?php print($background_color_one); ?>>
     <div class="page_width">
         <div class="footer_top">
-            <div class="footer-col">
-                <h2>About Wacker</h2>
-                <ul>
-                    <li><a href="javascript:void(0)">About Us</a></li>
-                    <li><a href="javascript:void(0)">Data protection</a></li>
-                    <li><a href="javascript:void(0)">Terms and Conditions</a></li>
-                    <li><a href="javascript:void(0)">Partner</a></li>
-                    <li><a href="javascript:void(0)">Wacker and the Environment</a></li>
-                    <li><a href="javascript:void(0)">Imprint</a></li>
-                    <li><a href="javascript:void(0)">Cancellation policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h2>Service</h2>
-                <ul>
-                    <li><a href="javascript:void(0)">Disposal of old devices</a></li>
-                    <li><a href="javascript:void(0)">Return of used batteries</a></li>
-                    <li><a href="javascript:void(0)">Return of packaging material</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h2>Discover More</h2>
-                <ul>
-                    <li><a href="javascript:void(0)">Copy Shop</a></li>
-                    <li><a href="javascript:void(0)">Test</a></li>
-                    <li><a href="javascript:void(0)">DHL parcel shop</a></li>
-                </ul>
-            </div>
+            <?php
+            $Query1 = "SELECT footer_id, footer_title_de AS footer_title FROM footer WHERE footer_status = '1' ORDER BY footer_orderby ASC";
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if (mysqli_num_rows($rs1) > 0) {
+                while ($row1 = mysqli_fetch_object($rs1)) {
+            ?>
+                    <div class="footer-col">
+                        <h2><?php print($row1->footer_title); ?></h2>
+                        <ul>
+                            <?php
+                            $Query2 = "SELECT cnt_id, cnt_slug, cnt_title_de AS cnt_title FROM contents WHERE cnt_status = '1' AND footer_id = '".$row1->footer_id."' ORDER BY cnt_orderby ASC";
+                            $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                            if (mysqli_num_rows($rs2) > 0) {
+                                while ($row2 = mysqli_fetch_object($rs2)) {
+                            ?>
+                                    <li><a href="<?php print($row2->cnt_slug); ?>"><?php print($row2->cnt_title); ?></a></li>
+                            <?php
+
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+            <?php
+                }
+            }
+            ?>
             <div class="footer-col">
                 <h2>Contact & Directions</h2>
                 <ul>
-                    <li><a href="javascript:void(0)">Contact form</a></li>
-                    <li><a href="javascript:void(0)">Opening hours</a></li>
-                    <li><a href="javascript:void(0)">Directions</a></li>
+                    <li><a href="contact_us">Contact form</a></li>
+                    <li><a href="contact_us">Opening hours</a></li>
+                    <li><a href="contact_us">Directions</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -51,7 +50,7 @@
                             }
                     ?>
                             <div class="payment_card">
-                                <div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>" ></div>
+                                <div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
                                 <div class="payment_card_title"><?php print($row->pm_title) ?></div>
                             </div>
                     <?php
@@ -77,6 +76,6 @@
             </div>
 
         </div>
-        <div class="footer_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo)?>" alt=""></a></div>
+        <div class="footer_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
     </div>
 </footer>

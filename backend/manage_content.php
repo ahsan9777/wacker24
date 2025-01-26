@@ -125,6 +125,20 @@ if (isset($_REQUEST['btnInactive'])) {
     }
 }
 
+//--------------Button Orderby--------------------
+if (isset($_REQUEST['btnOrderby'])) {
+    if (isset($_REQUEST['cnt_id'])) {
+        for ($i = 0; $i < count($_REQUEST['cnt_id']); $i++) {
+            mysqli_query($GLOBALS['conn'], "UPDATE contents SET cnt_orderby='" . $_REQUEST['cnt_orderby'][$i] . "' WHERE cnt_id = " . $_REQUEST['cnt_id'][$i]);
+        }
+        $class = "alert alert-success";
+        $strMSG = "Record(s) updated successfully";
+    } else {
+        $class = "alert alert-info";
+        $strMSG = "Please Select Alteast One Checkbox";
+    }
+}
+
 //--------------Button Delete--------------------
 if (isset($_REQUEST['btnDelete'])) {
     if (isset($_REQUEST['chkstatus'])) {
@@ -271,13 +285,14 @@ include("includes/messages.php");
                                         <th>Title</th>
                                         <th>Meta Keyword</th>
                                         <th>Meta Description</th>
+                                        <th width="100">Order By </th>
                                         <th width="50">Status</th>
                                         <th width="120">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT cnt.cnt_id, fot.footer_title_de AS footer_title, cnt.cnt_slug, cnt.cnt_title_de AS cnt_title, cnt.cnt_keywords, cnt.cnt_meta_description, cnt.cnt_status, cnt.cnt_section  FROM contents AS cnt LEFT OUTER JOIN footer AS fot ON fot.footer_id = cnt.footer_id";
+                                    $Query = "SELECT cnt.cnt_id, fot.footer_title_de AS footer_title, cnt.cnt_slug, cnt.cnt_title_de AS cnt_title, cnt.cnt_keywords, cnt.cnt_meta_description, cnt.cnt_orderby, cnt.cnt_status, cnt.cnt_section  FROM contents AS cnt LEFT OUTER JOIN footer AS fot ON fot.footer_id = cnt.footer_id ORDER BY cnt.footer_id, cnt.cnt_orderby ASC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -297,6 +312,10 @@ include("includes/messages.php");
                                                 <td><?php print($row->cnt_title); ?></td>
                                                 <td><?php print($row->cnt_keywords); ?></td>
                                                 <td><?php print($row->cnt_meta_description); ?></td>
+                                                <td>
+                                                    <input type="hidden" name="cnt_id[]" id="cnt_id" value="<?php print($row->cnt_id); ?>">
+                                                    <input type="number" class="input_style" name="cnt_orderby[]" id="cnt_orderby" value="<?php print($row->cnt_orderby); ?>">
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if ($row->cnt_status == 0) {
@@ -339,10 +358,13 @@ include("includes/messages.php");
 
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                </div>
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
                                 </div>
                                 <!--<div class=" col-md-1 col-12 mt-2">
                                     <input type="submit" name="btnDelete" value="Delete" class="btn btn-danger btn-style-light w-100" onclick="return confirm('Are you sure you want to delete selected item(s)?');">

@@ -443,7 +443,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT cs.csec_id, cnt.cnt_title_de AS cnt_title_de,  cs.cnt_id, cs.csec_heading_one_de AS csec_heading_one, cs.csec_content_one_de AS csec_content_one, cs.csec_banner_image, cs.csec_image_one, cs.csec_image_two, cs.cst_orderby, cs.csec_status FROM content_sections AS cs LEFT OUTER JOIN contents AS cnt ON cnt.cnt_id = cs.cnt_id WHERE cs.cnt_id = '" . $_REQUEST['cnt_id'] . "'  ORDER BY cs.cst_orderby ASC";
+                                    $Query = "SELECT cs.csec_id, cnt.cnt_title_de AS cnt_title,  cs.cnt_id, cs.csec_heading_one_de AS csec_heading_one, cs.csec_content_one_de AS csec_content_one, cs.csec_banner_image, cs.csec_image_one, cs.csec_image_two, cs.cst_orderby, cs.csec_status FROM content_sections AS cs LEFT OUTER JOIN contents AS cnt ON cnt.cnt_id = cs.cnt_id WHERE cs.cnt_id = '" . $_REQUEST['cnt_id'] . "'  ORDER BY cs.cst_orderby ASC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -472,7 +472,7 @@ include("includes/messages.php");
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->csec_id); ?>"></td>
                                                 <td><?php print($banner_image); ?></td>
                                                 <td><?php print($contents_image); ?></td>
-                                                <td><?php print($row->cnt_title_de); ?></td>
+                                                <td><?php print($row->cnt_title); ?></td>
                                                 <td><?php print($row->csec_heading_one); ?></td>
                                                 <!--<td><?php print($row->csec_content_one); ?></td>-->
                                                 <td>

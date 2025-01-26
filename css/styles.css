@@ -608,11 +608,12 @@ body.body-white{background-color: #fff !important;}
 .about_page .about_block .about_year{width: 100%; height: 1px; display: flex; align-items: center; position: relative; justify-content: center; margin: 30px 0px; background-color:  #273445;}
 .about_page .about_block .about_year_inner{display: inline-flex; position: absolute; background-color: #ffc107; color: #273445; border-radius: 10px; border: 1px solid #273445; padding: 3px 15px; font-size: 22px; font-weight: 500;}
 .about_page .about_block .about_block_heading{width: 100%;background-color: #273445; margin-bottom: 20px; text-align: center; border-radius: 100px; font-size: 20px; color: #fff; font-weight: bold; padding: 10px 15px;}
-.about_page .about_block p{font-size: 14px;color: #273445;font-weight: 400; margin-bottom: 20px;}
+.about_page .about_block p{font-size: 16px;color: #273445;font-weight: 400;}
 .about_page .about_block ul {margin-bottom: 20px;}
 .about_page .about_block ul li{list-style-type: none; margin-bottom: 6px; font-size: 14px;color: #273445;font-weight: 400;}
 .about_page .about_block ul li span{font-weight: bold;}
 .about_page .about_block .about_br{width: 100%; display: flex; flex-wrap: wrap;}
+.about_page .about_banner img{width: 100%}
 .about_page .about_block .about_br .about_image{width: 450px;}
 .about_page .about_block .about_br .about_image img{width: 100%;}
 .about_page .about_block .about_br .about_detail{width: calc(100% - 450px); padding-left: 20px;}
