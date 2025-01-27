@@ -45,6 +45,14 @@ if(mysqli_num_rows($rs) > 0){
 		define('config_condition_courier_amount', $row->config_condition_courier_amount);
 		define('config_courier_fix_charges', $row->config_courier_fix_charges);
 		define('config_ftp_img', $row->config_ftp_img);
+		define('config_appointment_regular_opening', $row->config_appointment_regular_opening);
+		define('config_appointment_regular_closing', $row->config_appointment_regular_closing);
+		define('config_appointment_saturday_opening', $row->config_appointment_saturday_opening);
+		define('config_appointment_saturday_closing', $row->config_appointment_saturday_closing);
+		define('config_appointment_heading_de', $row->config_appointment_heading_de);
+		define('config_appointment_heading_en', $row->config_appointment_heading_en);
+		define('config_appointment_detail_de', $row->config_appointment_detail_de);
+		define('config_appointment_detail_en', $row->config_appointment_detail_en);
 		define('config_site_logo', $GLOBALS['siteURL'] . "files/" .$row->config_site_logo);
 	}
 }

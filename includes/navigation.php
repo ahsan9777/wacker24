@@ -60,7 +60,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
             </form>
             <div class="header_account">
                 <ul>
-                    <li><a href="javascript:void(0)">
+                    <li><a href="appointments.php">
                             <div class="appointment_booking"><i class="fa fa-check-square-o" aria-hidden="true"></i> appointment booking</div>
                         </a></li>
                     <li>
