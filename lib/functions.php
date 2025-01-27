@@ -1267,6 +1267,16 @@ function TotalRecords1($condition){
 	return mysqli_num_rows($nResult);
 }
 
+function checkrecord($filde, $table, $where){
+	$retRes=0;
+		$strQry="SELECT ".$filde." FROM ".$table." WHERE ".$where." ";
+		//print($strQry);die();
+		$nResult =mysqli_query($GLOBALS['conn'], $strQry);
+		if (mysqli_num_rows($nResult)> 0){
+			$retRes=1;
+		}
+	return $retRes;		
+}
 function checkAdminOldPass($UserID,$Pass){
 	$retRes=0;
 		$strQry="SELECT admin_user, admin_pass FROM admin WHERE admin_id=$UserID AND admin_pass='$Pass'";

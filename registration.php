@@ -223,7 +223,7 @@ include("includes/message.php");
 									?>
 									<div class="form_label">Please enter confirmation code: <span class="code_text"><?php print($confirm_code); ?></span></div>
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
-									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off"></div>
+									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;" ></div>
 								</li>
 								<li class="mt_30"><input type="checkbox" required> I have read the privacy policy | <a href="javascript:void(0)">Privacy Policy</a></li>
 								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Register Now</button></li>

@@ -52,6 +52,10 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Please add the defualt address";
 			break;
+		case 13:
+			$class = "alert alert-danger";
+			$strMSG = "Dear Cuctomer, <br> Confirmation code does not match!";
+			break;
 	}
 }
 ?>

@@ -65,6 +65,7 @@ body.body-white{background-color: #fff !important;}
 .gerenric_form ul li .form_row{width: 100%; display: flex; flex-wrap: wrap;}
 .gerenric_form ul li .form_label{width: 100%; font-size: 15px; color: #000; margin-bottom: 10px;}
 .gerenric_form ul li .form_field{width: 100%;}
+.gerenric_form ul li .form_input_three{width: 33.33%; padding-right: 10px;}
 .gerenric_form ul li .form_left{width: 50%; padding-right: 10px;}
 .gerenric_form ul li .form_right{width: 50%; padding-left: 10px;}
 .gerenric_form ul li .forgot_password{width: 100%; text-align: center;}
@@ -636,12 +637,15 @@ body.body-white{background-color: #fff !important;}
 .appointment_date_booking .appointment_section1 .appointment_col{width: 33.333%; padding: 8px;}
 .appointment_date_booking .appointment_section1 .appointment_card{width:100%;min-height: 350px; border: 1px solid #d0d0d0; border-radius: 10px; padding: 15px;}
 .appointment_date_booking .appointment_section1 .appointment_card ul{display: flex; flex-wrap: wrap; margin: 0px -2px;}
-.appointment_date_booking .appointment_section1 .appointment_card ul li{list-style-type: none;width: calc(33.333% - 6px); cursor: pointer; margin: 3px; border: 1px solid #d0d0d0; font-size: 14px;color: #333; text-align: center; border-radius: 3px; padding:10px 5px;}
+.appointment_date_booking .appointment_section1 .appointment_card ul li{list-style-type: none;width: calc(33.333% - 6px); cursor: pointer; margin: 3px; }
 .appointment_date_booking .appointment_section1 .appointment_card ul li.active_time{color: #70ad7e; box-shadow: inset 0px -1px 0px #70ad7e;border: 1px solid #70ad7e; background-color: #70ad7e21;}
-.appointment_date_booking .appointment_section1 .appointment_card .appointment_image{width: 100%; margin-bottom: 15px;}
-.appointment_date_booking .appointment_section1 .appointment_card .appointment_image img{width: 100%; height: 200px; object-fit: cover;}
+.appointment_date_booking .appointment_section1 .appointment_card ul li input[type="radio"] {position: absolute;visibility: hidden;}
+.appointment_date_booking .appointment_section1 .appointment_card ul li label {width: 100%;display: flex;align-items: center;justify-content: center; box-sizing: border-box;  border-radius: 5px;position: relative;overflow: hidden;padding: 0px 5px; border: 1px solid #ccc; height: 35px;font-size: 14px;color: #000000;z-index: 9;cursor: pointer;}
+.appointment_date_booking .appointment_section1 .appointment_card ul li input[type="radio"]:checked ~ label {color: #70ad7e; box-shadow: inset 0px -1px 0px #70ad7e;border: 1px solid #70ad7e; background-color: #70ad7e21;}
+.appointment_date_booking .appointment_section1 .appointment_card .appointment_image{width: 245px; height: 222px; margin: auto;}
+.appointment_date_booking .appointment_section1 .appointment_card .appointment_image img{width: 100%; height: 100%; object-fit: contain;}
 .appointment_date_booking .appointment_section1 .appointment_card p{font-size: 15px;color: #000;font-weight: 500;text-align: center; margin-bottom: 10px;}
-.appointment_date_booking .appointment_section1 .appointment_card .appointment_time{display: inline-flex; margin-bottom: 30px; background-color: #70ad7e; border-radius: 3px; padding: 3px 5px; font-size: 13px;color: #fff;font-weight: 400; }
+.appointment_date_booking .appointment_section1 .appointment_card .appointment_time{display: inline-flex; margin-bottom: 10px; background-color: #70ad7e; border-radius: 3px; padding: 3px 5px; font-size: 13px;color: #fff;font-weight: 400; }
 .appointment_date_booking .appointment_section2{width:100%; margin-top: 20px; border: 1px solid #d0d0d0; border-radius: 10px; padding: 15px;}
 
 .contact_page{width: 100%;}

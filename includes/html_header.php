@@ -61,12 +61,12 @@
 
         //Smooth Scrolling Using Navigation Menu
 
-        $('a[href*="#"]').on('click', function(e) {
+        /*$('a[href*="#"]').on('click', function(e) {
             $('html,body').animate({
-                scrollTop: $($(this).attr('href')).offset().top - 15 /*Fixed header k liye is ko uncomment krna hai*/
+                scrollTop: $($(this).attr('href')).offset().top - 15 Fixed header k liye is ko uncomment krna hai
             }, 500);
             e.preventDefault();
-        });
+        });*/
 
         //Toggle Menu
         $('.all_menu').on('click', () => {

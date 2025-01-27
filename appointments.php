@@ -43,9 +43,11 @@
 											<h2><?php print($row->as_title); ?></h2>
 											<div class="appointment_time"><?php print($row->as_duration); ?> minutes</div>
 											<p><?php print(limit_text($row->as_detail, 265)); ?></p>
-											<div class="full_width txt_align_right"><a href="javascript: void(0);">
+											<div class="full_width txt_align_right">
+												<a href="appointment_schedule.php?as_id=<?php print($row->as_id); ?>">
 													<div class="gerenric_btn">Select a Date</div>
-												</a></div>
+												</a>
+											</div>
 										</div>
 									</div>
 								</div>
