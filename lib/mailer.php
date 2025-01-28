@@ -228,7 +228,7 @@ class Mailer {
             else {
                 $str = "Message has been sent successfully";
             }
-        } catch (phpmailerException $e) {
+        } catch (Exception $e) { //phpmailerException
             //$str = 'Mailer Exception';
            $str = $e->getMessage();
         }

@@ -219,8 +219,11 @@ include("includes/message.php");
 			success: function(response) {
 				//console.log(response)
 				const obj = JSON.parse(response);
+				//console.log(obj);
 				if (obj.status == 1) {
 					$("#appointment_schedule").html(obj.appointment_schedule);
+				} else{
+					$("#appointment_schedule").empty();
 				}
 			},
 			error: function(xhr, status, error) {

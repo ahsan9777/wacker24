@@ -87,8 +87,32 @@ if (isset($_REQUEST['btn_checkout'])) {
 					foreach ($paypalresponseData->redirect->parameters as $key => $value) {
 						$parameters .=  $value->name . "=" . $value->value . "&";
 					}
-					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '".dbStr(trim($ord_payment_transaction_id))."', ord_payment_short_id = '".dbStr(trim($ord_payment_short_id))."', ord_payment_info_detail = '".dbStr(trim($ord_payment_info_detail))."', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 					header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters);
+				}
+			} elseif (in_array($pm_id, array(4, 5))) {
+				$data['cardnumber'] = $_REQUEST['cardnumber'];
+				$data['cardholder'] = $_REQUEST['cardholder'];
+				$data['cardmonth'] = $_REQUEST['cardmonth'];
+				$data['cardyear'] = $_REQUEST['cardyear'];
+				$data['cvv'] = $_REQUEST['cvv'];
+				$Query3 = "SELECT pm_id, pm_currency, pm_brand_name, pm_entity_id FROM `payment_method` WHERE pm_id = '" . $pm_id . "' ";
+				$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+				if (mysqli_num_rows($rs3) > 0) {
+					$row3 = mysqli_fetch_object($rs3);
+					$data['brand'] = $row3->pm_brand_name;
+					$data['currency'] = $row3->pm_currency;
+					$data['entityId'] = $row3->pm_entity_id;
+				}
+				$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
+				$cardresponsedata = json_decode($cardrequest);
+				/*print("<pre>");
+				print_r($cardresponsedata);
+				print("</pre>");die();*/
+				if ($cardresponsedata->result->code == "000.100.110") {
+					//header('Location: checkout_order_complete.php?ord_id=' . $ord_id . "&id=" . $cardresponsedata->id);
+					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata->id)) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata->descriptor)) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					header('Location: my_order.php?op=2');
 				}
 			}
 		}
@@ -189,9 +213,19 @@ include("includes/message.php");
 	<script>
 		$(document).ready(function() {
 			$(".card_click_show").click(function() {
+				$("#cardnumber").attr("required", true);
+				$("#cardholder").attr("required", true);
+				$("#cardmonth").attr("required", true);
+				$("#cardyear").attr("required", true);
+				$("#cvv").attr("required", true);
 				$(".product_cart .cart_payment_method .cart_py_field").show();
 			});
 			$(".card_click_hide").click(function() {
+				$("#cardnumber").attr("required", false);
+				$("#cardholder").attr("required", false);
+				$("#cardmonth").attr("required", false);
+				$("#cardyear").attr("required", false);
+				$("#cvv").attr("required", false);
 				$(".product_cart .cart_payment_method .cart_py_field").hide();
 			});
 		});
@@ -350,52 +384,52 @@ include("includes/message.php");
 								</div>
 							</div>
 							<?php if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) { ?>
-							<div class="cart_delivery">
-								<?php
-								$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa_defualt = '1' AND user_id = '" . $_SESSION["UID"] . "' ";
-								$rs = mysqli_query($GLOBALS['conn'], $Query);
-								if (mysqli_num_rows($rs) > 0) {
-									while ($row = mysqli_fetch_object($rs)) {
-								?>
+								<div class="cart_delivery">
+									<?php
+									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa_defualt = '1' AND user_id = '" . $_SESSION["UID"] . "' ";
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										while ($row = mysqli_fetch_object($rs)) {
+									?>
+											<div class="cart_delivery_col">
+												<div class="gerenric_white_box">
+													<input type="hidden" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>">
+													<h2>Delivery address</h2>
+													<ul>
+														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<li> <?php print($row->usa_street); ?> </li>
+														<li> <?php print($row->usa_house_no); ?> </li>
+														<li> <?php print($row->usa_contactno); ?> </li>
+														<li><?php print($row->usa_zipcode); ?></li>
+														<li><?php print($row->countries_name); ?></li>
+														<li><?php print($row->usa_address); ?></li>
+													</ul>
+												</div>
+											</div>
+										<?php
+										}
+									}
+
+									$Query = "SELECT u.*, c.countries_name FROM users AS u LEFT OUTER JOIN countries AS c ON c.countries_id = u.countries_id WHERE u.user_id = '" . $_SESSION["UID"] . "'";
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										$row = mysqli_fetch_object($rs);
+										?>
 										<div class="cart_delivery_col">
 											<div class="gerenric_white_box">
-												<input type="hidden" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>">
-												<h2>Delivery address</h2>
+												<h2>Billing address</h2>
 												<ul>
-													<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-													<li> <?php print($row->usa_street); ?> </li>
-													<li> <?php print($row->usa_house_no); ?> </li>
-													<li> <?php print($row->usa_contactno); ?> </li>
-													<li><?php print($row->usa_zipcode); ?></li>
-													<li><?php print($row->countries_name); ?></li>
-													<li><?php print($row->usa_address); ?></li>
+													<li><span> <?php print($row->user_fname . " " . $row->user_lname); ?> </span></li>
+													<li> <?php print($row->user_phone); ?> </li>
+													<li> <?php print($row->user_name); ?> </li>
+													<li> <?php print($row->countries_name); ?> </li>
 												</ul>
 											</div>
 										</div>
 									<?php
 									}
-								}
-
-								$Query = "SELECT u.*, c.countries_name FROM users AS u LEFT OUTER JOIN countries AS c ON c.countries_id = u.countries_id WHERE u.user_id = '" . $_SESSION["UID"] . "'";
-								$rs = mysqli_query($GLOBALS['conn'], $Query);
-								if (mysqli_num_rows($rs) > 0) {
-									$row = mysqli_fetch_object($rs);
 									?>
-									<div class="cart_delivery_col">
-										<div class="gerenric_white_box">
-											<h2>Billing address</h2>
-											<ul>
-												<li><span> <?php print($row->user_fname . " " . $row->user_lname); ?> </span></li>
-												<li> <?php print($row->user_phone); ?> </li>
-												<li> <?php print($row->user_name); ?> </li>
-												<li> <?php print($row->countries_name); ?> </li>
-											</ul>
-										</div>
-									</div>
-								<?php
-								}
-								?>
-							</div>
+								</div>
 							<?php } ?>
 						</div>
 						<div class="cart_right">
@@ -513,9 +547,86 @@ include("includes/message.php");
 <?php include("includes/bottom_js.php"); ?>
 <script>
 	$(".ci_qty").on("change", function() {
-		console.log("ci_qty");
+		//console.log("ci_qty");
 		$('#frmCart')[0].submit();
 	});
+
+	// Set max length for input fields
+	document.getElementById("cardnumber").setAttribute("maxlength", "16");
+	document.getElementById("cardmonth").setAttribute("maxlength", "2");
+	document.getElementById("cardyear").setAttribute("maxlength", "4");
+	document.getElementById("cvv").setAttribute("maxlength", "4");
+
+	// Card Number Validation
+	document.getElementById("cardnumber").addEventListener("keyup", function() {
+		if (!validateCardNumber(this.value)) {
+			this.style.borderColor = "red";
+		} else {
+			this.style.borderColor = "green";
+		}
+	});
+
+	// Expiry Fields Validation
+	document.getElementById("cardmonth").addEventListener("keyup", validateExpiryFields);
+	document.getElementById("cardyear").addEventListener("keyup", validateExpiryFields);
+
+	// CVV Validation
+	document.getElementById("cvv").addEventListener("keyup", function() {
+		const cardNumber = document.getElementById("cardnumber").value;
+		if (!validateCVV(cardNumber, this.value)) {
+			this.style.borderColor = "red";
+		} else {
+			this.style.borderColor = "green";
+		}
+	});
+
+	function validateCardNumber(number) {
+		const visaRegEx = /^4[0-9]{12}(?:[0-9]{3})?$/;
+		const masterCardRegEx = /^5[1-5][0-9]{14}$|^2(22[1-9]|2[3-9][0-9]|[3-6][0-9]{2}|7[01][0-9]|720)[0-9]{12}$/;
+		const amexRegEx = /^3[47][0-9]{13}$/;
+
+		return visaRegEx.test(number) || masterCardRegEx.test(number) || amexRegEx.test(number);
+	}
+
+	function validateExpiryFields() {
+		const month = document.getElementById("cardmonth").value;
+		const year = document.getElementById("cardyear").value;
+
+		// Ensure month value is valid (01-12) and expiry date is in the future
+		if (/^(0[1-9]|1[0-2])$/.test(month) && validateExpiry(month, year)) {
+			this.style.borderColor = "green";
+		} else {
+			this.style.borderColor = "red";
+		}
+	}
+
+	function validateExpiry(month, year) {
+		const now = new Date();
+		const currentMonth = now.getMonth() + 1;
+		const currentYear = now.getFullYear();
+
+		// Convert to numbers for comparison
+		const monthNum = parseInt(month, 10);
+		const yearNum = parseInt(year, 10);
+
+		// Ensure valid future date
+		if (yearNum < currentYear) return false;
+		if (yearNum === currentYear && monthNum < currentMonth) return false;
+
+		return true;
+	}
+
+	function validateCVV(cardNumber, cvv) {
+		const visaOrMasterCardCVVRegEx = /^[0-9]{3}$/;
+		const amexCVVRegEx = /^[0-9]{4}$/;
+
+		const cardType = validateCardNumber(cardNumber);
+
+		if (cardType.includes("Amex")) {
+			return amexCVVRegEx.test(cvv);
+		}
+		return visaOrMasterCardCVVRegEx.test(cvv);
+	}
 </script>
 
 </html>
