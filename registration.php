@@ -95,7 +95,8 @@ if (isset($_REQUEST['btn_registration'])) {
 				$input_display = 'style="display: none;"';
 				$class = "alert alert-success";
 				$strMSG = "Dear Cuctomer, <br>
-				your account has been created successfully. Please <a href='login.php'>log in</a> to your account  and enjoy our services";
+				your account has been created successfully. Please your email account and enjoy our services";
+				$mailer->registration_account_verification("verification@wackersystems.com", "7v6LjC{rEIct", $_REQUEST['user_name'], "Account Verification", $user_verification_code);
 			}
 		}
 	}
