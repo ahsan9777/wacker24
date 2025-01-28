@@ -33,8 +33,9 @@ $cu = 'active';
                 </ul>
             </li>
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $c : ''; ?>>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment.php' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment.php' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $c : ''; ?>>
+                    <li><a href="manage_appointment.php" title="Appointment Management"><span class="text">Appointment</span></a></li>
                     <li><a href="manage_appointment_category.php" title="Category Management"><span class="text">Category</span></a></li>
                     <li><a href="manage_appointment_schedule.php" title="Schedule Management"><span class="text">Schedule</span></a></li>
                     <li><a href="manage_appointment_holidays.php" title="Holidays Management"><span class="text">Holidays</span></a></li>
