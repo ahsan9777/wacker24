@@ -1,27 +1,26 @@
-<?php 
+<?php
 include("includes/php_includes_top.php");
-if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
+if (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0) {
 
-	$whereclause = "WHERE pro.manf_id = '".$_REQUEST['manf_id']."' ";
-	$qryStrURL .= "manf_id=".$_REQUEST['manf_id']."&";
+	$whereclause = "WHERE pro.manf_id = '" . $_REQUEST['manf_id'] . "' ";
+	$qryStrURL .= "manf_id=" . $_REQUEST['manf_id'] . "&";
 	$heading_title = returnName("manf_name", "manufacture", "manf_id", $_REQUEST['manf_id']);
-
-}elseif(isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0){
-	$whereclause = "WHERE cm.cat_id = '".$_REQUEST['level_three']."' ";
-	$qryStrURL .= "level_three=".$_REQUEST['level_three']."&";
+} elseif (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) {
+	$whereclause = "WHERE cm.cat_id = '" . $_REQUEST['level_three'] . "' ";
+	$qryStrURL .= "level_three=" . $_REQUEST['level_three'] . "&";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['level_three']);
-} else{
+} else {
 	$whereclause = "WHERE FIND_IN_SET(" . $_REQUEST['level_two'] . ", cm.sub_group_ids)";
-	$qryStrURL .= "level_two=".$_REQUEST['level_two']."&";
+	$qryStrURL .= "level_two=" . $_REQUEST['level_two'] . "&";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['level_two']);
-	if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-		$cat_id_one = $cat_title_one = returnName("parent_id", "category", "group_id", $_REQUEST['level_two']);
-		$special_price = user_special_price("level_two", $_REQUEST['level_two']);
-		if (!$special_price) {
-			$special_price = user_special_price("level_one", $cat_id_one);
-		}
-		//print_r($special_price);
+	//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+	$cat_id_one = $cat_title_one = returnName("parent_id", "category", "group_id", $_REQUEST['level_two']);
+	$special_price = user_special_price("level_two", $_REQUEST['level_two']);
+	if (!$special_price) {
+		$special_price = user_special_price("level_one", $cat_id_one);
 	}
+	//print_r($special_price);
+	//}
 }
 ?>
 <!doctype html>
@@ -55,8 +54,8 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 								<div class="gerenric_product_inner">
 									<?php
 
-									
-									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' ".$whereclause." ";
+
+									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' " . $whereclause . " ";
 									//print($Query);die();
 									$counter = 0;
 									$limit = 24;
@@ -84,42 +83,46 @@ if(isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0){
 															</li>
 														</ul>
 													</div>
-													<?php if(!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print( "<del>".$row->pbp_price_without_tax."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value'])."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print( "<del>".$row->pbp_price_amount."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1)."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
 														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
 														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
 													<?php } ?>
-													<div class="pd_btn"><a class="add_to_card" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>" >
-															<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>" >
-															<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>" >
-															<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1" >
+													<div class="pd_btn">
+														<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
+															<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>">
+															<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>">
+															<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1">
+															<input type="hidden" id="ci_discount_type_<?php print($row->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
+															<input type="hidden" id="ci_discount_value_<?php print($row->pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
 															<div class="gerenric_btn">Add to Cart</div>
-														</a></div>
+														</a>
+													</div>
 												</div>
 											</div>
 									<?php
 										}
-									} else{
+									} else {
 										print("Record not found!");
 									}
 									?>
 								</div>
 								<?php if ($counter > 0) { ?>
-								<table width="100%" border="0" cellpadding="0" cellspacing="0">
-									<tr>
-										<td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
-										<td align="right">
-											<ul class="pagination" style="margin: 0px;">
-												<?php
-												$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
-												print($pageList);
-												?>
-											</ul>
-										</td>
-									</tr>
-								</table>
+									<table width="100%" border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
+											<td align="right">
+												<ul class="pagination" style="margin: 0px;">
+													<?php
+													$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
+													print($pageList);
+													?>
+												</ul>
+											</td>
+										</tr>
+									</table>
 								<?php } ?>
 							</div>
 						</div>

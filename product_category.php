@@ -1,9 +1,9 @@
 <?php
 include("includes/php_includes_top.php");
-if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 	$special_price = user_special_price("level_one", $_REQUEST['level_one']);
 	//print_r($special_price);die();
-}
+//}
 ?>
 <!doctype html>
 <html lang="de">

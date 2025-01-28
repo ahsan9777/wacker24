@@ -38,7 +38,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_title_three = $row->cat_title_three;
 }
 
-if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 	$special_price = user_special_price("supplier_id", $supplier_id);
 
 	if (!$special_price) {
@@ -49,7 +49,7 @@ if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 		$special_price = user_special_price("level_one", $cat_id_one);
 	}
 	//print_r($special_price);
-}
+//}
 ?>
 <!doctype html>
 <html lang="de">

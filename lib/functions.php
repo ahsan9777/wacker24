@@ -2467,7 +2467,10 @@ function get_delivery_charges($total){
 	  return $delivery_charges;
 }
 
-function user_special_price($parameter, $value){
+function user_special_price($parameter, $value, $user_id = 0){
+	if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+		$user_id = $_SESSION["UID"];
+	}
 	$searchWhere = "";
 	$special_price = array();
     if ($parameter ==  "supplier_id") {
@@ -2478,7 +2481,7 @@ function user_special_price($parameter, $value){
 		$searchWhere = "AND supplier_id = '0' AND level_two_id = '0' AND level_one_id = '" . dbStr(trim($value)) . "'";
     }
     if (!empty($searchWhere)) {
-        $Query = "SELECT * FROM `user_special_price` WHERE usp_status = '1' AND user_id = '3' " . $searchWhere . "";
+        $Query = "SELECT * FROM `user_special_price` WHERE usp_status = '1' AND user_id = '".$user_id."' " . $searchWhere . "";
         //print($Query);
         $rs = mysqli_query($GLOBALS['conn'], $Query);
         if (mysqli_num_rows($rs) > 0) {

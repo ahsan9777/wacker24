@@ -438,10 +438,10 @@ $page = 1;
 							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 							if(mysqli_num_rows($rs1) > 0){
 								while($row1 = mysqli_fetch_object($rs1)){
-									if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+									//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 										$special_price = user_special_price("level_one", $row1->group_id);
 										//print_r($special_price);//die();
-									}
+									//}
 							?>
 						<div class="gerenric_white_box">
 							<div class="gerenric_product full_column">

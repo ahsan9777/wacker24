@@ -271,7 +271,7 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Kontakt Formular</label>
-                                        <h2>4</h2>
+                                        <h2>0</h2>
                                     </div>
                                 </div>
                             </div>
