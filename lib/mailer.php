@@ -26,7 +26,7 @@ class Mailer {
             //print($ret);
     }
     
-    function  registration_account_verification($username, $password, $to, $subject_title, $user_verification_code){
+    function  registration_account_verification($customer_name, $username, $password, $to, $subject_title, $user_verification_code){
 
         //$get_email_template = json_encode();
         $get_email_template = json_decode(get_email_template("1"));
@@ -37,13 +37,11 @@ class Mailer {
         $subject = str_replace("{subject}", $subject_title, $subject);
         
         $eml_contents = $get_email_template[0]->eml_contents;
+        $eml_contents = str_replace("{customer_name}", $customer_name, $eml_contents);
         $eml_contents = str_replace("{sitelogo}", $GLOBALS['siteURL']."images/register_logo.png", $eml_contents);
         $eml_contents = str_replace("{btnlink}", $GLOBALS['siteURL']."account_verification.php?verification_code=".$user_verification_code, $eml_contents);
-        $eml_contents = str_replace("{href_help}", "javascript:void(0);", $eml_contents);
-        $eml_contents = str_replace("{href_mail_ourserviceteam}", "javascript:void(0);", $eml_contents);
-        $eml_contents = str_replace("{href_mail_service}", "javascript:void(0);", $eml_contents);
-        $eml_contents = str_replace("{href_mail_servicetxt}", "verification@wackersystems.com", $eml_contents);
-        $eml_contents = str_replace("{telephone_txt}", "+49 1521 4684582 (Mo-Fr 09:00 - 18:00, Sat.: 09:00 - 13:00)", $eml_contents);
+        $eml_contents = str_replace("{href_site}", $GLOBALS['siteURL'], $eml_contents);
+        $eml_contents = str_replace("{siteName}", $GLOBALS['siteName'], $eml_contents);
         $message = $eml_contents;
         //print($message); die();
 

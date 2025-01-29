@@ -49,6 +49,7 @@ if (isset($_REQUEST['btn_login'])) {
 					header("location:" . $GLOBALS['siteURL'] . "index.php");
 				}
 			} else {
+
 				$class = "alert alert-danger";
 				$strMSG = "Dear Cuctomer, <br>
 						Invalid login credential try again";
@@ -56,9 +57,22 @@ if (isset($_REQUEST['btn_login'])) {
 
 			//header("location:".$GLOBALS['siteURL']."my_account.php");
 		} else {
-			$class = "alert alert-danger";
-			$strMSG = "Dear Cuctomer, <br>
+
+			$status_id = returnName("status_id", "users", "user_name", $username);
+			if ($status_id == 0) {
+				$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '0'") or die(mysqli_error($GLOBALS['conn']));
+				if (mysqli_num_rows($rs) > 0) {
+					$row = mysqli_fetch_object($rs);
+					$user_verification_code = md5($row->user_id . date("Ymdhis"));
+					mysqli_query($GLOBALS['conn'], "UPDATE users SET user_confirmation = '" . $user_verification_code . "' WHERE user_id = '" . $row->user_id . "'") or die(mysqli_error($GLOBALS['conn']));
+					$mailer->registration_account_verification($row->user_fname . " " . $row->user_lname, "verification@wackersystems.com", "7v6LjC{rEIct", $row->user_name, "Account Verification", $user_verification_code);
+					header('Location: account_registration.php');
+				}
+			} else {
+				$class = "alert alert-danger";
+				$strMSG = "Dear Cuctomer, <br>
 						Invalid login credential try again";
+			}
 		}
 	}
 }

@@ -110,7 +110,6 @@ if (isset($_REQUEST['btn_checkout'])) {
 				print_r($cardresponsedata);
 				print("</pre>");die();*/
 				if ($cardresponsedata->result->code == "000.100.110") {
-					//header('Location: checkout_order_complete.php?ord_id=' . $ord_id . "&id=" . $cardresponsedata->id);
 					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata->id)) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata->descriptor)) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 					header('Location: my_order.php?op=2');
 				}

@@ -10,6 +10,7 @@ if($_SERVER['HTTP_HOST']=='localhost:82'){
 	$dbDatabase = "gac_2024_wacker24";
 	$dbUserName = "root";
 	$dbPassword = "";
+	$GLOBALS['siteName'] = "wacker24";
     $GLOBALS['siteURL'] = "http://localhost:82/wacker24/";
 }
 elseif($_SERVER['HTTP_HOST']=='localhost'){
@@ -17,6 +18,7 @@ elseif($_SERVER['HTTP_HOST']=='localhost'){
 	$dbDatabase = "gac_2024_wacker24";
 	$dbUserName = "root";
 	$dbPassword = "";
+	$GLOBALS['siteName'] = "wacker24";
     $GLOBALS['siteURL'] = "http://localhost/wacker24/";
 }
 else{
@@ -24,6 +26,7 @@ else{
     $dbDatabase = "wackersystems_wacker24demo";
 	$dbUserName = "wackersystems_wacker24demo";
     $dbPassword = "MU8s)gKIeQyD";
+    $GLOBALS['siteName'] = "www.wackersystems.com";
     $GLOBALS['siteURL'] = "https://wackersystems.com/wacker24-version2024/";
 }
 $GLOBALS['conn'] = new mysqli($dbServer, $dbUserName, $dbPassword, $dbDatabase);
@@ -57,6 +60,7 @@ if(mysqli_num_rows($rs) > 0){
 	}
 }
 
-date_default_timezone_set("Asia/Karachi");
+//date_default_timezone_set("Asia/Karachi");
+date_default_timezone_set("Europe/Berlin");
 define('date_time', date('Y-m-d H:i:s'));
 ?>
