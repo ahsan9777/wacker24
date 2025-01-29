@@ -340,7 +340,7 @@ td {
     color: #e2e8f0;
     color: #9a9cab;
     font-weight: 500;
-    padding: 15px 20px;
+    padding: 5px 10px;
     border-bottom: 1px solid #2d2d3f;
     /* Darker border */
 }
@@ -350,7 +350,7 @@ th {
     color: #e2e8f0;
     color: #9a9cab;
     font-weight: 500;
-    padding: 15px 20px;
+    padding: 5px 10px;
     border-bottom: 1px solid #2d2d3f;
 }
 

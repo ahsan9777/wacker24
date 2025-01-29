@@ -1,18 +1,26 @@
 <?php
 include("includes/php_includes_top.php");
 $page = 1;
-if(isset($_REQUEST['btnAdd'])){
-
+if (isset($_REQUEST['btnAdd']) || isset($_REQUEST['btn_Addbilling'])) {
+	$usa_type = 0;
+	if (isset($_REQUEST['btn_Addbilling'])) {
+		$usa_type = 1;
+	}
 	$usa_id = getMaximum("user_shipping_address", "usa_id");
-	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_fname, usa_lname, usa_address, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id) VALUES ('".$usa_id."', '".$_SESSION["UID"]."', '".dbStr(trim($_REQUEST['usa_fname']))."',  '".dbStr(trim($_REQUEST['usa_lname']))."', '".dbStr(trim($_REQUEST['usa_address']))."', '".dbStr(trim($_REQUEST['usa_street']))."', '".dbStr(trim($_REQUEST['usa_house_no']))."', '".dbStr(trim($_REQUEST['usa_zipcode']))."', '".dbStr(trim($_REQUEST['usa_contactno']))."', '".dbStr(trim($_REQUEST['countries_id']))."')") or die(mysqli_error($GLOBALS['conn']));
+	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_type, usa_fname, usa_lname, usa_additional_info, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id) VALUES ('" . $usa_id . "', '" . $_SESSION["UID"] . "', '" . $usa_type . "', '" . dbStr(trim($_REQUEST['usa_fname'])) . "',  '" . dbStr(trim($_REQUEST['usa_lname'])) . "', '" . dbStr(trim($_REQUEST['usa_additional_info'])) . "', '" . dbStr(trim($_REQUEST['usa_street'])) . "', '" . dbStr(trim($_REQUEST['usa_house_no'])) . "', '" . dbStr(trim($_REQUEST['usa_zipcode'])) . "', '" . dbStr(trim($_REQUEST['usa_contactno'])) . "', '" . dbStr(trim($_REQUEST['countries_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 }
 
-if(isset($_REQUEST['usa_id']) && !empty($_REQUEST['usa_id'])){
+if (isset($_REQUEST['set_defualt'])) {
 	//print_r($_REQUEST);die();
-	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '0' WHERE user_id = '".$_SESSION["UID"]."'") or die(mysqli_error($GLOBALS['conn']));
-	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '1' WHERE usa_id = '".$_REQUEST['usa_id']."' AND user_id = '".$_SESSION["UID"]."'") or die(mysqli_error($GLOBALS['conn']));
+	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '0' WHERE user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
+	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '1' WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+}
+if (isset($_REQUEST['deleted'])) {
+	//print_r($_REQUEST);die();
+	mysqli_query($GLOBALS['conn'], "DELETE FROM user_shipping_address WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
+	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
 }
 
 include("includes/message.php");
@@ -30,19 +38,19 @@ include("includes/message.php");
 		<!--LOCATION_POPUP_START-->
 		<?php include("includes/popup.php"); ?>
 
-		<div class="form_popup">
+		<div class="form_popup" id="form_shippingAddress_popup">
 			<div class="inner_popup">
 				<div class="form_popup_content">
-					<div class="form_popup_heading">Add new address <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					<div class="form_popup_heading">Add new shipping address <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
-						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+						<form class="gerenric_form" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">First name</div>
-											<div class="form_field"><input type="text" name="usa_fname" id="usa_fname" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="text" name="usa_fname" id="usa_fname" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">Last name</div>
@@ -50,29 +58,28 @@ include("includes/message.php");
 										</div>
 									</div>
 								</li>
-								<li>
-									<div class="form_label">Addition</div>
-									<div class="form_field"><input type="text" name="usa_address" id="usa_address" class="gerenric_input"></div>
-								</li>
+								<?php if ($_SESSION["Utype"] == 4) { ?>
+									<li>
+										<div class="form_label">Addition</div>
+										<div class="form_field"><input type="text" name="usa_additional_info" id="usa_additional_info" class="gerenric_input"></div>
+									</li>
+								<?php } ?>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">Street</div>
-											<div class="form_field"><input type="text" name="usa_street" id="usa_street" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="text" name="usa_street" id="usa_street" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">House number</div>
-											<div class="form_field"><input type="text" name="usa_house_no" id="usa_house_no" class="gerenric_input" required ></div>
+											<div class="form_field"><input type="text" name="usa_house_no" id="usa_house_no" class="gerenric_input" required></div>
 										</div>
 									</div>
 								</li>
 								<li>
 									<div class="form_label">ZIP / City</div>
 									<div class="form_field">
-										<input type="text" name="usa_zipcode" id="usa_zipcode" class="gerenric_input" required >
-										<!--<select class="gerenric_input" name="zc_id" id="zc_id">
-											<?php FillSelected2("zip_code", "zc_id", "zc_zipcode", "", "zc_id > 0"); ?>
-										</select>-->
+										<input type="text" name="usa_zipcode" id="usa_zipcode" class="gerenric_input usa_zipcode" required>
 									</div>
 								</li>
 								<li>
@@ -84,7 +91,7 @@ include("includes/message.php");
 										<div class="form_right">
 											<div class="form_label">Land</div>
 											<div class="form_field">
-												<select class="gerenric_input" name="countries_id" id="countries_id" >
+												<select class="gerenric_input" name="countries_id" id="countries_id">
 													<?php FillSelected2("countries", "countries_id", "countries_name", 81, "countries_id > 0"); ?>
 												</select>
 											</div>
@@ -94,6 +101,79 @@ include("includes/message.php");
 								<li class="mt_30">
 									<div class="form_two_button">
 										<button class="gerenric_btn" type="submit" name="btnAdd">Add</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Close</button>
+									</div>
+								</li>
+							</ul>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form_popup" id="form_billingAddress_popup">
+			<div class="inner_popup">
+				<div class="form_popup_content">
+					<div class="form_popup_heading">Add new billing address <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="form_popup_content_inner">
+						<form class="gerenric_form" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+							<ul>
+								<li>
+									<div class="form_row">
+										<div class="form_left">
+											<div class="form_label">First name</div>
+											<div class="form_field"><input type="text" name="usa_fname" id="usa_fname" class="gerenric_input" required></div>
+										</div>
+										<div class="form_right">
+											<div class="form_label">Last name</div>
+											<div class="form_field"><input type="text" name="usa_lname" id="usa_lname" class="gerenric_input"></div>
+										</div>
+									</div>
+								</li>
+								<?php if ($_SESSION["Utype"] == 4) { ?>
+									<li>
+										<div class="form_label">Addition</div>
+										<div class="form_field"><input type="text" name="usa_additional_info" id="usa_additional_info" class="gerenric_input"></div>
+									</li>
+								<?php } ?>
+								<li>
+									<div class="form_row">
+										<div class="form_left">
+											<div class="form_label">Street</div>
+											<div class="form_field"><input type="text" name="usa_street" id="usa_street" class="gerenric_input" required></div>
+										</div>
+										<div class="form_right">
+											<div class="form_label">House number</div>
+											<div class="form_field"><input type="text" name="usa_house_no" id="usa_house_no" class="gerenric_input" required></div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="form_label">ZIP / City</div>
+									<div class="form_field">
+										<input type="text" name="usa_zipcode" id="usa_zipcode" class="gerenric_input usa_zipcode" required>
+									</div>
+								</li>
+								<li>
+									<div class="form_row">
+										<div class="form_left">
+											<div class="form_label">Telefon</div>
+											<div class="form_field"><input type="text" name="usa_contactno" id="usa_contactno" class="gerenric_input" required></div>
+										</div>
+										<div class="form_right">
+											<div class="form_label">Land</div>
+											<div class="form_field">
+												<select class="gerenric_input" name="countries_id" id="countries_id">
+													<?php FillSelected2("countries", "countries_id", "countries_name", 81, "countries_id > 0"); ?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li class="mt_30">
+									<div class="form_two_button">
+										<button class="gerenric_btn" type="submit" name="btn_Addbilling">Add</button>
 										<button class="gerenric_btn gray_btn form_popup_close">Close</button>
 									</div>
 								</li>
@@ -130,7 +210,7 @@ include("includes/message.php");
 						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 					<?php } ?>
 					<h1>My Addresses</h1>
-					<form class="my_address_section1" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+					<div class="my_address_section1">
 						<div class="gerenric_address">
 							<div class="address_col">
 								<div class="gerenric_add_box form_popup_trigger">
@@ -141,62 +221,102 @@ include("includes/message.php");
 								</div>
 							</div>
 							<?php
-							$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE user_id = '".$_SESSION["UID"]."' ORDER BY usa_defualt DESC";
+							$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa_type = '0' AND user_id = '" . $_SESSION["UID"] . "' ORDER BY usa_defualt DESC";
 							$rs = mysqli_query($GLOBALS['conn'], $Query);
-							if(mysqli_num_rows($rs) > 0){
-								while($row = mysqli_fetch_object($rs)){
+							if (mysqli_num_rows($rs) > 0) {
+								while ($row = mysqli_fetch_object($rs)) {
+									if ($row->usa_defualt == 1) {
 							?>
-							<div class="address_col">
-								<div class="address_card">
-									<div class="address_detail" >
-										<input type="radio" class="usa_id" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>" <?php print( ($row->usa_defualt == 1)?'checked':''); ?> > <h2> <?php print( ($row->usa_defualt == 1)?'Defualt':'Standard'); ?> address</h2>
-										<ul>
-											<li><span> <?php print($row->usa_fname." ".$row->usa_lname); ?> </span></li>
-											<li> <?php print($row->usa_street); ?> </li>
-											<li> <?php print($row->usa_house_no); ?> </li>
-											<li> <?php print($row->usa_contactno); ?> </li>
-											<li><?php print($row->usa_zipcode); ?></li>
-											<li><?php print($row->countries_name); ?></li>
-											<li><?php print($row->usa_address); ?></li>
-										</ul>
-									</div>
-								</div>
-							</div>
+										<div class="address_col">
+											<div class="address_card">
+												<div class="address_detail">
+													<h2> Defualt address</h2>
+													<ul>
+														<?php if (!empty($row->usa_additional_info)) { ?>
+															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+														<?php } ?>
+														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<li> <?php print($row->usa_street); ?> </li>
+														<li> <?php print($row->usa_house_no); ?> </li>
+														<li> <?php print($row->usa_contactno); ?> </li>
+														<li><?php print($row->usa_zipcode); ?></li>
+														<li><?php print($row->countries_name); ?></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									<?php } else { ?>
+										<div class="address_col">
+											<div class="address_card">
+												<div class="address_detail">
+													<ul>
+														<?php if (!empty($row->usa_additional_info)) { ?>
+															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+														<?php } ?>
+														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<li> <?php print($row->usa_street); ?> </li>
+														<li> <?php print($row->usa_house_no); ?> </li>
+														<li> <?php print($row->usa_contactno); ?> </li>
+														<li><?php print($row->usa_zipcode); ?></li>
+														<li><?php print($row->countries_name); ?></li>
+														<li><?php print($row->usa_additional_info); ?></li>
+													</ul>
+													<div class="btn_address">
+														<a href="<?php print($_SERVER['PHP_SELF'] . "?set_defualt&usa_id=" . $row->usa_id); ?>">Als Standard einstellen</a> |
+														<a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Entfernen</a>
+													</div>
+												</div>
+											</div>
+										</div>
 							<?php
+									}
 								}
 							}
 							?>
 						</div>
-					</form>
-					<div class="my_address_section2">
-						<div class="gerenric_address full_column">
-							<?php
-							$Query = "SELECT u.*, c.countries_name FROM users AS u LEFT OUTER JOIN countries AS c ON c.countries_id = u.countries_id WHERE u.user_id = '".$_SESSION["UID"]."'";
-							$rs = mysqli_query($GLOBALS['conn'], $Query);
-							if(mysqli_num_rows($rs) > 0){
-								$row = mysqli_fetch_object($rs);
-							?>
-							<div class="address_col">
-								<div class="address_card">
-									<div class="address_detail">
-										<h2>Billing address</h2>
-										<ul>
-										<li><span> <?php print($row->user_fname." ".$row->user_lname); ?> </span></li>
-											<li> <?php print($row->user_phone); ?> </li>
-											<li> <?php print($row->user_name); ?> </li>
-											<li> <?php print($row->countries_name); ?> </li>
-										</ul>
+					</div>
+					<?php
+					$user_invoice_payment = returnName("user_invoice_payment", "users", "user_id", $_SESSION["UID"]);
+					if ($user_invoice_payment > 0) {
+					?>
+						<div class="my_address_section2">
+							<div class="gerenric_address full_column">
+								<div class="address_col">
+									<div class="address_card">
+										<?php
+										$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa_type = '1' AND user_id = '" . $_SESSION["UID"] . "' ORDER BY usa_defualt DESC";
+										$rs = mysqli_query($GLOBALS['conn'], $Query);
+										if (mysqli_num_rows($rs) > 0) {
+											$row = mysqli_fetch_object($rs);
+										?>
+											<div class="address_detail">
+												<h2>Billing address</h2>
+												<ul>
+													<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+													<li> <?php print($row->usa_street); ?> </li>
+													<li> <?php print($row->usa_house_no); ?> </li>
+													<li> <?php print($row->usa_contactno); ?> </li>
+													<li><?php print($row->usa_zipcode); ?></li>
+													<li><?php print($row->countries_name); ?></li>
+													<li><?php print($row->usa_additional_info); ?></li>
+												</ul>
+											</div>
+											<div class="address_remove"><a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">
+													<div class="gerenric_btn">Remove</div>
+												</a>
+											</div>
+										<?php
+										} else {
+										?>
+											<div class="txt_align_center">
+												<button class="gerenric_btn form_billingAddress_trigger" type="button" name="btnAdd">Rechnungsadresse hinzufügen</button>
+											</div>
+										<?php } ?>
 									</div>
-									<div class="address_remove"><a href="javascript:void(0)">
-											<div class="gerenric_btn">Remove</div>
-										</a></div>
 								</div>
 							</div>
-							<?php
-							}
-							?>
 						</div>
-					</div>
+					<?php } ?>
 				</div>
 			</div>
 		</section>
@@ -213,23 +333,50 @@ include("includes/message.php");
 <script>
 	$(window).load(function() {
 		$(".form_popup_trigger").click(function() {
-			$('.form_popup').show();
-			$('.form_popup').resize();
+			$('#form_shippingAddress_popup').show();
+			$('#form_shippingAddress_popup').resize();
+			$('body').css({
+				'overflow': 'hidden'
+			});
+		});
+
+		$(".form_billingAddress_trigger").click(function() {
+			$('#form_billingAddress_popup').show();
+			$('#form_billingAddress_popup').resize();
 			$('body').css({
 				'overflow': 'hidden'
 			});
 		});
 		$('.form_popup_close').click(function() {
-			$('.form_popup').hide();
+			$('#form_shippingAddress_popup, #form_billingAddress_popup').hide();
 			$('body').css({
 				'overflow': 'inherit'
 			});
 		});
 	});
 
-	$(".usa_id").on('click', function(){
-		//console.log("usa_id");
-		$("#frmaddress").submit();
+	$('input.usa_zipcode').autocomplete({
+		source: function(request, response) {
+			let level_one = $("#level_one").val();
+			$.ajax({
+				url: 'ajax_calls.php?action=usa_zipcode',
+				dataType: "json",
+				data: {
+					term: request.term
+				},
+				success: function(data) {
+					response(data);
+
+				}
+			});
+		},
+		minLength: 1,
+		select: function(event, ui) {
+			var usa_zipcode = $("#usa_zipcode");
+			$(usa_zipcode).val(ui.item.value);
+			//frm_search.submit();
+			//return false;
+		}
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>

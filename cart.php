@@ -10,113 +10,115 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$user_id = $_SESSION['UID'];
 	$usa_id = $_REQUEST['usa_id'];
 	$pm_id = $_REQUEST['pm_id'];
-	if ($pm_id > 1) {
-		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+	if ($pm_id == 1) {
+		$usa_id = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
+		if (empty($usa_id)) {
+			header("Location: my_address.php");
+			die();
+		}
 	}
-	//print_r($entityId);die();
-	if (isset($_REQUEST['usa_id']) && $_REQUEST['usa_id'] > 0) {
+	//print_r($usa_id);die();
 
-		$Query = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.user_id = '" . $user_id . "' AND usa.usa_id ='" . $usa_id . "'";
-		$rs = mysqli_query($GLOBALS['conn'], $Query);
-		if (mysqli_num_rows($rs) > 0) {
-			$rw = mysqli_fetch_object($rs);
-			$usa_id = $rw->usa_id;
-			$dinfo_fname = $rw->usa_fname;
-			$dinfo_lname = $rw->usa_lname;
-			$dinfo_email = $rw->user_name;
-			$dinfo_phone = $rw->usa_contactno;
-			$dinfo_street = $rw->usa_street;
-			$dinfo_house_no = $rw->usa_house_no;
-			$dinfo_address = $rw->usa_address;
-			$dinfo_countries_id = $rw->countries_id;
-			$dinfo_usa_zipcode = $rw->usa_zipcode;
+	$Query = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.user_id = '" . $user_id . "' AND usa.usa_id ='" . $usa_id . "'";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		$rw = mysqli_fetch_object($rs);
+		$usa_id = $rw->usa_id;
+		$dinfo_fname = $rw->usa_fname;
+		$dinfo_lname = $rw->usa_lname;
+		$dinfo_email = $rw->user_name;
+		$dinfo_phone = $rw->usa_contactno;
+		$dinfo_street = $rw->usa_street;
+		$dinfo_house_no = $rw->usa_house_no;
+		$dinfo_address = $rw->usa_address;
+		$dinfo_countries_id = $rw->countries_id;
+		$dinfo_usa_zipcode = $rw->usa_zipcode;
+		$dinfo_additional_info = $rw->usa_additional_info;
+	}
+
+	$orders_table_check = 0;
+	$order_items_table_check = 0;
+	$Query1 = "SELECT * FROM `cart` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "'";
+	$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+	if (mysqli_num_rows($rs1) > 0) {
+		$row1 = mysqli_fetch_object($rs1);
+		$ord_id = getMaximum("orders", "ord_id");
+		$dinfo_id = getMaximum("delivery_info", "dinfo_id");
+		$ord_shipping_charges = 0;
+		if ($row1->cart_gross_total <= config_condition_courier_amount) {
+			$ord_shipping_charges = config_courier_fix_charges;
 		}
+		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
+		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '" . trim(dbStr($_REQUEST['ord_note'])) . "', '" . dbStr(trim(date_time)) . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . dbStr(trim($dinfo_fname)) . "', '" . dbStr(trim($dinfo_lname)) . "', '" . dbStr(trim($dinfo_phone)) . "', '" . dbStr(trim($dinfo_email)) . "', '" . dbStr(trim($dinfo_street)) . "', '" . dbStr(trim($dinfo_house_no)) . "', '" . dbStr(trim($dinfo_address)) . "', '" . dbStr(trim($dinfo_countries_id)) . "', '" . $dinfo_usa_zipcode . "', '" . dbStr(trim($dinfo_additional_info)) . "')") or die(mysqli_error($GLOBALS['conn']));
+		$orders_table_check = 1;
+	}
 
-		$orders_table_check = 0;
-		$order_items_table_check = 0;
-		$Query1 = "SELECT * FROM `cart` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "'";
-		$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-		if (mysqli_num_rows($rs1) > 0) {
-			$row1 = mysqli_fetch_object($rs1);
-			$ord_id = getMaximum("orders", "ord_id");
-			$dinfo_id = getMaximum("delivery_info", "dinfo_id");
-			$ord_shipping_charges = 0;
-			if ($row1->cart_gross_total <= config_condition_courier_amount) {
-				$ord_shipping_charges = config_courier_fix_charges;
-			}
-			$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '" . trim(dbStr($_REQUEST['ord_note'])) . "', '" . dbStr(trim(date_time)) . "')") or die(mysqli_error($GLOBALS['conn']));
-			mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . dbStr(trim($dinfo_fname)) . "', '" . dbStr(trim($dinfo_lname)) . "', '" . dbStr(trim($dinfo_phone)) . "', '" . dbStr(trim($dinfo_email)) . "', '" . dbStr(trim($dinfo_street)) . "', '" . dbStr(trim($dinfo_house_no)) . "', '" . dbStr(trim($dinfo_address)) . "', '" . dbStr(trim($dinfo_countries_id)) . "', '" . $dinfo_usa_zipcode . "')") or die(mysqli_error($GLOBALS['conn']));
-			$orders_table_check = 1;
+	$Query2 = "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "' ORDER BY `ci_id` ASC";
+	$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+	if (mysqli_num_rows($rs2) > 0) {
+		while ($row2 = mysqli_fetch_object($rs2)) {
+			$ci_id = $row2->ci_id;
+			$oi_id = getMaximum("order_items", "oi_id");
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			$order_items_table_check = 1;
 		}
+	}
 
-		$Query2 = "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "' ORDER BY `ci_id` ASC";
-		$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
-		if (mysqli_num_rows($rs2) > 0) {
-			while ($row2 = mysqli_fetch_object($rs2)) {
-				$ci_id = $row2->ci_id;
-				$oi_id = getMaximum("order_items", "oi_id");
-				mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
-				$order_items_table_check = 1;
-			}
-		}
+	if ($orders_table_check == 1 && $order_items_table_check == 1) {
+		mysqli_query($GLOBALS['conn'], "DELETE FROM cart WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+		unset($_SESSION['cart_id']);
+		unset($_SESSION['sess_id']);
+		unset($_SESSION['ci_id']);
+		unset($_SESSION['header_quantity']);
+		if ($pm_id == 1) {
+			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+			header('Location: my_order.php?op=2');
+		} elseif ($pm_id == 2) {
+			//$PaypalResponseData = "";
+			$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+			$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
+			$paypalresponseData = json_decode($paypalrequest);
 
-		if ($orders_table_check == 1 && $order_items_table_check == 1) {
-			mysqli_query($GLOBALS['conn'], "DELETE FROM cart WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
-			mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
-			unset($_SESSION['cart_id']);
-			unset($_SESSION['sess_id']);
-			unset($_SESSION['ci_id']);
-			unset($_SESSION['header_quantity']);
-			if ($pm_id == 1) {
-				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: my_order.php?op=2');
-			} elseif ($pm_id == 2) {
-				//$PaypalResponseData = "";
-				$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
-				$paypalresponseData = json_decode($paypalrequest);
-
-				$ord_payment_transaction_id = $paypalresponseData->id;
-				$ord_payment_short_id = $paypalresponseData->descriptor;
-				$ord_payment_info_detail = $paypalrequest;
-				/*print("<pre>");
+			$ord_payment_transaction_id = $paypalresponseData->id;
+			$ord_payment_short_id = $paypalresponseData->descriptor;
+			$ord_payment_info_detail = $paypalrequest;
+			/*print("<pre>");
 				print_r($PaypalResponseData);
 				print("</pre>");die();*/
-				$parameters = "";
-				if ($paypalresponseData->resultDetails->AcquirerResponse == 'Success') {
-					foreach ($paypalresponseData->redirect->parameters as $key => $value) {
-						$parameters .=  $value->name . "=" . $value->value . "&";
-					}
-					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-					header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters);
+			$parameters = "";
+			if ($paypalresponseData->resultDetails->AcquirerResponse == 'Success') {
+				foreach ($paypalresponseData->redirect->parameters as $key => $value) {
+					$parameters .=  $value->name . "=" . $value->value . "&";
 				}
-			} elseif (in_array($pm_id, array(4, 5))) {
-				$data['cardnumber'] = $_REQUEST['cardnumber'];
-				$data['cardholder'] = $_REQUEST['cardholder'];
-				$data['cardmonth'] = $_REQUEST['cardmonth'];
-				$data['cardyear'] = $_REQUEST['cardyear'];
-				$data['cvv'] = $_REQUEST['cvv'];
-				$Query3 = "SELECT pm_id, pm_currency, pm_brand_name, pm_entity_id FROM `payment_method` WHERE pm_id = '" . $pm_id . "' ";
-				$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
-				if (mysqli_num_rows($rs3) > 0) {
-					$row3 = mysqli_fetch_object($rs3);
-					$data['brand'] = $row3->pm_brand_name;
-					$data['currency'] = $row3->pm_currency;
-					$data['entityId'] = $row3->pm_entity_id;
-				}
-				$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
-				$cardresponsedata = json_decode($cardrequest);
-				/*print("<pre>");
+				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+				header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters);
+			}
+		} elseif (in_array($pm_id, array(4, 5))) {
+			$data['cardnumber'] = $_REQUEST['cardnumber'];
+			$data['cardholder'] = $_REQUEST['cardholder'];
+			$data['cardmonth'] = $_REQUEST['cardmonth'];
+			$data['cardyear'] = $_REQUEST['cardyear'];
+			$data['cvv'] = $_REQUEST['cvv'];
+			$Query3 = "SELECT pm_id, pm_currency, pm_brand_name, pm_entity_id FROM `payment_method` WHERE pm_id = '" . $pm_id . "' ";
+			$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+			if (mysqli_num_rows($rs3) > 0) {
+				$row3 = mysqli_fetch_object($rs3);
+				$data['brand'] = $row3->pm_brand_name;
+				$data['currency'] = $row3->pm_currency;
+				$data['entityId'] = $row3->pm_entity_id;
+			}
+			$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
+			$cardresponsedata = json_decode($cardrequest);
+			/*print("<pre>");
 				print_r($cardresponsedata);
 				print("</pre>");die();*/
-				if ($cardresponsedata->result->code == "000.100.110") {
-					mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata->id)) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata->descriptor)) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-					header('Location: my_order.php?op=2');
-				}
+			if ($cardresponsedata->result->code == "000.100.110") {
+				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata->id)) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata->descriptor)) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+				header('Location: my_order.php?op=2');
 			}
 		}
-	} else {
-		header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=12");
 	}
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
 	//print_r($_REQUEST);die();
@@ -385,7 +387,7 @@ include("includes/message.php");
 							<?php if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) { ?>
 								<div class="cart_delivery">
 									<?php
-									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa_defualt = '1' AND user_id = '" . $_SESSION["UID"] . "' ";
+									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '0' AND usa.usa_defualt = '1' AND usa.user_id = '" . $_SESSION["UID"] . "' ";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
@@ -395,6 +397,9 @@ include("includes/message.php");
 													<input type="hidden" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>">
 													<h2>Delivery address</h2>
 													<ul>
+														<?php if (!empty($row->usa_additional_info)) { ?>
+															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+														<?php } ?>
 														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 														<li> <?php print($row->usa_street); ?> </li>
 														<li> <?php print($row->usa_house_no); ?> </li>
@@ -407,9 +412,12 @@ include("includes/message.php");
 											</div>
 										<?php
 										}
+									} else {
+										$checkout_click = "";
+										$checkout_click_href = "my_address.php";
 									}
 
-									$Query = "SELECT u.*, c.countries_name FROM users AS u LEFT OUTER JOIN countries AS c ON c.countries_id = u.countries_id WHERE u.user_id = '" . $_SESSION["UID"] . "'";
+									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '1' AND usa.user_id = '" . $_SESSION["UID"] . "'";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										$row = mysqli_fetch_object($rs);
@@ -418,10 +426,16 @@ include("includes/message.php");
 											<div class="gerenric_white_box">
 												<h2>Billing address</h2>
 												<ul>
-													<li><span> <?php print($row->user_fname . " " . $row->user_lname); ?> </span></li>
-													<li> <?php print($row->user_phone); ?> </li>
-													<li> <?php print($row->user_name); ?> </li>
-													<li> <?php print($row->countries_name); ?> </li>
+													<?php if (!empty($row->usa_additional_info)) { ?>
+														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+													<?php } ?>
+													<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+													<li> <?php print($row->usa_street); ?> </li>
+													<li> <?php print($row->usa_house_no); ?> </li>
+													<li> <?php print($row->usa_contactno); ?> </li>
+													<li><?php print($row->usa_zipcode); ?></li>
+													<li><?php print($row->countries_name); ?></li>
+													<li><?php print($row->usa_address); ?></li>
 												</ul>
 											</div>
 										</div>
@@ -487,19 +501,33 @@ include("includes/message.php");
 													if (!empty($row->pm_image)) {
 														$pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
 													}
+													$user_invoice_payment = returnName("user_invoice_payment", "users", "user_id", $_SESSION["UID"]);
+													if ($user_invoice_payment > 0 && $row->pm_id == 1) {
 											?>
-													<li>
-														<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
-															<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 1) ? 'checked' :  '') ?>>
-															<span class="checkmark">
-																<div class="payment_card">
-																	<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
-																	<div class="payment_card_title"><?php print($row->pm_title) ?></div>
-																</div>
-															</span>
-														</label>
-													</li>
-											<?php
+														<li>
+															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 1) ? 'checked' :  '') ?>>
+																<span class="checkmark">
+																	<div class="payment_card">
+																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
+																		<div class="payment_card_title"><?php print($row->pm_title) ?></div>
+																	</div>
+																</span>
+															</label>
+														</li>
+													<?php } elseif ($row->pm_id != 1) { ?>
+														<li>
+															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 1) ? 'checked' :  '') ?>>
+																<span class="checkmark">
+																	<div class="payment_card">
+																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
+																		<div class="payment_card_title"><?php print($row->pm_title) ?></div>
+																	</div>
+																</span>
+															</label>
+														</li>
+											<?php }
 												}
 											}
 											?>

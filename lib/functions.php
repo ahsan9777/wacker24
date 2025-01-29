@@ -1483,9 +1483,9 @@ function returnMulCat($ID){
 	return $retRes;
 }
 
-function returnName($Field, $Table, $IDField, $ID){
+function returnName($Field, $Table, $IDField, $ID, $AND = ""){
 	$retRes = "";
-	$strQry="SELECT $Field FROM $Table WHERE $IDField= '".$ID."' LIMIT 1";
+	$strQry="SELECT $Field FROM $Table WHERE $IDField= '".$ID."' ".$AND." LIMIT 1";
 	//print($strQry);die();
 	$nResult =mysqli_query($GLOBALS['conn'], $strQry) or die("Unable 2 Work");
 	if (mysqli_num_rows($nResult)>=1){		

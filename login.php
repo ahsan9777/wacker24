@@ -27,7 +27,7 @@ if (isset($_REQUEST['btn_login'])) {
 					Please enter user Name";
 	}
 	if ($valid) {
-
+		//echo "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '1'";die();
 		//$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id = '" . $utype_id . "' AND user_password='" . $password . "' AND user_name='" . $username . "' AND status_id = '1' AND gen_id = '".$gen_id."'") or die(mysqli_error($GLOBALS['conn']));
 		$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '1'") or die(mysqli_error($GLOBALS['conn']));
 		if (mysqli_num_rows($rs) > 0) {
@@ -41,7 +41,7 @@ if (isset($_REQUEST['btn_login'])) {
 				$_SESSION["utype_id"] = $row->utype_id;
 
 				//echo $ref_check[0];die();
-				if ($ref == $GLOBALS['siteURL'] . "login.php" || $ref == $GLOBALS['siteURL'] . "register.php" || $ref_check[0] == $GLOBALS['siteURL'] . "account_verification.php") {
+				if ($ref == $GLOBALS['siteURL'] . "login.php" || $ref == $GLOBALS['siteURL'] . "register.php" || $ref_check[0] == $GLOBALS['siteURL'] . "account_verification.php"  || $ref_check[0] == $GLOBALS['siteURL'] . "account_registration.php" ) {
 					header("Location:" . $GLOBALS['siteURL'] . "index.php");
 				} elseif (!empty($ref)) {
 					header("Location:" . $ref);
@@ -60,12 +60,12 @@ if (isset($_REQUEST['btn_login'])) {
 
 			$status_id = returnName("status_id", "users", "user_name", $username);
 			if ($status_id == 0) {
-				$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '0'") or die(mysqli_error($GLOBALS['conn']));
-				if (mysqli_num_rows($rs) > 0) {
-					$row = mysqli_fetch_object($rs);
-					$user_verification_code = md5($row->user_id . date("Ymdhis"));
-					mysqli_query($GLOBALS['conn'], "UPDATE users SET user_confirmation = '" . $user_verification_code . "' WHERE user_id = '" . $row->user_id . "'") or die(mysqli_error($GLOBALS['conn']));
-					$mailer->registration_account_verification($row->user_fname . " " . $row->user_lname, "verification@wackersystems.com", "7v6LjC{rEIct", $row->user_name, "Account Verification", $user_verification_code);
+				$rs1 = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '0'") or die(mysqli_error($GLOBALS['conn']));
+				if (mysqli_num_rows($rs1) > 0) {
+					$rw = mysqli_fetch_object($rs1);
+					$user_verification_code = md5($rw->user_id . date("Ymdhis"));
+					mysqli_query($GLOBALS['conn'], "UPDATE users SET user_confirmation = '" . $user_verification_code . "' WHERE user_id = '" . $rw->user_id . "'") or die(mysqli_error($GLOBALS['conn']));
+					$mailer->registration_account_verification($rw->user_fname . " " . $rw->user_lname, "verification@wackersystems.com", "7v6LjC{rEIct", $rw->user_name, "Account Verification", $user_verification_code);
 					header('Location: account_registration.php');
 				}
 			} else {

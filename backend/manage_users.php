@@ -326,8 +326,8 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <th width="150">Customer Id </th>
-                                        <th width="300">User Info </th>
+                                        <th width="130">Customer Id </th>
+                                        <th width="200">User Info </th>
                                         <?php if ($utype_id > 0) { ?>
                                             <th width="95">Zip Code</th>
                                             <th>Street</th>

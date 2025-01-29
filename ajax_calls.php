@@ -300,18 +300,18 @@ if (isset($_REQUEST['action'])) {
                     continue;
                 }
                 $appointment_schedule_time = date("H:i", $start_time) . " - " . date("H:i", $next_time);
-                $checkrecord = checkrecord("app_time", "appointments", "as_id = '".$_REQUEST['as_id']."' AND app_time = '".$appointment_schedule_time."' AND app_date = '".$_REQUEST['selected_date']."' ");
-                if($checkrecord > 0){
+                $checkrecord = checkrecord("app_time", "appointments", "as_id = '" . $_REQUEST['as_id'] . "' AND app_time = '" . $appointment_schedule_time . "' AND app_date = '" . $_REQUEST['selected_date'] . "' ");
+                if ($checkrecord > 0) {
                     $appointment_schedule .= '
                                     <li class = "active_time">
-										<label >'. $appointment_schedule_time . '</label>
+										<label >' . $appointment_schedule_time . '</label>
 									</li>
                  ';
-                } else{
+                } else {
                     $appointment_schedule .= '
                                     <li>
 										<input type="radio" class = "time_slote" id="appointment_schedule_time_' . $count . '" data-id = "' . $count . '" name="time_slote" value = "' . $appointment_schedule_time . '">
-										<label for="appointment_schedule_time_' . $count . '">'. $appointment_schedule_time . '</label>
+										<label for="appointment_schedule_time_' . $count . '">' . $appointment_schedule_time . '</label>
 									</li>
                  ';
                 }
@@ -339,6 +339,23 @@ if (isset($_REQUEST['action'])) {
             }
 
             $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'usa_zipcode':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                $where .= " WHERE zc_zipcode LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR zc_town LIKE '%" . dbStr($_REQUEST['term']) . "%'";
+            }
+            $Query = "SELECT * FROM `zip_code` " . $where . " ORDER BY zc_id LIMIT 0,13";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                    'value' => strip_tags(html_entity_decode($row->zc_zipcode." ".$row->zc_town, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
             print($jsonResults);
             break;
     }

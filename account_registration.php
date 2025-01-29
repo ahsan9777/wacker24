@@ -1,14 +1,4 @@
-<?php
-include("includes/php_includes_top.php");
-$account_verification = 0;
-if (isset($_REQUEST['verification_code'])) {
-	$user_id = returnName("user_id", "users", "user_confirmation", $_REQUEST['verification_code']);
-	if ($user_id > 0) {
-		mysqli_query($GLOBALS['conn'], "UPDATE users SET status_id = '1' WHERE user_id = '" . $user_id . "'") or die(mysqli_error($GLOBALS['conn']));
-		$account_verification = 1;
-	}
-}
-?>
+<?php include("includes/php_includes_top.php"); ?>
 <!doctype html>
 <html lang="de">
 
