@@ -1,0 +1,81 @@
+@font-face {
+    font-family: 'Almendra';
+    src: url('Almendra-Bold.woff2') format('woff2'),
+        url('Almendra-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra SC';
+    src: url('AlmendraSC-Bold.woff2') format('woff2'),
+        url('AlmendraSC-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra Display';
+    src: url('AlmendraDisplay-Regular.woff2') format('woff2'),
+        url('AlmendraDisplay-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra';
+    src: url('Almendra-Regular.woff2') format('woff2'),
+        url('Almendra-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra SC';
+    src: url('AlmendraSC-BoldItalic.woff2') format('woff2'),
+        url('AlmendraSC-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra';
+    src: url('Almendra-BoldItalic.woff2') format('woff2'),
+        url('Almendra-BoldItalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra SC';
+    src: url('AlmendraSC-Regular.woff2') format('woff2'),
+        url('AlmendraSC-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra SC';
+    src: url('AlmendraSC-Italic.woff2') format('woff2'),
+        url('AlmendraSC-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Almendra';
+    src: url('Almendra-Italic.woff2') format('woff2'),
+        url('Almendra-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+

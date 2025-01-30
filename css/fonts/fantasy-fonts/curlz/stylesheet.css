@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Curlz';
+    src: url('Curlz.woff2') format('woff2'),
+        url('Curlz.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

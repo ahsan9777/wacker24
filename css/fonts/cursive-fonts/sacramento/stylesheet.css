@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Sacramento';
+    src: url('Sacramento-Regular.woff2') format('woff2'),
+        url('Sacramento-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

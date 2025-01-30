@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Palatino';
+    src: url('Palatino-Roman.woff2') format('woff2'),
+        url('Palatino-Roman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

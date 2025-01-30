@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Jokerman';
+    src: url('Jokerman.woff2') format('woff2'),
+        url('Jokerman.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

@@ -30,8 +30,14 @@ if (isset($_REQUEST['btnUpdate'])) {
     config_appointment_heading_en = '" . dbStr(trim($_REQUEST['config_appointment_heading_en'])) . "', 
     config_appointment_detail_de = '" . dbStr(trim($_REQUEST['config_appointment_detail_de'])) . "', 
     config_appointment_detail_en = '" . dbStr(trim($_REQUEST['config_appointment_detail_en'])) . "', 
-    config_site_logo = '" . $mfileName . "'") 
-or die(mysqli_error($GLOBALS['conn']));
+    config_private_color_a = '" . dbStr(trim($_REQUEST['config_private_color_a'])) . "', 
+    config_private_color_b = '" . dbStr(trim($_REQUEST['config_private_color_b'])) . "', 
+    config_company_color_a = '" . dbStr(trim($_REQUEST['config_company_color_a'])) . "', 
+    config_company_color_b = '" . dbStr(trim($_REQUEST['config_company_color_b'])) . "', 
+    config_btn_color = '" . dbStr(trim($_REQUEST['config_btn_color'])) . "', 
+    config_fonts = '" . dbStr(trim($_REQUEST['config_fonts'])) . "', 
+    config_site_logo = '" . $mfileName . "'")
+        or die(mysqli_error($GLOBALS['conn']));
 
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 }
@@ -65,13 +71,16 @@ if (mysqli_num_rows($rsM) > 0) {
     $config_appointment_heading_en = $rsMem->config_appointment_heading_en;
     $config_appointment_detail_de = $rsMem->config_appointment_detail_de;
     $config_appointment_detail_en = $rsMem->config_appointment_detail_en;
+    $config_private_color_a = $rsMem->config_private_color_a;
+    $config_private_color_b = $rsMem->config_private_color_b;
+    $config_company_color_a = $rsMem->config_company_color_a;
+    $config_company_color_b = $rsMem->config_company_color_b;
+    $config_btn_color = $rsMem->config_btn_color;
+    $config_fonts = $rsMem->config_fonts;
     $mfileName = $rsMem->config_site_logo;
     $mfile_path = !empty($rsMem->config_site_logo) ? $GLOBALS['siteURL'] . "files/" . $rsMem->config_site_logo : "";
     $formHead = "Update Info";
 }
-
-
-
 include("includes/messages.php");
 
 ?>
@@ -192,6 +201,117 @@ include("includes/messages.php");
                                 <label for="config_ftp_img">Detail EN</label>
                                 <textarea rows="6" class="input_style" name="config_appointment_detail_en" id="config_appointment_detail_en" placeholder="Detail EN"><?php print($config_appointment_detail_en); ?></textarea>
                             </div>
+                            <div class="col-md-12 col-12 mt-3 border-bottom">
+                                <h2 class="text-start text-white">Site Color</h2>
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Private Customer - A</label>
+                                <input type="color" class="input_style" name="config_private_color_a" id="config_private_color_a" value="<?php print($config_private_color_a); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Private Customer - B</label>
+                                <input type="color" class="input_style" name="config_private_color_b" id="config_private_color_b" value="<?php print($config_private_color_b); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Business Customer - A</label>
+                                <input type="color" class="input_style" name="config_company_color_a" id="config_company_color_a" value="<?php print($config_company_color_a); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Business Customer - B</label>
+                                <input type="color" class="input_style" name="config_company_color_b" id="config_company_color_b" value="<?php print($config_company_color_b); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Button Color</label>
+                                <input type="color" class="input_style" name="config_btn_color" id="config_btn_color" value="<?php print($config_btn_color); ?>">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Button Color</label>
+                                <select class="input_style" name="config_fonts" id="config_fonts">
+                                    <?php
+                                    $font_options = [
+                                        ["label" => "Sans-Serif Fonts", "fonts" => [
+                                            "Arial, sans-serif",
+                                            "Helvetica, sans-serif",
+                                            "Verdana, sans-serif",
+                                            "Tahoma, sans-serif",
+                                            "Trebuchet MS, sans-serif",
+                                            "Calibri, sans-serif",
+                                            "Open Sans, sans-serif",
+                                            "Lato, sans-serif",
+                                            "Roboto, sans-serif",
+                                            "Source Sans Pro, sans-serif"
+                                        ]],
+                                        ["label" => "Serif Fonts", "fonts" => [
+                                            "Times New Roman, serif",
+                                            "Georgia, serif",
+                                            "Palatino Linotype, Book Antiqua, serif",
+                                            "Baskerville, serif",
+                                            "Garamond, serif",
+                                            "Didot, serif",
+                                            "Cambria, serif",
+                                            "Playfair Display, serif",
+                                            "Merriweather, serif",
+                                            "EB Garamond, serif"
+                                        ]],
+                                        ["label" => "Monospace Fonts", "fonts" => [
+                                            "Courier New, monospace",
+                                            "Consolas, monospace",
+                                            "Inconsolata, monospace",
+                                            "Monaco, monospace",
+                                            "Source Code Pro, monospace",
+                                            "Fira Code, monospace",
+                                            "Liberation Mono, monospace",
+                                            "Menlo, monospace",
+                                            "JetBrains Mono, monospace",
+                                            "Hack, monospace"
+                                        ]],
+                                        ["label" => "Cursive Fonts", "fonts" => [
+                                            "Comic Sans MS, cursive",
+                                            "Brush Script MT, cursive",
+                                            "Pacifico, cursive",
+                                            "Dancing Script, cursive",
+                                            "Great Vibes, cursive",
+                                            "Lobster, cursive",
+                                            "Sacramento, cursive",
+                                            "Italianno, cursive",
+                                            "Allura, cursive",
+                                            "Parisienne, cursive"
+                                        ]],
+                                        ["label" => "Fantasy Fonts", "fonts" => [
+                                            "Impact, fantasy",
+                                            "Chiller, fantasy",
+                                            "Curlz MT, fantasy",
+                                            "Harrington, fantasy",
+                                            "Jokerman, fantasy",
+                                            "Stencil, fantasy",
+                                            "Blippo, fantasy",
+                                            "Bangers, fantasy",
+                                            "Freckle Face, fantasy",
+                                            "Almendra Display, fantasy"
+                                        ]]/*,
+                                        ["label" => "Web Font Services", "fonts" => [
+                                            "Google Fonts",
+                                            "Adobe Fonts (formerly Typekit)",
+                                            "Font Squirrel"
+                                        ]]*/
+                                    ];
+
+                                    foreach ($font_options as $group) {
+                                        print "<optgroup label='{$group['label']}'>";
+                                        foreach ($group['fonts'] as $font) {
+                                            $selected = ($config_fonts == $font) ? "selected" : "";
+                                            print "<option value='$font' style='font-family: $font;' $selected>$font</option>";
+                                        }
+                                        print '</optgroup>';
+                                    }
+                                    ?>
+
+
+
+                                </select>
+                            </div>
+
+
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="">Logo</label>
                                 <div class="">
