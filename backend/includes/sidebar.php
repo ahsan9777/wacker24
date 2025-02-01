@@ -25,6 +25,9 @@ $cu = 'active';
                     <li><a href="manage_sub_category.php" title="Unterkategorien Management" ><span class="text">Unterkategorien</span></a></li>
                 </ul>
             </li>
+            <li>
+                <a href="manage_special_category.php" title="Special Category Management" ><span class="material-icons icon">category</span> <span class="text">Sonderkategorie</span> </a>
+            </li>
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_products' || $pg == 'manage_sales_system') ? $cu : ''; ?>"><span class="material-icons icon">add</span> <span class="text">Artikel</span></a>
                 <ul class="sub-menu panel" <?php echo ( $pg == 'manage_products' || $pg == 'manage_sales_system') ? $c : ''; ?>>
