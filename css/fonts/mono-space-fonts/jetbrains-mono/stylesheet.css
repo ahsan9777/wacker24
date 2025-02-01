@@ -70,3 +70,8 @@
     font-display: swap;
 }
 
+body{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+}
+

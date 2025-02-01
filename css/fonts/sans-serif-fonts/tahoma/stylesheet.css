@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Tahoma';
+    src: url('Tahoma.woff2') format('woff2'),
+        url('Tahoma.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body{
+    font-family: 'Tahoma', sans-serif;
+    font-size: 14px;
+}
+

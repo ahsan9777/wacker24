@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Freckle Face';
+    src: url('FreckleFace-Regular.woff2') format('woff2'),
+        url('FreckleFace-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+body{
+    font-family: 'Freckle Face', fantasy;
+    font-size: 14px;
+}
+

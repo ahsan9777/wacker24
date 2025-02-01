@@ -244,7 +244,7 @@ include("includes/messages.php");
                                         ["label" => "Serif Fonts", "fonts" => [
                                             "Times New Roman, serif",
                                             "Georgia, serif",
-                                            "Palatino Linotype, Book Antiqua, serif",
+                                            "Palatino, serif",
                                             "Baskerville, serif",
                                             "Garamond, serif",
                                             "Didot, serif",
@@ -280,7 +280,7 @@ include("includes/messages.php");
                                         ["label" => "Fantasy Fonts", "fonts" => [
                                             "Impact, fantasy",
                                             "Chiller, fantasy",
-                                            "Curlz MT, fantasy",
+                                            "Curlz, fantasy",
                                             "Harrington, fantasy",
                                             "Jokerman, fantasy",
                                             "Stencil, fantasy",

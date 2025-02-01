@@ -61,3 +61,8 @@
     font-display: swap;
 }
 
+body{
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+}
+

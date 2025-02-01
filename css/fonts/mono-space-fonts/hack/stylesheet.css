@@ -34,3 +34,7 @@
     font-display: swap;
 }
 
+body{
+    font-family: 'Hack', monospace;
+    font-size: 14px;
+}
