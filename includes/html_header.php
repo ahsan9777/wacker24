@@ -5,6 +5,7 @@
 <meta name="keywords" content="<?php print(config_metakey); ?>">
 <meta name="description" content="<?php print(config_metades); ?>">
 <title><?php print(config_sitetitle); ?></title>
+<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
 <link href="css/styles.css" rel="stylesheet" type="text/css" />
 <link href="css/slick-theme.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.css">

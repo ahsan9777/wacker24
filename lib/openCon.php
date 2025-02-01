@@ -56,6 +56,12 @@ if(mysqli_num_rows($rs) > 0){
 		define('config_appointment_heading_en', $row->config_appointment_heading_en);
 		define('config_appointment_detail_de', $row->config_appointment_detail_de);
 		define('config_appointment_detail_en', $row->config_appointment_detail_en);
+		define('config_private_color_a', $row->config_private_color_a);
+		define('config_private_color_b', $row->config_private_color_b);
+		define('config_company_color_a', $row->config_company_color_a);
+		define('config_company_color_b', $row->config_company_color_b);
+		define('config_btn_color', $row->config_btn_color);
+		define('config_fonts', $row->config_fonts);
 		define('config_site_logo', $GLOBALS['siteURL'] . "files/" .$row->config_site_logo);
 	}
 }

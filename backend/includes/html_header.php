@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Bootstrap CSS -->
     <link href="./assets/style/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts, "../"));?>" />
 
     <!-- Bootstrap Toggle CSS -->
     <link href="./assets/style/bootstrap4-toggle.min.css" rel="stylesheet">

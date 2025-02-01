@@ -2527,5 +2527,80 @@ function cat_min_pbp_price_amount($sub_group_ids){
 	return $pbp_price_amount;
 }
 
+function get_font_link($font, $path = "") {
+    $get_font_link = "";
+
+    // Map each font to its corresponding stylesheet path
+    $font_map = [
+        // Sans-Serif Fonts
+        "Arial, sans-serif" => "css/fonts/sans-serif-fonts/arial/stylesheet.css",
+        "Helvetica, sans-serif" => "css/fonts/sans-serif-fonts/helvetica/stylesheet.css",
+        "Verdana, sans-serif" => "css/fonts/sans-serif-fonts/verdana/stylesheet.css",
+        "Tahoma, sans-serif" => "css/fonts/sans-serif-fonts/tahoma/stylesheet.css",
+        "Trebuchet MS, sans-serif" => "css/fonts/sans-serif-fonts/trebuchet-ms/stylesheet.css",
+        "Calibri, sans-serif" => "css/fonts/sans-serif-fonts/calibri/stylesheet.css",
+        "Open Sans, sans-serif" => "css/fonts/sans-serif-fonts/open-sans/stylesheet.css",
+        "Lato, sans-serif" => "css/fonts/sans-serif-fonts/lato/stylesheet.css",
+        "Roboto, sans-serif" => "css/fonts/sans-serif-fonts/roboto/stylesheet.css",
+        "Source Sans Pro, sans-serif" => "css/fonts/sans-serif-fonts/source-sans-pro/stylesheet.css",
+        
+        // Serif Fonts
+        "Times New Roman, serif" => "css/fonts/serif-fonts/times-new-roman/stylesheet.css",
+        "Georgia, serif" => "css/fonts/serif-fonts/georgia/stylesheet.css",
+        "Palatino, serif" => "css/fonts/serif-fonts/palatino/stylesheet.css",
+        "Baskerville, serif" => "css/fonts/serif-fonts/baskerville/stylesheet.css",
+        "Garamond, serif" => "css/fonts/serif-fonts/garamond/stylesheet.css",
+        "Didot, serif" => "css/fonts/serif-fonts/didot/stylesheet.css",
+        "Cambria, serif" => "css/fonts/serif-fonts/cambria/stylesheet.css",
+        "Playfair Display, serif" => "css/fonts/serif-fonts/playfair-display/stylesheet.css",
+        "Merriweather, serif" => "css/fonts/serif-fonts/merriweather/stylesheet.css",
+        "EB Garamond, serif" => "css/fonts/serif-fonts/eb-garamond/stylesheet.css",
+        
+        // Monospace Fonts
+        "Courier New, monospace" => "css/fonts/monospace-fonts/courier-new/stylesheet.css",
+        "Consolas, monospace" => "css/fonts/monospace-fonts/consolas/stylesheet.css",
+        "Inconsolata, monospace" => "css/fonts/monospace-fonts/inconsolata/stylesheet.css",
+        "Monaco, monospace" => "css/fonts/monospace-fonts/monaco/stylesheet.css",
+        "Source Code Pro, monospace" => "css/fonts/monospace-fonts/source-code-pro/stylesheet.css",
+        "Fira Code, monospace" => "css/fonts/monospace-fonts/fira-code/stylesheet.css",
+        "Liberation Mono, monospace" => "css/fonts/monospace-fonts/liberation-mono/stylesheet.css",
+        "Menlo, monospace" => "css/fonts/monospace-fonts/menlo/stylesheet.css",
+        "JetBrains Mono, monospace" => "css/fonts/monospace-fonts/jetbrains-mono/stylesheet.css",
+        "Hack, monospace" => "css/fonts/monospace-fonts/hack/stylesheet.css",
+        
+        // Cursive Fonts
+        "Comic Sans MS, cursive" => "css/fonts/cursive-fonts/comic-sans-ms/stylesheet.css",
+        "Brush Script MT, cursive" => "css/fonts/cursive-fonts/brush-script-mt/stylesheet.css",
+        "Pacifico, cursive" => "css/fonts/cursive-fonts/pacifico/stylesheet.css",
+        "Dancing Script, cursive" => "css/fonts/cursive-fonts/dancing-script/stylesheet.css",
+        "Great Vibes, cursive" => "css/fonts/cursive-fonts/great-vibes/stylesheet.css",
+        "Lobster, cursive" => "css/fonts/cursive-fonts/lobster/stylesheet.css",
+        "Sacramento, cursive" => "css/fonts/cursive-fonts/sacramento/stylesheet.css",
+        "Italianno, cursive" => "css/fonts/cursive-fonts/italianno/stylesheet.css",
+        "Allura, cursive" => "css/fonts/cursive-fonts/allura/stylesheet.css",
+        "Parisienne, cursive" => "css/fonts/cursive-fonts/parisienne/stylesheet.css",
+        
+        // Fantasy Fonts
+        "Impact, fantasy" => "css/fonts/fantasy-fonts/impact/stylesheet.css",
+        "Chiller, fantasy" => "css/fonts/fantasy-fonts/chiller/stylesheet.css",
+        "Curlz, fantasy" => "css/fonts/fantasy-fonts/curlz/stylesheet.css",
+        "Harrington, fantasy" => "css/fonts/fantasy-fonts/harrington/stylesheet.css",
+        "Jokerman, fantasy" => "css/fonts/fantasy-fonts/jokerman/stylesheet.css",
+        "Stencil, fantasy" => "css/fonts/fantasy-fonts/stencil/stylesheet.css",
+        "Blippo, fantasy" => "css/fonts/fantasy-fonts/blippo/stylesheet.css",
+        "Bangers, fantasy" => "css/fonts/fantasy-fonts/bangers/stylesheet.css",
+        "Freckle Face, fantasy" => "css/fonts/fantasy-fonts/freckle-face/stylesheet.css",
+        "Almendra Display, fantasy" => "css/fonts/fantasy-fonts/almendra-display/stylesheet.css"
+    ];
+
+    if (isset($font_map[$font])) {
+        $get_font_link = $path . $font_map[$font];
+    }
+
+    return $get_font_link;
+}
+
+
+
 
 ?>
