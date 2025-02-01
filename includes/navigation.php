@@ -6,8 +6,8 @@ $price_without_tex_display = "";
 $switch_click_check = "";
 $display_check = 'style="display: none;"';
 if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
-    $background_color_one = 'style="background-color: rgb(72, 132, 252);"';
-    $background_color_two = 'style="background-color: rgb(1, 31, 67);"';
+    $background_color_one = 'style="background-color: '.config_company_color_a.';"';
+    $background_color_two = 'style="background-color: '.config_company_color_b.';"';
     $switch_click_check = "checked";
     $price_without_tex_display = 'style="display: block;"';
     $pbp_price_with_tex_display = 'style="display: none;"';
@@ -494,19 +494,19 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
             if ($(this).is(":checked")) {
                 //console.log("if switch_click");
                 utype_id = 4;
-                $("#header_section .header_top").css('background-color', '#4884fc');
-                $("#header_section .header_bottom").css('background-color', '#011f43');
-                $("#navigation_section").css('background-color', '#4884fc');
-                $("#footer_section").css('background-color', '#4884fc');
+                $("#header_section .header_top").css('background-color', '<?php print(config_company_color_a); ?>');
+                $("#header_section .header_bottom").css('background-color', '<?php print(config_company_color_b); ?>');
+                $("#navigation_section").css('background-color', '<?php print(config_company_color_a); ?>');
+                $("#footer_section").css('background-color', '<?php print(config_company_color_a); ?>');
                 $(".pbp_price_with_tex").hide();
                 $(".price_without_tex").show();
                 ci_total = $("#ci_total").val();
             } else {
                 //console.log("else switch_click");
-                $("#header_section .header_top").css('background-color', '#323234');
-                $("#header_section .header_bottom").css('background-color', '#cc0f19');
-                $("#navigation_section").css('background-color', '#323234');
-                $("#footer_section").css('background-color', '#323234');
+                $("#header_section .header_top").css('background-color', '<?php print(config_private_color_a); ?>');
+                $("#header_section .header_bottom").css('background-color', '<?php print(config_private_color_b); ?>');
+                $("#navigation_section").css('background-color', '<?php print(config_private_color_a); ?>');
+                $("#footer_section").css('background-color', '<?php print(config_private_color_a); ?>');
                 $(".pbp_price_with_tex").show();
                 $(".price_without_tex").hide();
                 ci_total = $("#ci_total").val();

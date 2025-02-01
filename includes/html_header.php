@@ -151,3 +151,4 @@
 		
 	});
 </script>
+<?php include("includes/btn_color.php"); ?>

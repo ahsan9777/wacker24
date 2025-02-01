@@ -56,7 +56,7 @@ a{ color:#000;}
 .waring_message{width: 100%; font-size: 14px;border-radius: 5px;color: #856404;background-color: #fff3cd;border-color: #ffeeba; padding: 15px; border: 5px; border: 1px solid #ffeeba;}
 body.body-white{background-color: #fff !important;}
 .gerenric_padding{padding: 50px 0px;}
-.gerenric_btn{min-width: 150px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px 10px 20px; border: 0px; cursor: pointer; font-weight: 600; text-align: center; background-color: #fffc04; border-radius: 3px; font-size: 12px; color: #212529;}
+.gerenric_btn{min-width: 150px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px 10px 20px; border: 0px; cursor: pointer; font-weight: 600; text-align: center; border-radius: 3px; font-size: 12px; color: #212529;}
 .gerenric_btn:hover{background-color: #f3dc09;}
 .gerenric_btn.full_btn{width: 100%; display: flex; min-width: auto;}
 .gerenric_btn.mt_30{margin-top: 30px;}
@@ -287,7 +287,7 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_search .header_select_slt:focus{outline: none;}
 #header_section .header_bottom .header_search .search_input{width: 100%;  height: 40px; background-color: #fff; border: 0px; padding: 7px 20px 7px 20px;}
 #header_section .header_bottom .header_search .search_input:focus{outline: none;}
-#header_section .header_bottom .header_search .search_icon{width: 60px; height: 40px; border: 0px; cursor: pointer; position: relative; justify-content: center; background-color: #fffc04; display: flex; align-items: center;}
+#header_section .header_bottom .header_search .search_icon{width: 60px; height: 40px; border: 0px; cursor: pointer; position: relative; justify-content: center; display: flex; align-items: center;}
 #header_section .header_bottom .header_search .search_icon::after{position: absolute;content: "\f002";  font: normal normal normal 14px/1 FontAwesome; color: #000; font-size:18px;}
 #header_section .header_bottom .header_account ul li .account_nav{width: 240px; display: none; z-index: 99; right: 0px; top: 35px; box-shadow: 0px 0px 9px rgba(0,0,0,0.10); position: absolute; background-color: #fff; border-radius: 3px;}
 #header_section .header_bottom .header_account ul li .account_nav ul{display: block;}
@@ -689,7 +689,7 @@ body.body-white{background-color: #fff !important;}
 #footer_section .footer_bottom {width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 30px;}
 #footer_section .footer_logo{width: 100%; text-align: center;}
 #footer_section .footer_logo img{width: 150px;}
-#footer_section .subscribe_newsletter_btn{min-width: 300px; padding: 10px 20px 10px 20px; border: 0px; cursor: pointer; font-weight: 600; text-align: center; background-color: #fffc04; border-radius: 3px; font-size: 12px; color: #212529;}
+#footer_section .subscribe_newsletter_btn{min-width: 300px; padding: 10px 20px 10px 20px; border: 0px; cursor: pointer; font-weight: 600; text-align: center; border-radius: 3px; font-size: 12px; color: #212529;}
 #footer_section .subscribe_newsletter_btn:hover{background-color: #f3dc09;}
 #footer_register{width: 100%; border-top: 1px solid #ccc; padding: 25px 0px; }
 #footer_register ul{display: flex; justify-content: center; flex-wrap: wrap;}
