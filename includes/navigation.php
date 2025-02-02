@@ -5,9 +5,9 @@ $pbp_price_with_tex_display = "";
 $price_without_tex_display = "";
 $switch_click_check = "";
 $display_check = 'style="display: none;"';
-if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
-    $background_color_one = 'style="background-color: '.config_company_color_a.';"';
-    $background_color_two = 'style="background-color: '.config_company_color_b.';"';
+if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
+    $background_color_one = 'style="background-color: ' . config_company_color_a . ';"';
+    $background_color_two = 'style="background-color: ' . config_company_color_b . ';"';
     $switch_click_check = "checked";
     $price_without_tex_display = 'style="display: block;"';
     $pbp_price_with_tex_display = 'style="display: none;"';
@@ -16,7 +16,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
 //print($_SESSION["FullName"]);
 ?>
 <header id="header_section" class="header_sticky">
-    <div class="header_top" <?php print($background_color_one); ?> >
+    <div class="header_top" <?php print($background_color_one); ?>>
         <ul>
             <li>
                 <div class="gerenric_switch">
@@ -45,7 +45,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
     </div>
     <div class="header_sticky">
         <div class="header_bottom" <?php print($background_color_two); ?>>
-            <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo)?>" alt=""></a></div>
+            <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> Versand <span>Germany</span></div>
             <form class="header_search" name="frm_search" id="frm_search" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
@@ -66,24 +66,26 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
                         <div class="hdr_text">
-                            <a href="javascript:void(0)"><span> <?php print( isset($_SESSION["FullName"])? "Hi, ".$_SESSION["FullName"]: "Hello Login"); ?> </span>Account & List <i class="fa fa-caret-down"></i></a>
+                            <a href="javascript:void(0)"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> </span>Account & List <i class="fa fa-caret-down"></i></a>
                             <div class="account_nav">
                                 <ul>
                                     <li>
-                                    <?php if(!isset($_SESSION["FullName"])){ ?>
-                                        <div class="full_width txt_align_center mb-10"><a href="login.php"><div class="gerenric_btn">Login</div></a></div>
-                                        <div class="full_width txt_align_center">New Account? <a href="registration.php"><b>Create One here</b></a></div>
-                                    <?php } ?>
+                                        <?php if (!isset($_SESSION["FullName"])) { ?>
+                                            <div class="full_width txt_align_center mb-10"><a href="login.php">
+                                                    <div class="gerenric_btn">Login</div>
+                                                </a></div>
+                                            <div class="full_width txt_align_center">New Account? <a href="registration.php"><b>Create One here</b></a></div>
+                                        <?php } ?>
                                     </li>
                                     <li><span>My lists</span></li>
-                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "shopping_list.php": "javascript:void(0);"); ?>"> shopping list </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "shopping_list.php" : "javascript:void(0);"); ?>"> shopping list </a></li>
                                     <li><span>My Account</span></li>
-                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "personal_data.php": "javascript:void(0);"); ?>"> Personal Data <a href=""></a></li>
-                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "my_order.php": "javascript:void(0);"); ?>"> My Orders </a></li>
-                                    <li> <a href="<?php print( isset($_SESSION["FullName"])? "my_address.php": "javascript:void(0);"); ?>"> Addresses </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "personal_data.php" : "javascript:void(0);"); ?>"> Personal Data <a href=""></a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_order.php" : "javascript:void(0);"); ?>"> My Orders </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_address.php" : "javascript:void(0);"); ?>"> Addresses </a></li>
                                     <li>payment methods</li>
-                                    <?php if(isset($_SESSION["FullName"])){ ?>
-                                    <li><a href="logout.php">Logout</a></li>
+                                    <?php if (isset($_SESSION["FullName"])) { ?>
+                                        <li><a href="logout.php">Logout</a></li>
                                     <?php } ?>
                                 </ul>
                             </div>
@@ -91,7 +93,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
                     </li>
                     <li>
                         <div class="hdr_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
-                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print( isset($_SESSION['header_quantity'])?$_SESSION['header_quantity']:0 ); ?> Items</span>Cart</a></div>
+                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Items</span>Cart</a></div>
                         <div class="hdr_side_cart">
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">
@@ -102,7 +104,7 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
                                     </a></div>
                             </div>
                             <div class="side_cart_pd" id="show_card_body">
-                                
+
                             </div>
                         </div>
                     </li>
@@ -148,338 +150,92 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
             </div>
 
         </nav>
-        <?php if ($page == 0) { ?>
-            <div class="header_nav_2">
-                <ul>
-                    <li><a href="javascript:void(0)"><span>HOME & KITCHEN</span></a>
-                        <div class="sub_menu">
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <div class="sub_menu_div">
-                                    <div class="sub_menu_image"><img src="images/product_img1.jpg" alt=""></div>
-                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
+        <?php if ($page == 0) {
+            $Query1 = "SELECT sc.scat_id, sc.group_id, sc.scat_title_de AS scat_title, sc.scat_params_de AS scat_params FROM special_category AS sc WHERE sc.scat_status = '1' ORDER BY sc.scat_orderby ASC";
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if (mysqli_num_rows($rs1)) {
+        ?>
+                <div class="header_nav_2">
+                    <ul>
+                        <?php
+                        while ($row1 = mysqli_fetch_object($rs1)) {
+                        ?>
+                            <li><a href="javascript:void(0)"><span><?php print($row1->scat_title); ?></span></a>
+                                <div class="sub_menu">
+                                    <?php
+                                    $Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.group_id IN (" . $row1->group_id . ") ORDER BY cat.cat_id ASC";
+                                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                                    if (mysqli_num_rows($rs2)) {
+                                        //$row2 = mysqli_fetch_object($rs2);
+                                        $row22 = array();
+                                        while ($row2 = mysqli_fetch_object($rs2)) {
+                                            $row22[] = $row2;
+                                        }
+                                        for ($i = 0; $i < count($row22); $i++) {
+                                            //print(end($row2));die();
+                                    ?>
+                                            <div class="sub_menu_col">
+
+                                                <h3><a href="products.php?level_two=<?php print($row22[$i]->group_id); ?>"><?php print($row22[$i]->cat_title); ?></a></h3>
+                                                <ul>
+                                                    <?php
+                                                    $Query3 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.parent_id = '" . $row22[$i]->group_id . "' ORDER BY  RAND() LIMIT 0,6";
+                                                    $rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+                                                    if (mysqli_num_rows($rs3)) {
+                                                        while ($row3 = mysqli_fetch_object($rs3)) {
+                                                    ?>
+                                                            <li><a href="products.php?level_three=<?php print($row3->group_id); ?>"><?php print($row3->cat_title); ?></a></li>
+                                                    <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </ul>
+                                                <?php $i++;
+                                                if ($i < count($row22)) { ?>
+                                                    <h3><a href="products.php?level_two=<?php print($row22[$i]->group_id); ?>"><?php print($row22[$i]->cat_title); ?></a></h3>
+                                                    <ul>
+                                                        <?php
+                                                        $Query3 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.parent_id = '" . $row22[$i]->group_id . "' ORDER BY  RAND() LIMIT 0,6";
+                                                        $rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+                                                        if (mysqli_num_rows($rs3)) {
+                                                            while ($row3 = mysqli_fetch_object($rs3)) {
+                                                        ?>
+                                                                <li><a href="products.php?level_three=<?php print($row3->group_id); ?>"><?php print($row3->cat_title); ?></a></li>
+                                                        <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </ul>
+                                                <?php } ?>
+                                            </div>
+                                        <?php
+                                        }
+                                    }
+                                    $Query4 = "SELECT gi.gimg_id, gi.gimg_title_de AS gimg_title, gi.scat_id, gi.gimg_file FROM gallery_images AS gi WHERE gi.gimg_status = '1' AND gi.scat_id = '" . $row1->scat_id . "' ORDER BY gi.gimg_orderby ASC";
+                                    $rs4 = mysqli_query($GLOBALS['conn'], $Query4);
+                                    if (mysqli_num_rows($rs4)) {
+                                        while ($row4 = mysqli_fetch_object($rs4)) {
+                                        ?>
+                                            <div class="sub_menu_col">
+                                                <div class="sub_menu_div">
+                                                    <div class="sub_menu_image"><img src="<?php print($GLOBALS['siteURL'] . "files/gallery_images/special_category/" . $row4->scat_id . "/" . $row4->gimg_file); ?>" alt=""></div>
+                                                    <div class="sub_menu_title"><a href="javascript:void(0)"><?php print($row4->gimg_title); ?></a></div>
+                                                </div>
+                                            </div>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
                                 </div>
-                            </div>
-                            <div class="sub_menu_col">
-                                <div class="sub_menu_div">
-                                    <div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
-                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                                </div>
-                            </div>
-                            <div class="sub_menu_col">
-                                <div class="sub_menu_div">
-                                    <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
-                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li><a href="javascript:void(0)"><span>SPECIAL OFFERS</span></a></li>
-                    <li><a href="javascript:void(0)"><span>FURNITURE</span></a>
-                        <div class="sub_menu">
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <div class="sub_menu_div">
-                                    <div class="sub_menu_image"><img src="images/product_img2.jpg" alt=""></div>
-                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                                </div>
-                            </div>
-                            <div class="sub_menu_col">
-                                <div class="sub_menu_div">
-                                    <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
-                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li><a href="javascript:void(0)"><span>LARGE APPLIANCES</span></a>
-                        <div class="sub_menu">
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <div class="sub_menu_div">
-                                    <div class="sub_menu_image"><img src="images/pd_img1.jfif" alt=""></div>
-                                    <div class="sub_menu_title"><a href="javascript:void(0)">BEDROOOM</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li><a href="javascript:void(0)"><span>SMALL APPLIANCES</span></a>
-                        <div class="sub_menu">
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                            <div class="sub_menu_col">
-                                <h3><a href="javascript:void(0)">LIVING ROOM</a></h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                                <h3>LIVING ROOM</h3>
-                                <ul>
-                                    <li><a href="javascript:void(0)">Chairs</a></li>
-                                    <li><a href="javascript:void(0)">Sofas & Couches</a></li>
-                                    <li><a href="javascript:void(0)">Tables</a></li>
-                                    <li><a href="javascript:void(0)">Cabinets</a></li>
-                                    <li><a href="javascript:void(0)">Bookcases</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li><a href="javascript:void(0)"><span>COOKING & DINING</span></a></li>
-                    <li><a href="javascript:void(0)"><span>HOME TEXTILES</span></a></li>
-                    <li><a href="javascript:void(0)"><span>LIGHTING</span></a></li>
-                </ul>
-            </div>
-        <?php } ?>
+                            </li>
+                        <?php
+                        }
+                        ?>
+                        <!--<li><a href="javascript:void(0)"><span>LIGHTING</span></a></li>-->
+                    </ul>
+                </div>
+        <?php  }
+        } ?>
     </div>
 </header>
 <div class="header_overlay"></div>
@@ -513,25 +269,25 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
             }
 
             $.ajax({
-				url: 'ajax_calls.php?action=switch_click',
-				method: 'POST',
+                url: 'ajax_calls.php?action=switch_click',
+                method: 'POST',
                 data: {
-					utype_id: utype_id,
-					ci_total: ci_total
-				},
-				success: function(response) {
-					//console.log("response = "+response);
+                    utype_id: utype_id,
+                    ci_total: ci_total
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
                     const obj = JSON.parse(response);
-				    //console.log(obj.delivery_charges.total);
-                    if(obj.status == 1){
-                        if(obj.delivery_charges.tex > 0){
+                    //console.log(obj.delivery_charges.total);
+                    if (obj.status == 1) {
+                        if (obj.delivery_charges.tex > 0) {
                             $("#cart_subtotal").show();
                             $("#cart_vat").show();
-                        } else{
-                            if(obj.delivery_charges.total == 0 && obj.utype_id == 4){
+                        } else {
+                            if (obj.delivery_charges.total == 0 && obj.utype_id == 4) {
                                 $("#cart_subtotal").show();
                                 $("#cart_vat").show();
-                            } else{
+                            } else {
                                 $("#cart_subtotal").hide();
                                 $("#cart_vat").hide();
                             }
@@ -539,21 +295,21 @@ if(isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4){
                         let packing = (obj.delivery_charges.packing).toFixed(2)
                         let shipping = (obj.delivery_charges.shipping).toFixed(2)
                         let total = (obj.delivery_charges.total).toFixed(2)
-                        $("#packing").text("Packaging fee ("+packing.replace(".", ",")+" €)");
-                        $("#shipping").text("Shipping costs ("+shipping.replace(".", ",")+" €)");
-                        $("#total").text(total.replace(".", ",")+" €");
-                    } else{
-                        if(obj.utype_id == 4){
+                        $("#packing").text("Packaging fee (" + packing.replace(".", ",") + " €)");
+                        $("#shipping").text("Shipping costs (" + shipping.replace(".", ",") + " €)");
+                        $("#total").text(total.replace(".", ",") + " €");
+                    } else {
+                        if (obj.utype_id == 4) {
                             $("#cart_subtotal").show();
                             $("#cart_vat").show();
-                        } else{
+                        } else {
                             $("#cart_subtotal").hide();
                             $("#cart_vat").hide();
                         }
                     }
-                    
-				}
-			});
+
+                }
+            });
         });
     });
 </script>

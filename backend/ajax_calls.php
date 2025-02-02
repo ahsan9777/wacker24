@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include("../lib/openCon.php");
 include("../lib/functions.php");
 if (isset($_REQUEST['action'])) {
@@ -10,19 +7,22 @@ if (isset($_REQUEST['action'])) {
         case 'cat_title':
             $json = array();
             $where = "";
+            $sub_cat_title = 0;
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
                 if (isset($_REQUEST['parent_id']) && $_REQUEST['parent_id'] > 0) {
-                    $where .= " WHERE parent_id > '0' AND ( cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    $sub_cat_title = 1;
+                    $where .= " WHERE cat.parent_id > '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title FROM `category` AS cat LEFT OUTER JOIN category AS sub_cat ON sub_cat.parent_id = cat.parent_id  " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 } else {
-                    $where .= " WHERE parent_id = '0' AND ( cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    $where .= " WHERE cat.parent_id = '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title FROM `category` AS cat " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 }
             }
-            $Query = "SELECT cat_id, cat_title_de AS cat_title FROM `category` " . $where . " ORDER BY cat_id  LIMIT 0,20";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
                     'cat_id' => strip_tags(html_entity_decode($row->cat_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->cat_title, ENT_QUOTES, 'UTF-8'))
+                    'value' => strip_tags(html_entity_decode($row->cat_title. (($sub_cat_title > 0)? '( '.$row->sub_cat_title. ')' : ''), ENT_QUOTES, 'UTF-8'))
                 );
             }
             $jsonResults = json_encode($json);
