@@ -66,6 +66,7 @@ if (isset($_REQUEST['btnAdd'])) {
         $ban_details_de = "";
         $mfileName = "";
         $mfile_path = "";
+        $ext = "";
         $formHead = "Add New";
     }
 }
@@ -168,11 +169,11 @@ include("includes/messages.php");
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Heading Color (Like: #fff)</label>
-                                    <input type="text" class="input_style" name="ban_heading_color" id="ban_heading_color" value="<?php print($ban_heading_color); ?>" placeholder="Heading Color (Like: #fff)">
+                                    <input type="text" class="input_style" name="ban_heading_color" id="ban_heading_color" value="<?php print($ban_heading_color); ?>" placeholder="#fff">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Detail Color (Like: #fff)</label>
-                                    <input type="text" class="input_style" name="ban_detail_color" id="ban_detail_color" value="<?php print($ban_detail_color); ?>" placeholder="Detail Color (Like: #fff)">
+                                    <input type="text" class="input_style" name="ban_detail_color" id="ban_detail_color" value="<?php print($ban_detail_color); ?>" placeholder="#fff">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Button Link</label>
@@ -180,11 +181,11 @@ include("includes/messages.php");
                                 </div>
                                 <div class="col-md-3 col-12 mt-3">
                                     <label for="">Button Background Color (Like: #fff)</label>
-                                    <input type="text" required class="input_style ban_background_color" name="ban_background_color" id="ban_background_color" value="<?php print($ban_background_color); ?>" placeholder="Button Background Color (Like: #fff)">
+                                    <input type="text" required class="input_style ban_background_color" name="ban_background_color" id="ban_background_color" value="<?php print($ban_background_color); ?>" placeholder="#fff">
                                 </div>
                                 <div class="col-md-3 col-12 mt-3">
                                     <label for="">Button Text Color (Like: #fff)</label>
-                                    <input type="text" required class="input_style ban_text_color" name="ban_text_color" id="ban_text_color" value="<?php print($ban_text_color); ?>" placeholder="Button Text Color (Like: #fff)">
+                                    <input type="text" required class="input_style ban_text_color" name="ban_text_color" id="ban_text_color" value="<?php print($ban_text_color); ?>" placeholder="#fff">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Heading EN</label>

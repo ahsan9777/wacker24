@@ -148,7 +148,7 @@ include("includes/messages.php");
                                         <th>Title </th>
                                         <th>Category </th>
                                         <th width="50">Status</th>
-                                        <th width="50">Action</th>
+                                        <th width="90">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -181,6 +181,7 @@ include("includes/messages.php");
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "&scat_id=" . $row->scat_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                    <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="Add Image" onClick="javascript: window.location = '<?php print("manage_special_category_images.php?action=1&scat_id=" . $row->scat_id); ?>';"><span class="material-icons icon material-xs">add_a_photo</span></button>
                                                 </td>
                                             </tr>
                                     <?php

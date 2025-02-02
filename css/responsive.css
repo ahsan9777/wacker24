@@ -5,6 +5,7 @@
 }
 @media screen and (max-width: 1024px) and (min-width: 240px){
     .page_width{width: 100%; padding: 0px 15px;}
+    #footer_section .page_width{max-width: 100%; padding: 0px 15px;}
     .gerenric_form ul li .form_left{width: 100%; padding-right: 0px; margin-bottom: 15px;}
     .gerenric_form ul li .form_right{width: 100%; padding-left: 0px;}
     .gerenric_product_category {margin: 0px -10px;}
