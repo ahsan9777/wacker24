@@ -151,7 +151,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
 
         </nav>
         <?php if ($page == 0) {
-            $Query1 = "SELECT sc.scat_id, sc.group_id, sc.scat_title_de AS scat_title, sc.scat_params_de AS scat_params FROM special_category AS sc WHERE sc.scat_status = '1' ORDER BY sc.scat_orderby ASC";
+            $Query1 = "SELECT sc.scat_id, sc.group_id, sc.scat_title_de AS scat_title, sc.scat_params_de AS scat_params FROM special_category AS sc WHERE sc.scat_status = '1' AND sc.group_id != '' ORDER BY sc.scat_orderby ASC";
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
             if (mysqli_num_rows($rs1)) {
         ?>

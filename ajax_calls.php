@@ -292,7 +292,7 @@ if (isset($_REQUEST['action'])) {
 
             $appointment_schedule = "";
             $count = 0;
-            while ($start_time <= $end_time) {
+            while ($start_time < $end_time) {
                 $count++;
                 $next_time = strtotime("+" . $_REQUEST['as_duration'] . " minutes", $start_time);
                 if (time() > $start_time && $_REQUEST['selected_date'] == date('Y-m-d')) {
