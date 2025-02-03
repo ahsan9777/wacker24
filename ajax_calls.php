@@ -155,10 +155,27 @@ if (isset($_REQUEST['action'])) {
                 $count = 0;
                 $cart_amount = 0;
                 $Query = "SELECT ci.*, pg.pg_mime_source FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                //print($Query);
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     $_SESSION['header_quantity'] = $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);
                     while ($row = mysqli_fetch_object($rs)) {
+
+                        $pq_quantity = 0;
+                        $Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                        if (mysqli_num_rows($rs1) > 0) {
+                            $row1 = mysqli_fetch_object($rs1);
+                            $pq_quantity = $row1->pq_quantity;
+                            $pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+                            $pq_status = $row1->pq_status;
+                            if ($pq_quantity == 0 && $pq_status == 'true') {
+                                $pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
+                            } elseif ($pq_quantity > 0 && $pq_status == 'false') {
+                                $pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;
+                            }
+                        }
+
                         $cart_amount = $cart_amount + $row->ci_total;
                         $gst = $row->ci_amount * config_gst;
                         $gst_orignal = $row->pbp_price_amount * config_gst;
@@ -182,8 +199,9 @@ if (isset($_REQUEST['action'])) {
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
-                                            <input type="number" class="qlt_number" value="' . $row->ci_qty . '">
+                                            <input type="number" class="qlt_number" id = "ci_qty_' . $row->ci_id . '" data-id = "' . $row->ci_id . '" value="' . $row->ci_qty . '" onkeyup="if(this.value === \'\' || parseFloat(this.value) <= 0) { this.value = 0; } else if (parseFloat(this.value) > ' . ($pq_quantity + $row->ci_qty) . ') { this.value = ' . ($pq_quantity + $row->ci_qty) . '; return false; }" min="1" max="' . $pq_quantity . '">
                                         </div>
+
                                         <div class="side_pd_delete"><a  class = "item_deleted" data-id = "' . $row->ci_id . '" href="javascript:void(0)"><i class="fa fa-trash"></i></a></div>
                                     </div>
                                 </div>
@@ -209,6 +227,30 @@ if (isset($_REQUEST['action'])) {
                                         }
                                     });
                                 });
+                                $(".qlt_number").on("change", function(){
+                                    //console.log("ci_qty");
+                                    let ci_id = $(this).attr("data-id");
+                                    let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
+                                    //console.log("ci_qty: "+ci_qty);
+                                    $.ajax({
+                                        url: "ajax_calls.php?action=item_ci_qty",
+                                        method: "POST",
+                                        data:{
+                                            ci_id: ci_id,
+                                            ci_qty: ci_qty
+                                        },
+                                        success: function(response) {
+                                            //console.log("response = "+response);
+                                            const obj = JSON.parse(response);
+                                            //console.log(obj);
+                                            if(obj.status == 1){
+                                                $(".side_cart_click").trigger("click");
+                                            } else{
+                                             $(".side_cart_click").trigger("click");
+                                            }
+                                        }
+                                    });
+                                });
                                 </script>
                         ';
                     }
@@ -224,6 +266,56 @@ if (isset($_REQUEST['action'])) {
             print($jsonResults);
             break;
 
+        case 'item_ci_qty':
+            //print_r($_REQUEST['ci_qty']);die();
+            $retValue = array();
+            if (isset($_REQUEST['ci_id']) && $_REQUEST['ci_id'] > 0) {
+                if (isset($_REQUEST['ci_qty']) && $_REQUEST['ci_qty'] > 0) {
+                    $cart_id = $_SESSION['cart_id'];
+                    $Query = "SELECT * FROM cart_items WHERE ci_id = '" . $_REQUEST['ci_id'] . "' ";
+                    $rs = mysqli_query($GLOBALS['conn'], $Query);
+                    if (mysqli_num_rows($rs) > 0) {
+                        $row = mysqli_fetch_object($rs);
+
+                        //$cart_quantity = returnName("ci_qty","cart_items", "ci_id", $row->ci_id);
+                        $get_pro_price = get_pro_price($row->pro_id, $row->supplier_id, $_REQUEST['ci_qty']);
+                        //print_r($get_pro_price);
+                        $pbp_id = $get_pro_price['pbp_id'];
+                        $pbp_price_amount = $get_pro_price['ci_amount'];
+                        $ci_amount = $get_pro_price['ci_amount'];
+                        $ci_discount_type = $row->ci_discount_type;
+                        $ci_discount_value = $row->ci_discount_value;
+                        $ci_discounted_amount = 0;
+                        $ci_discount = 0;
+                        if ($ci_discount_value > 0) {
+                            $ci_discounted_amount_gross = 0;
+                            $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value);
+                            $ci_discounted_amount = $pbp_price_amount - $ci_amount;
+
+                            $ci_discounted_amount_gross = $ci_discounted_amount * ($_REQUEST['ci_qty']);
+                            $ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * config_gst);
+                        }
+                        $ci_gross_total = $ci_amount * ($_REQUEST['ci_qty']);
+                        $ci_gst = $ci_gross_total * config_gst;
+                        $ci_total = $ci_gross_total + $ci_gst;
+
+                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'] . "',  ci_gross_total =  '$ci_gross_total' , ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                        $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
+                        $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
+                        if ($updated_cart_item == true && $update_cart == true) {
+                            //echo "success";
+                            $retValue = array("status" => "1", "message" => "Record of cart quantity updated successfully!");
+                        } else {
+                            $retValue = array("status" => "0", "message" => "Record of cart quantity not updated!");
+                        }
+                    }
+                }
+            } else {
+                $retValue = array("status" => "0", "message" => "parameter not selected");
+            }
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
         case 'item_deleted':
             //echo "DELETE FROM cart_items WHERE ci_id='".$_REQUEST['ci_id']."'";
             //print_r($_REQUEST);die();
@@ -352,7 +444,7 @@ if (isset($_REQUEST['action'])) {
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
-                    'value' => strip_tags(html_entity_decode($row->zc_zipcode." ".$row->zc_town, ENT_QUOTES, 'UTF-8'))
+                    'value' => strip_tags(html_entity_decode($row->zc_zipcode . " " . $row->zc_town, ENT_QUOTES, 'UTF-8'))
                 );
             }
             $jsonResults = json_encode($json);
