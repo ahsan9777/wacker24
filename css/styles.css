@@ -276,6 +276,7 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_account ul li .hdr_text span{display: block; font-weight: 500; color: #fffc04; font-size: 12px;}
 #header_section .header_bottom .header_account ul li .hdr_text a{color: #fff;}
 #header_section .header_bottom .header_account ul li a::after{width: 100%; min-height: 40px; top: -9px; border-radius: 4px; left: -5px; border: 1px solid #fff;  display: none; content: ''; position: absolute; padding: 5px;}
+#header_section .header_bottom .header_account ul li .href_login::after{border: none;}
 #header_section .header_bottom .header_account ul li a:hover::after{display: block;}
 #header_section .header_bottom .header_location{font-size: 12px; position: relative; padding: 0px 5px; color: #fff; display: flex; align-items: center;}
 #header_section .header_bottom .header_location .fa{font-size: 20px;color: #fffc04; margin-right: 5px;}

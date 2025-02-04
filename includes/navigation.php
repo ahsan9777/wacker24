@@ -71,7 +71,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                 <ul>
                                     <li>
                                         <?php if (!isset($_SESSION["FullName"])) { ?>
-                                            <div class="full_width txt_align_center mb-10"><a href="login.php">
+                                            <div class="full_width txt_align_center mb-10"><a class="href_login" href="login.php" >
                                                     <div class="gerenric_btn">Login</div>
                                                 </a></div>
                                             <div class="full_width txt_align_center">New Account? <a href="registration.php"><b>Create One here</b></a></div>
