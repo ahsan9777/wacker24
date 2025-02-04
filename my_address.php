@@ -7,7 +7,10 @@ if (isset($_REQUEST['btnAdd']) || isset($_REQUEST['btn_Addbilling'])) {
 		$usa_type = 1;
 	}
 	$usa_id = getMaximum("user_shipping_address", "usa_id");
-	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_type, usa_fname, usa_lname, usa_additional_info, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id) VALUES ('" . $usa_id . "', '" . $_SESSION["UID"] . "', '" . $usa_type . "', '" . dbStr(trim($_REQUEST['usa_fname'])) . "',  '" . dbStr(trim($_REQUEST['usa_lname'])) . "', '" . dbStr(trim($_REQUEST['usa_additional_info'])) . "', '" . dbStr(trim($_REQUEST['usa_street'])) . "', '" . dbStr(trim($_REQUEST['usa_house_no'])) . "', '" . dbStr(trim($_REQUEST['usa_zipcode'])) . "', '" . dbStr(trim($_REQUEST['usa_contactno'])) . "', '" . dbStr(trim($_REQUEST['countries_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
+	$usa_defualt = returnName("usa_id", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'");
+	//print($usa_defualt);die();
+	if(empty($usa_defualt) && $usa_type == 0){ $usa_defualt = 1; } else { $usa_defualt = 0; }
+	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_type, usa_fname, usa_lname, usa_additional_info, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id, usa_defualt) VALUES ('" . $usa_id . "', '" . $_SESSION["UID"] . "', '" . $usa_type . "', '" . dbStr(trim($_REQUEST['usa_fname'])) . "',  '" . dbStr(trim($_REQUEST['usa_lname'])) . "', '" . dbStr(trim($_REQUEST['usa_additional_info'])) . "', '" . dbStr(trim($_REQUEST['usa_street'])) . "', '" . dbStr(trim($_REQUEST['usa_house_no'])) . "', '" . dbStr(trim($_REQUEST['usa_zipcode'])) . "', '" . dbStr(trim($_REQUEST['usa_contactno'])) . "', '" . dbStr(trim($_REQUEST['countries_id'])) . "', '".$usa_defualt."')") or die(mysqli_error($GLOBALS['conn']));
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 }
 
