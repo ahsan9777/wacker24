@@ -24,8 +24,10 @@ if (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0) {
 }
 
 $pro_type = 0;
+$pro_typeURL = "";
 if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 	$pro_type = $_REQUEST['pro_type'];
+	$pro_typeURL .= "pro_type=".$_REQUEST['pro_type']."&";
 	$qryStrURL .= "pro_type=".$_REQUEST['pro_type']."&";
 }
 

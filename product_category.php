@@ -2,10 +2,12 @@
 include("includes/php_includes_top.php");
 $pro_type = 0;
 //$qryStrURL = "";
+$pro_typeURL = "";
 $level_one = $_REQUEST['level_one'];
 if($_REQUEST['level_one'] == 20){
 	$pro_type = $_REQUEST['level_one'];
 	$level_one = 19;
+	$pro_typeURL = "pro_type=".$_REQUEST['level_one']."&";
 	$qryStrURL = "pro_type=".$_REQUEST['level_one']."&";
 }
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
@@ -59,20 +61,21 @@ if($_REQUEST['level_one'] == 20){
 											}
 									?>
 											<div class="pd_card">
-												<div class="pd_image"><a href="products.php?level_two=<?php print($row1->group_id."&".$qryStrURL); ?>">
+												<div class="pd_image"><a href="products.php?level_two=<?php print($row1->group_id."&".$pro_typeURL); ?>">
 														<div class="pd_image_inner"><img src="<?php print($pg_mime_source_href); ?>" alt=""></div>
 													</a></div>
 												<div class="pd_detail">
-													<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id."&".$qryStrURL); ?>"> <?php print($row1->cat_title); ?> </a></div>
+													<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id."&".$pro_typeURL); ?>"> <?php print($row1->cat_title); ?> </a></div>
 													<ul>
 														<?php
-														$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, (SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) AS count_sub_group_ids FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' HAVING count_sub_group_ids > 0 ORDER BY  RAND() LIMIT 0,3";
+														//$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, (SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) AS count_sub_group_ids FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' HAVING count_sub_group_ids > 0 ORDER BY  RAND() LIMIT 0,3";
+														$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) ORDER BY  RAND() LIMIT 0,3";
 														//print($Query2);die();
 														$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
 														if (mysqli_num_rows($rs2) > 0) {
 															while ($row2 = mysqli_fetch_object($rs2)) {
 														?>
-																<li><a href="products.php?level_three=<?php print($row2->group_id."&".$qryStrURL); ?>"> <?php print($row2->cat_title); ?> </a></li>
+																<li><a href="products.php?level_three=<?php print($row2->group_id."&".$pro_typeURL); ?>"> <?php print($row2->cat_title); ?> </a></li>
 														<?php
 															}
 														}

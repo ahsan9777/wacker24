@@ -1,6 +1,6 @@
 <?php
 $leve_id = 11;
-$left_filter_cat_subQuery = "(SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) AS count_sub_group_ids";
+$left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) )";
 if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) || (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0)) {
     if (isset($_REQUEST['level_two'])) {
 
@@ -21,7 +21,8 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             $leve_id = 19;
             $left_filter_cat_title = "Schulranzen";
         }
-        $left_filter_cat_subQuery = "(SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) ) AS count_sub_group_ids";
+        //$left_filter_cat_subQuery = "(SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) ) AS count_sub_group_ids";
+        $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
     //}
 }
 ?>
@@ -34,7 +35,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             <ul class="list_checkbox_hide">
                 <?php
                 //$Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE parent_id = '" . $leve_id . "' ORDER BY group_id ASC ";
-                $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, ".$left_filter_cat_subQuery." FROM category AS cat WHERE cat.parent_id = '" . $leve_id . "' HAVING count_sub_group_ids > 0 ORDER BY cat.group_id ASC ";
+                $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.parent_id = '" . $leve_id . "' ".$left_filter_cat_WhereQuery." ORDER BY cat.group_id ASC ";
                 //print($Query);
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
@@ -45,7 +46,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
                             $cat_link = "products.php?level_three=" . $row->group_id;
                         }
                 ?>
-                        <li><a href=" <?php print($cat_link."&".$qryStrURL); ?> "> <?php print($row->cat_title); ?> </a></li>
+                        <li><a href=" <?php print($cat_link."&".$pro_typeURL); ?> "> <?php print($row->cat_title); ?> </a></li>
                 <?php
                     }
                 }
