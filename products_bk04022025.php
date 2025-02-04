@@ -22,14 +22,6 @@ if (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0) {
 	//print_r($special_price);
 	//}
 }
-
-$pro_type = 0;
-if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
-	$pro_type = $_REQUEST['pro_type'];
-	$qryStrURL .= "pro_type=".$_REQUEST['pro_type']."&";
-}
-
-
 ?>
 <!doctype html>
 <html lang="de">
@@ -63,7 +55,7 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 									<?php
 
 
-									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' " . $whereclause . " AND cm.cm_type = '".$pro_type."' ";
+									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' " . $whereclause . " ";
 									//print($Query);die();
 									$counter = 0;
 									$limit = 24;
@@ -77,7 +69,7 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 											$counter++;
 									?>
 											<div class="pd_card">
-												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print($row->pg_mime_source_url); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" alt=""></a></div>
 												<div class="pd_detail">
 													<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">

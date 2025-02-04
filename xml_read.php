@@ -1,5 +1,5 @@
 <?php
-$xml = simplexml_load_file("lagersortiment_standard.xml") or die("Error: Cannot create object");
+$xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
         case 'catalog':
@@ -14,8 +14,18 @@ if (isset($_REQUEST['action'])) {
             break;
         case 'artical':
             print('<pre>');
-            print_r($xml->T_NEW_CATALOG->ARTICLE);
+            print_r($xml->T_NEW_CATALOG->PRODUCT);
             // $i = 0;
+            //foreach ($xml->T_NEW_CATALOG->ARTICLE as $rl) {
+              //  echo $i++." ".$rl->SUPPLIER_AID.PHP_EOL;
+            //}
+            print('</pre>');
+            break;
+        case 'schulranzen_artical':
+            $xml = simplexml_load_file("BMEcat2005_schulranzen.xml") or die("Error: Cannot create object");
+            print('<pre>');
+            print_r($xml->T_NEW_CATALOG->PRODUCT);
+            // $i = 0; <PRODUCT mode="new">
             //foreach ($xml->T_NEW_CATALOG->ARTICLE as $rl) {
               //  echo $i++." ".$rl->SUPPLIER_AID.PHP_EOL;
             //}

@@ -8,6 +8,10 @@ if (mysqli_num_rows($rs) > 0) {
 	$row = mysqli_fetch_object($rs);
 
 	$pro_id = $row->pro_id;
+	$pro_type = $row->pro_type;
+	if($pro_type > 0){
+		$qryStrURL = "pro_type=".$pro_type."&";
+	}
 	$supplier_id = $row->supplier_id;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
 	$pro_description_short = $row->pro_description_short;
@@ -74,9 +78,14 @@ if (mysqli_num_rows($rs) > 0) {
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="product_category.php?level_one=<?php print($cat_id_one); ?>"> <?php print($cat_title_one); ?> </a></li>
-						<li><a href="products.php?level_two=<?php print($cat_id_two); ?>"> <?php print($cat_title_two); ?> </a></li>
-						<li><a href="products.php?level_three=<?php print($cat_id_three); ?>"> <?php print($cat_title_three); ?> </a></li>
+						<?php
+						if($pro_type > 0){?>
+						<li><a href="product_category.php?level_one=20"> Schulranzen </a></li>
+						<?php } else { ?>
+							<li><a href="product_category.php?level_one=<?php print($cat_id_one); ?>"> <?php print($cat_title_one); ?> </a></li>
+						<?php } ?>
+						<li><a href="products.php?level_two=<?php print($cat_id_two."&".$qryStrURL); ?>"> <?php print($cat_title_two); ?> </a></li>
+						<li><a href="products.php?level_three=<?php print($cat_id_three."&".$qryStrURL); ?>"> <?php print($cat_title_three); ?> </a></li>
 					</ul>
 				</div>
 			</div>
@@ -100,7 +109,7 @@ if (mysqli_num_rows($rs) > 0) {
 										<div class="thum_images">
 											<div class="simpleLens-thumbnails-container">
 												<?php
-												$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+												$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' AND pg_mime_purpose != 'others' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
 												$rs = mysqli_query($GLOBALS['conn'], $Query);
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {

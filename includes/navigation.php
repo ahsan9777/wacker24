@@ -125,7 +125,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     }
                 }
                 ?>
-                <li><a href="javascript:void(0);">Satchel</a></li>
+                <li><a href="product_category.php?level_one=20">Schulranzen</a></li>
                 <li><a href="javascript:void(0);" class="nav_sale">Sales & Offers</a></li>
             </ul>
             <div class="nav_submenu">
@@ -144,7 +144,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         }
                     }
                     ?>
-                    <li><a href="javascript:void(0);">Satchel</a></li>
+                    <li><a href="product_category.php?level_one=20">Schulranzen</a></li>
                 </ul>
                 <div class="nav_overlay"></div>
             </div>
