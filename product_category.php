@@ -41,6 +41,9 @@ if($_REQUEST['level_one'] == 20){
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
 						<?php include("includes/left_filter.php"); ?>
 						<div class="pd_right">
+						    <div class="product_category_heading">
+								<h1> <?php print( returnName("cat_title_de AS cat_title", "category", "group_id", $level_one)) ?> </h1>
+							</div>
 							<div class="product_category">
 								<h2>Featured Categories</h2>
 								<div class="product_category_inner">
@@ -89,7 +92,7 @@ if($_REQUEST['level_one'] == 20){
 									?>
 								</div>
 							</div>
-							<div class="gerenric_white_box gray_bg">
+							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
 									<h2>New Products</h2>
 									<div class="gerenric_slider">
@@ -140,7 +143,7 @@ if($_REQUEST['level_one'] == 20){
 										$rs = mysqli_query($GLOBALS['conn'], $Query);
 										if (mysqli_num_rows($rs) > 0) {
 											?>
-							<div class="gerenric_white_box gray_bg">
+							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
 									<h2>Best-selling products</h2>
 									<div class="gerenric_slider">
@@ -180,7 +183,7 @@ if($_REQUEST['level_one'] == 20){
 								</div>
 							</div>
 							<?php } ?>
-							<div class="gerenric_white_box gray_bg">
+							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
 									<h2>Similar products</h2>
 									<div class="gerenric_slider">
@@ -225,7 +228,7 @@ if($_REQUEST['level_one'] == 20){
 									<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
 								</div>
 							</div>
-							<div class="gerenric_white_box gray_bg">
+							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
 									<h2>product references</h2>
 									<div class="gerenric_slider">

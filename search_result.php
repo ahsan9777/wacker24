@@ -69,7 +69,7 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 									$Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short, cm.sub_group_ids, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source FROM products AS pro LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE " . $whereclause . " ";
 									//print($Query);die();
 									$counter = 0;
-									$limit = 24;
+									$limit = 30;
 									$start = $p->findStart($limit);
 									$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
 									$pages = $p->findPages($count, $limit);
@@ -94,7 +94,7 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 											//print_r($special_price);
 											//}
 									?>
-											<div class="pd_card">
+											<div class="pd_card pd_card_five">
 												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" alt=""></a></div>
 												<div class="pd_detail">
 													<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
@@ -136,10 +136,9 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 									?>
 								</div>
 								<?php if ($counter > 0) { ?>
-									<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0px;">
 										<tr>
-											<td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
-											<td align="right">
+											<td align="center">
 												<ul class="pagination" style="margin: 0px;">
 													<?php
 													$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);

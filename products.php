@@ -120,10 +120,9 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 									?>
 								</div>
 								<?php if ($counter > 0) { ?>
-									<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0px;">
 										<tr>
-											<td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
-											<td align="right">
+											<td align="center">
 												<ul class="pagination" style="margin: 0px;">
 													<?php
 													$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
@@ -134,6 +133,17 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 										</tr>
 									</table>
 								<?php } ?>
+								<style>
+
+								</style>
+								<div class="need_help">
+									<h2>Do you need help?</h2>
+									<div class="need_help_ref">
+										<a href="javascript:void(0);">Visit the help section</a>
+										<p>Or</p>
+										<a href="javascript:void(0);">contact us</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

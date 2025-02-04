@@ -31,7 +31,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         <h2>Category <div class="categroy_close_mb">X</div>
         </h2>
         <div class="categroy_block">
-            <h3> <?php print($left_filter_cat_title); ?> </h3>
+            <!--<h3> <?php print($left_filter_cat_title); ?> </h3>-->
             <ul class="list_checkbox_hide">
                 <?php
                 //$Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE parent_id = '" . $leve_id . "' ORDER BY group_id ASC ";
