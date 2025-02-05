@@ -94,11 +94,6 @@
     .appointment_date_booking .appointment_section1 .appointment_col{width: 50%; padding: 8px;}
     .contact_page .contact_col{width: 100%; padding: 0px; margin-bottom: 20px;}
     .contact_block h3{font-size: 18px;}
-    .grnc_tabnav_tabs > li{width: 100%;}
-    .new_shopping_list_page .shopping_list_left{width: 100%; padding-bottom: 10px; margin-bottom: 30px; border-bottom: 1px solid #ccc;}
-    .new_shopping_list_page .shopping_list_right {width: calc(100% - 0px);padding-left: 0px;}
-    .new_shopping_list_page .shopping_list_detail .list_porduct .gerenric_product .pd_card {width: calc(33.333% - 4px);}
-
     #footer_section .footer_top h2{margin-bottom: 10px;}
     #footer_section .footer_top .footer-col{width: 50%; margin-bottom: 20px;}
     #footer_section .subscribe_newsletter_btn{min-width: inherit; padding: 10px;}
@@ -129,13 +124,7 @@
     .appointment_booking .appointment_row .appointment_card .appintment_detail{width: calc(100% - 70px); }
     .appointment_date_booking .appointment_section1 .appointment_col{width: 100%; padding: 8px;}
     .appointment_date_booking .appointment_section1 .appointment_card{min-height: auto;}
-    .new_shopping_list_page .shopping_list_detail .list_porduct .gerenric_product .pd_card {width: calc(50% - 4px);}
-    .new_shopping_list_page .shopping_list_detail .list_porduct.list_class .gerenric_product .pd_image{width: 80px;margin-bottom: 0px;}
-.new_shopping_list_page .shopping_list_detail .list_porduct.list_class .gerenric_product .pd_detail{width: calc(100% - 80px); padding-left: 10px;}
-.gerenric_product .pd_detail .pd_action ul{flex-wrap: wrap;}
-.gerenric_product .pd_detail .pd_action ul li:last-child{width: 100%;}
-.gerenric_product .pd_detail .pd_action ul li:last-child::after{display: none;}
-#footer_section .footer_top{margin-bottom: 0px;}
+    #footer_section .footer_top{margin-bottom: 0px;}
     #footer_section .footer_top .footer-col{width: 100%;}
     #footer_section .footer_top .footer_payment_method{width: 250px;}
 }

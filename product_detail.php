@@ -9,8 +9,8 @@ if (mysqli_num_rows($rs) > 0) {
 
 	$pro_id = $row->pro_id;
 	$pro_type = $row->pro_type;
-	if($pro_type > 0){
-		$qryStrURL = "pro_type=".$pro_type."&";
+	if ($pro_type > 0) {
+		$qryStrURL = "pro_type=" . $pro_type . "&";
 	}
 	$supplier_id = $row->supplier_id;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
@@ -43,16 +43,16 @@ if (mysqli_num_rows($rs) > 0) {
 }
 
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-	$special_price = user_special_price("supplier_id", $supplier_id);
+$special_price = user_special_price("supplier_id", $supplier_id);
 
-	if (!$special_price) {
-		$special_price = user_special_price("level_two", $cat_id_two);
-	}
+if (!$special_price) {
+	$special_price = user_special_price("level_two", $cat_id_two);
+}
 
-	if (!$special_price) {
-		$special_price = user_special_price("level_one", $cat_id_one);
-	}
-	//print_r($special_price);
+if (!$special_price) {
+	$special_price = user_special_price("level_one", $cat_id_one);
+}
+//print_r($special_price);
 //}
 ?>
 <!doctype html>
@@ -68,6 +68,24 @@ if (mysqli_num_rows($rs) > 0) {
 		<!--LOCATION_POPUP_START-->
 		<?php include("includes/popup.php"); ?>
 		<!--LOCATION_POPUP_END-->
+		<!--CREATE_LIST_POPUP_START-->
+		<div class="create_list_popup">
+			<div class="inner_popup">
+				<div class="create_list_content">
+					<div class="create_list_heading">Create List <div class="create_list_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="create_list_content_inner">
+						<p>Delivery options and delivery speeds may vary for different locations</p>
+						<input type="text" class="input_list">
+						<div class="create_button">
+							<div class="gerenric_btn create_list_close">Cancel</div>
+							<div class="gerenric_btn">ADD</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--CREATE_LIST_POPUP_END-->
 
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
@@ -79,13 +97,13 @@ if (mysqli_num_rows($rs) > 0) {
 				<div class="breadcrumb_inner">
 					<ul>
 						<?php
-						if($pro_type > 0){?>
-						<li><a href="product_category.php?level_one=20"> Schulranzen </a></li>
+						if ($pro_type > 0) { ?>
+							<li><a href="product_category.php?level_one=20"> Schulranzen </a></li>
 						<?php } else { ?>
 							<li><a href="product_category.php?level_one=<?php print($cat_id_one); ?>"> <?php print($cat_title_one); ?> </a></li>
 						<?php } ?>
-						<li><a href="products.php?level_two=<?php print($cat_id_two."&".$qryStrURL); ?>"> <?php print($cat_title_two); ?> </a></li>
-						<li><a href="products.php?level_three=<?php print($cat_id_three."&".$qryStrURL); ?>"> <?php print($cat_title_three); ?> </a></li>
+						<li><a href="products.php?level_two=<?php print($cat_id_two . "&" . $qryStrURL); ?>"> <?php print($cat_title_two); ?> </a></li>
+						<li><a href="products.php?level_three=<?php print($cat_id_three . "&" . $qryStrURL); ?>"> <?php print($cat_title_three); ?> </a></li>
 					</ul>
 				</div>
 			</div>
@@ -172,8 +190,8 @@ if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 											if (!empty($special_price)) {
 									?>
-												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> > From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> "); ?> </div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> "); ?> </div>
 											<?php } else { ?>
 												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
 												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
@@ -220,9 +238,9 @@ if (mysqli_num_rows($rs) > 0) {
 									<div class="order_btn">
 										<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>">
 										<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>">
-										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print( (!empty($special_price))? $special_price['usp_price_type'] : '0' ); ?>">
-										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print( (!empty($special_price))? $special_price['usp_discounted_value'] : '0' ); ?>">
-										<a class="<?php print(($quantity_lenght > 0)?'add_to_card':''); ?>" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
+										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
+										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
+										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
 											<div class="gerenric_btn">Add to Cart</div>
 										</a>
 									</div>
@@ -233,10 +251,25 @@ if (mysqli_num_rows($rs) > 0) {
 										<div class="shippment_text"><span>Shipment</span> Wacker 24</div>
 										<div class="shippment_text"><a href="javascript:void(0)"><i class="fa fa-map-marker" aria-hidden="true"></i>
 												<div class="location_text location_trigger">Update Delivery to Location</div>
-											</a></div>
-										<div class="shippment_btn"><a href="javascript:void(0)">
-												<div class="gerenric_btn">In the shopping lists</div>
-											</a></div>
+											</a>
+										</div>
+									</div>
+									<div class="product_create_liste">
+										<div class="drop-down">
+											<div class="selected">
+												<a href="javascript:void(0)"><span>Add to list</span></a>
+											</div>
+											<div class="options">
+												<ul>
+													<li><a href="javascript:void(0)">Add To List 1</a></li>
+													<li><a href="javascript:void(0)">Add To List 2</a></li>
+													<li><a href="javascript:void(0)">Add To List 3</a></li>
+													<li>
+														<div class="create_other_list create_list_trigger">+ Create another list</div>
+													</li>
+												</ul>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -255,7 +288,7 @@ if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 											if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 												$cat_id_two = substr($cat_id_three, 0, 3);
-            									$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
+												$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
 												$special_price = user_special_price("level_two", $cat_id_two);
 												if (!$special_price) {
 													$special_price = user_special_price("level_one", $cat_id_one);
@@ -279,9 +312,9 @@ if (mysqli_num_rows($rs) > 0) {
 																</li>
 															</ul>
 														</div>
-														<?php if(!empty($special_price)) { ?>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print( "<del>".$row->pbp_price_without_tax."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value'])."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print( "<del>".$row->pbp_price_amount."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'])."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
+														<?php if (!empty($special_price)) { ?>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 														<?php } else { ?>
 															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
 															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
@@ -295,6 +328,116 @@ if (mysqli_num_rows($rs) > 0) {
 									?>
 								</div>
 								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="product_detail_section2 margin_top_30">
+					<div class="gerenric_white_box padding_left_right_10">
+						<div class="gerenric_product mostviewed full_column">
+							<h2>Similar products</h2>
+							<div class="gerenric_slider_mostviewed">
+								<?php
+								$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($row = mysqli_fetch_object($rs)) {
+										if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+											$cat_id_two = substr($cat_id_three, 0, 3);
+											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
+											$special_price = user_special_price("level_two", $cat_id_two);
+											if (!$special_price) {
+												$special_price = user_special_price("level_one", $cat_id_one);
+											}
+											//print_r($special_price);
+										}
+								?>
+										<div>
+											<div class="pd_card txt_align_left">
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print($row->pg_mime_source_url); ?>" alt=""></a></div>
+												<div class="pd_detail">
+													<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+													<div class="pd_rating">
+														<ul>
+															<li>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+															</li>
+														</ul>
+													</div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+													<?php } else { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+								<?php
+									}
+								}
+								?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="product_detail_section2">
+					<div class="gerenric_white_box padding_left_right_10">
+						<div class="gerenric_product mostviewed full_column">
+							<h2>Similar products</h2>
+							<div class="gerenric_slider_mostviewed">
+								<?php
+								$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($row = mysqli_fetch_object($rs)) {
+										if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+											$cat_id_two = substr($cat_id_three, 0, 3);
+											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
+											$special_price = user_special_price("level_two", $cat_id_two);
+											if (!$special_price) {
+												$special_price = user_special_price("level_one", $cat_id_one);
+											}
+											//print_r($special_price);
+										}
+								?>
+										<div>
+											<div class="pd_card txt_align_left">
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print($row->pg_mime_source_url); ?>" alt=""></a></div>
+												<div class="pd_detail">
+													<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+													<div class="pd_rating">
+														<ul>
+															<li>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+															</li>
+														</ul>
+													</div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+													<?php } else { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+								<?php
+									}
+								}
+								?>
 							</div>
 						</div>
 					</div>
@@ -353,20 +496,15 @@ if (mysqli_num_rows($rs) > 0) {
 			}
 		]
 	});
-	$(".brand_slider").slick({
+	$(".gerenric_slider_mostviewed").slick({
 		slidesToShow: 10,
 		slidesToScroll: 1,
-		autoplay: false,
+		autoplay: true,
 		dots: false,
 		autoplaySpeed: 2000,
 		infinite: true,
-		responsive: [{
-				breakpoint: 1200,
-				settings: {
-					slidesToShow: 6,
-					slidesToScroll: 1
-				}
-			},
+		responsive: [
+
 			{
 				breakpoint: 1024,
 				settings: {
@@ -391,17 +529,46 @@ if (mysqli_num_rows($rs) > 0) {
 		]
 	});
 </script>
+<?php include("includes/bottom_js.php"); ?>
 <script>
-	$(".show-more").click(function() {
-		if ($(".category_show").hasClass("category_show_height")) {
-			$(this).text("(Show Less)");
-		} else {
-			$(this).text("(Show More)");
-		}
+	//TOGGLING NESTED ul
+	$(".drop-down .selected a").click(function() {
+		$(".drop-down .options ul").toggle();
+	});
 
-		$(".category_show").toggleClass("category_show_height");
+	//SELECT OPTIONS AND HIDE OPTION AFTER SELECTION
+	$(".drop-down .options ul li a").click(function() {
+		var text = $(this).html();
+		$(".drop-down .selected a span").html(text);
+		$(".drop-down .options ul").hide();
+	});
+
+
+	//HIDE OPTIONS IF CLICKED ANYWHERE ELSE ON PAGE
+	$(document).bind('click', function(e) {
+		var $clicked = $(e.target);
+		if (!$clicked.parents().hasClass("drop-down"))
+			$(".drop-down .options ul").hide();
 	});
 </script>
-<?php include("includes/bottom_js.php"); ?>
+<script>
+	$(window).load(function() {
+		/*2 popup 1 hide 1 show*/
+		$(".create_list_trigger").click(function() {
+			$('.create_list_popup').show();
+			$('.create_list_popup').resize();
+			$('body').css({
+				'overflow': 'hidden'
+			});
+		});
+		$('.create_list_close').click(function() {
+			$('.create_list_popup').hide();
+			$('body').css({
+				'overflow': 'inherit'
+			});
+		});
+
+	});
+</script>
 
 </html>
