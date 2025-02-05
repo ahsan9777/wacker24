@@ -2,15 +2,15 @@
 include("includes/php_includes_top.php");
 $page = 1;
 
-if(isset($_REQUEST['btnAdd'])){
+if (isset($_REQUEST['btnAdd'])) {
 	//print_r($_REQUEST);die();
 	$sl_id = getMaximum("shopping_list", "sl_id");
-	mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '".$_SESSION["UID"]."','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+	mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
+	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
-	
+
 	mysqli_query($GLOBALS['conn'], "UPDATE shopping_list SET sl_title='" . dbStr(trim($_REQUEST['sl_title'])) . "' WHERE sl_id=" . $_REQUEST['sl_id']);
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
 	if ($_REQUEST['action'] == 2) {
 		$rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM shopping_list WHERE sl_id = " . $_REQUEST['sl_id']);
@@ -36,8 +36,36 @@ include("includes/message.php");
 ?>
 <!doctype html>
 <html>
+
 <head>
 	<?php include("includes/html_header.php"); ?>
+
+	<script>
+		$(document).ready(function() {
+			$('.grnc_tabnav_tabs > li > a').click(function(event) {
+				event.preventDefault();
+				var active_tab_selector = $('.grnc_tabnav_tabs > li.active > a').attr('href');
+				var actived_nav = $('.grnc_tabnav_tabs > li.active');
+				actived_nav.removeClass('active');
+				$(this).parents('li').addClass('active');
+				$(active_tab_selector).removeClass('active');
+				$(active_tab_selector).addClass('hide');
+				var target_tab_selector = $(this).attr('href');
+				$(target_tab_selector).removeClass('hide');
+				$(target_tab_selector).addClass('active');
+			});
+		});
+	</script>
+	<script>
+		$(document).ready(function() {
+			$(".click_list").click(function() {
+				$(".list_porduct").addClass('list_class');
+			});
+			$(".click_th").click(function() {
+				$(".list_porduct").removeClass('list_class');
+			});
+		});
+	</script>
 </head>
 
 <body>
@@ -46,6 +74,25 @@ include("includes/message.php");
 		<!--LOCATION_POPUP_START-->
 		<?php include("includes/popup.php"); ?>
 		<!--LOCATION_POPUP_END-->
+
+		<!--CREATE_LIST_POPUP_START-->
+		<div class="create_list_popup">
+			<div class="inner_popup">
+				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+					<div class="create_list_heading">Create List <div class="create_list_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="create_list_content_inner">
+						<p>List Name (Required)</p>
+						<input type="text" class="input_list" required name="sl_title" id="sl_title">
+						<div class="create_button">
+							<div class="gerenric_btn create_list_close">Cancel</div>
+							<button class="gerenric_btn" type="submit" name="btnAdd">ADD</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--CREATE_LIST_POPUP_END-->
 
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
@@ -66,63 +113,150 @@ include("includes/message.php");
 
 		<!--CONTENT_SECTION_START-->
 		<section id="content_section">
-			<div class="shopping_list_page gerenric_padding">
+			<div class="new_shopping_list_page gerenric_padding">
 				<div class="page_width_1480">
-					<div class="shopping_list_section1">
-						<div class="gerenric_white_box">
-							<div class="shopping_list_section_inner">
-								<?php if ($class != "") { ?>
-									<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
-								<?php } ?>
-								<h3> <?php print($formHead); ?> shopping lists</h3>
-								<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-									<ul>
-										<li><input type="text" class="gerenric_input" name="sl_title" id="sl_title" required value="<?php print($sl_title); ?>" placeholder="Add new shopping lists"></li>
-										<li>
-											<?php if (isset($_REQUEST['action']) && $_REQUEST['action'] == 2) { ?>
-												<button class="gerenric_btn" type="submit" name="btnUpdate">Update</button>
-											<?php } else{?>
-												<button class="gerenric_btn" type="submit" name="btnAdd">Add</button>
-											<?php } ?>
-										</li>
-									</ul>
-								</form>
+					<?php if ($class != "") { ?>
+						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+					<?php } ?>
+					<div class="shopping_list_inner">
+						<div class="shopping_list_left">
+							<div class="grnc_tabnav">
+								<ul class="grnc_tabnav_tabs ">
+									<?php
+									$count = 0;
+									$Query1 = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' ORDER BY sl_id ASC";
+									$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+									if (mysqli_num_rows($rs1) > 0) {
+										while ($row1 = mysqli_fetch_object($rs1)) {
+											$count++;
+									?>
+											<li <?php print(($count == 1) ? 'class="active"' : ''); ?>>
+												<a href="#tab<?php print($row1->sl_id); ?>">
+													<div class="tab_title"><?php print($row1->sl_title); ?></div>
+													<div class="tab_private">Private</div>
+												</a>
+											</li>
+									<?php
+										}
+									}
+									?>
+								</ul>
 							</div>
 						</div>
-					</div>
-					<div class="shopping_list_section2">
-						<div class="gerenric_white_box">
-							<h3>Shopping Lists</h3>
-							<div class="gerenric_table column_3">
-								<ul>
-									<li>No</li>
-									<li>Shopping List</li>
-									<li>Action</li>
-								</ul>
-								<?php
-								$count = 0;
-								$Query = "SELECT * FROM shopping_list WHERE user_id = '".$_SESSION["UID"]."' ORDER BY sl_id ASC";
-								$rs = mysqli_query($GLOBALS['conn'], $Query);
-								if(mysqli_num_rows($rs) > 0){
-									while($row = mysqli_fetch_object($rs)){
-										$count++;
-								?>
-								<ul>
-									<li> <?php print($count); ?> </li>
-									<li> <?php print($row->sl_title); ?> </li>
-									<li>
-										<div class="table_action">
-											<a href="<?php print($_SERVER['PHP_SELF'] . "?action=2&sl_id=" . $row->sl_id); ?>" ><i class="fa fa-edit"></i></a>
-											<a href="<?php print($_SERVER['PHP_SELF'] . "?btnDelete&sl_id=" . $row->sl_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');" ><i class="fa fa-trash"></i></a>
+
+						<div class="shopping_list_right">
+							<div class="grnc_tabnav_content">
+								<div class="shopping_list_detail">
+									<div class="shopping_list_title">
+										<div class="shopping_list_profile">
+											<div class="list_name">Ahsan <span>Private</span></div>
 										</div>
-									</li>
-								</ul>
-								<?php
+										<div class="shopping_list_create create_list_trigger">Create a List</div>
+									</div>
+									<div class="list_type_row">
+										<ul>
+											<li class="click_th"><i class="fa fa-th"></i></li>
+											<li class="click_list"><i class="fa fa-list"></i></li>
+										</ul>
+										<div class="list_type_search">
+											<input type="text" class="list_search_input">
+											<button class="search_button"><i class="fa fa-search"></i></button>
+										</div>
+									</div>
+									<?php
+									$count = 0;
+									$Query2 = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' ORDER BY sl_id ASC";
+									$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+									if (mysqli_num_rows($rs2) > 0) {
+										while ($row2 = mysqli_fetch_object($rs2)) {
+											$count++;
+									?>
+											<div class="list_porduct <?php print(($count == 1) ? 'active' : 'hide'); ?>" id="tab<?php print($row2->sl_id); ?>">
+												<div class="gerenric_product">
+													<div class="gerenric_product_inner">
+														<?php
+														$special_price = "";
+														$Query3 = "SELECT wl.*, cm.cat_id, cm.sub_group_ids, cm.cm_type, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM wishlist AS wl LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = wl.supplier_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = wl.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = wl.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = wl.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE wl.sl_id = '" . $row2->sl_id . "'";
+														//print($Query);die();
+														$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+														if (mysqli_num_rows($rs3) > 0) {
+															while ($row3 = mysqli_fetch_object($rs3)) {
+																$sub_group_ids = explode(",", $row3->sub_group_ids);
+																$cat_id_one = $sub_group_ids[1];
+																$cat_id_two = $sub_group_ids[0];
+																//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+																$special_price = user_special_price("supplier_id", $row3->supplier_id);
+
+																if (!$special_price) {
+																	$special_price = user_special_price("level_two", $cat_id_two);
+																}
+
+																if (!$special_price) {
+																	$special_price = user_special_price("level_one", $cat_id_one);
+																}
+														?>
+																<div class="pd_card">
+																	<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row3->supplier_id); ?>"><img src="<?php print($row3->pg_mime_source_url); ?>" alt=""></a></div>
+																	<div class="pd_detail">
+																		<h5><a href="product_detail.php?supplier_id=<?php print($row3->supplier_id); ?>"> <?php print($row3->pro_description_short); ?> </a></h5>
+																		<div class="pd_rating">
+																			<ul>
+																				<li>
+																					<div class="fa fa-star"></div>
+																					<div class="fa fa-star"></div>
+																					<div class="fa fa-star"></div>
+																					<div class="fa fa-star"></div>
+																					<div class="fa fa-star"></div>
+																				</li>
+																			</ul>
+																		</div>
+																		<?php if (!empty($special_price)) { ?>
+																			<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row3->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row3->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+																			<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row3->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row3->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+																		<?php } else { ?>
+																			<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row3->pbp_price_without_tax)); ?>€</div>
+																			<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row3->pbp_price_amount)); ?>€</div>
+																		<?php } ?>
+																		<div class="pd_action">
+																			<ul>
+																				<li><a href="javascript:void(0)"><i class="fa fa-eye"></i></a></li>
+																				<li><a href="javascript:void(0)"><i class="fa fa-edit"></i></a></li>
+																				<li><a href="javascript:void(0)"><i class="fa fa-trash"></i></a></li>
+																				<li>
+																					<select class="pd_slt">
+																						<option value="">Select 1</option>
+																						<option value="">Select 1</option>
+																						<option value="">Select Select Select 1</option>
+																					</select>
+																				</li>
+																			</ul>
+																		</div>
+																		<div class="pd_btn">
+																			<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($row3->pro_id); ?>">
+																				<input type="hidden" id="pro_id_<?php print($row3->pro_id); ?>" name="pro_id" value="<?php print($row3->pro_id); ?>">
+																				<input type="hidden" id="supplier_id_<?php print($row3->pro_id); ?>" name="supplier_id" value="<?php print($row3->supplier_id); ?>">
+																				<input type="hidden" id="ci_qty_<?php print($row3->pro_id); ?>" name="ci_qty" value="1">
+																				<input type="hidden" id="ci_discount_type_<?php print($row3->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
+																				<input type="hidden" id="ci_discount_value_<?php print($row3->pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
+																				<div class="gerenric_btn">Add to Cart</div>
+																			</a>
+																		</div>
+																	</div>
+																</div>
+														<?php
+															}
+														} else {
+														}
+														?>
+													</div>
+												</div>
+											</div>
+									<?php
+
+										}
 									}
-								} else{
-									print('<div colspan="100%" align="center" style = "padding-top: 15px" >No record found!</div>');
-								}
-								?>
+									?>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -140,4 +274,33 @@ include("includes/message.php");
 
 </body>
 <?php include("includes/bottom_js.php"); ?>
+<script>
+	$(window).load(function() {
+		/*2 popup 1 hide 1 show*/
+		$(".create_list_trigger").click(function() {
+			$('.create_list_popup').show();
+			$('.create_list_popup').resize();
+			$('body').css({
+				'overflow': 'hidden'
+			});
+		});
+		$('.create_list_close').click(function() {
+			$('.create_list_popup').hide();
+			$('body').css({
+				'overflow': 'inherit'
+			});
+		});
+
+	});
+</script>
+<script>
+	$('.gerenric_product .pd_detail .pd_action ul li .pd_slt').change(function() {
+		var text = $(this).find('option:selected').text()
+		var $aux = $('<select/>').append($('<option/>').text(text))
+		$(this).after($aux)
+		$(this).width($aux.width())
+		$aux.remove()
+	}).change()
+</script>
+
 </html>

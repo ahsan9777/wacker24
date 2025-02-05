@@ -139,6 +139,7 @@ body.body-white{background-color: #fff !important;}
 .gerenric_product .pd_image a{    display: flex;align-items: center;height: 100%;width: 100%;}
 .gerenric_product .pd_detail{width: 100%;}
 .gerenric_product .pd_detail h5{ font-size: 17px; color: #000; font-weight: 500; margin-bottom: 10px;}
+.gerenric_product.full_column.mostviewed .pd_detail h5{ font-size: 14px;}
 .gerenric_product .pd_detail h5 a:hover{ color: #007bff; text-decoration: underline;}
 .gerenric_product .pd_detail .pd_rating{width: 100%;}
 .gerenric_product .pd_detail .pd_rating ul{width: 100%;}
@@ -152,9 +153,12 @@ body.body-white{background-color: #fff !important;}
 .gerenric_product .pd_detail .pd_action ul li:first-child::after{background-color: transparent;}
 .gerenric_product .pd_detail .pd_action ul li .pd_slt{min-width: 90px; width: 100px; background-color: #ebebeb; padding: 0px 10px; height: 24px;}
 .gerenric_product .pd_detail .pd_prise{ font-size: 22px; color: #B12704; font-weight: 500; margin-bottom: 10px;}
+.gerenric_product.full_column.mostviewed .pd_detail .pd_prise{ font-size: 16px;}
 .gerenric_product .pd_detail .pd_prise.price_without_tex{ display: none;}
 .gerenric_product .pd_detail .pd_prise .pd_prise_discount{ color: green; font-size: 20px;}
+.gerenric_product.full_column.mostviewed .pd_detail .pd_prise .pd_prise_discount{font-size: 14px;}
 .gerenric_product .pd_detail .pd_prise .pd_prise_discount_value{ font-size: 16px;}
+.gerenric_product.full_column.mostviewed .pd_detail .pd_prise .pd_prise_discount_value{ font-size: 14px;}
 /*.gerenric_product .pd_detail .pd_btn .gerenric_btn{width: auto; min-width: inherit; margin-bottom: 20px; border-radius: 100px; font-weight: normal; font-size: 14px;}*/
 .gerenric_product .pd_detail .pd_btn .gerenric_btn{width: auto; min-width: inherit; border-radius: 100px; font-weight: normal; font-size: 14px; padding: 5px 20px;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image{width: 100%; margin-bottom: 20px;position: sticky; top: 100px;}
@@ -754,7 +758,7 @@ body.body-white{background-color: #fff !important;}
 .new_shopping_list_page .shopping_list_detail .shopping_list_title .shopping_list_create{cursor: pointer; color: #000;}
 .new_shopping_list_page .shopping_list_detail .list_image{width: 35px; height: 35px; background-color: #646464;border-radius: 35px;}
 .new_shopping_list_page .shopping_list_detail .list_image img{width: 35px; height: 35px; object-fit: cover; border-radius: 35px;}
-.new_shopping_list_page .shopping_list_detail .list_name{width: calc(100% - 35px); padding-left: 15px; font-size: 16px; font-weight: bold; color: #000;}
+.new_shopping_list_page .shopping_list_detail .list_name{/*width: calc(100% - 35px);*/ width: 100%; padding-left: 15px; font-size: 16px; font-weight: bold; color: #000;}
 .new_shopping_list_page .shopping_list_detail .list_name span{ margin-left: 5px; font-size: 14px; color: #696969;}
 .new_shopping_list_page .shopping_list_detail .list_type_row{width: 100%; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #c0c0c0; padding-bottom: 15px; display: flex; justify-content: space-between;}
 .new_shopping_list_page .shopping_list_detail .list_type_row ul{display: flex;}

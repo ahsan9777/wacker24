@@ -450,5 +450,23 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($json);
             print($jsonResults);
             break;
+
+        case 'addwhishlist':
+            //print_r($_REQUEST);die();
+            $retValue = array();
+
+            $Query = "SELECT * FROM `wishlist` WHERE user_id = '".$_SESSION['UID']."' AND sl_id = '".$_REQUEST['sl_id']."' AND supplier_id = '".$_REQUEST['supplier_id']."'";
+            //print($Query);die();
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                $retValue = array("status" => "1", "message" => "Record already exists!");
+            } else {
+                mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (user_id, sl_id, supplier_id) VALUES ('".$_SESSION['UID']."', '".$_REQUEST['sl_id']."', '".$_REQUEST['supplier_id']."')") or die(mysqli_error($GLOBALS['conn']));
+                $retValue = array("status" => "1", "message" => "Add into list");
+            }
+
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
     }
 }

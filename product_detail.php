@@ -255,20 +255,33 @@ if (!$special_price) {
 										</div>
 									</div>
 									<div class="product_create_liste">
+										<div id="alert_wishlist" class="alert alert-success" style="display: none;"><span id="alert_wishlist_txt"></span><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 										<div class="drop-down">
-											<div class="selected">
-												<a href="javascript:void(0)"><span>Add to list</span></a>
+											<div class="selected <?php print(isset($_SESSION["UID"]) ? 'show' : ''); ?>">
+												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Add to list</span></a>
 											</div>
+											<?php if (isset($_SESSION["UID"])) { ?>
 											<div class="options">
 												<ul>
-													<li><a href="javascript:void(0)">Add To List 1</a></li>
-													<li><a href="javascript:void(0)">Add To List 2</a></li>
-													<li><a href="javascript:void(0)">Add To List 3</a></li>
+													<?php
+													$count = 0;
+													$Query = "SELECT * FROM shopping_list WHERE user_id = '".$_SESSION["UID"]."' ORDER BY sl_id ASC";
+													$rs = mysqli_query($GLOBALS['conn'], $Query);
+													if (mysqli_num_rows($rs) > 0) {
+														while ($row = mysqli_fetch_object($rs)) {
+															$count++;
+													?>
+															<li><a href="javascript:void(0)" class="addwhishlist" data-id="<?php print($row->sl_id); ?>"><?php print($row->sl_title); ?></a></li>
+													<?php
+														}
+													}
+													?>
 													<li>
-														<div class="create_other_list create_list_trigger">+ Create another list</div>
+														<div class="create_other_list create_list_trigger">+ Create <?php print( ($count > 0) ? 'another' : 'new'); ?> list</div>
 													</li>
 												</ul>
 											</div>
+											<?php } ?>
 										</div>
 									</div>
 								</div>
@@ -532,14 +545,14 @@ if (!$special_price) {
 <?php include("includes/bottom_js.php"); ?>
 <script>
 	//TOGGLING NESTED ul
-	$(".drop-down .selected a").click(function() {
+	$(".drop-down .show a").click(function() {
 		$(".drop-down .options ul").toggle();
 	});
 
 	//SELECT OPTIONS AND HIDE OPTION AFTER SELECTION
 	$(".drop-down .options ul li a").click(function() {
 		var text = $(this).html();
-		$(".drop-down .selected a span").html(text);
+		$(".drop-down .show a span").html(text);
 		$(".drop-down .options ul").hide();
 	});
 
@@ -568,6 +581,30 @@ if (!$special_price) {
 			});
 		});
 
+	});
+</script>
+<script>
+	$(".addwhishlist").on("click", function(){
+		let supplier_id = <?php print($supplier_id); ?>;
+		let sl_id = $(this).attr("data-id");
+		//console.log("sl_id: "+sl_id);
+		$.ajax({
+			url: 'ajax_calls.php?action=addwhishlist',
+			method: 'POST',
+			data: {
+				supplier_id : supplier_id,
+				sl_id : sl_id
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				console.log(obj);
+				if(obj.status == 1){
+					$("#alert_wishlist_txt").text(obj.message);	
+					$("#alert_wishlist").show();	
+				}
+			}
+		});
 	});
 </script>
 
