@@ -211,7 +211,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         <?php
                                         }
                                     }
-                                    $Query4 = "SELECT gi.gimg_id, gi.gimg_title_de AS gimg_title, gi.scat_id, gi.gimg_file FROM gallery_images AS gi WHERE gi.gimg_status = '1' AND gi.scat_id = '" . $row1->scat_id . "' ORDER BY gi.gimg_orderby ASC";
+                                    $Query4 = "SELECT gi.gimg_id, gi.gimg_title_de AS gimg_title, gi.scat_id, gi.gimg_file, gi.gimg_link FROM gallery_images AS gi WHERE gi.gimg_status = '1' AND gi.scat_id = '" . $row1->scat_id . "' ORDER BY gi.gimg_orderby ASC";
                                     $rs4 = mysqli_query($GLOBALS['conn'], $Query4);
                                     if (mysqli_num_rows($rs4)) {
                                         while ($row4 = mysqli_fetch_object($rs4)) {
@@ -219,7 +219,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                             <div class="sub_menu_col">
                                                 <div class="sub_menu_div">
                                                     <div class="sub_menu_image"><img src="<?php print($GLOBALS['siteURL'] . "files/gallery_images/special_category/" . $row4->scat_id . "/" . $row4->gimg_file); ?>" alt=""></div>
-                                                    <div class="sub_menu_title"><a href="javascript:void(0)"><?php print($row4->gimg_title); ?></a></div>
+                                                    <div class="sub_menu_title"><a href="<?php print(!empty($row4->gimg_link) ? $row4->gimg_link : 'javascript:void(0);'); ?>"><?php print($row4->gimg_title); ?></a></div>
                                                 </div>
                                             </div>
                                     <?php

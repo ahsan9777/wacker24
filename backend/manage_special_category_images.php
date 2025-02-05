@@ -24,7 +24,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "INSERT INTO gallery_images (gimg_id, gimg_title_de, gimg_title_en, gimg_file, scat_id) VALUES ('" . $gimg_id . "', '" . dbStr(trim($_REQUEST['gimg_title_de'])) . "', '" . dbStr(trim($_REQUEST['gimg_title_en'])) . "', '" . $mfileName . "', '" . $scat_id . "')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO gallery_images (gimg_id, gimg_title_de, gimg_title_en, gimg_file, gimg_link, scat_id) VALUES ('" . $gimg_id . "', '" . dbStr(trim($_REQUEST['gimg_title_de'])) . "', '" . dbStr(trim($_REQUEST['gimg_title_en'])) . "', '" . $mfileName . "', '".dbStr(trim($_REQUEST['gimg_link']))."', '" . $scat_id . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -43,7 +43,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE gallery_images SET gimg_title_de = '" . dbStr(trim($_REQUEST['gimg_title_de'])) . "', gimg_title_en = '" . dbStr(trim($_REQUEST['gimg_title_en'])) . "', gimg_file = '" . $mfileName . "' WHERE gimg_id= '" . $_REQUEST['gimg_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE gallery_images SET gimg_title_de = '" . dbStr(trim($_REQUEST['gimg_title_de'])) . "', gimg_title_en = '" . dbStr(trim($_REQUEST['gimg_title_en'])) . "', gimg_file = '" . $mfileName . "', gimg_link = '".dbStr(trim($_REQUEST['gimg_link']))."' WHERE gimg_id= '" . $_REQUEST['gimg_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -52,12 +52,14 @@ if (isset($_REQUEST['btnAdd'])) {
             $rsMem = mysqli_fetch_object($rsM);
             $gimg_title_de = $rsMem->gimg_title_de;
             $gimg_title_en = $rsMem->gimg_title_en;
+            $gimg_link = $rsMem->gimg_link;
             $mfileName = $rsMem->gimg_file;
             $formHead = "Update Info";
         }
     } else {
         $gimg_title_de = "";
         $gimg_title_en = "";
+        $gimg_link = "";
         $mfileName = "";
         $formHead = "Add New";
     }
@@ -160,6 +162,10 @@ include("includes/messages.php");
                                 <input type="text" class="input_style" name="gimg_title_en" id="gimg_title_en" value="<?php print($gimg_title_en); ?>" placeholder="Heading DE">
                             </div>
                             <div class="col-md-12 col-12 mt-3">
+                                <label for="">Link (https://abc.com)</label>
+                                <input type="text" class="input_style" name="gimg_link" id="gimg_link" value="<?php print($gimg_link); ?>" placeholder="https://abc.com">
+                            </div>
+                            <div class="col-md-12 col-12 mt-3">
                                 <label for="">File</label>
                                 <div class="">
                                     <label for="file-upload" class="upload-btn">
@@ -187,6 +193,7 @@ include("includes/messages.php");
                                     <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                     <th width="100">Image</th>
                                     <th>Heading</th>
+                                    <th>Link</th>
                                     <th width="100">Order By </th>
                                     <th width="50">Status</th>
                                     <th width="50">Action</th>
@@ -194,7 +201,7 @@ include("includes/messages.php");
                             </thead>
                             <tbody>
                                 <?php
-                                $Query = "SELECT gi.gimg_id, gi.gimg_title_de AS gimg_title, gimg_file, gi.scat_id, gi.gimg_orderby, gi.gimg_status FROM gallery_images AS gi WHERE gi.scat_id = '".$scat_id."' ORDER BY gi.gimg_orderby ASC";
+                                $Query = "SELECT gi.gimg_id, gi.gimg_title_de AS gimg_title, gimg_file, gimg_link, gi.scat_id, gi.gimg_orderby, gi.gimg_status FROM gallery_images AS gi WHERE gi.scat_id = '".$scat_id."' ORDER BY gi.gimg_orderby ASC";
                                 //print($Query);
                                 $counter = 0;
                                 $limit = 25;
@@ -211,6 +218,10 @@ include("includes/messages.php");
                                         if (!empty($row->gimg_file)) {
                                             $image_path = $GLOBALS['siteURL'] . "files/gallery_images/special_category/" . $_REQUEST['scat_id'] . "/" . $row->gimg_file;
                                         }
+                                        $gimg_link = "";
+                                        if (!empty($row->gimg_link)) {
+                                            $gimg_link = '<a href="'.$row->gimg_link.'" target="_blank" rel="noopener noreferrer">'.$row->gimg_link.'</a>';
+                                        }
                                 ?>
                                         <tr>
                                             <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->gimg_id); ?>"></td>
@@ -222,6 +233,7 @@ include("includes/messages.php");
                                                 </div>
                                             </td>
                                             <td><?php print($row->gimg_title); ?></td>
+                                            <td><?php print($gimg_link); ?> </td>
                                             <td>
                                                 <input type="hidden" name="gimg_id[]" id="gimg_id" value="<?php print($row->gimg_id); ?>">
                                                 <input type="number" class="input_style" name="gimg_orderby[]" id="gimg_orderby" value="<?php print($row->gimg_orderby); ?>">

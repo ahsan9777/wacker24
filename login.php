@@ -90,8 +90,7 @@ if (isset($_REQUEST['btn_login'])) {
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
 	<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
 	<script src="js/jquery-2.2.0.min.js"></script>
-
-
+	<?php include("includes/btn_color.php"); ?>
 </head>
 
 <body class="body-white">

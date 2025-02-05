@@ -70,6 +70,20 @@ if (isset($_REQUEST['btnInactive'])) {
     }
 }
 
+//--------------Button Orderby--------------------
+if (isset($_REQUEST['btnOrderby'])) {
+    if (isset($_REQUEST['scat_id'])) {
+        for ($i = 0; $i < count($_REQUEST['scat_id']); $i++) {
+            mysqli_query($GLOBALS['conn'], "UPDATE special_category SET scat_orderby='" . $_REQUEST['scat_orderby'][$i] . "' WHERE scat_id = " . $_REQUEST['scat_id'][$i]);
+        }
+        $class = "alert alert-success";
+        $strMSG = "Record(s) updated successfully";
+    } else {
+        $class = "alert alert-info";
+        $strMSG = "Please Select Alteast One Checkbox";
+    }
+}
+
 include("includes/messages.php");
 
 ?>
@@ -147,13 +161,14 @@ include("includes/messages.php");
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th>Title </th>
                                         <th>Category </th>
+                                        <th width="100">Order By </th>
                                         <th width="50">Status</th>
                                         <th width="90">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT sc.scat_id, sc.group_id, sc.scat_title_de AS scat_title, sc.scat_params_de AS scat_params, sc.scat_status, (SELECT GROUP_CONCAT(cat.cat_title_de separator '<br>') FROM category AS cat WHERE FIND_IN_SET(cat.group_id, sc.group_id)) AS cat_title FROM special_category AS sc ORDER BY sc.scat_id ASC";
+                                    $Query = "SELECT sc.scat_id, sc.group_id, sc.scat_title_de AS scat_title, sc.scat_params_de AS scat_params, sc.scat_status, sc.scat_orderby, (SELECT GROUP_CONCAT(cat.cat_title_de separator '<br>') FROM category AS cat WHERE FIND_IN_SET(cat.group_id, sc.group_id)) AS cat_title FROM special_category AS sc ORDER BY sc.scat_orderby ASC";
                                     $counter = 0;
                                     $limit = 25;
                                     $start = $p->findStart($limit);
@@ -170,6 +185,10 @@ include("includes/messages.php");
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->scat_id); ?>"></td>
                                                 <td><?php print($row->scat_title); ?></td>
                                                 <td><?php print($row->cat_title); ?></td>
+                                                <td>
+                                                    <input type="hidden" name="scat_id[]" id="scat_id" value="<?php print($row->scat_id); ?>">
+                                                    <input type="number" class="input_style" name="scat_orderby[]" id="scat_orderby" value="<?php print($row->scat_orderby); ?>">
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if ($row->scat_status == 0) {
@@ -214,6 +233,9 @@ include("includes/messages.php");
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
                                     <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                </div>
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
                                 </div>
                             </div>
                         </form>
