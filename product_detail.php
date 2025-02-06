@@ -151,7 +151,7 @@ include("includes/message.php");
 		<section id="content_section">
 			<div class="product_detail_page gerenric_padding">
 				<div class="page_width_1480">
-				<?php if ($class != "") { ?>
+					<?php if ($class != "") { ?>
 						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 					<?php } ?>
 					<div class="product_detail_section1">
@@ -263,7 +263,7 @@ include("includes/message.php");
 									}
 									?>
 									<!--<div class="product_order_title"> 100 pieces ordered</div>-->
-									<div class="product_order_row">
+									<!--<div class="product_order_row">
 										<div class="product_order_row_inner">
 											<div class="order_text">Quantity:</div>
 											<div class="order_select">
@@ -274,12 +274,32 @@ include("includes/message.php");
 												</select>
 											</div>
 										</div>
+									</div>-->
+									<div class="product_order_row">
+										<div class="product_order_row_inner">
+											<div class="order_select">
+												<div class="drop-down_2">
+													<div class="selected">
+														<div class="qtu_slt">Quantity:</div>
+														<a href="javascript:void(0)"><span>1</span></a>
+													</div>
+													<div class="options">
+														<ul>
+															<?php for ($i = 1; $i <= $quantity_lenght; $i++) { ?>
+																<li><a href="javascript:void(0)" class="quantity" id="quantity_<?php print($i); ?>" data-id="<?php print($i); ?>"><?php print($i); ?></a></li>
+															<?php } ?>
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
 									</div>
 									<div class="order_btn">
 										<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>">
 										<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>">
 										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
+										<input type="hidden" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty" value="1">
 										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
 											<div class="gerenric_btn">Add to Cart</div>
 										</a>
@@ -334,7 +354,7 @@ include("includes/message.php");
 								<h2>Similar products</h2>
 								<div class="gerenric_slider">
 									<?php
-									$Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+									$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 									//print($Query);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -509,14 +529,6 @@ include("includes/message.php");
 </body>
 <script src="js/slick.js"></script>
 <script type="text/javascript">
-	$(".banner_slider").slick({
-		dots: false,
-		infinite: true,
-		slidesToShow: 1,
-		autoplay: false,
-		autoplaySpeed: 3000,
-		slidesToScroll: 1,
-	});
 	$(".gerenric_slider").slick({
 		slidesToShow: 6,
 		slidesToScroll: 1,
@@ -627,6 +639,33 @@ include("includes/message.php");
 				}
 			}
 		});
+	});
+</script>
+<script>
+	//TOGGLING NESTED ul
+	$(".drop-down_2 .selected a").click(function() {
+		$(".drop-down_2 .options ul").toggle();
+	});
+
+	//SELECT OPTIONS AND HIDE OPTION AFTER SELECTION
+	$(".drop-down_2 .options ul li a").click(function() {
+		var text = $(this).html();
+		$(".drop-down_2 .selected a span").html(text);
+		$(".drop-down_2 .options ul").hide();
+	});
+
+
+	//HIDE OPTIONS IF CLICKED ANYWHERE ELSE ON PAGE
+	$(document).bind('click', function(e) {
+		var $clicked = $(e.target);
+		if (!$clicked.parents().hasClass("drop-down_2"))
+			$(".drop-down_2 .options ul").hide();
+	});
+
+	$(".quantity").on("click", function(){
+		let quantity = $(this).attr("data-id");
+		//console.log("quantity: "+quantity);
+		$("#ci_qty_"+<?php print($pro_id); ?>).val($(this).attr("data-id"));
 	});
 </script>
 
