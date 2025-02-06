@@ -325,18 +325,21 @@ include("includes/messages.php");
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th width="100">Order ID</th>
-                                        <th>User Info </th>
+                                        <th width = "100">User Info </th>
+                                        <th width="100">Company</th>
+                                        <th width="250">Delivery</th>
                                         <th>Amount </th>
                                         <th>Payment Type</th>
+                                        <th width="147">Date / Time</th>
                                         <th>Payment Status</th>
-                                        <th>Delivery Status</th>
+                                        <th width="166">Delivery Status</th>
                                         <th>Order Status</th>
                                         <th width="50">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_address, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status ".$searchQuery." ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id  ".$searchQuery." ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 50;
@@ -350,9 +353,9 @@ include("includes/messages.php");
                                             $strClass = 'label  label-danger';
                                             $user_info = "";
                                             if ($row->utype_id == 3) {
-                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . $row->utype_name . '</span><br>';
+                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' .rtrim($row->utype_name, "Customer"). '</span><br>';
                                             } else {
-                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . $row->utype_name . '</span><br>';
+                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' .rtrim($row->utype_name, "Customer"). '</span><br>';
                                             }
                                             if (!empty($row->deliver_full_name)) {
                                                 $user_info .= $row->deliver_full_name . "<br>";
@@ -363,16 +366,29 @@ include("includes/messages.php");
                                             if (!empty($row->dinfo_email)) {
                                                 $user_info .= $row->dinfo_email . "<br>";
                                             }
+                                            $delivery_info = "";
+                                            if (!empty($row->dinfo_street)) {
+                                                $delivery_info .= $row->dinfo_street." ".$row->dinfo_house_no. "<br>";
+                                            }
+                                            if (!empty($row->dinfo_usa_zipcode)) {
+                                                $delivery_info .= $row->dinfo_usa_zipcode . "<br>";
+                                            }
+                                            if (!empty($row->countries_name)) {
+                                                $delivery_info .= $row->countries_name . "<br>";
+                                            }
                                             if (!empty($row->dinfo_address)) {
-                                                $user_info .= $row->dinfo_address . "<br>";
+                                                $delivery_info .= $row->dinfo_address . "<br>";
                                             }
                                     ?>
                                             <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->ord_id); ?>"></td>
                                                 <td><?php print($row->ord_id); ?></td>
                                                 <td><?php print($user_info); ?></td>
+                                                <td><?php print(returnName("user_company_name", "users", "user_id", $row->user_id)); ?></td>
+                                                <td><?php print($delivery_info); ?></td>
                                                 <td><?php print(number_format($row->ord_amount + $row->ord_shipping_charges, "2", ",", "")); ?> €</td>
                                                 <td><?php print($row->pm_title); ?></td>
+                                                <td><?php print(date('D F j, Y H:i', strtotime($row->ord_datetime))); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($row->ord_payment_status == 0) {
