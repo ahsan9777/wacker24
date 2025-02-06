@@ -56,6 +56,10 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Dear Cuctomer, <br> Confirmation code does not match!";
 			break;
+		case 14:
+			$class = "alert alert-success";
+			$strMSG = "Record already exists";
+			break;
 	}
 }
 ?>

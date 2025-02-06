@@ -151,7 +151,7 @@ body.body-white{background-color: #fff !important;}
 .gerenric_product .pd_detail .pd_action ul li{list-style-type: none;position: relative; padding:3px 8px; font-size: 16px;}
 .gerenric_product .pd_detail .pd_action ul li::after{width: 1px; height: 16px; background-color: #ccc; content: '';position: absolute; left: 0px;}
 .gerenric_product .pd_detail .pd_action ul li:first-child::after{background-color: transparent;}
-.gerenric_product .pd_detail .pd_action ul li .pd_slt{min-width: 90px; width: 100px; background-color: #ebebeb; padding: 0px 10px; height: 24px;}
+.gerenric_product .pd_detail .pd_action ul li .pd_slt{min-width: 75px; width: 100px; background-color: #ebebeb; padding: 0px 10px; height: 24px;}
 .gerenric_product .pd_detail .pd_prise{ font-size: 22px; color: #B12704; font-weight: 500; margin-bottom: 10px;}
 .gerenric_product.full_column.mostviewed .pd_detail .pd_prise{ font-size: 16px;}
 .gerenric_product .pd_detail .pd_prise.price_without_tex{ display: none;}
@@ -446,7 +446,7 @@ body.body-white{background-color: #fff !important;}
 .product_detail_page .product_detail_section1 .product_left{position: relative; width: 40%;}
 .product_detail_page .product_detail_section1 .product_right{width: 60%; display: flex; flex-wrap: wrap; padding-left: 30px;}
 .product_detail_page .product_detail_section1 .product_right .product_col1{width:70%; padding-right: 20px;}
-.product_detail_page .product_detail_section1 .product_right .product_col2{width:30%;border: 1px solid #dedede;padding: 15px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2{width:30%;border: 1px solid #dedede;padding: 15px; z-index: 2;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 h1{font-size: 24px; color: #212529; font-weight: 600; margin-bottom: 10px;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 h4{font-size: 16px; color: #212529; font-weight: 500; margin-bottom: 15px;}
 .product_detail_page .product_detail_section1 .product_right .product_col1 ul{border-bottom: 1px solid #dedede; margin-bottom: 20px; padding-bottom: 20px; }

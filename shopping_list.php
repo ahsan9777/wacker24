@@ -4,32 +4,25 @@ $page = 1;
 
 if (isset($_REQUEST['btnAdd'])) {
 	//print_r($_REQUEST);die();
-	$sl_id = getMaximum("shopping_list", "sl_id");
-	mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
-} elseif (isset($_REQUEST['btnUpdate'])) {
-
-	mysqli_query($GLOBALS['conn'], "UPDATE shopping_list SET sl_title='" . dbStr(trim($_REQUEST['sl_title'])) . "' WHERE sl_id=" . $_REQUEST['sl_id']);
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
-} elseif (isset($_REQUEST['action'])) {
-	if ($_REQUEST['action'] == 2) {
-		$rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM shopping_list WHERE sl_id = " . $_REQUEST['sl_id']);
-		if (mysqli_num_rows($rsM) > 0) {
-			$rsMem = mysqli_fetch_object($rsM);
-			$sl_title = $rsMem->sl_title;
-			$formHead = "Update Info";
-		}
+	$Query = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' AND sl_title = '" . $_REQUEST['sl_title'] . "'";
+	//print($Query);die();
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		$row = mysqli_fetch_object($rs);
+		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
 	} else {
-		$sl_title = "";
-		$formHead = "Add New";
+		$sl_id = getMaximum("shopping_list", "sl_id");
+		mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
+		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=1");
 	}
-} else {
-	$sl_title = "";
-	$formHead = "Add New";
 }
 
-if (isset($_REQUEST['btnDelete'])) {
-	mysqli_query($GLOBALS['conn'], "DELETE FROM shopping_list WHERE sl_id = " . $_REQUEST['sl_id']) or die(mysqli_error($_REQUEST['conn']));
+if (isset($_REQUEST['updatewishlist'])) {
+	mysqli_query($GLOBALS['conn'], "UPDATE wishlist SET sl_id = '".$_REQUEST['sl_id']."' WHERE wl_id = " . $_REQUEST['wl_id']) or die(mysqli_error($_REQUEST['conn']));
+	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+}
+if (isset($_REQUEST['deletewishlist'])) {
+	mysqli_query($GLOBALS['conn'], "DELETE FROM wishlist WHERE wl_id = " . $_REQUEST['wl_id']) or die(mysqli_error($_REQUEST['conn']));
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
 }
 include("includes/message.php");
@@ -85,8 +78,8 @@ include("includes/message.php");
 						<p>List Name (Required)</p>
 						<input type="text" class="input_list" required name="sl_title" id="sl_title">
 						<div class="create_button">
-							<div class="gerenric_btn create_list_close">Cancel</div>
 							<button class="gerenric_btn" type="submit" name="btnAdd">ADD</button>
+							<div class="gerenric_btn create_list_close">Cancel</div>
 						</div>
 					</div>
 				</form>
@@ -176,7 +169,7 @@ include("includes/message.php");
 													<div class="gerenric_product_inner">
 														<?php
 														$special_price = "";
-														$Query3 = "SELECT wl.*, cm.cat_id, cm.sub_group_ids, cm.cm_type, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM wishlist AS wl LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = wl.supplier_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = wl.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = wl.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = wl.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE wl.sl_id = '" . $row2->sl_id . "'";
+														$Query3 = "SELECT wl.*, cm.cat_id, cm.sub_group_ids, cm.cm_type, pro.pro_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax,  pg.pg_mime_source_url FROM wishlist AS wl LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = wl.supplier_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = wl.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = wl.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = wl.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE wl.sl_id = '" . $row2->sl_id . "' ORDER BY wl.wl_id ASC";
 														//print($Query);die();
 														$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
 														if (mysqli_num_rows($rs3) > 0) {
@@ -219,14 +212,25 @@ include("includes/message.php");
 																		<?php } ?>
 																		<div class="pd_action">
 																			<ul>
-																				<li><a href="javascript:void(0)"><i class="fa fa-eye"></i></a></li>
-																				<li><a href="javascript:void(0)"><i class="fa fa-edit"></i></a></li>
-																				<li><a href="javascript:void(0)"><i class="fa fa-trash"></i></a></li>
+																				<!--<li><a href="javascript:void(0)"><i class="fa fa-eye"></i></a></li>
+																				<li><a href="javascript:void(0)"><i class="fa fa-edit"></i></a></li>-->
+																				<li><a href="<?php print($_SERVER['PHP_SELF'] . "?deletewishlist&wl_id=" . $row3->wl_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');"><i class="fa fa-trash"></i></a></li>
 																				<li>
-																					<select class="pd_slt">
-																						<option value="">Select 1</option>
-																						<option value="">Select 1</option>
-																						<option value="">Select Select Select 1</option>
+																					<select class="pd_slt sl_id" name="sl_id" id="sl_id_<?php print($row3->wl_id); ?>" data-id="<?php print($row3->wl_id); ?>">
+																						<option value="0">Move</option>
+																						<?php
+																						$count = 0;
+																						$Query4 = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' AND sl_id != '".$row3->sl_id."' ORDER BY sl_id ASC";
+																						$rs4 = mysqli_query($GLOBALS['conn'], $Query4);
+																						if (mysqli_num_rows($rs4) > 0) {
+																							while ($row4 = mysqli_fetch_object($rs4)) {
+																								$count++;
+																						?>
+																								<option value="<?php print($row4->sl_id); ?>"><?php print($row4->sl_title); ?></option>
+																						<?php
+																							}
+																						}
+																						?>
 																					</select>
 																				</li>
 																			</ul>
@@ -246,6 +250,7 @@ include("includes/message.php");
 														<?php
 															}
 														} else {
+															print('<div class="margin_top_30 txt_align_center wd_100">Record not found!</div>');
 														}
 														?>
 													</div>
@@ -301,6 +306,14 @@ include("includes/message.php");
 		$(this).width($aux.width())
 		$aux.remove()
 	}).change()
+</script>
+<script>
+	$(".sl_id").on("change", function(){
+		let wl_id = $(this).attr("data-id");
+		let sl_id = $("#sl_id_"+$(this).attr("data-id")).val();
+		//console.log("wl_id: "+wl_id+" sl_id: "+sl_id);
+		window.location = "<?php print($_SERVER['PHP_SELF']) ?>?updatewishlist&wl_id="+wl_id+"&sl_id="+sl_id;
+	});
 </script>
 
 </html>

@@ -1,6 +1,7 @@
 <?php
 
 include("includes/php_includes_top.php");
+
 $Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -54,12 +55,48 @@ if (!$special_price) {
 }
 //print_r($special_price);
 //}
+
+if (isset($_REQUEST['btnAdd_to_list'])) {
+	//print_r($_REQUEST);die();
+	$Query = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' AND sl_title = '" . $_REQUEST['sl_title'] . "'";
+	//print($Query);die();
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		$row = mysqli_fetch_object($rs);
+		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
+	} else {
+		$sl_id = getMaximum("shopping_list", "sl_id");
+		mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
+		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=1");
+	}
+}
+
+include("includes/message.php");
 ?>
 <!doctype html>
 <html lang="de">
 
 <head>
 	<?php include("includes/html_header.php"); ?>
+	<script>
+		$(window).load(function() {
+			/*2 popup 1 hide 1 show*/
+			$(".create_list_trigger").click(function() {
+				$('.create_list_popup').show();
+				$('.create_list_popup').resize();
+				$('body').css({
+					'overflow': 'hidden'
+				});
+			});
+			$('.create_list_close').click(function() {
+				$('.create_list_popup').hide();
+				$('body').css({
+					'overflow': 'inherit'
+				});
+			});
+
+		});
+	</script>
 </head>
 
 <body style="background-color: #fff;">
@@ -71,18 +108,18 @@ if (!$special_price) {
 		<!--CREATE_LIST_POPUP_START-->
 		<div class="create_list_popup">
 			<div class="inner_popup">
-				<div class="create_list_content">
+				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 					<div class="create_list_heading">Create List <div class="create_list_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="create_list_content_inner">
-						<p>Delivery options and delivery speeds may vary for different locations</p>
-						<input type="text" class="input_list">
+						<p>List Name (Required)</p>
+						<input type="text" class="input_list" required name="sl_title" id="sl_title">
 						<div class="create_button">
+							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">ADD</button>
 							<div class="gerenric_btn create_list_close">Cancel</div>
-							<div class="gerenric_btn">ADD</div>
 						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 		<!--CREATE_LIST_POPUP_END-->
@@ -114,6 +151,9 @@ if (!$special_price) {
 		<section id="content_section">
 			<div class="product_detail_page gerenric_padding">
 				<div class="page_width_1480">
+				<?php if ($class != "") { ?>
+						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+					<?php } ?>
 					<div class="product_detail_section1">
 						<div class="product_left">
 							<div class="product_main_image">
@@ -261,26 +301,26 @@ if (!$special_price) {
 												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Add to list</span></a>
 											</div>
 											<?php if (isset($_SESSION["UID"])) { ?>
-											<div class="options">
-												<ul>
-													<?php
-													$count = 0;
-													$Query = "SELECT * FROM shopping_list WHERE user_id = '".$_SESSION["UID"]."' ORDER BY sl_id ASC";
-													$rs = mysqli_query($GLOBALS['conn'], $Query);
-													if (mysqli_num_rows($rs) > 0) {
-														while ($row = mysqli_fetch_object($rs)) {
-															$count++;
-													?>
-															<li><a href="javascript:void(0)" class="addwhishlist" data-id="<?php print($row->sl_id); ?>"><?php print($row->sl_title); ?></a></li>
-													<?php
+												<div class="options">
+													<ul>
+														<?php
+														$count = 0;
+														$Query = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' ORDER BY sl_id ASC";
+														$rs = mysqli_query($GLOBALS['conn'], $Query);
+														if (mysqli_num_rows($rs) > 0) {
+															while ($row = mysqli_fetch_object($rs)) {
+																$count++;
+														?>
+																<li><a href="javascript:void(0)" class="addwhishlist" data-id="<?php print($row->sl_id); ?>"><?php print($row->sl_title); ?></a></li>
+														<?php
+															}
 														}
-													}
-													?>
-													<li>
-														<div class="create_other_list create_list_trigger">+ Create <?php print( ($count > 0) ? 'another' : 'new'); ?> list</div>
-													</li>
-												</ul>
-											</div>
+														?>
+														<li>
+															<div class="create_other_list create_list_trigger">+ Create <?php print(($count > 0) ? 'another' : 'new'); ?> list</div>
+														</li>
+													</ul>
+												</div>
 											<?php } ?>
 										</div>
 									</div>
@@ -564,27 +604,9 @@ if (!$special_price) {
 			$(".drop-down .options ul").hide();
 	});
 </script>
-<script>
-	$(window).load(function() {
-		/*2 popup 1 hide 1 show*/
-		$(".create_list_trigger").click(function() {
-			$('.create_list_popup').show();
-			$('.create_list_popup').resize();
-			$('body').css({
-				'overflow': 'hidden'
-			});
-		});
-		$('.create_list_close').click(function() {
-			$('.create_list_popup').hide();
-			$('body').css({
-				'overflow': 'inherit'
-			});
-		});
 
-	});
-</script>
 <script>
-	$(".addwhishlist").on("click", function(){
+	$(".addwhishlist").on("click", function() {
 		let supplier_id = <?php print($supplier_id); ?>;
 		let sl_id = $(this).attr("data-id");
 		//console.log("sl_id: "+sl_id);
@@ -592,16 +614,16 @@ if (!$special_price) {
 			url: 'ajax_calls.php?action=addwhishlist',
 			method: 'POST',
 			data: {
-				supplier_id : supplier_id,
-				sl_id : sl_id
+				supplier_id: supplier_id,
+				sl_id: sl_id
 			},
 			success: function(response) {
 				//console.log("response = "+response);
 				const obj = JSON.parse(response);
 				console.log(obj);
-				if(obj.status == 1){
-					$("#alert_wishlist_txt").text(obj.message);	
-					$("#alert_wishlist").show();	
+				if (obj.status == 1) {
+					$("#alert_wishlist_txt").text(obj.message);
+					$("#alert_wishlist").show();
 				}
 			}
 		});
