@@ -424,7 +424,7 @@ include("includes/messages.php");
                                                 <td>
                                                     <div class="popup_container">
                                                         <div class="container__img-holder">
-                                                            <img src="<?php print($row->pg_mime_source_url); ?>">
+                                                            <img src="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>">
                                                         </div>
                                                     </div>
                                                 </td>

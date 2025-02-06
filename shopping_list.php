@@ -189,7 +189,7 @@ include("includes/message.php");
 																}
 														?>
 																<div class="pd_card">
-																	<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row3->supplier_id); ?>"><img src="<?php print($row3->pg_mime_source_url); ?>" alt=""></a></div>
+																	<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row3->supplier_id); ?>"><img src="<?php print(get_image_link(160, $row3->pg_mime_source_url)); ?>" alt=""></a></div>
 																	<div class="pd_detail">
 																		<h5><a href="product_detail.php?supplier_id=<?php print($row3->supplier_id); ?>"> <?php print($row3->pro_description_short); ?> </a></h5>
 																		<div class="pd_rating">
