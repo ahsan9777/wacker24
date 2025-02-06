@@ -11,7 +11,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$usa_id = $_REQUEST['usa_id'];
 	$pm_id = $_REQUEST['pm_id'];
 	if ($pm_id == 1) {
-		$usa_id = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
+		//$usa_id = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
 		if (empty($usa_id)) {
 			header("Location: my_address.php");
 			die();
@@ -284,7 +284,7 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pg.pg_mime_source FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
@@ -298,7 +298,7 @@ include("includes/message.php");
 											$delivery_charges = get_delivery_charges($cart_amount);
 									?>
 											<div class="cart_pd_row">
-												<div class="cart_pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="getftpimage.php?img=<?php print($row->pg_mime_source); ?>" alt=""></a></div>
+												<div class="cart_pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
 														<div class="cart_pd_title"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><?php print($row->pro_description_short); ?></a></div>

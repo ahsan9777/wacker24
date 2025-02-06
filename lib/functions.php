@@ -2600,6 +2600,11 @@ function get_font_link($font, $path = "") {
     return $get_font_link;
 }
 
+function get_image_link($replace, $link){
+
+	return str_replace("/2000/","/".$replace."/",$link);
+}
+
 
 
 

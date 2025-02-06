@@ -154,7 +154,7 @@ if (isset($_REQUEST['action'])) {
                 $show_card_body = "";
                 $count = 0;
                 $cart_amount = 0;
-                $Query = "SELECT ci.*, pg.pg_mime_source FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                $Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
                 //print($Query);
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
@@ -195,7 +195,7 @@ if (isset($_REQUEST['action'])) {
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="product_detail.php?supplier_id=' . $row->supplier_id . '"><img src="getftpimage.php?img=' . $row->pg_mime_source . '" alt=""></a></div>
+                                    <div class="side_cart_pd_image"><a href="product_detail.php?supplier_id=' . $row->supplier_id . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
