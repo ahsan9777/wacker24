@@ -475,7 +475,7 @@ body.body-white{background-color: #fff !important;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_select{width: calc(100%);}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_select_input{width: 100%; font-size: 14px;background: #eeeeee;padding: 6px 10px 6px 10px;border-radius: 100px; border: 0px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_select_input:focus{outline: none; border: none;}
-.product_detail_page .product_detail_section1 .product_right .product_col2 .order_btn .gerenric_btn{width: 100%; font-size: 14px; background-color: #ffca44; border-radius: 100px; margin-bottom: 10px; padding: 5px 20px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .order_btn .gerenric_btn{width: 100%; font-size: 14px; background-color: #ffca44; border-radius: 5px; margin-bottom: 10px; padding: 5px 20px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .order_btn .gerenric_btn:hover{background-color: #eeb31e;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_shippment{width: 100%;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_shippment .shippment_text{width: 100%; margin-bottom: 20px; color: #212529; font-size: 15px;}
@@ -499,7 +499,7 @@ body.body-white{background-color: #fff !important;}
 
 .drop-down_2{position: relative;}
 .drop-down_2 .selected {position: relative;}
-.drop-down_2 .selected a{background:#eeeeee no-repeat scroll right center; position: relative; display:block; padding: 8px 30px 8px 80px; height: 34px; border-radius: 100px; width:100%;box-sizing: border-box; text-decoration:none;color:#000;}
+.drop-down_2 .selected a{background:#eeeeee no-repeat scroll right center; position: relative; display:block; padding: 8px 30px 8px 80px; height: 34px; border-radius: 5px; width:100%;box-sizing: border-box; text-decoration:none;color:#000;}
 .drop-down_2 .selected a::after{width: 0px; height: 0px;border-left: 5px solid transparent; content: ''; position: absolute; right: 10px; top: 14px; border-right: 5px solid transparent; border-top: 5px solid black;}
 .drop-down_2 .option{position:relative;z-index: 9999; }
 .drop-down_2 .options ul{background:#eee none repeat scroll 0 0;position:relative;z-index: 999;  display:none;list-style:none; padding:0px 0px; position:absolute; left:0px; top:0px; width:auto; min-width:100%; height: 170px; overflow-y:scroll; border:1px solid #ccc}

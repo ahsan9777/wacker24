@@ -22,11 +22,13 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         <h2>Category <div class="categroy_close_mb">X</div>
         </h2>
         <div class="categroy_block">
-            <?php 
+            <?php
+            $TotalRecCount = ""; 
             $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id " . $Sidefilter_where . " GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
+            //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             $row = mysqli_fetch_object($rs);
-            $TotalRecCount = $row->TotalRecCount;
+            $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
             ?>
             <ul class="category_show <?php print(($TotalRecCount > 5) ? 'category_show_height' : ''); ?>" id="list_checkbox_hide_1">
                 <?php
@@ -47,10 +49,12 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             <h3>Brands</h3>
             <?php
             $TotalRecCount = 0;
-            $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%can%') AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%can%') AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            //$Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%can%') AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%can%') AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, ".$Sidefilter_brandSubQuery." AS total_count FROM manufacture AS manf WHERE manf.manf_id ".$Sidefilter_brandwhere." AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             $row = mysqli_fetch_object($rs);
-            $TotalRecCount = $row->TotalRecCount;
+            $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
             ?>
             <ul class="category_show <?php print(($TotalRecCount > 5) ? 'category_show_height' : ''); ?>" id="list_checkbox_hide_2">
                 <?php
