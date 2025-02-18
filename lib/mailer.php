@@ -160,6 +160,28 @@ class Mailer {
             $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
             //print($ret);
     }
+
+    public function forgotPass($name, $user_name, $user_passwordd){
+        $username = "";
+        $password = "";
+        $subject = "Forget Password Request";
+        $to = $user_name;
+        //$to = "aqeelashraf@gmail.com";
+
+        $message = "Hi ".$name.",
+        <br><br>Your new Password Request has been received, please see the details and login with new password:
+        <br><br>Name: ".$name."
+        <br>Email: ".$user_name."
+        <br>Subject: ".$subject."
+        <br>New Password: ".$user_passwordd."
+        <br><br>This is an automatic generated message. Do not reply to this message.";
+
+        $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
+        //return $ret;
+        /*print mail($To, $subject, $message, $headers);
+        die;*/
+
+    }
     
 
     

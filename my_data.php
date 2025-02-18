@@ -28,15 +28,15 @@ if(isset($_REQUEST['btnUpdate'])){
 			$qryUdt .= " user_phone='".dbStr(trim($_REQUEST['user_phone']))."',";
 		}
 		if(isset($_REQUEST['old_password'])){
-			$old_password = md5($_REQUEST['old_password']);
-			$check_old_password = returnName("user_password", "users", "user_password", $old_password);
+			$old_password = trim($_REQUEST['old_password']);
+			$check_old_password = returnName("user_password", "users", "user_id", $_SESSION["UID"]);
 
-			if($old_password == $check_old_password){
+			if(password_verify($old_password, $check_old_password)){
 				$new_password = $_REQUEST['new_password'];
 				$confirm_password = $_REQUEST['confirm_password'];
 
 				if($confirm_password == $new_password){
-					$qryUdt .= " user_password='".dbStr(md5(trim($new_password)))."',";
+					$qryUdt .= " user_password='".dbStr(password_hash(trim($new_password), PASSWORD_BCRYPT))."',";
 				} else{
 					header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=11");
 				}

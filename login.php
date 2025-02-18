@@ -29,7 +29,7 @@ if (isset($_REQUEST['btn_login'])) {
 	if ($valid) {
 		//echo "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '1'";die();
 		//$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id = '" . $utype_id . "' AND user_password='" . $password . "' AND user_name='" . $username . "' AND status_id = '1' AND gen_id = '".$gen_id."'") or die(mysqli_error($GLOBALS['conn']));
-		$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '1'") or die(mysqli_error($GLOBALS['conn']));
+		$rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND utype_id = '".$_REQUEST['utype_id']."' AND user_name='" . $username . "' AND status_id = '1'") or die(mysqli_error($GLOBALS['conn']));
 		if (mysqli_num_rows($rs) > 0) {
 			$row = mysqli_fetch_object($rs);
 			if (password_verify($password, $row->user_password)) {
@@ -109,6 +109,18 @@ if (isset($_REQUEST['btn_login'])) {
 						<?php } ?>
 						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
+							<li>
+									<div class="tab_radio_button">
+										<div class="tab_radio_col">
+											<input type="radio" class="utype_id" id="private_customer" name="utype_id" value="3" checked>
+											<label for="private_customer">Private customer</label>
+										</div>
+										<div class="tab_radio_col">
+											<input type="radio" class="utype_id" id="business_customer" name="utype_id" value="4">
+											<label for="business_customer">Business customer</label>
+										</div>
+									</div>
+								</li>
 								<li>
 									<input type="hidden" name="referer" value="<?php print($ref); ?>">
 									<div class="form_label">E-mail address</div>
@@ -120,7 +132,7 @@ if (isset($_REQUEST['btn_login'])) {
 								</li>
 								<li><button type="submit" name="btn_login" class="gerenric_btn full_btn">Login</button></li>
 								<li>
-									<div class="forgot_password"><a href="javascript:void(0)">Forgot your password?</a></div>
+									<div class="forgot_password"><a href="forgot_password.php">Forgot your password?</a></div>
 								</li>
 								<li>
 									<div class="form_term">By registering, you agree to our <a href="term">Allgemeinen Geschäftsbedingungen</a>.Please read our <a href="privacy">Datenschutzerklärung </a>, our <a href="javascript:void(0)">Cookie Notice and our Interest-Based Advertising Notice .</a></div>
