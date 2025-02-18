@@ -88,6 +88,7 @@ if (isset($_REQUEST['btn_login'])) {
 	<title>Wacker 24</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
 	<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
 	<script src="js/jquery-2.2.0.min.js"></script>
 	<?php include("includes/btn_color.php"); ?>
@@ -122,7 +123,7 @@ if (isset($_REQUEST['btn_login'])) {
 									<div class="forgot_password"><a href="javascript:void(0)">Forgot your password?</a></div>
 								</li>
 								<li>
-									<div class="form_term">By registering, you agree to our <a href="javascript:void(0)">Terms and Conditions</a>.Please read our <a href="javascript:void(0)">Privacy Policy </a>, our <a href="javascript:void(0)">Cookie Notice and our Interest-Based Advertising Notice .</a></div>
+									<div class="form_term">By registering, you agree to our <a href="term">Allgemeinen Geschäftsbedingungen</a>.Please read our <a href="privacy">Datenschutzerklärung </a>, our <a href="javascript:void(0)">Cookie Notice and our Interest-Based Advertising Notice .</a></div>
 								</li>
 							</ul>
 						</form>
@@ -143,10 +144,10 @@ if (isset($_REQUEST['btn_login'])) {
 			<div class="page_width">
 				<ul>
 					<li><a href="javascript:void(0)">Cookie Settings </a></li>
-					<li><a href="javascript:void(0)">Imprint</a></li>
-					<li><a href="javascript:void(0)">Privacy & Security</a></li>
-					<li><a href="javascript:void(0)">Terms & Conditions</a></li>
-					<li><a href="contact_page.html">Contact</a></li>
+					<li><a href="impressum">Impressum</a></li>
+					<li><a href="privacy">Datenschutzerklärung</a></li>
+					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
+					<li><a href="contact_us">Contact</a></li>
 				</ul>
 			</div>
 		</div>

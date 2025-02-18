@@ -112,6 +112,7 @@ include("includes/message.php");
 	<title>Wacker 24</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
 	<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
 	<script src="js/jquery-2.2.0.min.js"></script>
 	<?php include("includes/btn_color.php"); ?>
@@ -223,7 +224,7 @@ include("includes/message.php");
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
 									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;" ></div>
 								</li>
-								<li class="mt_30"><input type="checkbox" required> I have read the privacy policy | <a href="javascript:void(0)">Privacy Policy</a></li>
+								<li class="mt_30"><input type="checkbox" required> I have read the privacy policy | <a href="privacy">Datenschutzerklärung </a></li>
 								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Register Now</button></li>
 							</ul>
 						</div>
@@ -239,10 +240,10 @@ include("includes/message.php");
 			<div class="page_width">
 				<ul>
 					<li><a href="javascript:void(0)">Cookie Settings </a></li>
-					<li><a href="javascript:void(0)">Imprint</a></li>
-					<li><a href="javascript:void(0)">Privacy & Security</a></li>
-					<li><a href="javascript:void(0)">Terms & Conditions</a></li>
-					<li><a href="contact_page.html">Contact</a></li>
+					<li><a href="impressum">Impressum</a></li>
+					<li><a href="privacy">Datenschutzerklärung</a></li>
+					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
+					<li><a href="contact_us">Contact</a></li>
 				</ul>
 			</div>
 		</div>

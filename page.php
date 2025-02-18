@@ -1,6 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 $Query1 = "SELECT cnt.cnt_id, cnt.cnt_slug, cnt.cnt_section, cnt.cnt_title_de AS cnt_title, cnt.cnt_heading_de AS cnt_heading, cnt.cnt_details_de AS cnt_details, cnt.cnt_image, cnt.cnt_banner_image  FROM contents AS cnt WHERE cnt.cnt_slug = '" . $_REQUEST['cnt_slug'] . "'";
+//print($Query1);
 $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 if (mysqli_num_rows($rs1) > 0) {
 	$row1 = mysqli_fetch_object($rs1);
@@ -42,7 +43,7 @@ if (mysqli_num_rows($rs1) > 0) {
 						<?php } ?>
 						<?php
 						if ($cnt_section > 0) {
-							$Query2 = "SELECT cs.csec_id, cs.cst_id, cs.cnt_id, cs.csec_year, cs.csec_heading_one_de AS csec_heading_one, cs.csec_content_one_de AS csec_content_one, cs.csec_heading_two_de AS csec_heading_two, cs.csec_content_two_de AS csec_content_two, cs.csec_banner_image, cs.csec_image_one, cs.csec_image_two FROM content_sections AS cs WHERE cs.csec_status = '1' AND cs.cnt_id = '" . $row1->cnt_id . "' ORDER BY cs.cst_orderby ASC";
+							$Query2 = "SELECT cs.csec_id, cs.cst_id, cs.cnt_id, cs.csec_year, cs.csec_heading_one_de AS csec_heading_one, cs.csec_content_one_de AS csec_content_one, cs.csec_heading_two_de AS csec_heading_two, cs.csec_content_two_de AS csec_content_two, cs.csec_banner_image, cs.csec_image_one, cs.csec_image_two FROM content_sections AS cs WHERE cs.csec_status = '1' AND cs.cnt_id = '" . $cnt_id . "' ORDER BY cs.cst_orderby ASC";
 							$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
 							if (mysqli_num_rows($rs2) > 0) {
 								while ($row2 = mysqli_fetch_object($rs2)) {

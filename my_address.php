@@ -321,6 +321,100 @@ include("includes/message.php");
 						</div>
 					<?php } ?>
 				</div>
+				<div class="hm_section_3 margin_top_30">
+					<div class="gerenric_white_box">
+						<div class="gerenric_product full_column mostviewed padding_left_right_10">
+							<h2>My special prices</h2>
+							<div class="gerenric_slider_mostviewed">
+								<?php
+								$special_price = "";
+								$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '20500' AND cm.cm_type = '0' ORDER BY  RAND() LIMIT 0,12";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($rw = mysqli_fetch_object($rs)) {
+								?>
+										<div>
+											<div class="pd_card txt_align_left">
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_detail">
+													<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<div class="pd_rating">
+														<ul>
+															<li>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+															</li>
+														</ul>
+													</div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+													<?php } else { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_without_tax)); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_amount)); ?>€</div>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+								<?php
+									}
+								}
+								?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="hm_section_3">
+					<div class="gerenric_white_box">
+						<div class="gerenric_product full_column mostviewed padding_left_right_10">
+							<div class="gerenric_slider_mostviewed">
+								<?php
+								$special_price = "";
+								$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '20500' AND cm.cm_type = '0' ORDER BY  RAND() LIMIT 0,12";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($rw = mysqli_fetch_object($rs)) {
+								?>
+										<div>
+											<div class="pd_card txt_align_left">
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_detail">
+													<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<div class="pd_rating">
+														<ul>
+															<li>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+															</li>
+														</ul>
+													</div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+													<?php } else { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_without_tax)); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_amount)); ?>€</div>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+								<?php
+									}
+								}
+								?>
+							</div>
+						</div>
+					</div>
+					
+				</div>
 			</div>
 		</section>
 		<!--CONTENT_SECTION_END-->
@@ -380,6 +474,41 @@ include("includes/message.php");
 			//frm_search.submit();
 			//return false;
 		}
+	});
+</script>
+<script src="js/slick.js"></script>
+<script>
+$(".gerenric_slider_mostviewed").slick({
+		slidesToShow: 10,
+		slidesToScroll: 1,
+		autoplay: true,
+		dots: false,
+		autoplaySpeed: 2000,
+		infinite: true,
+		responsive: [
+
+			{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 650,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1
+				}
+			}
+		]
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>

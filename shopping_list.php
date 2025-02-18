@@ -18,7 +18,7 @@ if (isset($_REQUEST['btnAdd'])) {
 }
 
 if (isset($_REQUEST['updatewishlist'])) {
-	mysqli_query($GLOBALS['conn'], "UPDATE wishlist SET sl_id = '".$_REQUEST['sl_id']."' WHERE wl_id = " . $_REQUEST['wl_id']) or die(mysqli_error($_REQUEST['conn']));
+	mysqli_query($GLOBALS['conn'], "UPDATE wishlist SET sl_id = '" . $_REQUEST['sl_id'] . "' WHERE wl_id = " . $_REQUEST['wl_id']) or die(mysqli_error($_REQUEST['conn']));
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 }
 if (isset($_REQUEST['deletewishlist'])) {
@@ -220,7 +220,7 @@ include("includes/message.php");
 																						<option value="0">Move</option>
 																						<?php
 																						$count = 0;
-																						$Query4 = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' AND sl_id != '".$row3->sl_id."' ORDER BY sl_id ASC";
+																						$Query4 = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' AND sl_id != '" . $row3->sl_id . "' ORDER BY sl_id ASC";
 																						$rs4 = mysqli_query($GLOBALS['conn'], $Query4);
 																						if (mysqli_num_rows($rs4) > 0) {
 																							while ($row4 = mysqli_fetch_object($rs4)) {
@@ -265,6 +265,101 @@ include("includes/message.php");
 							</div>
 						</div>
 					</div>
+
+				</div>
+				<div class="hm_section_3 margin_top_30">
+					<div class="gerenric_white_box">
+						<div class="gerenric_product full_column mostviewed padding_left_right_10">
+							<h2>My special prices</h2>
+							<div class="gerenric_slider_mostviewed">
+								<?php
+								$special_price = "";
+								$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '90502' AND cm.cm_type = '0' ORDER BY  RAND() LIMIT 0,12";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($rw = mysqli_fetch_object($rs)) {
+								?>
+										<div>
+											<div class="pd_card txt_align_left">
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_detail">
+													<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<div class="pd_rating">
+														<ul>
+															<li>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+															</li>
+														</ul>
+													</div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+													<?php } else { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_without_tax)); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_amount)); ?>€</div>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+								<?php
+									}
+								}
+								?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="hm_section_3">
+					<div class="gerenric_white_box">
+						<div class="gerenric_product full_column mostviewed padding_left_right_10">
+							<div class="gerenric_slider_mostviewed">
+								<?php
+								$special_price = "";
+								$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '90502' AND cm.cm_type = '0' ORDER BY  RAND() LIMIT 0,12";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($rw = mysqli_fetch_object($rs)) {
+								?>
+										<div>
+											<div class="pd_card txt_align_left">
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_detail">
+													<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<div class="pd_rating">
+														<ul>
+															<li>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+																<div class="fa fa-star"></div>
+															</li>
+														</ul>
+													</div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $rw->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $rw->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+													<?php } else { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_without_tax)); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $rw->pbp_price_amount)); ?>€</div>
+													<?php } ?>
+												</div>
+											</div>
+										</div>
+								<?php
+									}
+								}
+								?>
+							</div>
+						</div>
+					</div>
+					
 				</div>
 			</div>
 		</section>
@@ -308,12 +403,46 @@ include("includes/message.php");
 	}).change()
 </script>
 <script>
-	$(".sl_id").on("change", function(){
+	$(".sl_id").on("change", function() {
 		let wl_id = $(this).attr("data-id");
-		let sl_id = $("#sl_id_"+$(this).attr("data-id")).val();
+		let sl_id = $("#sl_id_" + $(this).attr("data-id")).val();
 		//console.log("wl_id: "+wl_id+" sl_id: "+sl_id);
-		window.location = "<?php print($_SERVER['PHP_SELF']) ?>?updatewishlist&wl_id="+wl_id+"&sl_id="+sl_id;
+		window.location = "<?php print($_SERVER['PHP_SELF']) ?>?updatewishlist&wl_id=" + wl_id + "&sl_id=" + sl_id;
 	});
 </script>
+<script src="js/slick.js"></script>
+<script>
+$(".gerenric_slider_mostviewed").slick({
+		slidesToShow: 10,
+		slidesToScroll: 1,
+		autoplay: true,
+		dots: false,
+		autoplaySpeed: 2000,
+		infinite: true,
+		responsive: [
 
+			{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 650,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1
+				}
+			}
+		]
+	});
+</script>
 </html>
