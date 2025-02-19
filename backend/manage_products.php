@@ -359,8 +359,8 @@ include("includes/messages.php");
                             <h1 class="text-white">Artical Management</h1>
                             <div class="d-flex gap-1">
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
-                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
-                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=4"); ?>" class="add-new"><span class="material-icons icon">add</span> <span class="text">Add New Schulranzen</span></a>
+                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Artical</span></a>
+                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=4"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Schulranzen</span></a>
                             </div>
 
                         </div>

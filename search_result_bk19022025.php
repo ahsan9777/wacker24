@@ -24,7 +24,6 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	//$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%' ";
 	$whereclause = " pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '6' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
 	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	//$Sidefilter_brandSubQuery = "(SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	//$Sidefilter_brandwhere = "IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	$Sidefilter_brandwith = "WITH filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
@@ -43,31 +42,17 @@ if(isset($_REQUEST['search_group_id']) && $_REQUEST['search_group_id'] > 0){
 		if(!empty($search_group_id_where)){
 			$search_group_id_where .= " OR ";
 		}
-		$search_group_id_where .= "FIND_IN_SET (" . dbStr(trim($_REQUEST['search_group_id'][$i])) . ", cm.sub_group_ids)";
+		$search_group_id_where .= "FIND_IN_SET(" . dbStr(trim($_REQUEST['search_group_id'][$i])) . ", cm.sub_group_ids)";
 	}
 	$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE ".$search_group_id_where." ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (".$search_group_id_where.")) )";
 	$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (".$search_group_id_where.") AND cm.supplier_id " . $Sidefilter_where . ") ";
 }
 $search_manf_id_check = array();
 if(isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0){
-	//print_r($_REQUEST['search_manf_id']);//die();
-	$search_manf_id = "";
+	print_r($_REQUEST['search_manf_id']);//die();
 	for($i = 0; $i < count($_REQUEST['search_manf_id']); $i++){
-		$search_manf_id_check[] = $_REQUEST['search_manf_id'][$i];
-		$search_manf_id .= $_REQUEST['search_manf_id'][$i].",";
+		$search_manf_id_check[] = $_REQUEST['search_group_id'][$i];
 	}
-	$whereclause .= " AND pro.manf_id IN (".rtrim($search_manf_id, ",").")";
-}
-
-$search_pf_fvalue_check = "";
-if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
-	//print_r($_REQUEST['search_pf_fvalue']);die();
-	$search_pf_fvalue_array = explode(";", $_REQUEST['search_pf_fvalue']);
-	$search_pf_fvalue = "";
-		$search_pf_fvalue_check = $_REQUEST['search_pf_fvalue'];
-		$search_pf_fvalue .= "'".$search_pf_fvalue_array[0]."',";
-	$whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue = '".$search_pf_fvalue_array[0]."' AND pf.pf_forder = '".$search_pf_fvalue_array[1]."' )";
 }
 
 
@@ -101,7 +86,7 @@ if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
 							<div class="gerenric_product">
 								<?php
 								$Query = "SELECT * FROM vu_products AS pro WHERE " . $whereclause . " ";
-								//print($Query);
+								print($Query);
 								$counter = 0;
 								$limit = 30;
 								$start = $p->findStart($limit);
