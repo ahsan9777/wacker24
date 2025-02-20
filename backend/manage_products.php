@@ -212,7 +212,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $cat_title_three = $rsMem->cat_title;
             $pro_description_short = $rsMem->pro_description_short;
             $pro_description_long = $rsMem->pro_description_long;
-            $mfile_path = !empty($rsMem->pg_mime_source_url) ? $rsMem->pg_mime_source_url : "";
+            $mfile_path = !empty($rsMem->pg_mime_source_url) ? get_image_link(427, $rsMem->pg_mime_source_url) : "";
             //$mfile_path = !empty($rsMem->pg_mime_source_url) ? "" : "";
             $formHead = "Update Info";
         }
@@ -420,7 +420,6 @@ include("includes/messages.php");
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pro_id); ?>"></td>
-                                                <!--<td><img src="<?php print($image_path); ?>" width=" <?php print(!empty($row->cat_image) ? 300 : 100); ?>"></td>-->
                                                 <td>
                                                     <div class="popup_container">
                                                         <div class="container__img-holder">

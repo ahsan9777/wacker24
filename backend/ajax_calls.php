@@ -47,7 +47,11 @@ if (isset($_REQUEST['action'])) {
             $json = array();
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                $where .= " WHERE pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+                $pro_custom_add = "";
+                if(isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0){
+                    $pro_custom_add = " AND pro_custom_add = '1'";
+                }
+                $where .= " WHERE pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ".$pro_custom_add." ";
             }
             $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -190,6 +194,27 @@ if (isset($_REQUEST['action'])) {
             } else {
                 $level_one_data = "<option value=''>No record found!</option>";
                 $retValue = array("status" => "0", "message" => "Record not found!", "level_one_data" => $level_one_data);
+            }
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'level_two':
+            //print_r($_REQUEST);die();
+            $retValue = array();
+            $level_two_data = "";
+            $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title FROM category AS cat WHERE cat.parent_id = '" . dbStr(trim($_REQUEST['level_two_id'])) . "' ORDER BY cat.cat_id ASC";
+            //print($Query);die();
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $level_two_data .= "<option value=" . $row->group_id . "  > " . $row->cat_title . " </option>";
+                }
+
+                $retValue = array("status" => "1", "message" => "Record found successfully!",  "level_two_data" => $level_two_data);
+            } else {
+                $level_two_data = "<option value=''>No record found!</option>";
+                $retValue = array("status" => "0", "message" => "Record not found!", "level_two_data" => $level_two_data);
             }
             $jsonResults = json_encode($retValue);
             print($jsonResults);
