@@ -11,7 +11,7 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $pro_id = getMaximum("products", "pro_id");
         mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids) VALUES ('" . dbStr(trim($_REQUEST['level_three_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-        mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_custom_add, pro_status, manf_id, supplier_id, pro_ean, pro_description_short, pro_description_long, pro_udx_seo_internetbezeichung, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '1', '0', '" . dbStr(trim($_REQUEST['manf_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['pro_ean'])) . "', '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_custom_add, pro_status, manf_id, supplier_id, pro_ean, pro_manufacture_aid, pro_description_short, pro_description_long, pro_udx_seo_internetbezeichung, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '1', '0', '" . dbStr(trim($_REQUEST['manf_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['pro_ean'])) . "', '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -24,7 +24,7 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $old_supplier_id = returnName("supplier_id", "products", "pro_id", $_REQUEST['pro_id']);
         mysqli_query($GLOBALS['conn'], "UPDATE category_map SET cat_id = '" . dbStr(trim($_REQUEST['level_three_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', sub_group_ids = '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "'  WHERE supplier_id=" . $old_supplier_id) or die(mysqli_error($GLOBALS['conn']));
-        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '" . dbStr(trim($_REQUEST['manf_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', pro_ean = '" . dbStr(trim($_REQUEST['pro_ean'])) . "', pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', pro_description_long = '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '" . dbStr(trim($_REQUEST['manf_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', pro_ean = '" . dbStr(trim($_REQUEST['pro_ean'])) . "', pro_manufacture_aid = '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', pro_description_long = '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
     }
 } elseif (isset($_REQUEST['action'])) {
@@ -35,6 +35,7 @@ if (isset($_REQUEST['btnAdd'])) {
             $supplier_id = $rsMem->supplier_id;
             $pro_ean = $rsMem->pro_ean;
             $manf_id = $rsMem->manf_id;
+            $pro_manufacture_aid = $rsMem->pro_manufacture_aid;
             $pro_description_short = $rsMem->pro_description_short;
             $pro_description_long = $rsMem->pro_description_long;
             $pro_udx_seo_internetbezeichung = $rsMem->pro_udx_seo_internetbezeichung;
@@ -47,7 +48,9 @@ if (isset($_REQUEST['btnAdd'])) {
         }
     } else {
         $supplier_id = "";
+        $manf_id = "";
         $pro_ean = "";
+        $pro_manufacture_aid = "";
         $pro_description_short = "";
         $pro_description_long = "";
         $pro_udx_seo_internetbezeichung = "";
@@ -145,19 +148,23 @@ include("includes/messages.php");
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-md-4 col-12 mt-3">
+                                <div class="col-md-3 col-12 mt-3">
                                     <label for="">Manufacture</label>
                                     <select class="input_style" name="manf_id" id="manf_id">
                                         <?php FillSelected2("manufacture", "manf_id", "manf_name", $manf_id, "manf_status > 0"); ?>
                                     </select>
                                 </div>
-                                <div class="col-md-4 col-12 mt-3">
+                                <div class="col-md-3 col-12 mt-3">
                                     <label for="">Supplier ID</label>
                                     <input type="text" <?php print($readonly); ?> class="input_style" name="supplier_id" id="supplier_id" value="<?php print($supplier_id); ?>" placeholder="Supplier ID" required>
                                 </div>
-                                <div class="col-md-4 col-12 mt-3">
+                                <div class="col-md-3 col-12 mt-3">
                                     <label for="">EAN</label>
                                     <input type="text" class="input_style" name="pro_ean" id="pro_ean" value="<?php print($pro_ean); ?>" placeholder="EAN">
+                                </div>
+                                <div class="col-md-3 col-12 mt-3">
+                                    <label for="">Manufacture AID</label>
+                                    <input type="text" class="input_style" name="pro_manufacture_aid" id="pro_manufacture_aid" value="<?php print($pro_manufacture_aid); ?>" placeholder="Manufacture AID">
                                 </div>
                                 <div class="col-md-12 col-12 mt-3">
                                     <label for="">Short Description</label>
