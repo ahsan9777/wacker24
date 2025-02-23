@@ -13,22 +13,16 @@ if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
 }
 
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
-	//$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%'";
 	$whereclause = "pro.supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
 	header("Location: " . $GLOBALS['siteURL'] . "product_detail.php?supplier_id=" . $_REQUEST['supplier_id']);
-	/*$Sidefilter_where = "pf.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%')";
-	$heading_title .= "<br>Keyword : ".$_REQUEST['search_keyword'];
-	$qryStrURL .= "search_keyword=".$_REQUEST['search_keyword']."&";*/
+	
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
-	//$whereclause = "pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_description_short LIKE '%".dbStr(trim($_REQUEST['search_keyword']))."%' ";
-	$whereclause = " pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '6' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
+	$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '6' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' ) )";
 	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
-	//$Sidefilter_brandSubQuery = "(SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
-	//$Sidefilter_brandwhere = "IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	$Sidefilter_brandwith = "WITH filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
-	//$whereclause = "pro.pro_id = '".dbStr(trim($_REQUEST['pro_id']))."'";
+	
 	$heading_title .= "<br>Keyword : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
 	$search_keyword = $_REQUEST['search_keyword'];
