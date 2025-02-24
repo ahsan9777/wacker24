@@ -48,7 +48,7 @@ $page = 1;
 									?>
 									<div class="pd_ctg_card">
 										<a href="products.php?level_three=<?php print($row2->cat_id); ?>">
-											<div class="pd_ctg_image"><img src="<?php print(get_image_link(160, $row2->pg_mime_source)); ?>" alt=""></div>
+											<div class="pd_ctg_image"><img  loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source)); ?>" alt=""></div>
 											<div class="pd_ctg_title"> <?php print($row2->cat_title); ?> </div>
 										</a>
 									</div>
@@ -79,7 +79,7 @@ $page = 1;
 									?>
 									<div>
 										<div class="pd_card">
-											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 											<div class="pd_detail">
 												<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 												<div class="pd_rating">
@@ -125,7 +125,7 @@ $page = 1;
 									?>
 									<div>
 										<div class="pd_card">
-											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 											<div class="pd_detail">
 												<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 												<div class="pd_rating">
@@ -181,7 +181,7 @@ $page = 1;
 									?>
 									<div>
 										<div class="pd_card">
-											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>"><img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
+											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
 											<div class="pd_detail">
 												<h5><a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
 												<div class="pd_rating">
@@ -236,7 +236,7 @@ $page = 1;
 									?>
 									<div>
 										<div class="pd_card txt_align_left">
-											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 											<div class="pd_detail">
 												<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 												<div class="pd_rating">
@@ -282,7 +282,7 @@ $page = 1;
 									?>
 									<div>
 										<div class="pd_card txt_align_left">
-											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+											<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 											<div class="pd_detail">
 												<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 												<div class="pd_rating">
@@ -340,7 +340,7 @@ $page = 1;
 								?>
 								<div>
 									<div class="brand_col"><a href="javascript:void(0)">
-											<div class="brand_item"><img src="<?php print($brand_image_href) ?>" alt="<?php print($row->brand_name) ?>" title="<?php print($row->brand_name) ?>">
+											<div class="brand_item"><img  loading="lazy" src="<?php print($brand_image_href) ?>" alt="<?php print($row->brand_name) ?>" title="<?php print($row->brand_name) ?>">
 											</div>
 										</a></div>
 								</div>

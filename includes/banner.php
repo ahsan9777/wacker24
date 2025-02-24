@@ -27,7 +27,7 @@
                                 <source src="<?php print($image_path); ?>" type="video/mp4">
                             </video>
                             <?php } else {?>
-                            <div class="banner_image"><img src="<?php print($image_path); ?>" alt=""></div>
+                            <div class="banner_image"><img  loading="lazy" src="<?php print($image_path); ?>" alt=""></div>
                             <?php } ?>
                         </div>
                 <?php
