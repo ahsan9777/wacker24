@@ -128,7 +128,7 @@ if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
 									?>
 											<div class="pd_card pd_card_five">
 												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
-												<div class="pd_detail">
+												<div class="pd_detail ">
 													<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
