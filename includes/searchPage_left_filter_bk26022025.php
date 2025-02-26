@@ -25,7 +25,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         <div class="categroy_block">
             <?php
             $TotalRecCount = "";
-            $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id IN (" . rtrim($suppliers, ",") . ") GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
+            $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id " . $Sidefilter_where . " GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
             //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             $row = mysqli_fetch_object($rs);
@@ -57,9 +57,9 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             <h3>Brands</h3>
             <?php
             $TotalRecCount = 0;
-            $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.supplier_id IN (" . rtrim($suppliers, ",") . ")) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.supplier_id IN (" . rtrim($suppliers, ",") . ")) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            //$Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.pro_description_short LIKE '%can%') AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.pro_description_short LIKE '%can%') AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
             //$Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, " . $Sidefilter_brandSubQuery . " AS total_count FROM manufacture AS manf WHERE manf.manf_id " . $Sidefilter_brandwhere . " AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
-            //$Query = " ".$Sidefilter_brandwith." SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(*) FROM filtered_products WHERE filtered_products.manf_id = manf.manf_id) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT manf_id FROM filtered_products) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC;";
+            $Query = " ".$Sidefilter_brandwith." SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(*) FROM filtered_products WHERE filtered_products.manf_id = manf.manf_id) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT manf_id FROM filtered_products) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC;";
             //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             $row = mysqli_fetch_object($rs);
@@ -88,7 +88,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         </div>
         <?php
         $count = 3;
-        $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.supplier_id IN (" . rtrim($suppliers, ",") . ") GROUP BY pf.pf_forder ORDER BY pf.pf_forder ASC";
+        $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_forder ORDER BY pf.pf_forder ASC";
         //print($Query1);
         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
         if (mysqli_num_rows($rs) > 0) {
@@ -99,7 +99,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
                     <h3><?php print($row1->pf_fname); ?></h3>
                     <?php
                     $TotalRecCount = 0;
-                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_forder = '" . $row1->pf_forder . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id IN (" . rtrim($suppliers, ",") . ") AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_forder = '" . $row1->pf_forder . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id " . $Sidefilter_featurewhere . " AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     //print($Query2);
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     $row2 = mysqli_fetch_object($rs2);

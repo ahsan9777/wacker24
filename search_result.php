@@ -40,9 +40,9 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	//$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder IN (2,3,5,24,26) AND ( ".rtrim($pf_fvalue, " OR ")." ) ) )";
 	//$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fname IN ('Werbliche Produkttypbezeichnung', 'Papierformat', 'Grammatur', 'Farbe', 'Anzahl der Blätter je Packung') AND ( ".rtrim($pf_fvalue, " OR ")."  ) ) )";
 	$whereclause = " (pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_description_short LIKE '%" . dbStr(str_replace(array("-", " "),'',trim($_REQUEST['search_keyword']))) . "%'  " . rtrim($products_feature, " OR "). "  )";
-	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
-	$Sidefilter_brandwith = "WITH filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
+	//$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%') ".str_replace("pro.supplier_id", "cm.supplier_id", $products_feature)."";
+	//$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%') ";
+	//$Sidefilter_brandwith = "WITH filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' ".$products_feature.")";
 
 	$heading_title .= "<br>Keyword : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
@@ -60,9 +60,10 @@ if (isset($_REQUEST['search_group_id']) && $_REQUEST['search_group_id'] > 0) {
 		}
 		$search_group_id_where .= "FIND_IN_SET (" . dbStr(trim($_REQUEST['search_group_id'][$i])) . ", cm.sub_group_ids)";
 	}
-	$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE " . $search_group_id_where . " ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) )";
-	$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id " . $Sidefilter_where . ") ";
+	//$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE " . $search_group_id_where . " ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
+	//$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) )";
+	//$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id " . $Sidefilter_where . ") ";
+	$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND ( " . ltrim($products_feature, " OR ") . ") ) ";
 }
 $search_manf_id_check = array();
 if (isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0) {
@@ -111,18 +112,26 @@ if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 				<div class="page_width">
 					<div class="product_inner">
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
-						<?php include("includes/searchPage_left_filter.php"); ?>
+						<?php
+						$Query_search = "SELECT * FROM vu_products AS pro WHERE " . $whereclause . " ";
+						$counter = 0;
+						$limit = 30;
+						$start = $p->findStart($limit);
+						$rs1 = mysqli_query($GLOBALS['conn'], $Query_search);
+						$suppliers = "";
+						while($row22 = mysqli_fetch_object($rs1)){
+							$suppliers .= $row22->supplier_id.",";
+						}
+						//echo $suppliers;
+						 include("includes/searchPage_left_filter.php");
+						  ?>
 						<div class="pd_right">
 							<div class="gerenric_product">
 								<?php
-								$Query = "SELECT * FROM vu_products AS pro WHERE " . $whereclause . " ";
-								//print($Query);
-								$counter = 0;
-								$limit = 30;
-								$start = $p->findStart($limit);
-								$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
+								print($Query_search);
+								$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query_search));
 								$pages = $p->findPages($count, $limit);
-								$rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
+								$rs = mysqli_query($GLOBALS['conn'], $Query_search . " LIMIT " . $start . ", " . $limit);
 								$row = mysqli_fetch_object($rs);
 								?>
 								<h2> <?php print(rtrim($heading_title, ";") . " ( " . $count . " )"); ?> </h2>
