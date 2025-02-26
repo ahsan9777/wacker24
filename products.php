@@ -2,7 +2,7 @@
 include("includes/php_includes_top.php");
 if (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0) {
 
-	$whereclause = "WHERE pro.manf_id = '" . $_REQUEST['manf_id'] . "' ";
+	$whereclause = "WHERE cm.manf_id = '" . $_REQUEST['manf_id'] . "' ";
 	$qryStrURL .= "manf_id=" . $_REQUEST['manf_id'] . "&";
 	$heading_title = returnName("manf_name", "manufacture", "manf_id", $_REQUEST['manf_id']);
 } elseif (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) {

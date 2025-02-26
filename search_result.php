@@ -15,53 +15,74 @@ if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
 	$whereclause = "pro.supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
 	header("Location: " . $GLOBALS['siteURL'] . "product_detail.php?supplier_id=" . $_REQUEST['supplier_id']);
-	
+
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
-	$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '6' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' ) )";
+	$pf_fvalue_keyword = explode(" ", trim($_REQUEST['search_keyword']));
+	//print_r($pro_description_short_keyword);
+	$products_feature = "";
+	$pf_fname_array = array('Werbliche Produkttypbezeichnung', 'Papierformat', 'Grammatur', 'Farbe', 'Anzahl der Blätter je Packung');
+	for ($j = 0; $j < 2; $j++) {
+		$pf_fvalue = "";
+		$products_feature .= " OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fname = '" . $pf_fname_array[$j] . "' ";
+		for ($i = 0; $i < count($pf_fvalue_keyword); $i++) {
+			//print("i: ".$i." j: ".$j."<br>");
+			if (!empty($pf_fvalue_keyword[$i])) {
+				if ($j == 0) {
+					$pf_fvalue .= "pf.pf_fvalue LIKE '%" . dbStr(trim($pf_fvalue_keyword[$i])) . "%' OR ";
+				} else {
+					$pf_fvalue .= "pf.pf_fvalue LIKE '" . dbStr(trim($pf_fvalue_keyword[$i])) . "%' OR ";
+				}
+			}
+		}
+		$products_feature .= " AND ( " . rtrim($pf_fvalue, " OR ") . "  ) ) ";
+	}
+	//$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder IN (2,3,5,24,26) AND ( ".rtrim($pf_fvalue, " OR ")." ) ) )";
+	//$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fname IN ('Werbliche Produkttypbezeichnung', 'Papierformat', 'Grammatur', 'Farbe', 'Anzahl der Blätter je Packung') AND ( ".rtrim($pf_fvalue, " OR ")."  ) ) )";
+	$whereclause = " (pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_description_short LIKE '%" . dbStr(str_replace(array("-", " "),'',trim($_REQUEST['search_keyword']))) . "%'  " . rtrim($products_feature, " OR "). "  )";
 	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%')";
 	$Sidefilter_brandwith = "WITH filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' )";
-	
+
 	$heading_title .= "<br>Keyword : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
 	$search_keyword = $_REQUEST['search_keyword'];
 }
 $search_group_id_check = array();
-if(isset($_REQUEST['search_group_id']) && $_REQUEST['search_group_id'] > 0){
+if (isset($_REQUEST['search_group_id']) && $_REQUEST['search_group_id'] > 0) {
 	$whereclause = "";
 	$search_group_id_where = "";
 	//print_r($_REQUEST['search_group_id']);//die();
-	for($i = 0; $i < count($_REQUEST['search_group_id']); $i++){
+	for ($i = 0; $i < count($_REQUEST['search_group_id']); $i++) {
 		$search_group_id_check[] = $_REQUEST['search_group_id'][$i];
-		if(!empty($search_group_id_where)){
+		if (!empty($search_group_id_where)) {
 			$search_group_id_where .= " OR ";
 		}
 		$search_group_id_where .= "FIND_IN_SET (" . dbStr(trim($_REQUEST['search_group_id'][$i])) . ", cm.sub_group_ids)";
 	}
-	$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE ".$search_group_id_where." ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (".$search_group_id_where.")) )";
-	$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (".$search_group_id_where.") AND cm.supplier_id " . $Sidefilter_where . ") ";
+	$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE " . $search_group_id_where . " ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
+	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) )";
+	$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id " . $Sidefilter_where . ") ";
 }
 $search_manf_id_check = array();
-if(isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0){
+if (isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0) {
 	//print_r($_REQUEST['search_manf_id']);//die();
 	$search_manf_id = "";
-	for($i = 0; $i < count($_REQUEST['search_manf_id']); $i++){
+	for ($i = 0; $i < count($_REQUEST['search_manf_id']); $i++) {
 		$search_manf_id_check[] = $_REQUEST['search_manf_id'][$i];
-		$search_manf_id .= $_REQUEST['search_manf_id'][$i].",";
+		$search_manf_id .= $_REQUEST['search_manf_id'][$i] . ",";
 	}
-	$whereclause .= " AND pro.manf_id IN (".rtrim($search_manf_id, ",").")";
+	$whereclause .= " AND pro.manf_id IN (" . rtrim($search_manf_id, ",") . ")";
 }
 
 $search_pf_fvalue_check = "";
-if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
+if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 	//print_r($_REQUEST['search_pf_fvalue']);die();
 	$search_pf_fvalue_array = explode(";", $_REQUEST['search_pf_fvalue']);
 	$search_pf_fvalue = "";
-		$search_pf_fvalue_check = $_REQUEST['search_pf_fvalue'];
-		$search_pf_fvalue .= "'".$search_pf_fvalue_array[0]."',";
-	$whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue = '".$search_pf_fvalue_array[0]."' AND pf.pf_forder = '".$search_pf_fvalue_array[1]."' )";
+	$search_pf_fvalue_check = $_REQUEST['search_pf_fvalue'];
+	$search_pf_fvalue .= "'" . $search_pf_fvalue_array[0] . "',";
+	$whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue = '" . $search_pf_fvalue_array[0] . "' AND pf.pf_forder = '" . $search_pf_fvalue_array[1] . "' )";
 }
 
 
@@ -104,7 +125,7 @@ if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
 								$rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
 								$row = mysqli_fetch_object($rs);
 								?>
-								<h2> <?php print(rtrim($heading_title, ";"). " ( ".$count." )" ); ?> </h2>
+								<h2> <?php print(rtrim($heading_title, ";") . " ( " . $count . " )"); ?> </h2>
 								<div class="gerenric_product_inner">
 									<?php
 									if (mysqli_num_rows($rs) > 0) {
@@ -127,7 +148,7 @@ if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
 											//}
 									?>
 											<div class="pd_card pd_card_five">
-												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img  loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
 													<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
@@ -141,9 +162,9 @@ if(isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0){
 															</li>
 														</ul>
 													</div>
-													<?php if(!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print( "<del>".$row->pbp_price_without_tax."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value'])."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print( "<del>".$row->pbp_price_amount."€</del> <span class='pd_prise_discount'>". discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1)."€ <span class='pd_prise_discount_value'>".$special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0)? '€' : '%')."</span> </span>"); ?> </div>
+													<?php if (!empty($special_price)) { ?>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
 														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
 														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>

@@ -11,6 +11,10 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
     } elseif (isset($_REQUEST['manf_id'])) {
 
         $leve_id = 11;
+        if(isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0){
+            $leve_id = $_REQUEST['level_one'];
+            $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
+        }
     }
     $left_filter_cat_title = returnName("cat_title_de", "category", "group_id", $leve_id);
 } else {
@@ -25,6 +29,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
     //}
 }
+$Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(".$leve_id.", cm.sub_group_ids)), filtered_products AS ( SELECT DISTINCT pro.manf_id FROM products AS pro WHERE EXISTS ( SELECT 1 FROM relevant_suppliers rs WHERE rs.supplier_id = pro.supplier_id ) )";
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword'])? 'style="width: 420px;"' : ''); ?> >
     <div class="categroy_list sticky">
@@ -57,12 +62,14 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             <h3>Brands</h3>
             <ul class="list_checkbox_hide category_show_height" id="list_checkbox_hide_0">
                 <?php
-                $Query = "SELECT * FROM `manufacture` WHERE manf_status = '1'";
+                //$Query = "SELECT * FROM `manufacture` WHERE manf_status = '1'";
+                $Query = " ".$Sidefilter_brandwith." SELECT manf.* FROM manufacture AS manf JOIN filtered_products fp ON manf.manf_id = fp.manf_id WHERE manf.manf_status = '1' ORDER BY manf.manf_id ASC;";
+                //print($Query);
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
                 ?>
-                        <li><a href="products.php?manf_id=<?php print($row->manf_id); ?>"> <?php print($row->manf_name); ?> </a></li>
+                        <li><a href="products.php?manf_id=<?php print($row->manf_id); ?>&level_one=<?php print($leve_id); ?>"> <?php print($row->manf_name); ?> </a></li>
                 <?php
                     }
                 }
@@ -70,12 +77,12 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             </ul>
             <div class="show-more" data-id= "0">(Show More)</div>
         </div>
-        <div class="categroy_block">
+        <!--<div class="categroy_block">
             <h3>Price</h3>
             <div class="gerenric_range">
                 <div class="range-value"> <input type="text" id="amount" readonly></div>
                 <div id="slider-range" class="range-bar" style="padding: 0px; font-size: 14px"></div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>

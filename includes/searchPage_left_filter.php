@@ -130,13 +130,13 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             }
         }
         ?>
-        <div class="categroy_block">
+        <!--<div class="categroy_block">
             <h3>Price</h3>
             <div class="gerenric_range">
                 <div class="range-value"> <input type="text" id="amount" readonly></div>
                 <div id="slider-range" class="range-bar" style="padding: 0px; font-size: 14px"></div>
             </div>
-        </div>
+        </div>-->
     </form>
 </div>
 
