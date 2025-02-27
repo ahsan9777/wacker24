@@ -18,14 +18,15 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
 }
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword']) ? 'style="width: 420px;"' : ''); ?>>
-    <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="POST" action="search_result.php" role="form" enctype="multipart/form-data">
+    <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
         <h2>Category <div class="categroy_close_mb">X</div>
         </h2>
         <input type="hidden" name="search_keyword" value="<?php print($search_keyword); ?>">
         <div class="categroy_block">
             <?php
             $TotalRecCount = "";
-            $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id IN (" . rtrim($suppliers, ",") . ") GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
+            $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id ".$Sidefilter_where." GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
+            //$Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id IN (" . rtrim($suppliers, ",") . ") GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
             //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             $row = mysqli_fetch_object($rs);
@@ -57,9 +58,9 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
             <h3>Brands</h3>
             <?php
             $TotalRecCount = 0;
-            $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.supplier_id IN (" . rtrim($suppliers, ",") . ")) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.supplier_id IN (" . rtrim($suppliers, ",") . ")) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            //$Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.supplier_id IN (" . rtrim($suppliers, ",") . ")) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.supplier_id IN (" . rtrim($suppliers, ",") . ")) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
             //$Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, " . $Sidefilter_brandSubQuery . " AS total_count FROM manufacture AS manf WHERE manf.manf_id " . $Sidefilter_brandwhere . " AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
-            //$Query = " ".$Sidefilter_brandwith." SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(*) FROM filtered_products WHERE filtered_products.manf_id = manf.manf_id) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT manf_id FROM filtered_products) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC;";
+            $Query = " ".$Sidefilter_brandwith." SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(*) FROM filtered_products WHERE filtered_products.manf_id = manf.manf_id) AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT manf_id FROM filtered_products) AND manf.manf_status = '1' ORDER BY manf.manf_id ASC;";
             //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             $row = mysqli_fetch_object($rs);
