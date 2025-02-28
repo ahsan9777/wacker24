@@ -3,45 +3,46 @@ include("includes/php_includes_top.php");
 
 //print_r($_REQUEST);die();
 $heading_title = "";
-$search_whereclause = "";
 $Sidefilter_where = "";
 
 if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
-	$search_whereclause = "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(" . dbStr(trim($_REQUEST['level_one'])) . ", cm.sub_group_ids)) ";
+	$whereclause = "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(" . dbStr(trim($_REQUEST['level_one'])) . ", cm.sub_group_ids)) ";
 	$heading_title .= "Category : " . returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['level_one']);
 	$qryStrURL .= "level_one=" . $_REQUEST['level_one'] . "&";
 	$cat_id = $_REQUEST['level_one'];
 }
-$search_keyword_where = "";
+$products_feature = "";
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
-	//$search_whereclause = "pro.supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
+	$whereclause = "pro.supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "'";
 	header("Location: " . $GLOBALS['siteURL'] . "product_detail.php?supplier_id=" . $_REQUEST['supplier_id']);
 
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
-	$search_keyword_array = explode(" ", trim(str_replace("-", " ", $_REQUEST['search_keyword'])));
+	$pf_fvalue_keyword = explode(" ", trim($_REQUEST['search_keyword']));
 	//print_r($pro_description_short_keyword);
-	$search_keyword_case = "";
-	$search_keyword_where = "";
-	for ($i = 0; $i < count($search_keyword_array); $i++) {
-		$search_keyword_array_data = "";
-		if (!empty($search_keyword_array[$i])) {
-			$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
-			$search_keyword_case .= "(CASE WHEN ".rtrim($search_keyword_array_data, " OR ")." THEN 1 ELSE 0 END) + "; 
-			$search_keyword_where .= $search_keyword_array_data; 
+	$pf_fname_array = array('Werbliche Produkttypbezeichnung', 'Papierformat', 'Grammatur', 'Farbe', 'Anzahl der Blätter je Packung');
+	for ($j = 0; $j < 2; $j++) {
+		$pf_fvalue = "";
+		$products_feature .= " OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fname = '" . $pf_fname_array[$j] . "' ";
+		for ($i = 0; $i < count($pf_fvalue_keyword); $i++) {
+			//print("i: ".$i." j: ".$j."<br>");
+			if (!empty($pf_fvalue_keyword[$i])) {
+				if ($j == 0) {
+					$pf_fvalue .= "pf.pf_fvalue LIKE '%" . dbStr(trim($pf_fvalue_keyword[$i])) . "%' OR ";
+				} else {
+					$pf_fvalue .= "pf.pf_fvalue LIKE '" . dbStr(trim($pf_fvalue_keyword[$i])) . "%' OR ";
+				}
+			}
 		}
+		$products_feature .= " AND ( " . rtrim($pf_fvalue, " OR ") . "  ) ) ";
 	}
-	/*for ($i = 0; $i < count($search_keyword_array); $i++) {
-		$search_keyword_array_data = "";
-		if (!empty($search_keyword_array[$i])) {
-			$search_keyword_array_data = "pro.pf_fvalue LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
-			$search_keyword_case .= "(CASE WHEN ".rtrim($search_keyword_array_data, " OR ")." THEN 1 ELSE 0 END) + "; 
-			$search_keyword_where .= $search_keyword_array_data; 
-		}
-	}*/
+	//$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder IN (2,3,5,24,26) AND ( ".rtrim($pf_fvalue, " OR ")." ) ) )";
+	//$whereclause = " ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fname IN ('Werbliche Produkttypbezeichnung', 'Papierformat', 'Grammatur', 'Farbe', 'Anzahl der Blätter je Packung') AND ( ".rtrim($pf_fvalue, " OR ")."  ) ) )";
+	$whereclause = " (pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_description_short LIKE '%" . dbStr(str_replace(array("-", " "), '', trim($_REQUEST['search_keyword']))) . "%'  " . rtrim($products_feature, " OR ") . "  )";
+	$Sidefilter_where = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%') ".str_replace("pro.supplier_id", "cm.supplier_id", $products_feature)."";
+	//$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%') ";
+	$Sidefilter_brandwith = "WITH filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' ".$products_feature.")";
 
-	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE ".rtrim($search_keyword_where, " OR ").")";
-	
 	$heading_title .= "Keyword : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
 	$search_keyword = $_REQUEST['search_keyword'];
@@ -59,9 +60,14 @@ if (isset($_REQUEST['search_group_id']) && $_REQUEST['search_group_id'] > 0) {
 		$search_group_id_where .= "FIND_IN_SET (" . dbStr(trim($_REQUEST['search_group_id'][$i])) . ", cm.sub_group_ids)";
 		$qryStrURL .= "search_group_id[]=" . $_REQUEST['search_group_id'][$i] . "&";
 	}
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE (".rtrim($search_keyword_where, " OR ").") AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) )";
-	$search_whereclause = " AND pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) ";
-	$Sidefilter_brandwith = "IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id ".rtrim($Sidefilter_where, " OR ")." ) ";
+	if(!empty($products_feature)){
+		$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE " . $search_group_id_where . " ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE (".ltrim($products_feature, " OR ").") AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
+	} else {
+		$Sidefilter_brandwith = "WITH relevant_suppliers AS ( SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE " . $search_group_id_where . " ), filtered_products AS ( SELECT pro.manf_id, pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN (SELECT supplier_id FROM relevant_suppliers) )";
+	}
+	//$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) )";
+	//$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id " . $Sidefilter_where . ") ";
+	$whereclause .= "pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND ( " . ltrim($products_feature, " OR ") . ") ) ";
 }
 $search_manf_id_check = array();
 if (isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0) {
@@ -72,10 +78,10 @@ if (isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0) {
 		$search_manf_id .= $_REQUEST['search_manf_id'][$i] . ",";
 		$qryStrURL .= "search_manf_id[]=" . $_REQUEST['search_manf_id'][$i] . "&";
 	}
-	$search_whereclause .= " AND pro.manf_id IN (" . rtrim($search_manf_id, ",") . ")";
+	$whereclause .= " AND pro.manf_id IN (" . rtrim($search_manf_id, ",") . ")";
 }
 
-/*$search_pf_fvalue_check = "";
+$search_pf_fvalue_check = "";
 if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 	//print_r($_REQUEST['search_pf_fvalue']);die();
 	$search_pf_fvalue_array = explode(";", $_REQUEST['search_pf_fvalue']);
@@ -83,28 +89,14 @@ if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 	$search_pf_fvalue_check = $_REQUEST['search_pf_fvalue'];
 	$search_pf_fvalue .= "'" . $search_pf_fvalue_array[0] . "',";
 	$whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue = '" . $search_pf_fvalue_array[0] . "' AND pf.pf_forder = '" . $search_pf_fvalue_array[1] . "' )";
-}*/
-$search_pf_fvalue_check = array();
-if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
-	//print_r($_REQUEST['search_pf_forder']);die();
-	//print_r($_REQUEST['search_pf_fvalue']);die();
-	$search_pf_fvalue = "";
-	$search_pf_forder = "";
-	for ($i = 0; $i < count($_REQUEST['search_pf_fvalue']); $i++) {
-		$search_pf_fvalue_check[] = $_REQUEST['search_pf_fvalue'][$i];
-		$search_pf_fvalue .= "'".$_REQUEST['search_pf_fvalue'][$i] . "',";
-		$search_pf_forder .= "'".$_REQUEST['search_pf_forder'][$i] . "',";
-		$qryStrURL .= "search_pf_fvalue[]=" . $_REQUEST['search_pf_fvalue'][$i] . "&";
-	}
-	$search_whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue IN (" .rtrim($search_pf_fvalue, ",").") AND  pf.pf_forder IN (" .rtrim($search_pf_forder, ",").") )";
 }
 
 $order_by = "";
 $sortby = 0;
 $sortby_array = array("Sort by: N/A", "Price high to low", "Price low to high", "Sort by a to z", "Sort by z to a");
-if (isset($_REQUEST['sortby'])) {
+if(isset($_REQUEST['sortby'])){
 	$sortby = $_REQUEST['sortby'];
-	switch ($sortby) {
+	switch($sortby){
 		case 1:
 			$order_by = "ORDER BY pro.pbp_price_amount DESC";
 			break;
@@ -158,15 +150,23 @@ if (isset($_REQUEST['sortby'])) {
 				<div class="page_width">
 					<div class="product_inner">
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
-						<?php include("includes/searchPage_left_filter.php"); ?>
+						<?php
+						$Query_search = "SELECT * FROM vu_products AS pro WHERE " . $whereclause . " ".$order_by."";
+						$counter = 0;
+						$limit = 30;
+						$start = $p->findStart($limit);
+						$rs1 = mysqli_query($GLOBALS['conn'], $Query_search);
+						$suppliers = "";
+						while ($row22 = mysqli_fetch_object($rs1)) {
+							$suppliers .= "'".$row22->supplier_id . "',";
+						}
+						//echo $suppliers;
+						include("includes/searchPage_left_filter.php");
+						?>
 						<div class="pd_right">
 
 							<?php
-							$Query_search = "SELECT pro.*, (".rtrim($search_keyword_case, " + ").") AS match_count FROM vu_products AS pro WHERE (".rtrim($search_keyword_where, " OR ").") ".$search_whereclause." ORDER BY match_count DESC";
 							//print($Query_search);
-							$counter = 0;
-							$limit = 28;
-							$start = $p->findStart($limit);
 							$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query_search));
 							$pages = $p->findPages($count, $limit);
 							$rs = mysqli_query($GLOBALS['conn'], $Query_search . " LIMIT " . $start . ", " . $limit);
@@ -185,11 +185,9 @@ if (isset($_REQUEST['sortby'])) {
 												</div>
 												<div class="options">
 													<ul>
-														<?php for ($i = 0; $i < count($sortby_array); $i++) {
-															if ($i != $sortby) { ?>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?sortby=" . $i . "&" . $qryStrURL); ?>"><?php print($sortby_array[$i]); ?></a></li>
-														<?php }
-														} ?>
+														<?php for($i = 0; $i < count($sortby_array); $i++) { if($i != $sortby){ ?>
+															<li><a href="<?php print($_SERVER['PHP_SELF'] . "?sortby=".$i."&" . $qryStrURL); ?>"><?php print($sortby_array[$i]); ?></a></li>
+														<?php } } ?>
 													</ul>
 												</div>
 											</div>
