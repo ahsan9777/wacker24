@@ -1,11 +1,23 @@
 <?php
 include("includes/php_includes_top.php");
 if (isset($_REQUEST['manf_id']) && $_REQUEST['manf_id'] > 0) {
-
 	$whereclause = "WHERE cm.manf_id = '" . $_REQUEST['manf_id'] . "' ";
 	$qryStrURL .= "manf_id=" . $_REQUEST['manf_id'] . "&";
+	if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0){
+
+		$whereclause .= " AND FIND_IN_SET(" . $_REQUEST['level_one'] . ", cm.sub_group_ids)";
+		$qryStrURL .= "level_one=" . $_REQUEST['level_one'] . "&";
+	} elseif (isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) {
+
+		$whereclause .= " AND FIND_IN_SET(" . $_REQUEST['level_two'] . ", cm.sub_group_ids)";
+		$qryStrURL .= "level_two=" . $_REQUEST['level_two'] . "&";
+	} elseif (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) {
+
+		$whereclause = "WHERE cm.cat_id = '" . $_REQUEST['level_three'] . "' ";
+		$qryStrURL .= "level_three=" . $_REQUEST['level_three'] . "&";
+	}
 	$heading_title = returnName("manf_name", "manufacture", "manf_id", $_REQUEST['manf_id']);
-} elseif (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) {
+} else if (isset($_REQUEST['level_three']) && $_REQUEST['level_three'] > 0) {
 	$whereclause = "WHERE cm.cat_id = '" . $_REQUEST['level_three'] . "' ";
 	$qryStrURL .= "level_three=" . $_REQUEST['level_three'] . "&";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['level_three']);
@@ -136,14 +148,14 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 								<style>
 
 								</style>
-								<div class="need_help">
+								<!--<div class="need_help">
 									<h2>Do you need help?</h2>
 									<div class="need_help_ref">
 										<a href="javascript:void(0);">Visit the help section</a>
 										<p>Or</p>
 										<a href="javascript:void(0);">contact us</a>
 									</div>
-								</div>
+								</div>-->
 							</div>
 						</div>
 					</div>

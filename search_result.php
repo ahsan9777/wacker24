@@ -27,8 +27,8 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 		$search_keyword_array_data = "";
 		if (!empty($search_keyword_array[$i])) {
 			$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
-			$search_keyword_case .= "(CASE WHEN ".rtrim($search_keyword_array_data, " OR ")." THEN 1 ELSE 0 END) + "; 
-			$search_keyword_where .= $search_keyword_array_data; 
+			$search_keyword_case .= "(CASE WHEN " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
+			$search_keyword_where .= $search_keyword_array_data;
 		}
 	}
 	/*for ($i = 0; $i < count($search_keyword_array); $i++) {
@@ -40,8 +40,8 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 		}
 	}*/
 
-	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE ".rtrim($search_keyword_where, " OR ").")";
-	
+	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . rtrim($search_keyword_where, " OR ") . ")";
+
 	$heading_title .= "Keyword : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
 	$search_keyword = $_REQUEST['search_keyword'];
@@ -59,9 +59,9 @@ if (isset($_REQUEST['search_group_id']) && $_REQUEST['search_group_id'] > 0) {
 		$search_group_id_where .= "FIND_IN_SET (" . dbStr(trim($_REQUEST['search_group_id'][$i])) . ", cm.sub_group_ids)";
 		$qryStrURL .= "search_group_id[]=" . $_REQUEST['search_group_id'][$i] . "&";
 	}
-	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE (".rtrim($search_keyword_where, " OR ").") AND pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) )";
+	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) AND (" . rtrim($search_keyword_where, " OR ") . ") )";
 	$search_whereclause = " AND pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) ";
-	$Sidefilter_brandwith = "IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id ".rtrim($Sidefilter_where, " OR ")." ) ";
+	$Sidefilter_brandwith = "IN (SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ") AND cm.supplier_id " . rtrim($Sidefilter_where, " OR ") . " ) ";
 }
 $search_manf_id_check = array();
 if (isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0) {
@@ -92,33 +92,33 @@ if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 	$search_pf_forder = "";
 	for ($i = 0; $i < count($_REQUEST['search_pf_fvalue']); $i++) {
 		$search_pf_fvalue_check[] = $_REQUEST['search_pf_fvalue'][$i];
-		$search_pf_fvalue .= "'".$_REQUEST['search_pf_fvalue'][$i] . "',";
-		$search_pf_forder .= "'".$_REQUEST['search_pf_forder'][$i] . "',";
+		$search_pf_fvalue .= "'" . $_REQUEST['search_pf_fvalue'][$i] . "',";
+		$search_pf_forder .= "'" . $_REQUEST['search_pf_forder'][$i] . "',";
 		$qryStrURL .= "search_pf_fvalue[]=" . $_REQUEST['search_pf_fvalue'][$i] . "&";
 	}
-	$search_whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue IN (" .rtrim($search_pf_fvalue, ",").") AND  pf.pf_forder IN (" .rtrim($search_pf_forder, ",").") )";
+	$search_whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue IN (" . rtrim($search_pf_fvalue, ",") . ") AND  pf.pf_forder IN (" . rtrim($search_pf_forder, ",") . ") )";
 }
 
-$order_by = "";
+$order_by = "ORDER BY match_count DESC";
 $sortby = 0;
 $sortby_array = array("Sort by: N/A", "Price high to low", "Price low to high", "Sort by a to z", "Sort by z to a");
 if (isset($_REQUEST['sortby'])) {
 	$sortby = $_REQUEST['sortby'];
 	switch ($sortby) {
 		case 1:
-			$order_by = "ORDER BY pro.pbp_price_amount DESC";
+			$order_by = "ORDER BY match_count, pro.pbp_price_amount DESC";
 			break;
 		case 2:
-			$order_by = "ORDER BY pro.pbp_price_amount ASC";
+			$order_by = "ORDER BY match_count DESC, pro.pbp_price_amount ASC";
 			break;
 		case 3:
-			$order_by = "ORDER BY pro.pro_description_short ASC";
+			$order_by = "ORDER BY match_count DESC, pro.pro_description_short ASC";
 			break;
 		case 4:
-			$order_by = "ORDER BY pro.pro_description_short DESC";
+			$order_by = "ORDER BY match_count, pro.pro_description_short DESC";
 			break;
 		default:
-			$order_by = "";
+			$order_by = "ORDER BY match_count DESC";
 	}
 }
 
@@ -133,9 +133,13 @@ if (isset($_REQUEST['sortby'])) {
 		$(document).ready(function() {
 			$(".click_list").click(function() {
 				$(".list_porduct").addClass('list_class');
+				$(".detail_data_show").show();
+				$(".pd_image").css("height", "100%");
 			});
 			$(".click_th").click(function() {
 				$(".list_porduct").removeClass('list_class');
+				$(".detail_data_show").hide();
+				$(".pd_image").css("height", "");
 			});
 		});
 	</script>
@@ -158,15 +162,22 @@ if (isset($_REQUEST['sortby'])) {
 				<div class="page_width">
 					<div class="product_inner">
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
-						<?php include("includes/searchPage_left_filter.php"); ?>
+						<?php
+						$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE (" . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " ".$order_by."";
+						$counter = 0;
+						$limit = 28;
+						$start = $p->findStart($limit);
+						$rs1 = mysqli_query($GLOBALS['conn'], $Query_search);
+						$suppliers = "";
+						while ($row22 = mysqli_fetch_object($rs1)) {
+							$suppliers .= "'" . $row22->supplier_id . "',";
+						}
+						include("includes/searchPage_left_filter.php");
+						?>
 						<div class="pd_right">
 
 							<?php
-							$Query_search = "SELECT pro.*, (".rtrim($search_keyword_case, " + ").") AS match_count FROM vu_products AS pro WHERE (".rtrim($search_keyword_where, " OR ").") ".$search_whereclause." ORDER BY match_count DESC";
 							//print($Query_search);
-							$counter = 0;
-							$limit = 28;
-							$start = $p->findStart($limit);
 							$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query_search));
 							$pages = $p->findPages($count, $limit);
 							$rs = mysqli_query($GLOBALS['conn'], $Query_search . " LIMIT " . $start . ", " . $limit);
@@ -223,7 +234,55 @@ if (isset($_REQUEST['sortby'])) {
 												<div class="pd_card pd_card_five">
 													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 													<div class="pd_detail">
+														<h3 class="detail_data_show"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
 														<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+														<?php
+														$count = 0;
+														if($row->pro_udx_seo_epag_id > 0){
+														$Query1 = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = 'Farbe'";
+														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+														$count = mysqli_num_rows($rs1);
+														if ($count > 1) {
+															if (mysqli_num_rows($rs1) > 0) {
+														?>
+																<div class="pd_detail_shirt detail_data_show">
+																	<h2>Farbvariante: <span id="color_title_<?php print($counter); ?>"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = 'Farbe'")); ?></span> </h2>
+																	<ul>
+																		<?php while ($row1 = mysqli_fetch_object($rs1)) { ?>
+																			<li>
+																				<input type="radio" class="color" id="color_<?php print($counter); ?>" name="color_radio_<?php print($counter) ?>" data-id="<?php print($counter); ?>" value="<?php print($row1->supplier_id); ?>" <?php print(($row1->supplier_id == $row->supplier_id) ? 'checked' : ''); ?>>
+																				<label for="color_<?php print($counter); ?>">
+																					<span>
+																						<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
+																					</span>
+																				</label>
+																			</li>
+																		<?php } ?>
+																	</ul>
+																</div>
+														<?php
+															}
+														}
+													}
+														?>
+														<?php
+														$quantity_lenght = 0;
+														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+														if (mysqli_num_rows($rs) > 0) {
+															$row1 = mysqli_fetch_object($rs1);
+															$pq_quantity = $row1->pq_quantity;
+															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+															$pq_status = $row1->pq_status;
+															if ($pq_quantity == 0 && $pq_status == 'true') {
+																$quantity_lenght = $pq_upcomming_quantity;
+																print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
+															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
+																$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
+																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+															}
+														}
+														?>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -243,7 +302,7 @@ if (isset($_REQUEST['sortby'])) {
 															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
 														<?php } ?>
 														<div class="pd_btn">
-															<a class="add_to_card" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
+															<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
 																<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>">
 																<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>">
 																<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1">
@@ -374,6 +433,26 @@ if (isset($_REQUEST['sortby'])) {
 	});
 </script>
 <script>
+
+$(".color_tab").on("mouseover", function() {
+		let color_title = $(this).attr('title');
+		let data_id = $(this).attr('data-id');
+		//let supplier_id = $(this).attr('data-supplier-id');
+		//console.log("color_tab: "+data_id+" supplier_id: "+supplier_id);
+		$("#color_title_"+data_id).text(color_title);
+	});
+	$(".color_tab").on("mouseout", function() {
+		let data_id = $(this).attr('data-id');
+		let color_radio = $('input[name="color_radio_'+data_id+'"]:checked').val();
+		let color_title = $("#color_tab_"+color_radio).attr('title');
+		//console.log("mouseout: "+color_radio);
+		$("#color_title_"+data_id).text(color_title);
+	});
+	$(".color_tab").on("click", function() {
+		let supplier_id = $(this).attr("data-supplier-id");
+		//console.log("color_tab: "+supplier_id);
+		window.location.href = "<?php print($GLOBALS['siteURL']. "product_detail.php?supplier_id="); ?>"+supplier_id;
+	});
 	//TOGGLING NESTED ul
 	$(".drop-down_2 .selected a").click(function() {
 		$(".drop-down_2 .options ul").toggle();

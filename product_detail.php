@@ -203,7 +203,8 @@ include("includes/message.php");
 									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $pbp_price_amount)); ?>€ <span>Each ST 1/ incl. VAT</span></div>
 									<?php }
 								$count = 0;
-								$Query = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '".$pro_udx_seo_epag_id."' AND pf.pf_fname = 'Farbe'";
+								if($pro_udx_seo_epag_id > 0){
+								echo $Query = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '".$pro_udx_seo_epag_id."' AND pf.pf_fname = 'Farbe'";
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								$count = mysqli_num_rows($rs);
 								if ($count > 1) {
@@ -227,6 +228,7 @@ include("includes/message.php");
 								<?php
 									}
 								}
+							}
 								?>
 								<ul class="product_type">
 									<?php

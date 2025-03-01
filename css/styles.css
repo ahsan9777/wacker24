@@ -138,7 +138,10 @@ body.body-white{background-color: #fff !important;}
 .gerenric_product .pd_image img{ max-height: 100%;object-fit: contain;margin: auto; mix-blend-mode: multiply;}
 .gerenric_product .pd_image a{    display: flex;align-items: center;height: 100%;width: 100%;}
 .gerenric_product .pd_detail{width: 100%;}
+.gerenric_product .pd_detail .detail_data_show{display: none;}
 .gerenric_product .pd_detail h5{ font-size: 17px; color: #000; font-weight: 500; margin-bottom: 10px;}
+.gerenric_product .pd_detail h3{ font-size: 18px; color: #000; font-weight: 600; margin-bottom: 10px;}
+.gerenric_product .pd_detail .product_order_title{font-size: 17px; color: orange; font-weight: 700; margin-bottom: 10px;}
 .gerenric_product.full_column.mostviewed .pd_detail h5{ font-size: 14px;}
 .gerenric_product .pd_detail h5 a:hover{ color: #007bff; text-decoration: underline;}
 .gerenric_product .pd_detail .pd_rating{width: 100%;}

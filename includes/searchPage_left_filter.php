@@ -87,6 +87,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         <?php
         $count = 3;
         $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.supplier_id ".$Sidefilter_featurewhere. " GROUP BY pf.pf_forder ORDER BY pf.pf_forder ASC";
+        //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.supplier_id IN (".rtrim($suppliers, ",").") GROUP BY pf.pf_forder ORDER BY pf.pf_forder ASC";
         //print($Query1);
         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
         if (mysqli_num_rows($rs) > 0) {
@@ -97,7 +98,8 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
                     <h3><?php print($row1->pf_fname); ?></h3>
                     <?php
                     $TotalRecCount = 0;
-                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_forder = '" . $row1->pf_forder . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    //$Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id IN (".rtrim($suppliers, ",").") AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     //print($Query2);
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     $row2 = mysqli_fetch_object($rs2);

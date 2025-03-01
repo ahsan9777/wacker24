@@ -45,7 +45,7 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
-                        if (isset($_REQUEST['level_one']) || isset($_REQUEST['manf_id']) || isset($_REQUEST['search_keyword'])) {
+                        if (isset($_REQUEST['level_one'])) {
                             $cat_link = "products.php?level_two=" . $row->group_id;
                         } elseif (isset($_REQUEST['level_two']) || isset($_REQUEST['level_three'])) {
                             $cat_link = "products.php?level_three=" . $row->group_id;
@@ -62,14 +62,22 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
             <h3>Brands</h3>
             <ul class="list_checkbox_hide category_show_height" id="list_checkbox_hide_0">
                 <?php
+                $brand_link = "";
                 //$Query = "SELECT * FROM `manufacture` WHERE manf_status = '1'";
                 $Query = " ".$Sidefilter_brandwith." SELECT manf.* FROM manufacture AS manf JOIN filtered_products fp ON manf.manf_id = fp.manf_id WHERE manf.manf_status = '1' ORDER BY manf.manf_id ASC;";
                 //print($Query);
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
+                        if (isset($_REQUEST['level_one'])) {
+                            $brand_link = "products.php?level_one=" . $leve_id."&manf_id=".$row->manf_id;
+                        } else if (isset($_REQUEST['level_two'])) {
+                            $brand_link = "products.php?level_two=" . $leve_id."&manf_id=".$row->manf_id;
+                        } else if (isset($_REQUEST['level_three'])){
+                            $brand_link = "products.php?level_three=" . $_REQUEST['level_three']."&manf_id=".$row->manf_id;
+                        }
                 ?>
-                        <li><a href="products.php?manf_id=<?php print($row->manf_id); ?>&level_one=<?php print($leve_id); ?>"> <?php print($row->manf_name); ?> </a></li>
+                        <li><a href="<?php print($brand_link); ?>"> <?php print($row->manf_name); ?> </a></li>
                 <?php
                     }
                 }
