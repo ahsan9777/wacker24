@@ -71,3 +71,6 @@ if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_
         }
     }
 }
+if(isset($_REQUEST['btn_plz'])){
+    $_SESSION['plz'] = $_REQUEST['plz'];
+}

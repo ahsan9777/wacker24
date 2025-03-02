@@ -4,7 +4,7 @@ include("includes/php_includes_top.php");
 
 if (isset($_REQUEST['btn_forgotpassword'])) {
 
-	$Query = "SELECT * FROM users WHERE user_name = '" . $_REQUEST['user_name'] . "' AND utype_id = '" . $_REQUEST['utype_id'] . "' "; // $2y$10$vTJ8Y1ulWNW8upkatUlxQuh.cF6LzHx6GK820Ngxo/sCdfOw4JO9W
+	$Query = "SELECT * FROM users WHERE user_name = '" . $_REQUEST['user_name'] . "' "; // $2y$10$vTJ8Y1ulWNW8upkatUlxQuh.cF6LzHx6GK820Ngxo/sCdfOw4JO9W
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
@@ -52,18 +52,6 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 						<?php } ?>
 						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
-								<li>
-									<div class="tab_radio_button">
-										<div class="tab_radio_col">
-											<input type="radio" class="utype_id" id="private_customer" name="utype_id" value="3" checked>
-											<label for="private_customer">Private customer</label>
-										</div>
-										<div class="tab_radio_col">
-											<input type="radio" class="utype_id" id="business_customer" name="utype_id" value="4">
-											<label for="business_customer">Business customer</label>
-										</div>
-									</div>
-								</li>
 								<li>
 									<div class="form_label">E-mail address</div>
 									<div class="form_field"><input type="text" class="gerenric_input" name="user_name" id="user_name"></div>

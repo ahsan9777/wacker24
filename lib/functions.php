@@ -2605,6 +2605,52 @@ function get_image_link($replace, $link){
 	return str_replace("/2000/","/".$replace."/",$link);
 }
 
+function getShippingTiming($plz)
+{
+    
+
+    $order_date = date('Y-m-d');
+    $order_day_num = date('N', strtotime($order_date)); // 1 (Monday) - 7 (Sunday)
+    $order_time = date('H:i');
+
+    // Fetch shipping details for the given postal code
+    $sqlShipping = "SELECT * FROM `shipping_timing` WHERE `plz` = ?";
+    $stmt = $GLOBALS['conn']->prepare($sqlShipping);
+    $stmt->bind_param("s", $plz);
+    $stmt->execute();
+    $resultShipping = $stmt->get_result();
+
+    if ($rowShipp = $resultShipping->fetch_assoc()) {
+        $delivery_days = [$rowShipp['day_of_delivery1'], $rowShipp['day_of_delivery2']];
+        $_SESSION['ort'] = $rowShipp['ort'];
+        $delivery_days = array_filter($delivery_days); // Remove empty values
+
+        return calculateDeliveryDate($order_date, $order_day_num, $order_time, $delivery_days);
+    }
+	$_SESSION['ort'] = "";
+    return "Lieferung nicht verfügbar"; // Return if no shipping info found
+}
+
+function calculateDeliveryDate($order_date, $order_day_num, $order_time, $delivery_days)
+{
+    sort($delivery_days); // Sort days for easier processing
+    $delivery_days_map = ["Monday" => 1, "Tuesday" => 2, "Wednesday" => 3, "Thursday" => 4, "Friday" => 5, "Saturday" => 6, "Sunday" => 7];
+
+    foreach ($delivery_days as $delivery_day) {
+        $delivery_day_num = $delivery_days_map[$delivery_day];
+
+        if ($order_day_num == $delivery_day_num && $order_time <= "09:00") {
+            return "Lieferung heute";
+        } elseif ($order_day_num <= $delivery_day_num) {
+            return "Lieferung " . date('M d, Y', strtotime("next $delivery_day", strtotime($order_date)));
+        }
+    }
+
+    // If order day is past the delivery days in the week, pick the next week's first delivery day
+    return "Lieferung " . date('M d, Y', strtotime("next " . $delivery_days[0], strtotime($order_date)));
+}
+
+
 
 
 

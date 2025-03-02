@@ -36,7 +36,8 @@ if (isset($_REQUEST['btn_registration'])) {
 		$value .= ", '" . dbStr(trim($_REQUEST['user_tax_no'])) . "'";
 		$input_display = "";
 	}
-	$Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id ='" . dbStr(trim($_REQUEST['utype_id'])) . "'";
+	//$Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id ='" . dbStr(trim($_REQUEST['utype_id'])) . "'";
+	$Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$utype_id = $_REQUEST['utype_id'];
