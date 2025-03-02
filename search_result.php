@@ -96,7 +96,7 @@ if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 		$search_pf_forder .= "'" . $_REQUEST['search_pf_forder'][$i] . "',";
 		$qryStrURL .= "search_pf_fvalue[]=" . $_REQUEST['search_pf_fvalue'][$i] . "&";
 	}
-	$search_whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue IN (" . rtrim($search_pf_fvalue, ",") . ") AND  pf.pf_forder IN (" . rtrim($search_pf_forder, ",") . ") )";
+	$search_whereclause .= " AND pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fvalue IN (" . rtrim($search_pf_fvalue, ",") . ") AND  pf.supplier_id IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . rtrim($search_keyword_where, " OR ") . ") )";
 }
 
 $order_by = "ORDER BY match_count DESC";

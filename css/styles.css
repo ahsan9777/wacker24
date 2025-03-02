@@ -168,7 +168,7 @@ body.body-white{background-color: #fff !important;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-gallery-container.active{ display: block;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .thum_images {width: 100%;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-lens-image{height: auto;}
-.product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-container{padding: 10px 20px; height: auto; border-color: #dedede;}
+.product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-container{padding: 10px 20px; height: auto; /*border-color: #dedede;*/ border: none !important;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-lens-image img{height: 450px;  object-fit: contain; max-height: 100%;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-thumbnails-container{display: flex; margin: 0px -3px; flex-wrap: wrap; margin-top: 10px;}
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-thumbnails-container a{width: 80px; height: 80px; padding: 5px; border: 1px solid #dedede;margin-bottom: 5px; margin:0px 3px;}

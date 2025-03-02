@@ -18,7 +18,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
 }
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword']) ? 'style="width: 420px;"' : ''); ?>>
-    <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
+    <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="POST" action="search_result.php" role="form" enctype="multipart/form-data">
         <h2>Category <div class="categroy_close_mb">X</div>
         </h2>
         <input type="hidden" name="search_keyword" value="<?php print($search_keyword); ?>">
@@ -86,8 +86,8 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         </div>
         <?php
         $count = 3;
-        $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.supplier_id ".$Sidefilter_featurewhere. " GROUP BY pf.pf_forder ORDER BY pf.pf_forder ASC";
-        //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.supplier_id IN (".rtrim($suppliers, ",").") GROUP BY pf.pf_forder ORDER BY pf.pf_forder ASC";
+        $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname != 'Made in Germany' AND pf.supplier_id ".$Sidefilter_featurewhere. " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
+        //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname != 'Made in Germany' AND pf.supplier_id IN (".rtrim($suppliers, ",").") GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
         //print($Query1);
         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
         if (mysqli_num_rows($rs) > 0) {
@@ -98,7 +98,8 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
                     <h3><?php print($row1->pf_fname); ?></h3>
                     <?php
                     $TotalRecCount = 0;
-                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    //$Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     //$Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id IN (".rtrim($suppliers, ",").") AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     //print($Query2);
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
