@@ -73,6 +73,7 @@ if (isset($_REQUEST['search_manf_id']) && $_REQUEST['search_manf_id'] > 0) {
 		$qryStrURL .= "search_manf_id[]=" . $_REQUEST['search_manf_id'][$i] . "&";
 	}
 	$search_whereclause .= " AND pro.manf_id IN (" . rtrim($search_manf_id, ",") . ")";
+	$Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE pro.supplier_id IN ( SELECT cm.supplier_id FROM category_map AS cm WHERE (" . $search_group_id_where . ")) AND (" . rtrim($search_keyword_where, " OR ") . ")  AND pro.manf_id IN (" . rtrim($search_manf_id, ",") . ")  ) ";
 }
 
 /*$search_pf_fvalue_check = "";
@@ -162,22 +163,15 @@ if (isset($_REQUEST['sortby'])) {
 				<div class="page_width">
 					<div class="product_inner">
 						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
-						<?php
-						$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE (" . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " ".$order_by."";
-						$counter = 0;
-						$limit = 28;
-						$start = $p->findStart($limit);
-						$rs1 = mysqli_query($GLOBALS['conn'], $Query_search);
-						$suppliers = "";
-						while ($row22 = mysqli_fetch_object($rs1)) {
-							$suppliers .= "'" . $row22->supplier_id . "',";
-						}
-						include("includes/searchPage_left_filter.php");
-						?>
+						<?php include("includes/searchPage_left_filter.php"); ?>
 						<div class="pd_right">
 
 							<?php
+							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE (" . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " ".$order_by."";
 							//print($Query_search);
+							$counter = 0;
+							$limit = 28;
+							$start = $p->findStart($limit);
 							$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query_search));
 							$pages = $p->findPages($count, $limit);
 							$rs = mysqli_query($GLOBALS['conn'], $Query_search . " LIMIT " . $start . ", " . $limit);

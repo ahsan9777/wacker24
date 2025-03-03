@@ -455,17 +455,169 @@ if (isset($_REQUEST['action'])) {
             //print_r($_REQUEST);die();
             $retValue = array();
 
-            $Query = "SELECT * FROM `wishlist` WHERE user_id = '".$_SESSION['UID']."' AND sl_id = '".$_REQUEST['sl_id']."' AND supplier_id = '".$_REQUEST['supplier_id']."'";
+            $Query = "SELECT * FROM `wishlist` WHERE user_id = '" . $_SESSION['UID'] . "' AND sl_id = '" . $_REQUEST['sl_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'";
             //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
                 $retValue = array("status" => "1", "message" => "Record already exists!");
             } else {
                 $wl_id = getMaximum("wishlist", "wl_id");
-                mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, user_id, sl_id, supplier_id) VALUES ('".$wl_id."', '".$_SESSION['UID']."', '".$_REQUEST['sl_id']."', '".$_REQUEST['supplier_id']."')") or die(mysqli_error($GLOBALS['conn']));
+                mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, user_id, sl_id, supplier_id) VALUES ('" . $wl_id . "', '" . $_SESSION['UID'] . "', '" . $_REQUEST['sl_id'] . "', '" . $_REQUEST['supplier_id'] . "')") or die(mysqli_error($GLOBALS['conn']));
                 $retValue = array("status" => "1", "message" => "Add into list");
             }
 
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'category_show':
+            $search_manf_id_check = array();
+            $Sidefilter_where = $_REQUEST['Sidefilter_where'];
+            $search_group_id_check = (!empty($_REQUEST['search_group_id_check'])) ? $_REQUEST['search_group_id_check'] : [];
+            $category_show = "";
+            $TotalRecCount = "";
+            $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id " . $Sidefilter_where . " GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
+            //print($Query);
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            $row = mysqli_fetch_object($rs);
+            $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
+            //$search_group_id = explode(",", $row->sub_group_ids);
+            $category_show .= '<ul class="category_show '.(($TotalRecCount > 5) ? 'category_show_height' : '').'" id="list_checkbox_hide_1">';
+                if (mysqli_num_rows($rs) > 0) {
+                    do {
+                        $category_show .= '<li>
+                            <label class="gerenric_checkbox">
+                                '.$row->cat_title . " (" . $row->total_count . ")".'
+                                <input type="checkbox" name="search_group_id[]" class="search_group_id" id="search_group_id" value="'.$row->group_id.'" '.((in_array($row->group_id, $search_group_id_check)) ? 'checked' : '').'>
+                                <span class="checkmark"></span>
+                            </label>
+                        </li>';
+                } while ($row = mysqli_fetch_object($rs));
+                }
+            $category_show .= '</ul>';
+            if ($TotalRecCount > 5) {
+                $category_show .= '<div class="show-more" data-id="1">(Show More)</div>';
+            }
+            $category_show .= '
+            <script>
+                $(".search_group_id").on("click", function() {
+                    $(".search_pf_fvalue").attr("checked", false)
+                    $("#frm_left_search").submit();
+                });
+            </script>
+            ';
+
+            $retValue = array("status" => "1", "message" => "Record found", "category_show" => $category_show);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'brand_show':
+            $search_manf_id_check = array();
+            $Sidefilter_brandwith = $_REQUEST['Sidefilter_brandwith'];
+            $search_manf_id_check = (!empty($_REQUEST['search_manf_id_check'])) ? $_REQUEST['search_manf_id_check'] : [];
+            $brand_show = '<h3>Brands</h3>';
+            $TotalRecCount = 0;
+            $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.supplier_id " . $Sidefilter_brandwith . ") AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.supplier_id " . $Sidefilter_brandwith . ") AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            //print($Query);
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            $row = mysqli_fetch_object($rs);
+            $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
+            $brand_show .= '<ul class="category_show ' . (($TotalRecCount > 5) ? 'category_show_height' : '') . '" id="list_checkbox_hide_2">';
+            if (mysqli_num_rows($rs) > 0) {
+                do {
+                    $brand_show .= '<li>
+                            <label class="gerenric_checkbox">
+                                ' . $row->manf_name . " (" . $row->total_count . ")" . '
+                                <input type="checkbox" name="search_manf_id[]" class="search_manf_id" id="search_manf_id" value="' . $row->manf_id . '" ' . ((in_array($row->manf_id, $search_manf_id_check)) ? 'checked' : '') . '>
+                                <span class="checkmark"></span>
+                            </label>
+                        </li>';
+                } while ($row = mysqli_fetch_object($rs));
+            }
+            $brand_show .= '</ul>';
+            if ($TotalRecCount > 5) {
+                $brand_show .= '<div class="show-more" data-id="2">(Show More)</div>';
+            }
+            $brand_show .= '
+            <script>
+                $(".search_manf_id").on("click", function() {
+                    $(".search_pf_fvalue").attr("checked", false)
+                    $("#frm_left_search").submit();
+                });
+            </script>
+            ';
+
+            $retValue = array("status" => "1", "message" => "Record found", "brand_show" => $brand_show);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'feature_show':
+            $search_pf_fvalue_check = array();
+            $Sidefilter_featurewhere = $_REQUEST['Sidefilter_featurewhere'];
+            $search_pf_fvalue_check = (!empty($_REQUEST['search_pf_fvalue_check'])) ? $_REQUEST['search_pf_fvalue_check'] : [];
+            //print_r($search_pf_fvalue_check);die();
+            //print_r($_REQUEST);die();
+            $retValue = array();
+            $feature_show = "";
+            $count = 3;
+            $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname NOT IN ('Made in Germany','Material der Sitzfläche', 'Packungsmenge', 'Material der Schreibfläche', 'Farbe des Rückens', 'Oberflächenbeschaffenheit', 'Fadenverstärkung vorhanden', 'Ausführung der Oberflächenbeschaffenheit', 'Farbe der Vorderseite', 'Material der Rückseite', 'Gehäusefarbe', 'Material des Rahmens', 'Trägermaterial', 'Deckel vorhanden', 'Material', 'Ausführung der Oberseite', 'Material des Papierhandtuches', 'Material des Tisches', 'Ablageschale vorhanden', 'max. Anzahl der Erweiterungshüllen', 'Motiv', 'Werkstoff', 'Zertifikat/Zulassung', 'Verwendung für Druck- oder Schreibgerät', '3 Klappen (Jurisklappen) am Unterdeckel vorhanden', 'feucht abwischbar', 'Anordnung der Lage (Öffnungsseite)', 'Ausführung der Tür', 'Material des Hygienebeutels', 'stapelbar', 'selbstklebend', 'Verschluss', 'Ausführung der Höhenverstellung', 'Boden vorhanden', 'max. Auflösung', 'Tafel beschreibbar', 'beidseitig beschreibbar', 'Weißgrad (ISO)', 'Verschlusstechnik', 'Weißgrad (CIE)', 'Lichtleistung', 'Breite des Sitzes', 'Kalenderaufteilung', 'Fenster vorhanden', 'Haftungsintensität', 'Volumen', 'Körnung', 'Heftleistung', 'Art des Auftragungshilfsmittels', 'Ausführung der vorderseitigen Lineatur', 'Rückenbreite', 'Typbezeichnung des Duftes', 'Fassungsvermögen', 'Taben', 'Grammatur', 'Dicke der Folie', 'Heftungsart', 'Auffangvolumen', 'Ausführung der Landkarte', 'Sterilität', 'Lochung', 'Arbeitsbreite', 'Kerndurchmesser', 'Anzahl der Teile', 'max. Aufbewahrungsmenge', 'Format der Folie', 'Maße der Oberfläche', 'Art des Laminierverfahrens', 'Innenmaße', 'Heftklammertyp', 'Einsatzbereich', 'max. Tragfähigkeit', 'Abmessung des Rahmens', 'Typbezeichnung') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
+            //print($Query1);
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row1 = mysqli_fetch_object($rs1)) {
+                    $count++;
+                    $feature_show .= '
+                    <div class="categroy_block">
+                        <h3>' . $row1->pf_fname . '</h3>';
+                    $TotalRecCount = 0;
+                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    //print($Query2);
+                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                    $row2 = mysqli_fetch_object($rs2);
+                    $TotalRecCount = $row2->TotalRecCount;
+                    $feature_show .= '<ul class="category_show ' . (($TotalRecCount > 5) ? 'category_show_height' : '') . '" id="category_show_' . $count . '">';
+                    if (mysqli_num_rows($rs2) > 0) {
+                        do {
+                            $feature_show .= '<li>
+                                        <label class="gerenric_checkbox">
+                                            ' . $row2->pf_fvalue . " (" . $row2->total_count . ")" . '
+                                            <input type="hidden" name="search_pf_forder[]" value="' . $row2->pf_forder . '">
+                                            <input type="checkbox" name="search_pf_fvalue[]" id="search_pf_fvalue" class="search_pf_fvalue" value="' . $row2->pf_fvalue . '" ' . ((in_array($row2->pf_fvalue, $search_pf_fvalue_check)) ? 'checked' : '') . '>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>';
+                            //print($feature_show);die();
+                        } while ($row2 = mysqli_fetch_object($rs2));
+                    }
+                    $feature_show .= '</ul>';
+                    if ($TotalRecCount > 5) {
+                        $feature_show .= '<div class="show-more" data-id="' . $count . '">(Show More)</div>';
+                    }
+                    $feature_show .= '</div>';
+                }
+                $feature_show .= '
+                    <script>
+                        $(".search_pf_fvalue").on("click", function() {
+                            $("#frm_left_search").submit();
+                        });
+                    </script>
+                    <script>
+                        $(".show-more").click(function() {
+                            if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
+                                $(this).text("(Show Less)");
+                            } else {
+                                $(this).text("(Show More)");
+                            }
+
+                            $("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");
+                        });
+                    </script>
+            ';
+            }
+            //print($feature_show);die();
+            $retValue = array("status" => "1", "message" => "Record found", "feature_show" => $feature_show);
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;

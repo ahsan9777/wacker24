@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading with Percentage</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .loading-container {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .loading-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-left: 5px;
+            background: #ffcc00;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.3s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #444;
+            border-radius: 4px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff4b2b, #ffcc00);
+            border-radius: 4px;
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-container">
+        <div class="loading-text">
+            Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span> 
+            <span id="percentage">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        let percentage = 0;
+        let interval = setInterval(() => {
+            if (percentage >= 100) {
+                clearInterval(interval);
+            } else {
+                percentage += Math.floor(Math.random() * 10) + 5;
+                if (percentage > 100) percentage = 100;
+                document.getElementById("percentage").textContent = percentage + "%";
+                document.getElementById("progress").style.width = percentage + "%";
+            }
+        }, 500);
+    </script>
+
+</body>
+</html>

@@ -17,122 +17,36 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
     }
 }
 ?>
+
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword']) ? 'style="width: 420px;"' : ''); ?>>
     <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="POST" action="search_result.php" role="form" enctype="multipart/form-data">
         <h2>Category <div class="categroy_close_mb">X</div>
         </h2>
         <input type="hidden" name="search_keyword" value="<?php print($search_keyword); ?>">
-        <div class="categroy_block">
-            <?php
-            $TotalRecCount = "";
-            $Query = "SELECT cm.*, COUNT(*) OVER() AS TotalRecCount, COUNT(cat.group_id) AS total_count, cat.group_id, cat.cat_title_de AS cat_title FROM category_map AS cm LEFT OUTER JOIN category AS cat ON FIND_IN_SET(cat.group_id, cm.sub_group_ids) > 1 WHERE cm.supplier_id ".$Sidefilter_where." GROUP BY cat.group_id ORDER BY cat.group_id ASC ";
-            //print($Query);
-            $rs = mysqli_query($GLOBALS['conn'], $Query);
-            $row = mysqli_fetch_object($rs);
-            $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
-            //$search_group_id = explode(",", $row->sub_group_ids);
-            ?>
-            <ul class="category_show <?php print(($TotalRecCount > 5) ? 'category_show_height' : ''); ?>" id="list_checkbox_hide_1">
-                <?php
-                if (mysqli_num_rows($rs) > 0) {
-                    do {
-                ?>
-                        <li>
-                            <label class="gerenric_checkbox">
-                                <?php print($row->cat_title . " (" . $row->total_count . ")"); ?>
-                                <input type="checkbox" name="search_group_id[]" class="search_group_id" id="search_group_id" value="<?php print($row->group_id); ?>" <?php print(((in_array($row->group_id, $search_group_id_check)) ? 'checked' : '')); ?> >
-                                <span class="checkmark"></span>
-                            </label>
-                        </li>
-                <?php
-                    } while ($row = mysqli_fetch_object($rs));
-                }
-                ?>
-            </ul>
-            <?php if ($TotalRecCount > 5) { ?>
-                <div class="show-more" data-id="1">(Show More)</div>
-            <?php } ?>
-        </div>
-        <div class="categroy_block">
-            <h3>Brands</h3>
-            <?php
-            $TotalRecCount = 0;
-            $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.supplier_id " .$Sidefilter_brandwith. ") AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.supplier_id " .$Sidefilter_brandwith. ") AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
-            //print($Query);
-            $rs = mysqli_query($GLOBALS['conn'], $Query);
-            $row = mysqli_fetch_object($rs);
-            $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
-            ?>
-            <ul class="category_show <?php print(($TotalRecCount > 5) ? 'category_show_height' : ''); ?>" id="list_checkbox_hide_2">
-                <?php
-                if (mysqli_num_rows($rs) > 0) {
-                    do {
-                ?>
-                        <li>
-                            <label class="gerenric_checkbox">
-                                <?php print($row->manf_name . " (" . $row->total_count . ")"); ?>
-                                <input type="checkbox" name="search_manf_id[]" class="search_manf_id" id="search_manf_id" value="<?php print($row->manf_id); ?>" <?php print(((in_array($row->manf_id, $search_manf_id_check)) ? 'checked' : '')); ?> >
-                                <span class="checkmark"></span>
-                            </label>
-                        </li>
-                <?php
-                    } while ($row = mysqli_fetch_object($rs));
-                }
-                ?>
-            </ul>
-            <?php if ($TotalRecCount > 5) { ?>
-                <div class="show-more" data-id="2">(Show More)</div>
-            <?php } ?>
-        </div>
-        <?php
-        $count = 3;
-        $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname != 'Made in Germany' AND pf.supplier_id ".$Sidefilter_featurewhere. " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
-        //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname != 'Made in Germany' AND pf.supplier_id IN (".rtrim($suppliers, ",").") GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
-        //print($Query1);
-        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-        if (mysqli_num_rows($rs) > 0) {
-            while ($row1 = mysqli_fetch_object($rs1)) {
-                $count++;
-        ?>
-                <div class="categroy_block">
-                    <h3><?php print($row1->pf_fname); ?></h3>
-                    <?php
-                    $TotalRecCount = 0;
-                    $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
-                    //$Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id ".$Sidefilter_featurewhere. " AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
-                    //$Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.pf_group_id = '" . $row1->pf_group_id . "' AND pf.supplier_id IN (".rtrim($suppliers, ",").") AND pf.pf_fvalue_details = 'FILTER' GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
-                    //print($Query2);
-                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
-                    $row2 = mysqli_fetch_object($rs2);
-                    $TotalRecCount = $row2->TotalRecCount;
-                    ?>
-                    <ul class="category_show <?php print(($TotalRecCount > 5) ? 'category_show_height' : ''); ?>" id="category_show_<?php print($count); ?>"><!-- category_show -->
-                        <?php
-
-                        if (mysqli_num_rows($rs2) > 0) {
-                            do { ?>
-                                <li>
-                                    <label class="gerenric_checkbox">
-                                        <?php print($row2->pf_fvalue . " (" . $row2->total_count . ")"); ?>
-                                        <!--<input type="radio" name="search_pf_fvalue" id="search_pf_fvalue" class="search_pf_fvalue" value="<?php print($row2->pf_fvalue.";".$row1->pf_forder); ?>" <?php print((($row2->pf_fvalue.";".$row1->pf_forder == $search_pf_fvalue_check) ? 'checked' : '')); ?> >-->
-                                        <input type="hidden" name="search_pf_forder[]" value="<?php print($row2->pf_forder); ?>">
-                                        <input type="checkbox" name="search_pf_fvalue[]" id="search_pf_fvalue" class="search_pf_fvalue" value="<?php print($row2->pf_fvalue); ?>" <?php print(((in_array($row2->pf_fvalue, $search_pf_fvalue_check)) ? 'checked' : '')); ?> >
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </li>
-                        <?php
-                            } while ($row2 = mysqli_fetch_object($rs2));
-                        }
-                        ?>
-                    </ul>
-                    <?php if ($TotalRecCount > 5) { ?>
-                        <div class="show-more" data-id="<?php print($count); ?>">(Show More)</div>
-                    <?php } ?>
+        <div class="categroy_block" id="category_show">
+            <div class="loading-container" id="category_loading">
+                <div class="loading-text">
+                    Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span>
                 </div>
-        <?php
-            }
-        }
-        ?>
+            </div>
+            
+        </div>
+        <div class="categroy_block" id="brand_show">
+            <div class="loading-container" id="brand_loading">
+                <div class="loading-text">
+                    Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <span id="feature_show">
+            <div class="loading-container" id="fature_loading">
+                <div class="loading-text">
+                    Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+        </span>
         <!--<div class="categroy_block">
             <h3>Price</h3>
             <div class="gerenric_range">
@@ -150,5 +64,74 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
     });
     $(".search_pf_fvalue").on("click", function() {
         $("#frm_left_search").submit();
+    });
+    $(window).load(function() {
+        setTimeout(function() {
+            let Sidefilter_where = "<?php print($Sidefilter_where); ?>";
+            let search_group_id_check = <?php echo json_encode($search_group_id_check); ?>;
+            $.ajax({
+                url: 'ajax_calls.php?action=category_show',
+                method: 'POST',
+                data: {
+                    Sidefilter_where: Sidefilter_where,
+                    search_group_id_check: search_group_id_check
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    //console.log(obj);
+                    if (obj.status == 1) {
+                        $("#category_loading").hide();
+                        $("#category_show").html(obj.category_show);
+                    }
+                }
+            }, 5000);
+        });
+    });
+    $(window).load(function() {
+        setTimeout(function() {
+            let Sidefilter_brandwith = "<?php print($Sidefilter_brandwith); ?>";
+            let search_manf_id_check = <?php echo json_encode($search_manf_id_check); ?>;
+            $.ajax({
+                url: 'ajax_calls.php?action=brand_show',
+                method: 'POST',
+                data: {
+                    Sidefilter_brandwith: Sidefilter_brandwith,
+                    search_manf_id_check: search_manf_id_check
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    //console.log(obj);
+                    if (obj.status == 1) {
+                        $("#brand_loading").hide();
+                        $("#brand_show").html(obj.brand_show);
+                    }
+                }
+            }, 6000);
+        });
+    });
+    $(window).load(function() {
+        setTimeout(function() {
+            let Sidefilter_featurewhere = "<?php print($Sidefilter_featurewhere); ?>";
+            let search_pf_fvalue_check = <?php echo json_encode($search_pf_fvalue_check); ?>;
+            $.ajax({
+                url: 'ajax_calls.php?action=feature_show',
+                method: 'POST',
+                data: {
+                    Sidefilter_featurewhere: Sidefilter_featurewhere,
+                    search_pf_fvalue_check: search_pf_fvalue_check
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    //console.log(obj);
+                    if (obj.status == 1) {
+                        $("#fature_loading").hide();
+                        $("#feature_show").html(obj.feature_show);
+                    }
+                }
+            }, 7000);
+        });
     });
 </script>
