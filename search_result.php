@@ -202,7 +202,7 @@ if (isset($_REQUEST['sortby'])) {
 									</ul>
 								</div>
 							</div>
-							<div class="list_porduct">
+							<div class="list_porduct list_class">
 								<div class="gerenric_product">
 									<div class="gerenric_product_inner">
 										<?php
