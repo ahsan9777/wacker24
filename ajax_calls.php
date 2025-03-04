@@ -555,16 +555,17 @@ if (isset($_REQUEST['action'])) {
 
         case 'feature_show':
             $search_pf_fvalue_check = array();
+            $search_pf_fname_check = array();
             $Sidefilter_featurewhere = $_REQUEST['Sidefilter_featurewhere'];
             $search_pf_fvalue_check = (!empty($_REQUEST['search_pf_fvalue_check'])) ? $_REQUEST['search_pf_fvalue_check'] : [];
-            //print_r($search_pf_fvalue_check);die();
+            $search_pf_fname_check = (!empty($_REQUEST['search_pf_fname_check'])) ? $_REQUEST['search_pf_fname_check'] : [];
             //print_r($_REQUEST);die();
             $retValue = array();
             $feature_show = "";
             $count = 3;
             //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname NOT IN ('Made in Germany','Material der Sitzfläche', 'Packungsmenge', 'Material der Schreibfläche', 'Farbe des Rückens', 'Oberflächenbeschaffenheit', 'Fadenverstärkung vorhanden', 'Ausführung der Oberflächenbeschaffenheit', 'Farbe der Vorderseite', 'Material der Rückseite', 'Gehäusefarbe', 'Material des Rahmens', 'Trägermaterial', 'Deckel vorhanden', 'Material', 'Ausführung der Oberseite', 'Material des Papierhandtuches', 'Material des Tisches', 'Ablageschale vorhanden', 'max. Anzahl der Erweiterungshüllen', 'Motiv', 'Werkstoff', 'Zertifikat/Zulassung', 'Verwendung für Druck- oder Schreibgerät', '3 Klappen (Jurisklappen) am Unterdeckel vorhanden', 'feucht abwischbar', 'Anordnung der Lage (Öffnungsseite)', 'Ausführung der Tür', 'Material des Hygienebeutels', 'stapelbar', 'selbstklebend', 'Verschluss', 'Ausführung der Höhenverstellung', 'Boden vorhanden', 'max. Auflösung', 'Tafel beschreibbar', 'beidseitig beschreibbar', 'Weißgrad (ISO)', 'Verschlusstechnik', 'Weißgrad (CIE)', 'Lichtleistung', 'Breite des Sitzes', 'Kalenderaufteilung', 'Fenster vorhanden', 'Haftungsintensität', 'Volumen', 'Körnung', 'Heftleistung', 'Art des Auftragungshilfsmittels', 'Ausführung der vorderseitigen Lineatur', 'Rückenbreite', 'Typbezeichnung des Duftes', 'Fassungsvermögen', 'Taben', 'Grammatur', 'Dicke der Folie', 'Heftungsart', 'Auffangvolumen', 'Ausführung der Landkarte', 'Sterilität', 'Lochung', 'Arbeitsbreite', 'Kerndurchmesser', 'Anzahl der Teile', 'max. Aufbewahrungsmenge', 'Format der Folie', 'Maße der Oberfläche', 'Art des Laminierverfahrens', 'Innenmaße', 'Heftklammertyp', 'Einsatzbereich', 'max. Tragfähigkeit', 'Abmessung des Rahmens', 'Typbezeichnung') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
             $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname IN ('Papierformat', 'Verwendung für Produkt', 'max. Gewicht des Nutzers', 'Farbe der Rückenlehne', 'Farbe der Sitzfläche') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
-            //print($Query1);
+            //print($Query1);die();
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
             if (mysqli_num_rows($rs) > 0) {
                 while ($row1 = mysqli_fetch_object($rs1)) {
@@ -574,18 +575,18 @@ if (isset($_REQUEST['action'])) {
                         <h3>' . $row1->pf_fname . '</h3>';
                     $TotalRecCount = 0;
                     $Query2 = "SELECT pf.*, COUNT(*) OVER() AS TotalRecCount, COUNT(pf.pf_fvalue) AS total_count FROM products_feature AS pf WHERE pf.pf_fname = '" . $row1->pf_fname . "' AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
-                    //print($Query2);
+                    //print($Query2);die();
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     $row2 = mysqli_fetch_object($rs2);
                     $TotalRecCount = $row2->TotalRecCount;
                     $feature_show .= '<ul class="category_show ' . (($TotalRecCount > 5) ? 'category_show_height' : '') . '" id="category_show_' . $count . '">';
                     if (mysqli_num_rows($rs2) > 0) {
-                        do {
+                        do { $index = uniqid();
                             $feature_show .= '<li>
                                         <label class="gerenric_checkbox">
                                             ' . $row2->pf_fvalue . " (" . $row2->total_count . ")" . '
-                                            <input type="hidden" name="search_pf_forder[]" value="' . $row2->pf_forder . '">
-                                            <input type="checkbox" name="search_pf_fvalue[]" id="search_pf_fvalue" class="search_pf_fvalue" value="' . $row2->pf_fvalue . '" ' . ((in_array($row2->pf_fvalue, $search_pf_fvalue_check)) ? 'checked' : '') . '>
+                                            <input type="hidden" name="search_pf_fname[' . $index . ']" value="' . $row2->pf_fname . '">
+                                            <input type="checkbox" name="search_pf_fvalue[' . $index . ']" id="search_pf_fvalue" class="search_pf_fvalue" value="' . $row2->pf_fvalue . '" ' . ((in_array($row2->pf_fvalue, $search_pf_fvalue_check) && in_array($row1->pf_fname, $search_pf_fname_check) ) ? 'checked' : '') . '>
                                             <span class="checkmark"></span>
                                         </label>
                                     </li>';

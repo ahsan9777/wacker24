@@ -114,12 +114,14 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
     $(window).load(function() {
         setTimeout(function() {
             let Sidefilter_featurewhere = "<?php print($Sidefilter_featurewhere); ?>";
+            let search_pf_fname_check = <?php echo json_encode($search_pf_fname_check); ?>;
             let search_pf_fvalue_check = <?php echo json_encode($search_pf_fvalue_check); ?>;
             $.ajax({
                 url: 'ajax_calls.php?action=feature_show',
                 method: 'POST',
                 data: {
                     Sidefilter_featurewhere: Sidefilter_featurewhere,
+                    search_pf_fname_check: search_pf_fname_check,
                     search_pf_fvalue_check: search_pf_fvalue_check
                 },
                 success: function(response) {
