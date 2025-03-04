@@ -61,7 +61,7 @@ $page = 1;
 														<a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>">
 															<div class="pd_ctg_image">
 																<img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="">
-																<span class="pd_ctg_sale_tag"><?php print($row1->usp_discounted_value.(($row1->usp_price_type > 0) ? '€' : '%')); ?> OFF</span>
+																<span class="pd_tag"><?php print($row1->usp_discounted_value.(($row1->usp_price_type > 0) ? '€' : '%')); ?> OFF</span>
 															</div>
 															<div class="pd_ctg_title price_without_tex" <?php print($price_without_tex_display); ?>>
 																<del><?php print(str_replace(".", ",", $row2->pbp_price_without_tax)); ?>€</del> | <span class="pd_ctg_discount_price"><?php print(discounted_price($special_price['usp_price_type'], $row2->pbp_price_without_tax, $special_price['usp_discounted_value'])) ?>€ </span>
@@ -120,15 +120,25 @@ $page = 1;
 								<div class="gerenric_slider">
 									<?php
 									$special_price = "";
-									$Query = "SELECT DISTINCT oi.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url FROM order_items AS oi LEFT JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = oi.supplier_id AND pbp.pbp_lower_bound = '1' LEFT JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' JOIN (SELECT supplier_id FROM order_items GROUP BY supplier_id HAVING COUNT(*) >= 1 ORDER BY RAND() LIMIT 12) AS random_suppliers ON random_suppliers.supplier_id = oi.supplier_id WHERE pg.pg_mime_source_url IS NOT NULL AND pg.pg_mime_source_url <> ''";
-									//print($Query2);die();
+									$Query = "SELECT DISTINCT oi.supplier_id, oi.ord_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url FROM order_items AS oi LEFT JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = oi.supplier_id AND pbp.pbp_lower_bound = '1' LEFT JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' JOIN (SELECT supplier_id FROM order_items GROUP BY supplier_id HAVING COUNT(*) >= 1 ORDER BY RAND() LIMIT 12) AS random_suppliers ON random_suppliers.supplier_id = oi.supplier_id WHERE pg.pg_mime_source_url IS NOT NULL AND pg.pg_mime_source_url <> '' GROUP BY oi.supplier_id";
+									//print($Query);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($rw = mysqli_fetch_object($rs)) {
+											$TotalRecords = TotalRecords("ord_id", "order_items", "WHERE ord_id = '".$rw->ord_id."'");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image">
+														<a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>">
+															<img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt="">
+															<?php
+															if($TotalRecords > 80){
+																print('<span class="pd_tag">Best Seller</span>');
+															}
+															?>
+														</a>
+													</div>
 													<div class="pd_detail">
 														<h5><a href="product_detail.php?supplier_id=<?php print($rw->supplier_id); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
