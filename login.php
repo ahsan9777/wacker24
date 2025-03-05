@@ -133,7 +133,8 @@ if (isset($_REQUEST['btn_login'])) {
 					</div>
 					<div class="new_account_btn"><a href="registration.php">
 							<div class="gerenric_btn">Create your Wacker24 account here</div>
-						</a></div>
+						</a>
+					</div>
 				</div>
 			</div>
 		</section>

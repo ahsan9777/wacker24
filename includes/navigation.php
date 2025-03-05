@@ -66,7 +66,8 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
                         <div class="hdr_text">
-                            <a href="javascript:void(0)"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> </span>Account & List <i class="fa fa-caret-down"></i></a>
+                            <a href="javascript:void(0)"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Account & List <i class="fa fa-caret-down"></i> <?php } ?> </a>
+                            <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
                             <div class="account_nav">
                                 <ul>
                                     <li>
@@ -89,6 +90,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                     <?php } ?>
                                 </ul>
                             </div>
+                            <?php } ?>
                         </div>
                     </li>
                     <li>

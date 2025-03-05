@@ -122,6 +122,10 @@ if (isset($_REQUEST['sortby'])) {
 <head>
 	<?php include("includes/html_header.php"); ?>
 	<script>
+		$(window).load(function() {
+			$(".click_list").trigger('click');
+		});
+
 		$(document).ready(function() {
 			$(".click_list").click(function() {
 				$(".list_porduct").addClass('list_class');

@@ -387,7 +387,11 @@ include("includes/message.php");
 							<?php if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) { ?>
 								<div class="cart_delivery">
 									<?php
-									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '0' AND usa.usa_defualt = '1' AND usa.user_id = '" . $_SESSION["UID"] . "' ";
+									$guest_user = 0;
+									if($_SESSION["utype_id"] == 5){
+										$guest_user = 1;
+									}
+									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '".$guest_user."' AND usa.usa_defualt = '1' AND usa.user_id = '" . $_SESSION["UID"] . "' ";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
@@ -486,6 +490,11 @@ include("includes/message.php");
 										<li>
 											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout</a>
 										</li>
+										<?php if(!isset($_SESSION["UID"])){?>
+										<li>
+											<a href="registration_as_gast.php" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout As Guest</a>
+										</li>
+										<?php } ?>
 									</ul>
 								</div>
 								<div class="cart_payment_method">
