@@ -31,7 +31,9 @@ $page = 1;
 					<div class="hm_section_1">
 						<div class="gerenric_product_category">
 							<?php
+							//$supplier_id_check = checkrecord("supplier_id", "user_special_price", "user_id = 0 ORDER BY CASE WHEN level_one_id IS NOT NULL AND level_two_id = 0 AND supplier_id = 0 THEN 1 WHEN supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1");
 							$Query1 = "SELECT * FROM user_special_price WHERE user_id = 0 ORDER BY CASE WHEN level_one_id IS NOT NULL AND level_two_id = 0 AND supplier_id = 0 THEN 1 WHEN supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							//print($Query1);
 							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 							if (mysqli_num_rows($rs1) > 0) {
 								while ($row1 = mysqli_fetch_object($rs1)) {

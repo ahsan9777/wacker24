@@ -34,11 +34,12 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li><a href="contact_us.php">Contact</a></li>
             <li>
                 <div class="header_language">
-                    <div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
+                    <div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></div>
+                    <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
                     <ul>
                         <li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
                         <li><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></li>
-                    </ul>
+                    </ul>-->
                 </div>
             </li>
         </ul>

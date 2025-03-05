@@ -163,7 +163,7 @@ include("includes/messages.php");
                                                 </div>
                                             </div>
                                             <label for="">Value</label>
-                                            <input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                            <input type="number" step="any" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
                                         </div>
                                         <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
                                             <label for="">Price</label>
@@ -194,7 +194,7 @@ include("includes/messages.php");
                                                     </div>
                                                 </div>
                                                 <label for="">Value</label>
-                                                <input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
+                                                <input type="number" step="any" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="<?php print($usp_discounted_value); ?>" required placeholder="Value">
                                             </div>
                                             <div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">
                                                 <label for="">Price</label>

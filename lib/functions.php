@@ -1273,7 +1273,8 @@ function checkrecord($filde, $table, $where){
 		//print($strQry);die();
 		$nResult =mysqli_query($GLOBALS['conn'], $strQry);
 		if (mysqli_num_rows($nResult)> 0){
-			$retRes=1;
+			$row=mysqli_fetch_row($nResult);
+			$retRes=$row[0];
 		}
 	return $retRes;		
 }

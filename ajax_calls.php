@@ -335,8 +335,9 @@ if (isset($_REQUEST['action'])) {
 
                 mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE ci_id='" . $_REQUEST['ci_id'] . "' ") or die(mysqli_error($GLOBALS['conn']));
 
-                $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);
+                $_SESSION['header_quantity'] = $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);
                 if ($count == 0) {
+                    $_SESSION['header_quantity'] = 0;
                     mysqli_query($GLOBALS['conn'], "UPDATE cart SET  cart_gross_total= '0', cart_gst= '0', cart_discount= '0', cart_amount= '0' WHERE cart_id='" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
                 } else {
                     mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id= '" . $_SESSION['cart_id'] . "'), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id= '" . $_SESSION['cart_id'] . "'), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id= '" . $_SESSION['cart_id'] . "'), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id= '" . $_SESSION['cart_id'] . "') WHERE cart_id=" . $_SESSION['cart_id']) or die(mysqli_error($GLOBALS['conn']));
@@ -344,7 +345,7 @@ if (isset($_REQUEST['action'])) {
 
                 $retValue = array("status" => "1", "message" => "Record deleted successfully!", "count" => $count);
             } else {
-                $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);
+                $_SESSION['header_quantity'] = $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);
                 $retValue = array("status" => "0", "message" => "Please select the required parameter", "count" => $count);
             }
 

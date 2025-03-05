@@ -102,6 +102,10 @@
     #footer_section .footer_top h2{margin-bottom: 10px;}
     #footer_section .footer_top .footer-col{width: 50%; margin-bottom: 20px;}
     #footer_section .subscribe_newsletter_btn{min-width: inherit; padding: 10px;}
+    .login_page .login_inner{max-width: 100%;}
+    .login_page.register_page .login_inner{max-width: 100%;}
+    .login_page .login_box{width: auto;}
+    .pd_tag{font-size: 14px;}
 }
 @media screen and (max-width: 800px) and (min-width: 240px){}
 

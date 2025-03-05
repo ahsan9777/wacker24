@@ -259,8 +259,8 @@ include("includes/message.php");
 										while ($row = mysqli_fetch_object($rs)) {
 											if (!empty($special_price)) {
 									?>
-												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> "); ?> </div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€  </span>"); ?> </div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ </span> "); ?> </div>
 											<?php } else { ?>
 												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
 												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
@@ -393,7 +393,7 @@ include("includes/message.php");
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
-											if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+											//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 												$cat_id_two = substr($cat_id_three, 0, 3);
 												$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
 												$special_price = user_special_price("level_two", $cat_id_two);
@@ -401,7 +401,7 @@ include("includes/message.php");
 													$special_price = user_special_price("level_one", $cat_id_one);
 												}
 												//print_r($special_price);
-											}
+											//}
 									?>
 											<div>
 												<div class="pd_card">
@@ -450,7 +450,7 @@ include("includes/message.php");
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								if (mysqli_num_rows($rs) > 0) {
 									while ($row = mysqli_fetch_object($rs)) {
-										if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+										//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 											$cat_id_two = substr($cat_id_three, 0, 3);
 											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
 											$special_price = user_special_price("level_two", $cat_id_two);
@@ -458,7 +458,7 @@ include("includes/message.php");
 												$special_price = user_special_price("level_one", $cat_id_one);
 											}
 											//print_r($special_price);
-										}
+										//}
 								?>
 										<div>
 											<div class="pd_card txt_align_left">

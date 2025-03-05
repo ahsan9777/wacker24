@@ -296,6 +296,9 @@ include("includes/message.php");
 											$gst = $row->ci_amount * config_gst;
 											$gst_orignal = $row->pbp_price_amount * config_gst;
 											$delivery_charges = get_delivery_charges($cart_amount);
+											$pro_description_short = explode(' ', $row->pro_description_short);
+
+											$smiller_product_url = $GLOBALS['siteURL']."search_result.php?search_keyword=".implode(' ', array_slice($pro_description_short, 0, 2));
 									?>
 											<div class="cart_pd_row">
 												<div class="cart_pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
@@ -330,7 +333,7 @@ include("includes/message.php");
 																</li>
 																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Delete</a></li>
 																<li><a href="javascript:void(0)">Share</a></li>
-																<li><a href="javascript:void(0)">Similar Product</a></li>
+																<li><a href="<?php print($smiller_product_url); ?>">Similar Product</a></li>
 															</ul>
 														</div>
 													</div>
@@ -388,10 +391,10 @@ include("includes/message.php");
 								<div class="cart_delivery">
 									<?php
 									$guest_user = 0;
-									if($_SESSION["utype_id"] == 5){
+									if ($_SESSION["utype_id"] == 5) {
 										$guest_user = 1;
 									}
-									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '".$guest_user."' AND usa.usa_defualt = '1' AND usa.user_id = '" . $_SESSION["UID"] . "' ";
+									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '" . $guest_user . "' AND usa.usa_defualt = '1' AND usa.user_id = '" . $_SESSION["UID"] . "' ";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
@@ -490,10 +493,10 @@ include("includes/message.php");
 										<li>
 											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout</a>
 										</li>
-										<?php if(!isset($_SESSION["UID"])){?>
-										<li>
-											<a href="registration_as_gast.php" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout As Guest</a>
-										</li>
+										<?php if (!isset($_SESSION["UID"])) { ?>
+											<li>
+												<a href="registration_as_gast.php" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout As Guest</a>
+											</li>
 										<?php } ?>
 									</ul>
 								</div>
