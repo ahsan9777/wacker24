@@ -20,7 +20,7 @@ $search_keyword = "";
 $cat_id = "";
 $special_price = array();
 
-if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0)) {
+if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) ) {
     $cart_id = $_SESSION['cart_id'];
     $Query = "SELECT ci.*, cm.sub_group_ids FROM cart_items AS ci LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = ci.supplier_id WHERE cart_id = '" . $cart_id . "' AND ci_discounted_price_see = '0' ";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
