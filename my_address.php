@@ -324,7 +324,7 @@ include("includes/message.php");
 				<div class="hm_section_3 margin_top_30">
 					<div class="gerenric_white_box">
 						<div class="gerenric_product full_column mostviewed padding_left_right_10">
-							<h2>Meine Sonderpreise</h2>
+							<h2>Kategorie Kopierpapiere</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$special_price = "";

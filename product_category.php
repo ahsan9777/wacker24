@@ -276,7 +276,7 @@ $special_price = user_special_price("level_one", $level_one);
 							</div>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column mostviewed">
-									<h2>Meine Sonderpreise</h2>
+									<h2>Kategorie zusammenhängen</h2>
 									<div class="gerenric_slider_mostviewed">
 										<?php
 										//$special_price = "";
