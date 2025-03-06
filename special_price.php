@@ -38,170 +38,77 @@ $page = 1;
 				<div class="page_width_1480">
 					<div class="gerenric_white_box">
 						<div class="gerenric_product full_column">
-							<h2>My special prices</h2>
-							<div class="gerenric_slider">
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img1.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410 +500 staples/500 nails</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
+							<?php
+							$Query1 = "SELECT * FROM user_special_price WHERE user_id = '" . $_SESSION["UID"] . "' AND usp_status = '1'  ORDER BY CASE WHEN supplier_id IS NOT NULL THEN 1 WHEN level_two_id IS NOT NULL AND supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							//print($Query1);
+							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+							if (mysqli_num_rows($rs1) > 0) {
+								$row1 = mysqli_fetch_object($rs1);
+							?>
+								<h2>My special prices</h2>
+								<div class="gerenric_slider">
+									<?php
+									$whereclause = "WHERE 1=1";
+									if ($row1->supplier_id > 0) {
+										$retArray = retArray("SELECT supplier_id FROM user_special_price WHERE user_id = '" . $_SESSION["UID"] . "' AND usp_status = '1' AND supplier_id > 0");
+										//print_r($retArray);
+										$supplier_id_data = "";
+										for ($i = 0; $i < count($retArray); $i++) {
+											$supplier_id_data .= "'" . $retArray[$i] . "',";
+										}
+										//$special_price = user_special_price("supplier_id", $row1->supplier_id);
+										$whereclause .= " AND supplier_id IN (" . rtrim($supplier_id_data, ',') . ")";
+									} elseif ($row1->level_two_id > 0) {
+										$special_price = user_special_price("level_two", $row1->level_two_id);
+										$whereclause .= " AND FIND_IN_SET(" . $row1->level_two_id . ", pro.sub_group_ids)";
+									} elseif ($row1->level_one_id > 0) {
+										$special_price = user_special_price("level_one", $row1->level_one_id);
+										$whereclause .= " AND FIND_IN_SET(" . $row1->level_one_id . ", pro.sub_group_ids)";
+									}
+									$Query2 = "SELECT * FROM vu_products AS pro " . $whereclause . "  ORDER BY  RAND() LIMIT 0,12";
+									//print($Query2);
+									$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+									if (mysqli_num_rows($rs2) > 0) {
+										while ($row2 = mysqli_fetch_object($rs2)) {
+											if ($row1->supplier_id > 0) {
+												//$special_price = array();
+												$special_price = user_special_price("supplier_id", $row2->supplier_id);
+												//print_r($special_price);
+											}
+									?>
+											<div>
+												<div class="pd_card">
+													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_detail">
+														<h5><a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
+														<div class="pd_rating">
+															<ul>
+																<li>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																	<div class="fa fa-star"></div>
+																</li>
+															</ul>
+														</div>
+														<?php if (!empty($special_price)) { ?>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row2->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row2->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row2->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row2->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<?php } else { ?>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row2->pbp_price_without_tax)); ?>€</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row2->pbp_price_amount)); ?>€</div>
+														<?php } ?>
+													</div>
+												</div>
 											</div>
-											<div class="pd_prise">270.20€</div>
-										</div>
-									</div>
+									<?php
+										}
+									}
+									?>
 								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img2.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy Camou</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">12.60€</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img1.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410 +500 staples/500 nails</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">270.20€</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img2.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy Camou</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">12.60€</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img1.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410 +500 staples/500 nails</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">270.20€</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img2.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy Camou</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">12.60€</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img1.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">BRÜDER MANNESMANN hand stapler M48410 +500 staples/500 nails</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">270.20€</div>
-										</div>
-									</div>
-								</div>
-								<div>
-									<div class="pd_card">
-										<div class="pd_image"><a href="product_detail.html"><img src="images/product_img2.jpg" alt=""></a></div>
-										<div class="pd_detail">
-											<h5><a href="product_detail.html">COOCAZOO pencil case 00211516 Cloudy Camou</a></h5>
-											<div class="pd_rating">
-												<ul>
-													<li>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-														<div class="fa fa-star"></div>
-													</li>
-												</ul>
-											</div>
-											<div class="pd_prise">12.60€</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+							<?php } ?>
 						</div>
 
 					</div>
@@ -222,37 +129,37 @@ $page = 1;
 <script src="js/slick.js"></script>
 <script>
 	$(".gerenric_slider").slick({
-	slidesToShow: 6,
-	slidesToScroll: 1,
-	autoplay:false,
-	dots:false,
-	autoplaySpeed:2000,
-	infinite: true,
+		slidesToShow: 6,
+		slidesToScroll: 1,
+		autoplay: false,
+		dots: false,
+		autoplaySpeed: 2000,
+		infinite: true,
 		responsive: [
-			
-		{
-		breakpoint: 1024,
-		settings: {
-			slidesToShow:4,
-			slidesToScroll: 1,
-		}
-		},
-		{
-		breakpoint: 650,
-		settings: {
-			slidesToShow:3,
-			slidesToScroll: 1
-		}
-		},
-		{
-		breakpoint: 480,
-		settings: {
-			slidesToShow: 2,
-			slidesToScroll: 1
-		}
-		}
-	]
-});
 
+			{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 4,
+					slidesToScroll: 1,
+				}
+			},
+			{
+				breakpoint: 650,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 1
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 1
+				}
+			}
+		]
+	});
 </script>
+
 </html>

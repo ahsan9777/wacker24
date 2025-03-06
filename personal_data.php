@@ -104,8 +104,9 @@ $page = 1;
 								</div>
 							</a>
 						</div>
+						<?php $user_special_price_count = TotalRecords("usp_id", "user_special_price", "WHERE user_id  = '".$_SESSION["UID"]."' "); ?>
 						<div class="my_personal_card">
-							<a href="special_price.php">
+							<a href="<?php print( ($user_special_price_count > 0) ? 'special_price' : 'javascript:void(0);' ); ?>">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/user.png" alt=""></div>
 									<div class="personal_detail">

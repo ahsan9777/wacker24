@@ -31,12 +31,11 @@ $page = 1;
 					<div class="hm_section_1">
 						<div class="gerenric_product_category">
 							<?php
-							//$supplier_id_check = checkrecord("supplier_id", "user_special_price", "user_id = 0 ORDER BY CASE WHEN level_one_id IS NOT NULL AND level_two_id = 0 AND supplier_id = 0 THEN 1 WHEN supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1");
-							$Query1 = "SELECT * FROM user_special_price WHERE user_id = 0 ORDER BY CASE WHEN level_one_id IS NOT NULL AND level_two_id = 0 AND supplier_id = 0 THEN 1 WHEN supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							$Query1 = "SELECT * FROM user_special_price WHERE user_id = 0 AND usp_status = '1'  ORDER BY CASE WHEN supplier_id IS NOT NULL THEN 1 WHEN level_two_id IS NOT NULL AND supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
 							//print($Query1);
 							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 							if (mysqli_num_rows($rs1) > 0) {
-								while ($row1 = mysqli_fetch_object($rs1)) {
+								$row1 = mysqli_fetch_object($rs1);
 							?>
 									<div class="pd_ctg_block pd_ctg_special_sale">
 										<div class="pd_ctg_heading">SALE <i class="fa fa-tag" aria-hidden="true"></i></div>
@@ -44,13 +43,19 @@ $page = 1;
 											<?php
 											$whereclause = "WHERE 1=1";
 											if($row1->supplier_id > 0){
-												$special_price = user_special_price("supplier_id", $row1->supplier_id);
-												$whereclause .= " AND supplier_id = '".$row1->supplier_id."'";
+												$retArray = retArray("SELECT supplier_id FROM user_special_price WHERE user_id = 0 AND usp_status = '1' AND supplier_id > 0");
+												//print_r($retArray);
+												$supplier_id_data = "";
+												for($i = 0; $i < count($retArray); $i++){
+													$supplier_id_data .= "'".$retArray[$i]."',";
+												}
+												//$special_price = user_special_price("supplier_id", $row1->supplier_id);
+												$whereclause .= " AND supplier_id IN (".rtrim($supplier_id_data, ',').")";
 											} elseif($row1->level_two_id > 0){
-												$special_price = user_special_price("level_two", $row1->level_two_id);
+												$special_price = user_special_price("level_two", $row1->level_two_id, 0, 1);
 												$whereclause .= " AND FIND_IN_SET(".$row1->level_two_id.", pro.sub_group_ids)";
 											} elseif($row1->level_one_id > 0){
-												$special_price = user_special_price("level_one", $row1->level_one_id);
+												$special_price = user_special_price("level_one", $row1->level_one_id, 0, 1);
 												$whereclause .= " AND FIND_IN_SET(".$row1->level_one_id.", pro.sub_group_ids)";
 											}
 											$Query2 = "SELECT * FROM vu_products AS pro ".$whereclause."  ORDER BY  RAND() LIMIT 0,4";
@@ -58,12 +63,17 @@ $page = 1;
 											$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
 											if (mysqli_num_rows($rs2) > 0) {
 												while ($row2 = mysqli_fetch_object($rs2)) {
+													if($row1->supplier_id > 0){
+														//$special_price = array();
+														$special_price = user_special_price("supplier_id", $row2->supplier_id, 0, 1);
+														//print_r($special_price);
+													}
 											?>
 													<div class="pd_ctg_card">
 														<a href="product_detail.php?supplier_id=<?php print($row2->supplier_id); ?>">
 															<div class="pd_ctg_image">
 																<img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="">
-																<span class="pd_tag"><?php print($row1->usp_discounted_value.(($row1->usp_price_type > 0) ? '€' : '%')); ?> OFF</span>
+																<span class="pd_tag"><?php print($special_price['usp_discounted_value'].(($special_price['usp_price_type'] > 0) ? '€' : '%')); ?> OFF</span>
 															</div>
 															<div class="pd_ctg_title price_without_tex" <?php print($price_without_tex_display); ?>>
 																<del><?php print(str_replace(".", ",", $row2->pbp_price_without_tax)); ?>€</del> | <span class="pd_ctg_discount_price"><?php print(discounted_price($special_price['usp_price_type'], $row2->pbp_price_without_tax, $special_price['usp_discounted_value'])) ?>€ </span>
@@ -81,7 +91,6 @@ $page = 1;
 									</div>
 								<?php
 								}
-							}
 							$Query1 = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND cat_showhome = '1'";
 							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 							if (mysqli_num_rows($rs1) > 0) {

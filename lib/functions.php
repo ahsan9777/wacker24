@@ -29,7 +29,7 @@ function get_contents($url){
 }
 
 function retArray($qry){
-	$age_ids="";
+	$age_ids= array();
 	$rsAge = mysqli_query($GLOBALS['conn'], $qry);
 	if(mysqli_num_rows($rsAge)>0){
 		while($row=mysqli_fetch_row($rsAge)){
@@ -2469,8 +2469,8 @@ function get_delivery_charges($total){
 	  return $delivery_charges;
 }
 
-function user_special_price($parameter, $value, $user_id = 0){
-	if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4)))) {
+function user_special_price($parameter, $value, $user_id = 0, $price_type = 0){
+	if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) && $price_type == 0) {
 		$user_id = $_SESSION["UID"];
 	}
 	$searchWhere = "";
