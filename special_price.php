@@ -24,8 +24,8 @@ $page = 1;
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">My personal data</a></li>
-						<li><a href="javascript:void(0)">special prices</a></li>
+						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="javascript:void(0)">Sonderpreise</a></li>
 					</ul>
 				</div>
 			</div>
@@ -45,7 +45,7 @@ $page = 1;
 							if (mysqli_num_rows($rs1) > 0) {
 								$row1 = mysqli_fetch_object($rs1);
 							?>
-								<h2>My special prices</h2>
+								<h2>Meine Sonderpreise</h2>
 								<div class="gerenric_slider">
 									<?php
 									$whereclause = "WHERE 1=1";
@@ -107,7 +107,6 @@ $page = 1;
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
 							<?php } ?>
 						</div>
 
@@ -118,7 +117,7 @@ $page = 1;
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

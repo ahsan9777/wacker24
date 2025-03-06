@@ -72,14 +72,14 @@ include("includes/message.php");
 		<div class="create_list_popup">
 			<div class="inner_popup">
 				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-					<div class="create_list_heading">Create List <div class="create_list_close"><i class="fa fa-times"></i></div>
+					<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="create_list_content_inner">
-						<p>List Name (Required)</p>
+						<p>Listenname (erforderlich)</p>
 						<input type="text" class="input_list" required name="sl_title" id="sl_title">
 						<div class="create_button">
-							<button class="gerenric_btn" type="submit" name="btnAdd">ADD</button>
-							<div class="gerenric_btn create_list_close">Cancel</div>
+							<button class="gerenric_btn" type="submit" name="btnAdd">hinzufügen</button>
+							<div class="gerenric_btn create_list_close">Abbrechen</div>
 						</div>
 					</div>
 				</form>
@@ -96,8 +96,8 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">My personal data</a></li>
-						<li><a href="javascript:void(0)">My shopping lists</a></li>
+						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="javascript:void(0)">Meine Einkaufslisten</a></li>
 					</ul>
 				</div>
 			</div>
@@ -144,17 +144,17 @@ include("includes/message.php");
 										<div class="shopping_list_profile">
 											<div class="list_name">Ahsan <span>Private</span></div>
 										</div>
-										<div class="shopping_list_create create_list_trigger">Create a List</div>
+										<div class="shopping_list_create create_list_trigger">Eine neue Liste erstellen</div>
 									</div>
 									<div class="list_type_row">
 										<ul>
 											<li class="click_th"><i class="fa fa-th"></i></li>
 											<li class="click_list"><i class="fa fa-list"></i></li>
 										</ul>
-										<div class="list_type_search">
+										<!--<div class="list_type_search">
 											<input type="text" class="list_search_input">
 											<button class="search_button"><i class="fa fa-search"></i></button>
-										</div>
+										</div>-->
 									</div>
 									<?php
 									$count = 0;
@@ -217,7 +217,7 @@ include("includes/message.php");
 																				<li><a href="<?php print($_SERVER['PHP_SELF'] . "?deletewishlist&wl_id=" . $row3->wl_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');"><i class="fa fa-trash"></i></a></li>
 																				<li>
 																					<select class="pd_slt sl_id" name="sl_id" id="sl_id_<?php print($row3->wl_id); ?>" data-id="<?php print($row3->wl_id); ?>">
-																						<option value="0">Move</option>
+																						<option value="0">Verschieben</option>
 																						<?php
 																						$count = 0;
 																						$Query4 = "SELECT * FROM shopping_list WHERE user_id = '" . $_SESSION["UID"] . "' AND sl_id != '" . $row3->sl_id . "' ORDER BY sl_id ASC";
@@ -242,7 +242,7 @@ include("includes/message.php");
 																				<input type="hidden" id="ci_qty_<?php print($row3->pro_id); ?>" name="ci_qty" value="1">
 																				<input type="hidden" id="ci_discount_type_<?php print($row3->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 																				<input type="hidden" id="ci_discount_value_<?php print($row3->pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
-																				<div class="gerenric_btn">Add to Cart</div>
+																				<div class="gerenric_btn">In den Einkaufswagen</div>
 																			</a>
 																		</div>
 																	</div>
@@ -270,7 +270,7 @@ include("includes/message.php");
 				<div class="hm_section_3 margin_top_30">
 					<div class="gerenric_white_box">
 						<div class="gerenric_product full_column mostviewed padding_left_right_10">
-							<h2>My special prices</h2>
+							<h2>Meine Sonderpreise</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$special_price = "";
@@ -366,7 +366,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

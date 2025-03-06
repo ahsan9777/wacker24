@@ -24,7 +24,7 @@ $page = 1;
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="javascript:void(0)">My personal data</a></li>
+						<li><a href="javascript:void(0)">Meine persönlichen Daten</a></li>
 						<li><a href="javascript:void(0)">Private customer account</a></li>
 					</ul>
 				</div>
@@ -43,8 +43,8 @@ $page = 1;
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/PersonalData.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">My data</div>
-										<p>Change name, password, phone number</p>
+										<div class="personal_title">Meine Daten</div>
+										<p>Änderung Name, Passwort, Telefonnummer</p>
 									</div>
 								</div>
 							</a>
@@ -54,8 +54,8 @@ $page = 1;
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Address.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">My addresses</div>
-										<p>Add, edit, remove address</p>
+										<div class="personal_title">Meine Adressen </div>
+										<p>Adresse hinzufügen, bearbeiten, entfernen</p>
 									</div>
 								</div>
 							</a>
@@ -65,19 +65,20 @@ $page = 1;
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Orders.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">My Orders</div>
-										<p>shipment tracking, return</p>
+										<div class="personal_title">Meine Bestellungen</div>
+										<p>Sendungsverfolgung, Rücksendung</p>
 									</div>
 								</div>
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="my_payment.php">
+							<!--<a href="my_payment.php">-->
+							<a href="javascript:void(0);">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Payments.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">My Payments</div>
-										<p>Manage payments, add new payment methods</p>
+										<div class="personal_title">Meine Zahlungen</div>
+										<p>Verwaltet Zahlungen,Neue Zahlungsarten hinzufügen</p>
 									</div>
 								</div>
 							</a>
@@ -87,8 +88,8 @@ $page = 1;
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Cart.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">shopping cart</div>
-										<p>My Cart Checkout, Add New</p>
+										<div class="personal_title">Einkaufswagen</div>
+										<p>Meine Einkaufswagen Zur Kasse, Neu hinzufügen</p>
 									</div>
 								</div>
 							</a>
@@ -98,20 +99,20 @@ $page = 1;
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/shoppingList.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">My shopping lists</div>
-										<p>list of items to purchase</p>
+										<div class="personal_title">Meine Einkaufslisten</div>
+										<p>Liste der zu kaufenden Artikel</p>
 									</div>
 								</div>
 							</a>
 						</div>
 						<?php $user_special_price_count = TotalRecords("usp_id", "user_special_price", "WHERE user_id  = '".$_SESSION["UID"]."' "); ?>
 						<div class="my_personal_card">
-							<a href="<?php print( ($user_special_price_count > 0) ? 'special_price' : 'javascript:void(0);' ); ?>">
+							<a href="<?php print( ($user_special_price_count > 0) ? 'special_price.php' : 'javascript:void(0);' ); ?>">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/user.png" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">special prices</div>
-										<p>List of special prices</p>
+										<div class="personal_title">Sonderpreise</div>
+										<p>Liste der zu Sonderpreise</p>
 									</div>
 								</div>
 							</a>
@@ -121,8 +122,8 @@ $page = 1;
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Contact.svg" alt=""></div>
 									<div class="personal_detail">
-										<div class="personal_title">make contact</div>
-										<p>Contact 24/7 support</p>
+										<div class="personal_title">Kontakt aufnehmen</div>
+										<p>Kontakt 24/7 support</p>
 									</div>
 								</div>
 							</a>
@@ -133,7 +134,7 @@ $page = 1;
 				<div class="hm_section_3 margin_top_30">
 					<div class="gerenric_white_box">
 						<div class="gerenric_product full_column mostviewed padding_left_right_10">
-							<h2>My special prices</h2>
+							<h2>Meine Sonderpreise</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$special_price = "";
@@ -229,7 +230,7 @@ $page = 1;
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

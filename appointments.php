@@ -45,7 +45,7 @@
 											<p><?php print(limit_text($row->as_detail, 265)); ?></p>
 											<div class="full_width txt_align_right">
 												<a href="appointment_schedule.php?as_id=<?php print($row->as_id); ?>">
-													<div class="gerenric_btn">Select a Date</div>
+													<div class="gerenric_btn">Termin auswählen</div>
 												</a>
 											</div>
 										</div>
@@ -63,7 +63,7 @@
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

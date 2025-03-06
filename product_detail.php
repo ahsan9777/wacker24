@@ -110,14 +110,14 @@ include("includes/message.php");
 		<div class="create_list_popup">
 			<div class="inner_popup">
 				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-					<div class="create_list_heading">Create List <div class="create_list_close"><i class="fa fa-times"></i></div>
+					<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="create_list_content_inner">
-						<p>List Name (Required)</p>
+						<p>Listenname (erforderlich)</p>
 						<input type="text" class="input_list" required name="sl_title" id="sl_title">
 						<div class="create_button">
-							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">ADD</button>
-							<div class="gerenric_btn create_list_close">Cancel</div>
+							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">hinzufügen</button>
+							<div class="gerenric_btn create_list_close">Abbrechen</div>
 						</div>
 					</div>
 				</form>
@@ -368,7 +368,7 @@ include("includes/message.php");
 														}
 														?>
 														<li>
-															<div class="create_other_list create_list_trigger">+ Create <?php print(($count > 0) ? 'another' : 'new'); ?> list</div>
+															<div class="create_other_list create_list_trigger">Eine neue Liste erstellen</div>
 														</li>
 													</ul>
 												</div>

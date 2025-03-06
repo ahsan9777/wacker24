@@ -51,7 +51,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <form class="header_search" name="frm_search" id="frm_search" method="post" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
                     <select class="header_select_slt" name="level_one" id="level_one">
-                        <option value="0">ALL</option>
+                        <option value="0">Alle</option>
                         <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $cat_id, "cat_status = '1' AND parent_id = '0'"); ?>
                     </select>
                 </div>
@@ -80,6 +80,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         <?php } ?>
                                     </li>
                                     <li><span>Meine Listen</span></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "special_price.php" : "javascript:void(0);"); ?>"> Sonderpreise </a></li>
                                     <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "shopping_list.php" : "javascript:void(0);"); ?>"> Einkaufslisten </a></li>
                                     <li><span>Mein Konto</span></li>
                                     <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "personal_data.php" : "javascript:void(0);"); ?>"> Persönliche Daten <a href=""></a></li>

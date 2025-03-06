@@ -1,13 +1,14 @@
 <?php include("includes/php_includes_top.php"); ?>
 <!doctype html>
 <html lang="de">
+
 <head>
 	<?php include("includes/html_header.php"); ?>
 </head>
 
 <body>
 	<div id="container" align="center">
-		
+
 		<!--LOCATION_POPUP_START-->
 		<?php include("includes/popup.php"); ?>
 		<!--LOCATION_POPUP_END-->
@@ -15,7 +16,7 @@
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
-		
+
 		<!--CONTENT_SECTION_START-->
 		<section id="content_section">
 			<div class="contact_page gerenric_padding">
@@ -28,128 +29,138 @@
 							</div>
 						</div>
 						<div class="contact_col">
-							<h2>Contact Form</h2>
+							<h2>Kontaktformular</h2>
 							<div class="gerenric_form">
 								<ul>
 									<li>
 										<div class="form_row">
 											<div class="form_left">
 												<div class="form_label">Name</div>
-												<div class="form_field"><input type="text" class="gerenric_input" placeholder="Your First Name"></div>
+												<div class="form_field"><input type="text" class="gerenric_input" placeholder="Ihr Vorname / Nachname"></div>
 											</div>
 											<div class="form_right">
-												<div class="form_label">E-mail address</div>
-												<div class="form_field"><input type="text" class="gerenric_input" placeholder="Your Email Address"></div>
+												<div class="form_label">E-Mail-Adresse</div>
+												<div class="form_field"><input type="text" class="gerenric_input" placeholder="Ihre E-Mail Addresse"></div>
 											</div>
 										</div>
 									</li>
 									<li>
 										<div class="form_row">
 											<div class="form_left">
-												<div class="form_label">phone number</div>
-												<div class="form_field"><input type="number" class="gerenric_input" placeholder="Your Phone Number"></div>
+												<div class="form_label">Telefonnummer</div>
+												<div class="form_field"><input type="number" class="gerenric_input" placeholder="Ihrer Telefonnummer"></div>
 											</div>
 											<div class="form_right">
-												<div class="form_label">Theme</div>
+												<div class="form_label">Thema</div>
 												<div class="form_field">
 													<select class="gerenric_input">
-														<option>Please select</option>
-														<option>Order</option>
-														<option>Questions about delivery time/product</option>
-														<option>Returns/Returns</option>
-														<option>My user account</option>
-														<option>Request personal data</option>
-														<option>Request deletion of personal data</option>
-														<option>technical malfunction</option>
-														<option>Miscellaneous</option>
-													  </select>
+														<option>Bitte auswählen</option>
+														<option>Bestellung</option>
+														<option>Fragen zu Lieferzeit/Produkt</option>
+														<option>Retouren/Rücknahme</option>
+														<option>Mein Benutzerkonto</option>
+														<option>Persönliche Daten anfordern</option>
+														<option>Löschung persönlicher Daten anfordern</option>
+														<option>Technische Störung</option>
+														<option>Sonstiges</option>
+													</select>
 												</div>
 											</div>
 										</div>
 									</li>
 									<li>
-										<div class="form_label">Your Message</div>
+										<div class="form_label">Ihre Nachricht</div>
 										<div class="form_field"><textarea class="gerenric_input gerenric_textarea" placeholder=""></textarea></div>
 									</li>
 									<li>
-										<div class="form_label">Please enter confirmation code: 1983</div>
+										<div class="form_label">Bitte Bestätigungscode eingeben: 1983</div>
 										<div class="form_field"><input type="text" class="gerenric_input"></div>
 									</li>
-									<li><button class="gerenric_btn full_btn mt_30">Submit</button></li>
+									<li><button class="gerenric_btn full_btn mt_30">Absenden</button></li>
 								</ul>
 							</div>
 						</div>
 						<div class="contact_col">
 							<div class="contact_block">
-								<h3>opening hours of the specialist store</h3>
-								<p>Mon.-Fri.: 09:00 - 18:00</p>
-								<p>Sat.: 09:00 - 13:00</p>
+								<h3>Öffnungszeiten Fachmarkt</h3>
+								<p>Mo.-Fr.: 09:00 - 18:00 Uhr</p>
+								<p>Sa.: 09:00 - 13:00 Uhr</p>
 							</div>
 							<div class="contact_block">
-								<h3>Reachable by phone</h3>
-								<p>Mon.-Fri.: 08:00 - 18:00</p>
-								<p>Sat.: 09:00 - 13:00</p>
+								<h3>Telefonisch erreichbar</h3>
+								<p>Mo.-Fr.: 08:00 - 18:00 Uhr</p>
+								<p>Sa.: 09:00 - 13:00 Uhr</p>
 							</div>
 						</div>
 						<div class="contact_col">
 							<div class="contact_block">
-								<h3>Customer Service</h3>
-								<p>We will help you personally and are available during our service hours:</p>
+								<h3>Kundenservice</h3>
+								<p>Wir helfen Ihnen persönlich weiter und stehen Ihnen während unserer Servicezeiten gerne zur Verfügung:</p>
 							</div>
 							<div class="contact_block">
-								<h3>Phone</h3>
+								<h3>Telefon</h3>
 								<p>06321 - 9124 -</p>
 							</div>
 							<div class="contact_table">
 								<ul>
-									<li>Department</li>
-									<li>E-mail</li>
-									<li>phone</li>
+									<li>Abteilung</li>
+									<li>Email</li>
+									<li>Telefon</li>
 								</ul>
 								<ul>
-									<li>headquarters</li>
+									<li>Zentrale</li>
 									<li>mail@wacker24.de</li>
 									<li>-0</li>
 								</ul>
 								<ul>
-									<li>accounting</li>
+									<li>Buchhaltung</li>
 									<li>buchhaltung@wacker24.de</li>
 									<li>-10</li>
 								</ul>
 								<ul>
-									<li>Technology Printer/Scanner</li>
+									<li>Technik Drucker/Scanner</li>
 									<li>technik@wacker24.de</li>
 									<li>-22</li>
 								</ul>
 								<ul>
-									<li>headquarters</li>
-									<li>mail@wacker24.de</li>
-									<li>-0</li>
+									<li>Technik Kassensysteme</li>
+									<li>kassen@wacker24.de</li>
+									<li>-23</li>
 								</ul>
 								<ul>
-									<li>accounting</li>
-									<li>buchhaltung@wacker24.de</li>
-									<li>-10</li>
+									<li>Technik IT</li>
+									<li>support@wacker24.de</li>
+									<li>-24</li>
 								</ul>
 								<ul>
-									<li>Technology Printer/Scanner</li>
-									<li>technik@wacker24.de</li>
-									<li>-22</li>
+									<li>Vertrieb Bürobedarf</li>
+									<li>vertrieb@wacker24.de</li>
+									<li>-30</li>
 								</ul>
 								<ul>
-									<li>headquarters</li>
-									<li>mail@wacker24.de</li>
-									<li>-0</li>
+									<li>Vertrieb Möbel</li>
+									<li>vertrieb@wacker24.de</li>
+									<li>-40</li>
 								</ul>
 								<ul>
-									<li>accounting</li>
-									<li>buchhaltung@wacker24.de</li>
-									<li>-10</li>
+									<li>Vertrieb Technik</li>
+									<li>vertrieb@wacker24.de</li>
+									<li>-50</li>
 								</ul>
 								<ul>
-									<li>Technology Printer/Scanner</li>
-									<li>technik@wacker24.de</li>
-									<li>-22</li>
+									<li>Copyshop</li>
+									<li>copyshop@wacker24.de</li>
+									<li>-60</li>
+								</ul>
+								<ul>
+									<li>Fachmarkt</li>
+									<li>fachmarkt@wacker24.de</li>
+									<li>-70</li>
+								</ul>
+								<ul>
+									<li>Bestellung/Logistik</li>
+									<li>bestellung@wacker24.de</li>
+									<li>-80</li>
 								</ul>
 							</div>
 						</div>
@@ -160,7 +171,7 @@
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
@@ -168,4 +179,5 @@
 
 </body>
 <?php include("includes/bottom_js.php"); ?>
+
 </html>

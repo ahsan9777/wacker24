@@ -44,7 +44,7 @@ include("includes/message.php");
 		<div class="form_popup" id="form_shippingAddress_popup">
 			<div class="inner_popup">
 				<div class="form_popup_content">
-					<div class="form_popup_heading">Add new shipping address <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					<div class="form_popup_heading">Neue Adresse hinzufügen <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
 						<form class="gerenric_form" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -52,35 +52,35 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">First name</div>
+											<div class="form_label">Vorname</div>
 											<div class="form_field"><input type="text" name="usa_fname" id="usa_fname" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Last name</div>
+											<div class="form_label">Nachname</div>
 											<div class="form_field"><input type="text" name="usa_lname" id="usa_lname" class="gerenric_input"></div>
 										</div>
 									</div>
 								</li>
 								<?php if ($_SESSION["Utype"] == 4) { ?>
 									<li>
-										<div class="form_label">Addition</div>
+										<div class="form_label">Zusatz</div>
 										<div class="form_field"><input type="text" name="usa_additional_info" id="usa_additional_info" class="gerenric_input"></div>
 									</li>
 								<?php } ?>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">Street</div>
+											<div class="form_label">Straße</div>
 											<div class="form_field"><input type="text" name="usa_street" id="usa_street" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">House number</div>
+											<div class="form_label">Hausnr</div>
 											<div class="form_field"><input type="text" name="usa_house_no" id="usa_house_no" class="gerenric_input" required></div>
 										</div>
 									</div>
 								</li>
 								<li>
-									<div class="form_label">ZIP / City</div>
+									<div class="form_label">PLZ / Ort</div>
 									<div class="form_field">
 										<input type="text" name="usa_zipcode" id="usa_zipcode" class="gerenric_input usa_zipcode" required>
 									</div>
@@ -103,8 +103,8 @@ include("includes/message.php");
 								</li>
 								<li class="mt_30">
 									<div class="form_two_button">
-										<button class="gerenric_btn" type="submit" name="btnAdd">Add</button>
-										<button class="gerenric_btn gray_btn form_popup_close">Close</button>
+										<button class="gerenric_btn" type="submit" name="btnAdd">Aktualisieren</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Abbrechen</button>
 									</div>
 								</li>
 							</ul>
@@ -117,7 +117,7 @@ include("includes/message.php");
 		<div class="form_popup" id="form_billingAddress_popup">
 			<div class="inner_popup">
 				<div class="form_popup_content">
-					<div class="form_popup_heading">Add new billing address <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					<div class="form_popup_heading">Rechnungsadresse hinzufügen <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
 						<form class="gerenric_form" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -125,35 +125,35 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">First name</div>
+											<div class="form_label">Vorname</div>
 											<div class="form_field"><input type="text" name="usa_fname" id="usa_fname" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Last name</div>
+											<div class="form_label">Nachname</div>
 											<div class="form_field"><input type="text" name="usa_lname" id="usa_lname" class="gerenric_input"></div>
 										</div>
 									</div>
 								</li>
 								<?php if ($_SESSION["Utype"] == 4) { ?>
 									<li>
-										<div class="form_label">Addition</div>
+										<div class="form_label">Zusatz</div>
 										<div class="form_field"><input type="text" name="usa_additional_info" id="usa_additional_info" class="gerenric_input"></div>
 									</li>
 								<?php } ?>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">Street</div>
+											<div class="form_label">Straße</div>
 											<div class="form_field"><input type="text" name="usa_street" id="usa_street" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">House number</div>
+											<div class="form_label">Hausnr</div>
 											<div class="form_field"><input type="text" name="usa_house_no" id="usa_house_no" class="gerenric_input" required></div>
 										</div>
 									</div>
 								</li>
 								<li>
-									<div class="form_label">ZIP / City</div>
+									<div class="form_label">PLZ / Ort</div>
 									<div class="form_field">
 										<input type="text" name="usa_zipcode" id="usa_zipcode" class="gerenric_input usa_zipcode" required>
 									</div>
@@ -176,8 +176,8 @@ include("includes/message.php");
 								</li>
 								<li class="mt_30">
 									<div class="form_two_button">
-										<button class="gerenric_btn" type="submit" name="btn_Addbilling">Add</button>
-										<button class="gerenric_btn gray_btn form_popup_close">Close</button>
+										<button class="gerenric_btn" type="submit" name="btn_Addbilling">Aktualisieren</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Abbrechen</button>
 									</div>
 								</li>
 							</ul>
@@ -197,8 +197,8 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">My personal data</a></li>
-						<li><a href="javascript:void(0)">Addresses</a></li>
+						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="javascript:void(0)">Adressen</a></li>
 					</ul>
 				</div>
 			</div>
@@ -212,14 +212,14 @@ include("includes/message.php");
 					<?php if ($class != "") { ?>
 						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 					<?php } ?>
-					<h1>My Addresses</h1>
+					<h1>Meine Adressen</h1>
 					<div class="my_address_section1">
 						<div class="gerenric_address">
 							<div class="address_col">
 								<div class="gerenric_add_box form_popup_trigger">
 									<div>
 										<div class="add_icon"><i class="fa fa-plus"></i></div>
-										<div class="add_text">Add new address</div>
+										<div class="add_text">Neue Adresse hinzufügen</div>
 									</div>
 								</div>
 							</div>
@@ -233,7 +233,7 @@ include("includes/message.php");
 										<div class="address_col">
 											<div class="address_card">
 												<div class="address_detail">
-													<h2> Defualt address</h2>
+													<h2> Standardadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
 															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
@@ -293,7 +293,7 @@ include("includes/message.php");
 											$row = mysqli_fetch_object($rs);
 										?>
 											<div class="address_detail">
-												<h2>Billing address</h2>
+												<h2>Rechnungsadresse</h2>
 												<ul>
 													<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 													<li> <?php print($row->usa_street); ?> </li>
@@ -305,7 +305,7 @@ include("includes/message.php");
 												</ul>
 											</div>
 											<div class="address_remove"><a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">
-													<div class="gerenric_btn">Remove</div>
+													<div class="gerenric_btn">Entfernen</div>
 												</a>
 											</div>
 										<?php
@@ -324,7 +324,7 @@ include("includes/message.php");
 				<div class="hm_section_3 margin_top_30">
 					<div class="gerenric_white_box">
 						<div class="gerenric_product full_column mostviewed padding_left_right_10">
-							<h2>My special prices</h2>
+							<h2>Meine Sonderpreise</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$special_price = "";
@@ -420,7 +420,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

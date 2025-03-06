@@ -69,23 +69,23 @@ include("includes/message.php");
 		<div class="form_popup form_firstname_popup">
 			<div class="inner_popup">
 				<div class="form_popup_content">
-					<div class="form_popup_heading">Change name <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					<div class="form_popup_heading">Name ändern <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
 						<form class="gerenric_form"  name="frmname" id="frmname" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data" >
 							<ul>
 								<li>
-									<div class="form_label">First name</div>
+									<div class="form_label">Vorname</div>
 									<div class="form_field"><input type="text" id="user_fname" name="user_fname" class="gerenric_input"></div>
 								</li>
 								<li>
-									<div class="form_label">Last name</div>
+									<div class="form_label">Nachname</div>
 									<div class="form_field"><input type="text" id="user_lname" name="user_lname" class="gerenric_input"></div>
 								</li>
 								<li class="mt_30">
 									<div class="form_two_button">
-										<button class="gerenric_btn" type="submit" name="btnUpdate">Update</button>
-										<button class="gerenric_btn gray_btn form_popup_close">Cancel</button>
+										<button class="gerenric_btn" type="submit" name="btnUpdate">Aktualisieren</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Abbrechen</button>
 									</div>
 								</li>
 							</ul>
@@ -97,19 +97,19 @@ include("includes/message.php");
 		<div class="form_popup form_phoneno_popup">
 			<div class="inner_popup">
 				<div class="form_popup_content">
-					<div class="form_popup_heading">Change Phone Number <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					<div class="form_popup_heading">Telefonnummer ändern <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
 						<form class="gerenric_form" name="frmphone" id="frmphone" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
-									<div class="form_label">Phone Number</div>
+									<div class="form_label">Telefonnummer</div>
 									<div class="form_field"><input type="text" id="user_phone" name="user_phone" class="gerenric_input"></div>
 								</li>
 								<li class="mt_30">
 									<div class="form_two_button">
-										<button class="gerenric_btn" type="submit" name="btnUpdate">Update</button>
-										<button class="gerenric_btn gray_btn form_popup_close">Cancel</button>
+										<button class="gerenric_btn" type="submit" name="btnUpdate">Aktualisieren</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Abbrechen</button>
 									</div>
 								</li>
 							</ul>
@@ -121,27 +121,27 @@ include("includes/message.php");
 		<div class="form_popup form_password_popup">
 			<div class="inner_popup">
 				<div class="form_popup_content">
-					<div class="form_popup_heading">Change Password <div class="form_popup_close"><i class="fa fa-times"></i></div>
+					<div class="form_popup_heading">Passwort ändern <div class="form_popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="form_popup_content_inner">
 						<form class="gerenric_form" name="frmphone" id="frmphone" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
-									<div class="form_label">Old Password</div>
+									<div class="form_label">Altes Passwort eingeben</div>
 									<div class="form_field"><input type="password" id="old_password" name="old_password" class="gerenric_input"></div>
 								</li>
 								<li>
-									<div class="form_label">New Password</div>
+									<div class="form_label">Neues Passwort eingeben</div>
 									<div class="form_field"><input type="password" id="new_password" name="new_password" class="gerenric_input"></div>
 								</li>
 								<li>
-									<div class="form_label">Confirm New Password</div>
+									<div class="form_label">Neues Passwort nochmals eingeben</div>
 									<div class="form_field"><input type="password" id="confirm_password" name="confirm_password" class="gerenric_input"></div>
 								</li>
 								<li class="mt_30">
 									<div class="form_two_button">
-										<button class="gerenric_btn" type="submit" name="btnUpdate">Update</button>
-										<button class="gerenric_btn gray_btn form_popup_close">Cancel</button>
+										<button class="gerenric_btn" type="submit" name="btnUpdate">Aktualisieren</button>
+										<button class="gerenric_btn gray_btn form_popup_close">Abbrechen</button>
 									</div>
 								</li>
 							</ul>
@@ -161,8 +161,8 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">My personal data</a></li>
-						<li><a href="javascript:void(0)">Personal Details</a></li>
+						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="javascript:void(0)">Persönliche Details</a></li>
 					</ul>
 				</div>
 			</div>
@@ -173,40 +173,40 @@ include("includes/message.php");
 		<section id="content_section">
 			<div class="my_data_page gerenric_padding">
 				<div class="page_width_1480">
-					<h1>My data</h1>
+					<h1>Meine Daten</h1>
 					<div class="my_data_box">
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 						<?php } ?>
 						<div class="my_data_block">
 							<div class="data_detail">
-								<h3>Name (first name / last name)</h3>
+								<h3>Name (Vorname / Nachname)</h3>
 								<p> <?php print($user_fname." ".$user_lname); ?> </p>
 							</div>
 							<div class="data_button fisrtname_popup_trigger"><i class="fa fa-edit"></i></div>
 						</div>
 						<div class="my_data_block">
 							<div class="data_detail">
-								<h3>E-mail address</h3>
+								<h3>E-Mail-Adresse</h3>
 								<p><?php print($user_name); ?></p>
 							</div>
 						</div>
 						<div class="my_data_block">
 							<div class="data_detail">
-								<h3>phone number</h3>
+								<h3>Telefonnummer</h3>
 								<p><?php print($user_phone); ?></p>
 							</div>
 							<div class="data_button phoneno_popup_trigger"><i class="fa fa-edit"></i></div>
 						</div>
 						<div class="my_data_block">
 							<div class="data_detail">
-								<h3>Customer Type</h3>
+								<h3>Kundengruppe</h3>
 								<p> <?php print($utype_name); ?> </p>
 							</div>
 						</div>
 						<div class="my_data_block">
 							<div class="data_detail">
-								<h3>password</h3>
+								<h3>Passwort</h3>
 								<p>**********</p>
 							</div>
 							<div class="data_button password_popup_trigger"><i class="fa fa-edit"></i></div>
@@ -218,7 +218,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Meine Sonderpreise</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

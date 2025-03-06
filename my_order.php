@@ -27,8 +27,8 @@ if($_SESSION["utype_id"] == 5){
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">My personal data</a></li>
-						<li><a href="javascript:void(0)">My Orders</a></li>
+						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="javascript:void(0)">Meine Bestellungen</a></li>
 					</ul>
 				</div>
 			</div>
@@ -39,7 +39,7 @@ if($_SESSION["utype_id"] == 5){
 		<section id="content_section">
 			<div class="my_order_page gerenric_padding">
 				<div class="page_width_1480">
-					<h1>My Orders</h1>
+					<h1>Meine Bestellungen</h1>
 					<?php
 					$Query = "SELECT oi.*, ord.user_id, ord.ord_datetime, ord.ord_udate, di.dinfo_countries_id, c.countries_name, di.dinfo_fname, di.dinfo_house_no, di.dinfo_street, di.dinfo_phone, di.dinfo_usa_zipcode, di.dinfo_additional_info, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pg.pg_mime_source_url FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = oi.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ord.user_id = '" . $_SESSION['UID'] . "' ORDER BY ord.ord_datetime DESC";
 					$rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -49,11 +49,11 @@ if($_SESSION["utype_id"] == 5){
 							<div class="my_order_box">
 								<div class="order_place_bar">
 									<div class="place_col">
-										<div class="place_div">Order placed</div>
+										<div class="place_div">Bestellung aufgegeben</div>
 										<div class="place_div"><?php print(date('D F j, Y', strtotime($row->ord_datetime))); ?></div>
 									</div>
 									<div class="place_col">
-										<div class="place_div">Article Price</div>
+										<div class="place_div">Artikel Preis</div>
 										<div class="place_div">
 											<?php
 											if ($row->oi_discount_value > 0) {
@@ -65,7 +65,7 @@ if($_SESSION["utype_id"] == 5){
 										</div>
 									</div>
 									<div class="place_col">
-										<div class="place_div">Send to</div>
+										<div class="place_div">Versenden an</div>
 										<div class="place_div">
 											<div class="placeser_name"> <?php print($row->dinfo_fname); ?> <i class="fa fa-caret-down"></i>
 												<div class="placeser_info">
@@ -84,11 +84,11 @@ if($_SESSION["utype_id"] == 5){
 										</div>
 									</div>
 									<div class="place_col">
-										<div class="place_div">Quantity</div>
+										<div class="place_div">Menge</div>
 										<div class="place_div"> <?php print($row->oi_qty); ?> </div>
 									</div>
 									<div class="place_col">
-										<div class="place_div">Order number - <?php print($row->ord_id); ?></div>
+										<div class="place_div">Bestellnummer - <?php print($row->ord_id); ?></div>
 									</div>
 								</div>
 								<div class="my_order_box_inner">
@@ -98,14 +98,14 @@ if($_SESSION["utype_id"] == 5){
 										<h2 class="black_text"><?php print($row->pro_description_short); ?></h2>
 										<div class="order_button">
 											<a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>">
-												<div class="gerenric_btn">View Your Article</div>
+												<div class="gerenric_btn">Ihren Artikel ansehen</div>
 											</a>
-											<a href="javascript:void(0)">
-												<div class="gerenric_btn gray_btn">Buy Again</div>
+											<a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>">
+												<div class="gerenric_btn gray_btn">Wieder kaufen</div>
 											</a>
 										</div>
-										<div class="return_date">Return window closes on Dec 22, 2024</div>
-										<div class="order_date">Order sent on Oct 21, 2024</div>
+										<!--<div class="return_date">Return window closes on Apr 05, 2025</div>
+										<div class="order_date">Order sent on Oct 21, 2024</div>-->
 									</div>
 								</div>
 							</div>
@@ -119,7 +119,7 @@ if($_SESSION["utype_id"] == 5){
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

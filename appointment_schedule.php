@@ -51,7 +51,7 @@ include("includes/message.php");
 					<?php if ($class != "") { ?>
 						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 					<?php } ?>
-					<h2>Select day & time</h2>
+					<h2>Tag & Uhrzeit wählen</h2>
 					<div class="appointment_section1">
 						<div class="appointment_col">
 							<div class="appointment_card">
@@ -63,7 +63,7 @@ include("includes/message.php");
 								<ul id="appointment_schedule">
 
 								</ul>
-								<p>The time slots are displayed after the appointment date is selected.</p>
+								<p>Die Zeitfenster werden angezeigt, nachdem das Termindatum ausgewählt wurde.</p>
 							</div>
 						</div>
 						<div class="appointment_col">
@@ -74,20 +74,20 @@ include("includes/message.php");
 									<div class="appointment_time"><?php print($as_duration); ?> minutes</div>
 								</div>
 								<div class="full_width txt_align_center"><a href="appointments.php">
-										<div class="gerenric_btn">Change</div>
+										<div class="gerenric_btn">Ändern</div>
 									</a></div>
 							</div>
 						</div>
 					</div>
 
 					<div class="appointment_section2" id="appointment_form" style="display: none;">
-						<h2 class="text_center">Your data</h2>
+						<h2 class="text_center">Ihre Daten</h2>
 						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
 									<div class="form_row">
 										<div class="form_input_three">
-											<div class="form_label">Salutation</div>
+											<div class="form_label">Anrede</div>
 											<div class="form_field">
 												<select class="gerenric_input" name="app_gender" id="app_gender">
 													<option value="1">Herr</option>
@@ -97,11 +97,11 @@ include("includes/message.php");
 											</div>
 										</div>
 										<div class="form_input_three">
-											<div class="form_label">Last name *</div>
+											<div class="form_label">Vorname *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" required name="app_fname" id="app_fname"></div>
 										</div>
 										<div class="form_input_three">
-											<div class="form_label">Last name *</div>
+											<div class="form_label">Nachname *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" name="app_lname" id="app_lname"></div>
 										</div>
 									</div>
@@ -109,15 +109,15 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_input_three">
-											<div class="form_label">Street *</div>
+											<div class="form_label">Straße *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" required name="app_street" id="app_street"></div>
 										</div>
 										<div class="form_input_three">
-											<div class="form_label">ZIP Code *</div>
+											<div class="form_label">PLZ *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" required name="app_zipcode" id="app_zipcode"></div>
 										</div>
 										<div class="form_input_three">
-											<div class="form_label">Place *</div>
+											<div class="form_label">Ort *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" required name="app_place" id="app_place"></div>
 										</div>
 									</div>
@@ -125,27 +125,27 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">Email *</div>
+											<div class="form_label">E-Mail *</div>
 											<div class="form_field"><input type="email" class="gerenric_input" required name="app_email" id="app_email"></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Phone *</div>
+											<div class="form_label">Telefon *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" name="app_contactno" id="app_contactno"></div>
 										</div>
 									</div>
 								</li>
 								<li>
-									<div class="form_label">Comments *</div>
+									<div class="form_label">Bemerkungen *</div>
 									<div class="form_field"><textarea type="text" class="gerenric_input gerenric_textarea" name="app_remarks" id="app_remarks"> </textarea></div>
 								</li>
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">Time *</div>
+											<div class="form_label">Zeit *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" readonly name="app_time" id="app_time"></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Date *</div>
+											<div class="form_label">Datum *</div>
 											<div class="form_field"><input type="text" class="gerenric_input" readonly name="app_date" id="app_date"></div>
 										</div>
 									</div>
@@ -157,14 +157,14 @@ include("includes/message.php");
 										$confirm_code = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
 										?>
 										<div class="form_left">
-											<div class="form_label">Please enter confirmation code: <span class="code_text"><?php print($confirm_code); ?></span></div>
+											<div class="form_label">Bitte Bestätigungscode eingeben: <span class="code_text"><?php print($confirm_code); ?></span></div>
 											<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
 											<div class="form_field"><input type="number" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;"></div>
 										</div>
 									</div>
 								</li>
 								<li>
-									<div class="full_width txt_align_center"><button class="gerenric_btn" type="submit" name="btn_appointmentBook">Booking an appointment</button></div>
+									<div class="full_width txt_align_center"><button class="gerenric_btn" type="submit" name="btn_appointmentBook">Termin Buchen</button></div>
 								</li>
 							</ul>
 						</form>
@@ -175,7 +175,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
@@ -188,7 +188,15 @@ include("includes/message.php");
 		inline: true,
 		firstDay: 1,
 		showOtherMonths: true,
-		dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+		dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+		monthNames: [
+			"Januar", "Februar", "März", "April", "Mai", "Juni",
+			"Juli", "August", "September", "Oktober", "November", "Dezember"
+		],
+		monthNamesShort: [
+			"Jan", "Feb", "Mär", "Apr", "Mai", "Jun",
+			"Jul", "Aug", "Sep", "Okt", "Nov", "Dez"
+		],
 		minDate: 0, // Prevent previous dates
 		beforeShowDay: function(date) {
 			const day = date.getDay();
@@ -222,7 +230,7 @@ include("includes/message.php");
 				//console.log(obj);
 				if (obj.status == 1) {
 					$("#appointment_schedule").html(obj.appointment_schedule);
-				} else{
+				} else {
 					$("#appointment_schedule").empty();
 				}
 			},
