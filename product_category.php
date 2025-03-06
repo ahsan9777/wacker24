@@ -46,7 +46,7 @@ $special_price = user_special_price("level_one", $level_one);
 								<h1> <?php print(returnName("cat_title_de AS cat_title", "category", "group_id", $level_one)) ?> </h1>
 							</div>
 							<div class="product_category">
-								<h2>Featured Categories</h2>
+								<h2>Ausgewählte Kategorien</h2>
 								<div class="product_category_inner">
 									<?php
 									$Query1 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, (SELECT GROUP_CONCAT(pg.pg_mime_source_url) FROM products_gallery AS pg WHERE  pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' AND pg.supplier_id = (SELECT cm.supplier_id FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) LIMIT 0,1)) AS pg_mime_source FROM category AS cat  WHERE cat.parent_id = '" . $level_one . "' ORDER BY cat.group_id ASC";
@@ -95,7 +95,7 @@ $special_price = user_special_price("level_one", $level_one);
 							</div>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
-									<h2>New Products</h2>
+									<h2>Neue Produkte</h2>
 									<div class="gerenric_slider">
 										<?php
 										$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ORDER BY  RAND() LIMIT 0,12";
@@ -136,7 +136,7 @@ $special_price = user_special_price("level_one", $level_one);
 										}
 										?>
 									</div>
-									<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+									
 								</div>
 							</div>
 							<?php $Query = "SELECT DISTINCT oi.supplier_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url FROM order_items AS oi LEFT JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = oi.supplier_id AND pbp.pbp_lower_bound = '1' LEFT JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' JOIN (SELECT supplier_id FROM order_items GROUP BY supplier_id HAVING COUNT(*) >= 1 ORDER BY RAND() LIMIT 12) AS random_suppliers ON random_suppliers.supplier_id = oi.supplier_id WHERE oi.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) AND cm.cm_type = '" . $pro_type . "') AND pg.pg_mime_source_url IS NOT NULL AND pg.pg_mime_source_url <> ''";
@@ -146,7 +146,7 @@ $special_price = user_special_price("level_one", $level_one);
 							?>
 								<div class="gerenric_white_box">
 									<div class="gerenric_product full_column">
-										<h2>Best-selling products</h2>
+										<h2>Meist verkaufte Produkte</h2>
 										<div class="gerenric_slider">
 											<?php
 											while ($row = mysqli_fetch_object($rs)) {
@@ -186,7 +186,7 @@ $special_price = user_special_price("level_one", $level_one);
 							<?php } ?>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
-									<h2>Similar products</h2>
+									<h2>Ähnliche Produkte</h2>
 									<div class="gerenric_slider">
 										<?php
 										$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ORDER BY  RAND() LIMIT 0,12";
@@ -226,12 +226,12 @@ $special_price = user_special_price("level_one", $level_one);
 										}
 										?>
 									</div>
-									<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+									
 								</div>
 							</div>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column">
-									<h2>product references</h2>
+									<h2>Referenzen der Produkte</h2>
 									<div class="gerenric_slider">
 										<?php
 										$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ORDER BY  RAND() LIMIT 0,12";
@@ -271,12 +271,12 @@ $special_price = user_special_price("level_one", $level_one);
 										}
 										?>
 									</div>
-									<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
+									
 								</div>
 							</div>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column mostviewed">
-									<h2>My special prices</h2>
+									<h2>Meine Sonderpreise</h2>
 									<div class="gerenric_slider_mostviewed">
 										<?php
 										//$special_price = "";
@@ -372,7 +372,7 @@ $special_price = user_special_price("level_one", $level_one);
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
@@ -381,60 +381,15 @@ $special_price = user_special_price("level_one", $level_one);
 </body>
 <script src="js/slick.js"></script>
 <script type="text/javascript">
-	$(".banner_slider").slick({
-		dots: false,
-		infinite: true,
-		slidesToShow: 1,
-		autoplay: false,
-		autoplaySpeed: 3000,
-		slidesToScroll: 1,
-	});
 	$(".gerenric_slider").slick({
 		slidesToShow: 6,
 		slidesToScroll: 1,
-		autoplay: false,
+		autoplay: true,
 		dots: false,
 		autoplaySpeed: 2000,
 		infinite: true,
 		responsive: [
 
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 4,
-					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 650,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1
-				}
-			}
-		]
-	});
-	$(".brand_slider").slick({
-		slidesToShow: 10,
-		slidesToScroll: 1,
-		autoplay: false,
-		dots: false,
-		autoplaySpeed: 2000,
-		infinite: true,
-		responsive: [{
-				breakpoint: 1200,
-				settings: {
-					slidesToShow: 6,
-					slidesToScroll: 1
-				}
-			},
 			{
 				breakpoint: 1024,
 				settings: {
@@ -494,9 +449,9 @@ $special_price = user_special_price("level_one", $level_one);
 <script>
 	$(".show-more").click(function() {
 		if ($(".category_show, .list_checkbox_hide").hasClass("category_show_height")) {
-			$(this).text("(Show Less)");
+			$(this).text("(Weniger anzeigen)");
 		} else {
-			$(this).text("(Show More)");
+			$(this).text("(Mehr anzeigen)");
 		}
 
 		$(".category_show, .list_checkbox_hide").toggleClass("category_show_height");

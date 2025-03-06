@@ -22,7 +22,7 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 
 ?>
 <!doctype html>
-<html>
+<html lang="de">
 
 <head>
 	<meta charset="utf-8">
@@ -46,7 +46,7 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 				<div class="login_inner">
 					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<div class="login_box">
-						<h2>Forgot Password</h2>
+						<h2>Passwort vergessen</h2>
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 						<?php } ?>
@@ -56,7 +56,7 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 									<div class="form_label">E-mail address</div>
 									<div class="form_field"><input type="text" class="gerenric_input" name="user_name" id="user_name"></div>
 								</li>
-								<li><button type="submit" name="btn_forgotpassword" class="gerenric_btn full_btn">Forgot Password</button></li>
+								<li><button type="submit" name="btn_forgotpassword" class="gerenric_btn full_btn">Passwort vergessen</button></li>
 							</ul>
 						</form>
 					</div>
@@ -69,11 +69,11 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 		<div id="footer_register">
 			<div class="page_width">
 				<ul>
-					<li><a href="javascript:void(0)">Cookie Settings </a></li>
+					<li><a href="javascript:void(0)">Cookie-Einstellungen </a></li>
 					<li><a href="impressum">Impressum</a></li>
 					<li><a href="privacy">Datenschutzerklärung</a></li>
 					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
-					<li><a href="contact_us">Contact</a></li>
+					<li><a href="contact_us">Kontakt</a></li>
 				</ul>
 			</div>
 		</div>

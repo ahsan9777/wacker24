@@ -20,18 +20,18 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
         <ul>
             <li>
                 <div class="gerenric_switch">
-                    <span>Private Customer</span>
+                    <span>Privatkunde</span>
                     <span>
                         <input class="switch_click" type="checkbox" hidden="hidden" id="username" <?php print($switch_click_check); ?>>
                         <label class="switch" for="username"></label>
                     </span>
                 </div>
             </li>
-            <li>Business Customer</li>
+            <li>Geschäftskunde</li>
         </ul>
         <ul>
-            <li><a href="javascript:void(0)">About Wacker 24</a></li>
-            <li><a href="contact_us.php">Contact</a></li>
+            <li><a href="about_us">Über Wacker 24</a></li>
+            <li><a href="contact_us.php">Kontakt</a></li>
             <li>
                 <div class="header_language">
                     <div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></div>
@@ -62,32 +62,32 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <div class="header_account">
                 <ul>
                     <li><a href="appointments.php">
-                            <div class="appointment_booking"><i class="fa fa-check-square-o" aria-hidden="true"></i> appointment booking</div>
+                            <div class="appointment_booking"><i class="fa fa-check-square-o" aria-hidden="true"></i> Terminbuchung</div>
                         </a></li>
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
                         <div class="hdr_text">
-                            <a href="javascript:void(0)"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Account & List <i class="fa fa-caret-down"></i> <?php } ?> </a>
+                            <a href="javascript:void(0)"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
                             <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
                             <div class="account_nav">
                                 <ul>
                                     <li>
                                         <?php if (!isset($_SESSION["FullName"])) { ?>
                                             <div class="full_width txt_align_center mb-10"><a class="href_login" href="login.php" >
-                                                    <div class="gerenric_btn">Login</div>
+                                                    <div class="gerenric_btn">Anmelden</div>
                                                 </a></div>
-                                            <div class="full_width txt_align_center">New Account? <a href="registration.php"><b>Create One here</b></a></div>
+                                            <div class="full_width txt_align_center">Neues Konto? <a href="registration.php"><b>Erstellen Sie hier.</b></a></div>
                                         <?php } ?>
                                     </li>
-                                    <li><span>My lists</span></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "shopping_list.php" : "javascript:void(0);"); ?>"> shopping list </a></li>
-                                    <li><span>My Account</span></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "personal_data.php" : "javascript:void(0);"); ?>"> Personal Data <a href=""></a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_order.php" : "javascript:void(0);"); ?>"> My Orders </a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_address.php" : "javascript:void(0);"); ?>"> Addresses </a></li>
-                                    <li>payment methods</li>
+                                    <li><span>Meine Listen</span></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "shopping_list.php" : "javascript:void(0);"); ?>"> Einkaufslisten </a></li>
+                                    <li><span>Mein Konto</span></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "personal_data.php" : "javascript:void(0);"); ?>"> Persönliche Daten <a href=""></a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_order.php" : "javascript:void(0);"); ?>"> Bestellungen </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_address.php" : "javascript:void(0);"); ?>"> Adressen </a></li>
+                                    <li>Zahlungsarten</li>
                                     <?php if (isset($_SESSION["FullName"])) { ?>
-                                        <li><a href="logout.php">Logout</a></li>
+                                        <li><a href="logout.php">Abmelden</a></li>
                                     <?php } ?>
                                 </ul>
                             </div>
@@ -96,14 +96,14 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     </li>
                     <li>
                         <div class="hdr_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
-                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Items</span>Cart</a></div>
+                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
                         <div class="hdr_side_cart">
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">
-                                <div class="subtotal_title">Subtotal</div>
+                                <div class="subtotal_title">Zwischensumme</div>
                                 <div class="subtotal_prise" id="cart_amount">0,00 €</div>
                                 <div class="full_width"><a id="cart_href" href="javascript:void(0)">
-                                        <div class="gerenric_btn full_btn">Go to Basket</div>
+                                        <div class="gerenric_btn full_btn">Einkaufswagen</div>
                                     </a></div>
                             </div>
                             <div class="side_cart_pd" id="show_card_body">
@@ -116,7 +116,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
         </div>
         <nav id="navigation_section" <?php print($background_color_one); ?>>
             <ul>
-                <li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> All</a></li>
+                <li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> Alle</a></li>
                 <?php
                 $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND parent_id = '0'";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -129,7 +129,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 }
                 ?>
                 <li><a href="product_category.php?level_one=20">Schulranzen</a></li>
-                <li><a href="javascript:void(0);" class="nav_sale">Sales & Offers</a></li>
+                <li><a href="javascript:void(0);" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
                 <div class="nav_submenu_logo"><a href="index.php"><img src="images/logo.png" alt=""></a>

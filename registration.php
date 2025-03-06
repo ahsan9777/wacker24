@@ -104,7 +104,7 @@ if (isset($_REQUEST['btn_registration'])) {
 include("includes/message.php");
 ?>
 <!doctype html>
-<html>
+<html lang="de">
 
 <head>
 	<meta charset="utf-8">
@@ -128,7 +128,7 @@ include("includes/message.php");
 				<div class="login_inner">
 					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<form class="login_box" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-						<h2>Register</h2>
+						<h2>Registrierung</h2>
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 						<?php } ?>
@@ -138,11 +138,11 @@ include("includes/message.php");
 									<div class="tab_radio_button">
 										<div class="tab_radio_col">
 											<input type="radio" class="utype_id" id="private_customer" name="utype_id" value="3" <?php print(($utype_id == 3) ? "checked" : ""); ?>>
-											<label for="private_customer">Private customer</label>
+											<label for="private_customer">Privatkunde</label>
 										</div>
 										<div class="tab_radio_col">
 											<input type="radio" class="utype_id" id="business_customer" name="utype_id" value="4" <?php print(($utype_id == 4) ? "checked" : ""); ?>>
-											<label for="business_customer">Business customer</label>
+											<label for="business_customer">Geschäftskunde</label>
 										</div>
 									</div>
 								</li>
@@ -159,7 +159,7 @@ include("includes/message.php");
 									</div>
 								</li>
 								<li>
-									<div class="form_label">Salutation</div>
+									<div class="form_label">Anrede</div>
 									<div class="form_field">
 										<select class="gerenric_input" name="gen_id" id="gen_id">
 											<option value="1" <?php print(($gen_id == 1) ? 'checked' : ''); ?>>Herr</option>
@@ -171,11 +171,11 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">First name *</div>
+											<div class="form_label">Vorname *</div>
 											<div class="form_field"><input type="text" name="user_fname" id="user_fname" value="<?php print($user_fname); ?>" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Last name *</div>
+											<div class="form_label">Nachname *</div>
 											<div class="form_field"><input type="text" name="user_lname" id="user_lname" value="<?php print($user_lname); ?>" class="gerenric_input" required></div>
 										</div>
 									</div>
@@ -183,11 +183,11 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">Password *</div>
+											<div class="form_label">Passwort *</div>
 											<div class="form_field"><input type="password" name="user_password" id="user_password" value="<?php print($user_password); ?>" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Repeat your password *</div>
+											<div class="form_label">Wiederholen Sie Ihr Passwort *</div>
 											<div class="form_field"><input type="password" name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" class="gerenric_input" required></div>
 										</div>
 									</div>
@@ -195,11 +195,11 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">E-mail address *</div>
+											<div class="form_label">Email Adresse *</div>
 											<div class="form_field"><input type="text" name="user_name" id="user_name" value="<?php print($user_name); ?>" class="gerenric_input" required></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">Phone *</div>
+											<div class="form_label">Telefon *</div>
 											<div class="form_field"><input type="text" name="user_phone" id="user_phone" value="<?php print($user_phone); ?>" class="gerenric_input"></div>
 										</div>
 									</div>
@@ -207,7 +207,7 @@ include("includes/message.php");
 								<li>
 									<div class="form_row">
 										<div class="form_left">
-											<div class="form_label">Country</div>
+											<div class="form_label">Land</div>
 											<div class="form_field">
 												<select class="gerenric_input" name="countries_id" id="countries_id">
 													<?php FillSelected2("countries", "countries_id", "countries_name ", $countries_id, "countries_id > 0"); ?>
@@ -221,12 +221,12 @@ include("includes/message.php");
 									$digits = 4;
 									$confirm_code = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
 									?>
-									<div class="form_label">Please enter confirmation code: <span class="code_text"><?php print($confirm_code); ?></span></div>
+									<div class="form_label">Bitte Bestätigungscode eingeben: <span class="code_text"><?php print($confirm_code); ?></span></div>
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
 									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;" ></div>
 								</li>
-								<li class="mt_30"><input type="checkbox" required> I have read the privacy policy | <a href="privacy">Datenschutzerklärung </a></li>
-								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Register Now</button></li>
+								<li class="mt_30"><input type="checkbox" required> Ich habe die Datenschutzbestimmungen zur Kenntnis genommen | <a href="privacy">Datenschutzerklärung </a></li>
+								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Jetzt registrieren</button></li>
 							</ul>
 						</div>
 					</form>
@@ -240,11 +240,11 @@ include("includes/message.php");
 		<div id="footer_register">
 			<div class="page_width">
 				<ul>
-					<li><a href="javascript:void(0)">Cookie Settings </a></li>
+					<li><a href="javascript:void(0)">Cookie-Einstellungen </a></li>
 					<li><a href="impressum">Impressum</a></li>
 					<li><a href="privacy">Datenschutzerklärung</a></li>
 					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
-					<li><a href="contact_us">Contact</a></li>
+					<li><a href="contact_us">Kontakt</a></li>
 				</ul>
 			</div>
 		</div>

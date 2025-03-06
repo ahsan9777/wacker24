@@ -20,13 +20,13 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
 
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword']) ? 'style="width: 420px;"' : ''); ?>>
     <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="POST" action="search_result.php" role="form" enctype="multipart/form-data">
-        <h2>Category <div class="categroy_close_mb">X</div>
+        <h2>Kategorie <div class="categroy_close_mb">X</div>
         </h2>
         <input type="hidden" name="search_keyword" value="<?php print($search_keyword); ?>">
         <div class="categroy_block" id="category_show">
             <div class="loading-container" id="category_loading">
                 <div class="loading-text">
-                    Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
                 </div>
             </div>
             
@@ -34,7 +34,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         <div class="categroy_block" id="brand_show">
             <div class="loading-container" id="brand_loading">
                 <div class="loading-text">
-                    Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
                 </div>
             </div>
 
@@ -43,7 +43,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
         <span id="feature_show">
             <div class="loading-container" id="fature_loading">
                 <div class="loading-text">
-                    Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
                 </div>
             </div>
         </span>

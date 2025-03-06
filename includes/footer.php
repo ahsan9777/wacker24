@@ -29,15 +29,15 @@
             }
             ?>
             <div class="footer-col">
-                <h2>Contact & Directions</h2>
+                <h2>Kontakt & Anfahrt</h2>
                 <ul>
-                    <li><a href="contact_us">Contact form</a></li>
-                    <li><a href="contact_us">Opening hours</a></li>
-                    <li><a href="contact_us">Directions</a></li>
+                    <li><a href="contact_us">Kontaktformular</a></li>
+                    <li><a href="contact_us">Öffnungszeiten</a></li>
+                    <li><a href="contact_us">Anfahrt</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h2>Payment Methods</h2>
+                <h2>Zahlungsarten</h2>
                 <div class="footer_payment_method">
                     <?php
                     $Query = "SELECT pm.pm_id, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="footer_btm_right">
-                <button class="subscribe_newsletter_btn">Subscribe to Newsletter</button>
+                <button class="subscribe_newsletter_btn">Newsletter abonnieren</button>
             </div>
 
         </div>

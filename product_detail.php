@@ -259,17 +259,17 @@ include("includes/message.php");
 										while ($row = mysqli_fetch_object($rs)) {
 											if (!empty($special_price)) {
 									?>
-												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€  </span>"); ?> </div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> From <?php print($row->pbp_lower_bound); ?> piece <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ </span> "); ?> </div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€  </span>"); ?> </div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ </span> "); ?> </div>
 											<?php } else { ?>
-												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>From <?php print($row->pbp_lower_bound); ?> piece <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
 									<?php
 											}
 										}
 									}
 									?>
-									<div class="product_vat">VAT included</div>
+									<div class="product_vat">exkl. MwSt</div>
 									<?php
 									$quantity_lenght = 0;
 									$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
@@ -309,7 +309,7 @@ include("includes/message.php");
 											<div class="order_select">
 												<div class="drop-down_2">
 													<div class="selected">
-														<div class="qtu_slt">Quantity:</div>
+														<div class="qtu_slt">Menge:</div>
 														<a href="javascript:void(0)"><span>1</span></a>
 													</div>
 													<div class="options">
@@ -330,17 +330,14 @@ include("includes/message.php");
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
 										<input type="hidden" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty" value="1">
 										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
-											<div class="gerenric_btn">Add to Cart</div>
+											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>
 									</div>
-									<div class="order_btn"><a href="javascript:void(0)">
-											<div class="gerenric_btn">Buy Now</div>
-										</a></div>
 									<div class="product_shippment">
-										<div class="shippment_text"><span>Shipment</span> Wacker 24</div>
+										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
 										<div class="shippment_text">
 											<a href="javascript:void(0)"><i class="fa fa-map-marker" aria-hidden="true"></i>
-												<div class="location_text location_trigger">Update Delivery to Location</div>
+												<div class="location_text location_trigger"> Lieferung an Standort aktualisieren</div>
 											</a>
 											<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) { ?>
 												<div class="location_text location_trigger">Lieferung PLZ: <?php print($_SESSION['plz']); ?></div>
@@ -352,7 +349,7 @@ include("includes/message.php");
 										<div id="alert_wishlist" class="alert alert-success" style="display: none;"><span id="alert_wishlist_txt"></span><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 										<div class="drop-down">
 											<div class="selected <?php print(isset($_SESSION["UID"]) ? 'show' : ''); ?>">
-												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Add to list</span></a>
+												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Auf die Liste</span></a>
 											</div>
 											<?php if (isset($_SESSION["UID"])) { ?>
 												<div class="options">
@@ -385,7 +382,7 @@ include("includes/message.php");
 					<div class="product_detail_section2">
 						<div class="gerenric_white_box gray_bg">
 							<div class="gerenric_product full_column">
-								<h2>Similar products</h2>
+								<h2>Ähnliche Produkte</h2>
 								<div class="gerenric_slider">
 									<?php
 									$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
@@ -434,7 +431,6 @@ include("includes/message.php");
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a href="javascript:void(0)">Show More</a></div>
 							</div>
 						</div>
 					</div>
@@ -442,7 +438,7 @@ include("includes/message.php");
 				<div class="product_detail_section2 margin_top_30">
 					<div class="gerenric_white_box padding_left_right_10">
 						<div class="gerenric_product mostviewed full_column">
-							<h2>Similar products</h2>
+							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
@@ -497,7 +493,7 @@ include("includes/message.php");
 				<div class="product_detail_section2">
 					<div class="gerenric_white_box padding_left_right_10">
 						<div class="gerenric_product mostviewed full_column">
-							<h2>Similar products</h2>
+							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
@@ -554,7 +550,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

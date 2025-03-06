@@ -127,7 +127,7 @@ $page = 1;
 					<div class="hm_section_2">
 						<div class="gerenric_white_box">
 							<div class="gerenric_product full_column">
-								<h2 class="pd_heading">Best-selling products</h2>
+								<h2 class="pd_heading">Meist verkaufte Produkte</h2>
 								<div class="gerenric_slider">
 									<?php
 									$special_price = "";
@@ -294,7 +294,7 @@ $page = 1;
 				<div class="hm_section_3 margin_top_30">
 					<div class="gerenric_white_box">
 						<div class="gerenric_product full_column mostviewed padding_left_right_10">
-							<h2>My special prices</h2>
+							<h2>Meine räumlichen Preise</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
 								$special_price = "";
@@ -385,10 +385,10 @@ $page = 1;
 					</div>
 					<div class="gerenric_white_box">
 						<div class="hm_register">
-							<div class="full_width txt_align_center"><a href="login_page.html">
-									<div class="gerenric_btn">Login</div>
+							<div class="full_width txt_align_center"><a href="login.php">
+									<div class="gerenric_btn">Anmelden</div>
 								</a></div>
-							<p>New to Wacker24? <a href="register_page.html">Create here</a></p>
+							<p>Neues Konto? <a href="registration.php">Erstellen Sie hier.</a></p>
 						</div>
 					</div>
 				</div>
@@ -399,7 +399,7 @@ $page = 1;
 				?>
 					<div class="hm_section_3">
 						<div class="gerenric_white_box">
-							<h2 class="txt_align_center">Top Manufacturers & Brands</h2>
+							<h2 class="txt_align_center">Top Hersteller & Marken</h2>
 							<div class="hm_brand_logo">
 								<div class="brand_slider">
 									<?php while ($row = mysqli_fetch_object($rs)) {
@@ -418,7 +418,7 @@ $page = 1;
 								</div>
 							</div>
 							<div class="brand_btn"><a href="javascript:void(0)">
-									<div class="gerenric_btn">Show All</div>
+									<div class="gerenric_btn">Alle anzeigen</div>
 								</a></div>
 						</div>
 					</div>
@@ -428,7 +428,7 @@ $page = 1;
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

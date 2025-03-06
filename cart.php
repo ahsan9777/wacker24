@@ -189,7 +189,7 @@ if (isset($_SESSION['UID']) && $_SESSION['UID'] > 0) {
 include("includes/message.php");
 ?>
 <!doctype html>
-<html>
+<html lang="de">
 
 <head>
 	<?php include("includes/html_header.php"); ?>
@@ -249,8 +249,8 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="javascript:void(0)">My data</a></li>
-						<li><a href="javascript:void(0)">My shopping carts</a></li>
+						<li><a href="javascript:void(0)">Meine Daten</a></li>
+						<li><a href="javascript:void(0)">Meine Einkaufswagen</a></li>
 					</ul>
 				</div>
 			</div>
@@ -268,10 +268,10 @@ include("includes/message.php");
 						<div class="cart_left">
 							<div class="gerenric_white_box">
 								<h2>
-									<div class="shopping_title">Shopping Cart</div>
+									<div class="shopping_title">Einkaufswagen</div>
 									<div class="cart_prise_label_row">
-										<div class="cart_prise_label">Unit Price</div>
-										<div class="cart_prise_label">Total Price</div>
+										<div class="cart_prise_label">Einzelpreis</div>
+										<div class="cart_prise_label">Gesamtpreis</div>
 									</div>
 								</h2>
 								<div class="cart_pd_section">
@@ -376,14 +376,14 @@ include("includes/message.php");
 									}
 									?>
 									<div class="cart_pd_total">
-										<div class="cart_note"><input type="checkbox" class="checknote_click"> Add note to order</div>
-										<div class="total_prise_text"><span>Total amount (<?php print($count); ?> items):</span> <?php print(str_replace(".", ",", $cart_amount)); ?> €</div>
+										<div class="cart_note"><input type="checkbox" class="checknote_click"> Notiz zur Bestellung hinzufügen</div>
+										<div class="total_prise_text"><span>Gesamtbetrag (<?php print($count); ?> Artikel):</span> <?php print(str_replace(".", ",", $cart_amount)); ?> €</div>
 									</div>
 								</div>
 							</div>
 							<div class="cart_note_section">
 								<div class="gerenric_white_box">
-									<h2>Your message about the order to us</h2>
+									<h2>Ihre Nachricht zur Bestellung an uns</h2>
 									<div><textarea class="gerenric_input gerenric_textarea" name="ord_note" id="ord_note"></textarea></div>
 								</div>
 							</div>
@@ -402,7 +402,7 @@ include("includes/message.php");
 											<div class="cart_delivery_col">
 												<div class="gerenric_white_box">
 													<input type="hidden" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>">
-													<h2>Delivery address</h2>
+													<h2>Lieferadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
 															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
@@ -431,7 +431,7 @@ include("includes/message.php");
 										?>
 										<div class="cart_delivery_col">
 											<div class="gerenric_white_box">
-												<h2>Billing address</h2>
+												<h2>Rechnungsadresse</h2>
 												<ul>
 													<?php if (!empty($row->usa_additional_info)) { ?>
 														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
@@ -454,44 +454,44 @@ include("includes/message.php");
 						</div>
 						<div class="cart_right">
 							<div class="cart_orderview">
-								<h3>Order Overview</h3>
+								<h3>Bestellübersicht</h3>
 								<div class="cart_prise_orderview">
 									<ul>
 										<li>
-											<div class="cart_prise_lb"><span>value of goods </span></div>
+											<div class="cart_prise_lb"><span>Warenwert </span></div>
 											<input type="hidden" class="get_delivery_charges" name="ci_total" id="ci_total" value="<?php print($ci_total); ?>">
 											<div class="cart_prise_vl price_without_tex" <?php print($price_without_tex_display); ?>><span> <?php print(number_format($cart_gross_total, "2", ",", "")); ?> €</span></div>
 											<div class="cart_prise_vl pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><span> <?php print(number_format($ci_total, "2", ",", "")); ?> €</span></div>
 										</li>
 										<li>
 											<div class="cart_prise_lb">
-												<div class="packing_cost" id="packing" <?php print($display); ?>>Packaging fee (<?php print(number_format($delivery_charges_packing, "2", ",", "")); ?> €)</div>
-												<div class="packing_cost" id="shipping" <?php print($display); ?>>Shipping costs (<?php print(number_format($delivery_charges_shipping, "2", ",", "")); ?> €)</div>
-												<div>Shipping & Packaging total:</div>
+												<div class="packing_cost" id="packing" <?php print($display); ?>>Verpackungspauschale (<?php print(number_format($delivery_charges_packing, "2", ",", "")); ?> €)</div>
+												<div class="packing_cost" id="shipping" <?php print($display); ?>>Versandkosten (<?php print(number_format($delivery_charges_shipping, "2", ",", "")); ?> €)</div>
+												<div>Versand & Verpackung gesamt:</div>
 											</div>
 											<div class="cart_prise_vl" id="total"> <?php print(number_format($delivery_charges_total, "2", ",", "")); ?> €</div>
 										</li>
 										<li id="cart_subtotal" <?php print($display_check); ?>>
 											<div class="cart_prise_lb">
-												<div class="packing_cost">Subtotal</div>
+												<div class="packing_cost">Zwischensumme</div>
 											</div>
 											<div class="cart_prise_vl"><?php print(number_format($cart_gross_total + $shipping_one, "2", ",", "")); ?> €</div>
 										</li>
 										<li id="cart_vat" <?php print($display_check); ?>>
 											<div class="cart_prise_lb">
-												<div class="packing_cost">plus VAT <?php print(config_gst * 100); ?>%</div>
+												<div class="packing_cost">zzgl. MwSt. <?php print(config_gst * 100); ?>%</div>
 											</div>
 											<div class="cart_prise_vl"><?php print(number_format(($cart_gross_total + $shipping_two) * config_gst, "2", ",", "")); ?> €</div>
 										</li>
 										<li>
-											<div class="cart_prise_lb"><span>Total Amount</span></div>
+											<div class="cart_prise_lb"><span>Gesamtbetrag:</span></div>
 											<div class="cart_prise_vl"><span><?php print(number_format($cart_amount, "2", ",", "")); ?> €</span></div>
 										</li>
 										<li <?php print($display); ?>>
-											<div class="success_message">Buy for only <?php print(number_format($schipping_cost_waived, "2", ",", "")); ?> € and the packaging and shipping costs are waived.</div>
+											<div class="success_message">Kaufen Sie nur noch für <b><?php print(number_format($schipping_cost_waived, "2", ",", "")); ?> €</b> ein und die <b>Kosten der Verpackungspauschale und Versandkosten entfallen.</b></div>
 										</li>
 										<li>
-											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout</a>
+											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Zur Kasse</a>
 										</li>
 										<?php if (!isset($_SESSION["UID"])) { ?>
 											<li>
@@ -502,7 +502,7 @@ include("includes/message.php");
 								</div>
 								<div class="cart_payment_method">
 									<div class="cart_box">
-										<h4>Please click on your payment method</h4>
+										<h4>Bitte klicken Sie Ihre Zahlungsart an</h4>
 										<ul>
 											<?php
 											$Query = "SELECT pm.pm_id, pm.pm_show_detail, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
@@ -546,7 +546,7 @@ include("includes/message.php");
 										</ul>
 									</div>
 									<div class="cart_py_field">
-										<h4>Payment Details</h4>
+										<h4>Zahlungsdetails</h4>
 										<div class="gerenric_form">
 											<ul>
 												<li>
@@ -576,7 +576,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

@@ -79,7 +79,7 @@ if (isset($_REQUEST['btn_login'])) {
 
 ?>
 <!doctype html>
-<html>
+<html lang="de">
 
 <head>
 	<meta charset="utf-8">
@@ -103,7 +103,7 @@ if (isset($_REQUEST['btn_login'])) {
 				<div class="login_inner">
 					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<div class="login_box">
-						<h2>Login</h2>
+						<h2>Anmelden</h2>
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 						<?php } ?>
@@ -111,28 +111,28 @@ if (isset($_REQUEST['btn_login'])) {
 							<ul>
 								<li>
 									<input type="hidden" name="referer" value="<?php print($ref); ?>">
-									<div class="form_label">E-mail address</div>
+									<div class="form_label">Email-Adresse</div>
 									<div class="form_field"><input type="text" class="gerenric_input" name="user_name" id="user_name"></div>
 								</li>
 								<li>
-									<div class="form_label">Password</div>
+									<div class="form_label">Passwort</div>
 									<div class="form_field"><input type="password" class="gerenric_input" name="user_password" id="user_password"></div>
 								</li>
-								<li><button type="submit" name="btn_login" class="gerenric_btn full_btn">Login</button></li>
+								<li><button type="submit" name="btn_login" class="gerenric_btn full_btn">Einloggen</button></li>
 								<li>
-									<div class="forgot_password"><a href="forgot_password.php">Forgot your password?</a></div>
+									<div class="forgot_password"><a href="forgot_password.php">Passwort vergessen?</a></div>
 								</li>
 								<li>
-									<div class="form_term">By registering, you agree to our <a href="term">Allgemeinen Geschäftsbedingungen</a>.Please read our <a href="privacy">Datenschutzerklärung </a>, our <a href="javascript:void(0)">Cookie Notice and our Interest-Based Advertising Notice .</a></div>
+									<div class="form_term">Mit Ihrer Anmeldung stimmen Sie unseren <a href="term">Allgemeinen Geschäftsbedingungen</a> zu.Bitte lesen Sie unsere <a href="privacy">Datenschutzerklärung </a>, unser <a href="javascript:void(0)"> Hinweis auf Cookies und unser Hinweis auf interessenbezogener Werbung.</a></div>
 								</li>
 							</ul>
 						</form>
 					</div>
 					<div class="or_div">
-						<div class="or_div_inner">New to Wacker24?</div>
+						<div class="or_div_inner">Neu bei Wacker24?</div>
 					</div>
 					<div class="new_account_btn"><a href="registration.php">
-							<div class="gerenric_btn">Create your Wacker24 account here</div>
+							<div class="gerenric_btn">Erstellen Sie hier Ihr Wacker24 Konto</div>
 						</a>
 					</div>
 				</div>
@@ -144,11 +144,11 @@ if (isset($_REQUEST['btn_login'])) {
 		<div id="footer_register">
 			<div class="page_width">
 				<ul>
-					<li><a href="javascript:void(0)">Cookie Settings </a></li>
+					<li><a href="javascript:void(0)">Cookie-Einstellungen </a></li>
 					<li><a href="impressum">Impressum</a></li>
 					<li><a href="privacy">Datenschutzerklärung</a></li>
 					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
-					<li><a href="contact_us">Contact</a></li>
+					<li><a href="contact_us">Kontakt</a></li>
 				</ul>
 			</div>
 		</div>

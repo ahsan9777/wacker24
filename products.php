@@ -119,7 +119,7 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 															<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1">
 															<input type="hidden" id="ci_discount_type_<?php print($row->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 															<input type="hidden" id="ci_discount_value_<?php print($row->pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
-															<div class="gerenric_btn">Add to Cart</div>
+															<div class="gerenric_btn">In den Einkaufswagen</div>
 														</a>
 													</div>
 												</div>
@@ -166,99 +166,19 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Back to top</div>
+		<div id="scroll_top">Zurück zum Seitenanfang</div>
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
 	</div>
 
 </body>
-<script src="js/slick.js"></script>
-<script type="text/javascript">
-	$(".banner_slider").slick({
-		dots: false,
-		infinite: true,
-		slidesToShow: 1,
-		autoplay: false,
-		autoplaySpeed: 3000,
-		slidesToScroll: 1,
-	});
-	$(".gerenric_slider").slick({
-		slidesToShow: 6,
-		slidesToScroll: 1,
-		autoplay: false,
-		dots: false,
-		autoplaySpeed: 2000,
-		infinite: true,
-		responsive: [
-
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 4,
-					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 650,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1
-				}
-			}
-		]
-	});
-	$(".brand_slider").slick({
-		slidesToShow: 10,
-		slidesToScroll: 1,
-		autoplay: false,
-		dots: false,
-		autoplaySpeed: 2000,
-		infinite: true,
-		responsive: [{
-				breakpoint: 1200,
-				settings: {
-					slidesToShow: 6,
-					slidesToScroll: 1
-				}
-			},
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 4,
-					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 650,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1
-				}
-			}
-		]
-	});
-</script>
 <script>
 	$(".show-more").click(function() {
 		if ($(".category_show, .list_checkbox_hide").hasClass("category_show_height")) {
-			$(this).text("(Show Less)");
+			$(this).text("(Weniger anzeigen)");
 		} else {
-			$(this).text("(Show More)");
+			$(this).text("(Mehr anzeigen)");
 		}
 
 		$(".category_show, .list_checkbox_hide").toggleClass("category_show_height");

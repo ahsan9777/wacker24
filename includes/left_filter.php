@@ -33,7 +33,7 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword'])? 'style="width: 420px;"' : ''); ?> >
     <div class="categroy_list sticky">
-        <h2>Category <div class="categroy_close_mb">X</div>
+        <h2>Kategorie <div class="categroy_close_mb">X</div>
         </h2>
         <div class="categroy_block">
             <!--<h3> <?php print($left_filter_cat_title); ?> </h3>-->
@@ -59,7 +59,7 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
             </ul>
         </div>
         <div class="categroy_block">
-            <h3>Brands</h3>
+            <h3>Marke</h3>
             <ul class="list_checkbox_hide category_show_height" id="list_checkbox_hide_0">
                 <?php
                 $brand_link = "";
@@ -83,7 +83,7 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
                 }
                 ?>
             </ul>
-            <div class="show-more" data-id= "0">(Show More)</div>
+            <div class="show-more" data-id= "0">(Mehr anzeigen)</div>
         </div>
         <!--<div class="categroy_block">
             <h3>Price</h3>

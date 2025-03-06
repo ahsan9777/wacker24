@@ -507,7 +507,7 @@ if (isset($_REQUEST['action'])) {
                 }
             $category_show .= '</ul>';
             if ($TotalRecCount > 5) {
-                $category_show .= '<div class="show-more" data-id="1">(Show More)</div>';
+                $category_show .= '<div class="show-more" data-id="1">(Mehr anzeigen)</div>';
             }
             $category_show .= '
             <script>
@@ -527,7 +527,7 @@ if (isset($_REQUEST['action'])) {
             $search_manf_id_check = array();
             $Sidefilter_brandwith = $_REQUEST['Sidefilter_brandwith'];
             $search_manf_id_check = (!empty($_REQUEST['search_manf_id_check'])) ? $_REQUEST['search_manf_id_check'] : [];
-            $brand_show = '<h3>Brands</h3>';
+            $brand_show = '<h3>Marke</h3>';
             $TotalRecCount = 0;
             $Query = "SELECT manf.*, COUNT(*) OVER() AS TotalRecCount, (SELECT COUNT(pro.manf_id) FROM products AS pro WHERE pro.manf_id = manf.manf_id AND pro.supplier_id " . $Sidefilter_brandwith . ") AS total_count FROM manufacture AS manf WHERE manf.manf_id IN (SELECT pro.manf_id FROM products AS pro WHERE pro.supplier_id " . $Sidefilter_brandwith . ") AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
             //print($Query);
@@ -548,7 +548,7 @@ if (isset($_REQUEST['action'])) {
             }
             $brand_show .= '</ul>';
             if ($TotalRecCount > 5) {
-                $brand_show .= '<div class="show-more" data-id="2">(Show More)</div>';
+                $brand_show .= '<div class="show-more" data-id="2">(Mehr anzeigen)</div>';
             }
             $brand_show .= '
             <script>
@@ -606,7 +606,7 @@ if (isset($_REQUEST['action'])) {
                     }
                     $feature_show .= '</ul>';
                     if ($TotalRecCount > 5) {
-                        $feature_show .= '<div class="show-more" data-id="' . $count . '">(Show More)</div>';
+                        $feature_show .= '<div class="show-more" data-id="' . $count . '">(Mehr anzeigen)</div>';
                     }
                     $feature_show .= '</div>';
                 }
@@ -619,9 +619,9 @@ if (isset($_REQUEST['action'])) {
                     <script>
                         $(".show-more").click(function() {
                             if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
-                                $(this).text("(Show Less)");
+                                $(this).text("(Weniger anzeigen)");
                             } else {
-                                $(this).text("(Show More)");
+                                $(this).text("(Mehr anzeigen)");
                             }
 
                             $("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");

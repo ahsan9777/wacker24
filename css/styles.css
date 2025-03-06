@@ -358,7 +358,7 @@ body.body-white{background-color: #fff !important;}
 #header_section .header_bottom .header_account ul li .account_nav ul li::after{display: none !important;}
 .hdr_side_cart{width: 130px;-webkit-transition: all 0.3s;transition: all 0.3s; display: none; background-color: #fff;border-left: 1px solid #bbb; height: 100vh; overflow-y: auto; top: 0px; position: fixed; z-index: 999; right: 0px;}
 .hdr_side_cart .side_bar_close{position: absolute; left: 10px; top: 5px; font-size: 15px; font-weight: bold;color: #000; cursor: pointer;}
-.hdr_side_cart .side_cart_subtotal{width: 100%;border-bottom: 1px solid #bbb; padding: 15px; }
+.hdr_side_cart .side_cart_subtotal{width: 100%;border-bottom: 1px solid #bbb; padding: 15px; margin-top: 10px;}
 .hdr_side_cart .side_cart_subtotal .subtotal_title{width: 100%; font-size: 14px; color: #000; text-align: center; margin-bottom: 10px;}
 .hdr_side_cart .side_cart_subtotal .subtotal_prise{width: 100%; font-size: 16px; font-weight: bold; color: #cc0f19; text-align: center; margin-bottom: 10px;}
 .hdr_side_cart .side_cart_subtotal .gerenric_btn{width: 100%; border-radius: 100px;    padding: 5px; height: 25px; background-color: #fff; border: 1px solid #bbb;}
