@@ -25,7 +25,7 @@ $page = 1;
 				<div class="breadcrumb_inner">
 					<ul>
 						<li><a href="javascript:void(0)">Meine persönlichen Daten</a></li>
-						<li><a href="javascript:void(0)">Private customer account</a></li>
+						<li><a href="javascript:void(0)"><?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde Konto' : 'Geschäftskunde Konto' ); ?></a></li>
 					</ul>
 				</div>
 			</div>
@@ -36,7 +36,7 @@ $page = 1;
 		<section id="content_section">
 			<div class="my_personal_page gerenric_padding">
 				<div class="page_width_1480">
-					<h1>Private Customer Account</h1>
+					<h1><?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde Konto' : 'Geschäftskunde Konto' ); ?></h1>
 					<div class="my_personal_inner">
 						<div class="my_personal_card">
 							<a href="my_data.php">

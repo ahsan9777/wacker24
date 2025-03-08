@@ -94,7 +94,8 @@ if (isset($_REQUEST['btn_registration'])) {
 				$field = "";
 				$value = "";
 				$input_display = 'style="display: none;"';
-				$mailer->registration_account_verification(dbStr(trim($_REQUEST['user_fname']))." ".dbStr(trim($_REQUEST['user_lname'])), "verification@wackersystems.com", "7v6LjC{rEIct", $_REQUEST['user_name'], "Account Verification", $user_verification_code);
+				//$mailer->registration_account_verification(dbStr(trim($_REQUEST['user_fname']))." ".dbStr(trim($_REQUEST['user_lname'])), "verification@wackersystems.com", "7v6LjC{rEIct", $_REQUEST['user_name'], "Account Verification", $user_verification_code);
+				$mailer->registration_account_verification(dbStr(trim($_REQUEST['user_fname']))." ".dbStr(trim($_REQUEST['user_lname'])), "verification@esol-tech.com", "s8@oKfnzju~k", $_REQUEST['user_name'], "Account Verification", $user_verification_code);
 				header('Location: account_registration.php');
 			}
 		}

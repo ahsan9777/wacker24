@@ -126,7 +126,7 @@ include("includes/message.php");
 											<li <?php print(($count == 1) ? 'class="active"' : ''); ?>>
 												<a href="#tab<?php print($row1->sl_id); ?>">
 													<div class="tab_title"><?php print($row1->sl_title); ?></div>
-													<div class="tab_private">Private</div>
+													<div class="tab_private"><?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde' : 'Geschäftskunde' ); ?></div>
 												</a>
 											</li>
 									<?php
@@ -142,7 +142,7 @@ include("includes/message.php");
 								<div class="shopping_list_detail">
 									<div class="shopping_list_title">
 										<div class="shopping_list_profile">
-											<div class="list_name">Ahsan <span>Private</span></div>
+											<div class="list_name"><?php print($_SESSION["FirstName"]); ?> <span> <?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde' : 'Geschäftskunde' ); ?></span></div>
 										</div>
 										<div class="shopping_list_create create_list_trigger">Eine neue Liste erstellen</div>
 									</div>

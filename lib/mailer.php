@@ -200,8 +200,10 @@ class Mailer {
             $mail_username = $username;
             $mail_password = $password;
         } else {
-            $mail_username = "noreply@wackersystems.com";
-            $mail_password = "A^tXZxQCCDM4";
+            /*$mail_username = "noreply@wackersystems.com";
+            $mail_password = "A^tXZxQCCDM4";*/
+            $mail_username = "noreply@esol-tech.com";
+            $mail_password = "#w2nOX5!vAOH";
         }
         //require_once($dir . "lib/class.phpmailer.php");
 
@@ -219,7 +221,8 @@ class Mailer {
             //$mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             //$mail->Host       = "mail.gmx.com";
-            $mail->Host       = "wackersystems.com";
+            //$mail->Host       = "wackersystems.com";
+            $mail->Host       = "mail.esol-tech.com";
             $mail->Username   = $mail_username;
             $mail->Password   = $mail_password;
 

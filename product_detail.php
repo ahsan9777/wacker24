@@ -269,7 +269,8 @@ include("includes/message.php");
 										}
 									}
 									?>
-									<div class="product_vat">exkl. MwSt</div>
+									<div class="product_vat price_without_tex">exkl. MwSt</div>
+									<div class="product_vat pbp_price_with_tex">inkl. MwSt</div>
 									<?php
 									$quantity_lenght = 0;
 									$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";

@@ -488,6 +488,7 @@ body.body-white{background-color: #fff !important;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise.price_without_tex{display: none;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise span{font-weight: bold; font-size: 20px; color: #000;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_vat{font-size: 15px; color: #212529; font-weight: 500; margin-bottom: 25px;}
+.product_detail_page .product_detail_section1 .product_right .product_col2 .product_vat.price_without_tex{display: none;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_title{font-size: 17px; color: orange; font-weight: 700; margin-bottom: 10px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_row{width: 100%; border-bottom: 1px solid #dedede; padding-bottom: 15px; margin-bottom: 20px;}
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_order_row_inner{width: 100%; display: flex; align-items: center; background: #eeeeee; border-radius: 100px;}
