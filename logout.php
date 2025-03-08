@@ -7,9 +7,11 @@ if (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) {
     unset($_SESSION['FirstName']);
     unset($_SESSION['FullName']);
     unset($_SESSION['Utype']);
+    $_SESSION["cart_check"] = true;
 } else {
     session_unset();
     session_destroy();
 }
 header("Location: index.php");
 ob_end_flush();
+?>

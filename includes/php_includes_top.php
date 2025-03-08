@@ -20,8 +20,10 @@ $search_keyword = "";
 $cat_id = "";
 $special_price = array();
 
-if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) ) {
+//if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4)))) {
+if ((isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && ( isset($_SESSION["cart_check"]) && $_SESSION["cart_check"] == true) ) {
     $cart_id = $_SESSION['cart_id'];
+    mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_discounted_price_see = '0' WHERE cart_id = '" . $cart_id . "'") or die(mysqli_error($GLOBALS['conn']));
     $Query = "SELECT ci.*, cm.sub_group_ids FROM cart_items AS ci LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = ci.supplier_id WHERE cart_id = '" . $cart_id . "' AND ci_discounted_price_see = '0' ";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
@@ -42,8 +44,11 @@ if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_
                 $special_price = user_special_price("level_one", $cat_id_one);
             }
             //print_r($special_price);
-            $pbp_price_amount = $row->pbp_price_amount;
-            $ci_amount = $row->ci_amount;
+            $get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty);
+            //$pbp_price_amount = $row->pbp_price_amount;
+            //$ci_amount = $row->ci_amount;
+            $pbp_price_amount = $get_pro_price['ci_amount'];
+            $ci_amount = $get_pro_price['ci_amount'];
             $ci_discount_type = !empty($special_price) ? $special_price['usp_price_type'] : $row->ci_discount_type;
             $ci_discount_value = !empty($special_price) ? $special_price['usp_discounted_value'] : $row->ci_discount_value;
 
@@ -70,6 +75,7 @@ if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_
             $special_price = array();
         }
     }
+    $_SESSION["cart_check"] = false;
 }
 if(isset($_REQUEST['btn_plz'])){
     $_SESSION['plz'] = $_REQUEST['plz'];

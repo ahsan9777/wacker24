@@ -72,6 +72,9 @@ if (isset($_REQUEST['btn_checkout'])) {
 		unset($_SESSION['sess_id']);
 		unset($_SESSION['ci_id']);
 		unset($_SESSION['header_quantity']);
+		if(isset($_SESSION["cart_check"])){
+			unset($_SESSION["cart_check"]);
+		}
 		if ($pm_id == 1) {
 			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 			header('Location: my_order.php?op=2');
