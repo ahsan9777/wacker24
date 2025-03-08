@@ -2472,6 +2472,11 @@ function get_delivery_charges($total){
 function user_special_price($parameter, $value, $user_id = 0, $price_type = 0){
 	if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) && $price_type == 0) {
 		$user_id = $_SESSION["UID"];
+		$checkrecord = checkrecord("usp_id", "user_special_price", "user_id = '".$user_id."'");
+		if($checkrecord == 0){
+			$user_id = 0;
+		}
+		
 	}
 	$searchWhere = "";
 	$special_price = array();
