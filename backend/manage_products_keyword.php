@@ -78,7 +78,7 @@ include("includes/messages.php");
                 <?php } ?>
                 <div class="main_container">
                     <h2 class="text-white">
-                        <?php print($formHead); ?> Products Feature
+                        <?php print($formHead); ?> Products Keyword
                     </h2>
                     <form name="frm_data" id="frm_data" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                         <div class="row">

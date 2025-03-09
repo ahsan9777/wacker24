@@ -31,7 +31,8 @@ $page = 1;
 					<div class="hm_section_1">
 						<div class="gerenric_product_category">
 							<?php
-							$Query1 = "SELECT * FROM user_special_price WHERE user_id = 0 AND usp_status = '1'  ORDER BY CASE WHEN supplier_id IS NOT NULL THEN 1 WHEN level_two_id IS NOT NULL AND supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							//$Query1 = "SELECT * FROM user_special_price WHERE user_id = 0 AND usp_status = '1'  ORDER BY CASE WHEN supplier_id IS NOT NULL THEN 1 WHEN level_two_id IS NOT NULL AND supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							$Query1 = "SELECT usp.*, pro.pro_status FROM user_special_price AS usp LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id WHERE usp.user_id = 0 AND usp.usp_status = '1'   ORDER BY CASE WHEN usp.supplier_id IS NOT NULL AND pro.pro_status = '1' THEN 1 WHEN usp.level_two_id IS NOT NULL AND usp.supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
 							//print($Query1);
 							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 							if (mysqli_num_rows($rs1) > 0) {

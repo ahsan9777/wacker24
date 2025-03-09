@@ -245,9 +245,9 @@ if (isset($_REQUEST['action'])) {
             $json = array();
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                $where .= " WHERE FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr(trim($_REQUEST['level_two_id'])) : dbStr(trim($_REQUEST['level_one_id']))) . "', cm.sub_group_ids) AND ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%') ";
+                $where .= " WHERE pro.pro_status = '1' AND FIND_IN_SET('" . (($_REQUEST['level_two_id'] > 0) ? dbStr(trim($_REQUEST['level_two_id'])) : dbStr(trim($_REQUEST['level_one_id']))) . "', cm.sub_group_ids) AND ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%') ";
             }
-            $Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id " . $where . " ORDER BY pro.pro_id ASC  LIMIT 0,20";
+            $Query = "SELECT cm.cat_id, cm.supplier_id, pro.pro_id, pro.pro_description_short, pro.pro_status FROM category_map AS cm LEFT OUTER JOIN products AS pro ON pro.supplier_id = cm.supplier_id " . $where . " ORDER BY pro.pro_id ASC  LIMIT 0,20";
             //print($Query);die(); 120026930
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {

@@ -36,6 +36,7 @@ include("includes/messages.php");
                         align-items: center;
                         color: #000;
                     }
+
                     .tab_img {
                         width: 40px;
 
@@ -45,14 +46,15 @@ include("includes/messages.php");
                         width: 100%;
                     }
 
-                    .contact_detail{
+                    .contact_detail {
                         display: flex;
                         flex-direction: column;
                         gap: 30px;
                         top: 10px;
 
                     }
-                    .contact_detail .contact_user_info{
+
+                    .contact_detail .contact_user_info {
                         display: flex;
                         flex-direction: column;
                         gap: 15px;
@@ -65,7 +67,7 @@ include("includes/messages.php");
                         align-items: center;
                     }
 
-                    .contact_detail_user_info .user_info_detail{
+                    .contact_detail_user_info .user_info_detail {
                         display: flex;
                         flex-direction: column;
                         gap: 10px;
@@ -77,59 +79,36 @@ include("includes/messages.php");
                     </h2>
                     <div class="row mt-3 position-relative">
                         <div class="col-md-3 col-12 bg-secondary rounded-3">
-                            <a href="javascript:void(0);" class="tab_container p-3 border-bottom">
-                                <div class="tab_img rounded">
-                                    <img src="../images/user_img.png" alt="">
-                                </div>
-                                <div class="tab_detail">
-                                    <div class="user_detail">
-                                        Ahsan Nawaz Khan Niazi <span class="ms-2 p-2 mb-3 text-bg-success rounded-3"> Close</span>
+                            <?php
+                            $Query1 = "SELECT * FROM contact_us_request ORDER BY cu_date DESC";
+                            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                            if (mysqli_num_rows($rs1)) {
+                                while ($row1 = mysqli_fetch_object($rs1)) {
+                            ?>
+                                <a href="javascript:void(0);" class="tab_container p-3 border-bottom">
+                                    <div class="tab_img rounded">
+                                        <img src="../images/user_img.png" alt="">
                                     </div>
-                                    <div class="contact_date">
-                                        Mon 07, 2025 09:33
+                                    <div class="tab_detail">
+                                        <div class="user_detail">
+                                            <?php 
+                                            print($row1->cu_name);
+                                            if($row1->cu_is_viewed > 0){
+                                                print('<span class="ms-2 p-2 mb-3 text-bg-success rounded-3"> Close</span>');
+                                            } else{
+                                                print('<span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>');
+                                            }
+                                            ?> 
+                                        </div>
+                                        <div class="contact_date">
+                                            <?php print($row1->cu_date); ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0);" class="tab_container p-3 border-bottom">
-                                <div class="tab_img rounded">
-                                    <img src="../images/user_img.png" alt="">
-                                </div>
-                                <div class="tab_detail">
-                                    <div class="user_detail">
-                                        Ahsan Nawaz Khan Niazi <span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>
-                                    </div>
-                                    <div class="contact_date">
-                                        Mon 07, 2025 09:33
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0);" class="tab_container p-3 border-bottom">
-                                <div class="tab_img rounded">
-                                    <img src="../images/user_img.png" alt="">
-                                </div>
-                                <div class="tab_detail">
-                                    <div class="user_detail">
-                                        Ahsan Nawaz Khan Niazi <span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>
-                                    </div>
-                                    <div class="contact_date">
-                                        Mon 07, 2025 09:33
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0);" class="tab_container p-3 border-bottom">
-                                <div class="tab_img rounded">
-                                    <img src="../images/user_img.png" alt="">
-                                </div>
-                                <div class="tab_detail">
-                                    <div class="user_detail">
-                                        Ahsan Nawaz Khan Niazi <span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>
-                                    </div>
-                                    <div class="contact_date">
-                                        Mon 07, 2025 09:33
-                                    </div>
-                                </div>
-                            </a>
-                            
+                                </a>
+                            <?php
+                                }
+                            }
+                            ?>
                         </div>
                         <div class="col-md-9 col-12 bg-dark rounded-3 p-3">
                             <div class="contact_detail position-sticky">

@@ -17,7 +17,7 @@ if (isset($_REQUEST['btnAdd'])) {
         $pq_status = "true";
     }
     $pq_id = getMaximum("products_quantity", "pq_id");
-    mysqli_query($GLOBALS['conn'], "INSERT INTO products_quantity (pq_id, supplier_id, pq_quantity, pq_upcomming_quantity, pq_status) VALUES ('" . $pq_id . "', '" . $supplier_id . "', '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', '0', 'false')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO products_quantity (pq_id, supplier_id, pq_quantity, pq_upcomming_quantity, pq_status) VALUES ('" . $pq_id . "', '" . $supplier_id . "', '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "', '" . $pq_status . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -25,7 +25,7 @@ if (isset($_REQUEST['btnAdd'])) {
     if ($_REQUEST['pq_status'] > 0) {
         $pq_status = "true";
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "' WHERE pq_id=" . $_REQUEST['pq_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "', pq_status = '" . $pq_status . "' WHERE pq_id=" . $_REQUEST['pq_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -108,6 +108,18 @@ include("includes/messages.php");
                                 <label for="">Quantity</label>
                                 <input type="number" class="input_style" name="pq_quantity" id="pq_quantity" value="<?php print($pq_quantity); ?>" placeholder="Quantity">
                             </div>
+                            <div class="col-md-4 col-12 mt-3">
+                                <label for="">Upcomming</label>
+                                <input type="number" class="input_style" name="pq_upcomming_quantity" id="pq_upcomming_quantity" value="<?php print($pq_upcomming_quantity); ?>" placeholder="Upcomming Quantity">
+                            </div>
+                            <div class="col-md-4 col-12 mt-3">
+                                <label for="">Type</label>
+                                <select class="input_style pq_status" name="pq_status" id="pq_status">
+                                    <option value="0" <?php print(($pq_status == 0) ? 'selected' : ''); ?> >false</option>
+                                    <option value="1" <?php print(($pq_status == 1) ? 'selected' : ''); ?> >true</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-12 col-12 mt-3">
                                 <button class="btn btn-primary" type="submit" name="<?php print(($_REQUEST['action'] == 1) ? 'btnAdd' : 'btnUpdate'); ?>">Upload</button>
                                 <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = 'manage_custom_products.php';">Cancel</button>
@@ -124,6 +136,8 @@ include("includes/messages.php");
                                 <tr>
                                     <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                     <th>Quantity</th>
+                                    <th>Upcomming Quantity</th>
+                                    <th>Status</th>
                                     <th width="50">Action</th>
                                 </tr>
                             </thead>
@@ -146,6 +160,8 @@ include("includes/messages.php");
                                         <tr>
                                             <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pq_id); ?>"></td>
                                             <td><?php print($row->pq_quantity); ?></td>
+                                            <td><?php print($row->pq_upcomming_quantity); ?></td>
+                                            <td><?php print($row->pq_status); ?></td>
                                             <td>
                                                 <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pq_id=" . $row->pq_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                             </td>
