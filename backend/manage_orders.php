@@ -47,6 +47,7 @@ if (isset($_REQUEST['btnCompleted'])) {
     if (isset($_REQUEST['chkstatus'])) {
         for ($i = 0; $i < count($_REQUEST['chkstatus']); $i++) {
             mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '1', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['chkstatus'][$i]);
+            $mailer->order($_REQUEST['chkstatus'][$i]);
         }
         $class = "alert alert-success";
         $strMSG = "Record(s) updated successfully";
@@ -60,6 +61,7 @@ if (isset($_REQUEST['btnRejected'])) {
     if (isset($_REQUEST['chkstatus'])) {
         for ($i = 0; $i < count($_REQUEST['chkstatus']); $i++) {
             mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['chkstatus'][$i]);
+            $mailer->order($_REQUEST['chkstatus'][$i]);
         }
         $class = "alert alert-success";
         $strMSG = "Record(s) updated successfully";
@@ -75,6 +77,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
         for ($i = 0; $i < count($_REQUEST['d_status_id']); $i++) {
             if ($_REQUEST['d_status_id'][$i] > 0) {
                 mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'][$i] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
+                $mailer->order($_REQUEST['ord_id'][$i]);
             }
         }
         $class = "alert alert-success";
@@ -84,7 +87,6 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
         $strMSG = "Please Select Alteast One Checkbox";
     }
 } elseif (isset($_REQUEST['d_status_id'])) {
-
     mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 }

@@ -6,6 +6,8 @@ include("../lib/functions.php");
 
 require_once("../lib/class.pager1.php"); 
 $p = new Pager1;
+require_once("../lib/mailer.php");
+$mailer = new Mailer();
 
 
 if(!isset($_SESSION['UserID'])) {
