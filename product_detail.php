@@ -259,11 +259,11 @@ include("includes/message.php");
 										while ($row = mysqli_fetch_object($rs)) {
 											if (!empty($special_price)) {
 									?>
-												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€  </span>"); ?> </div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br> <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ </span> "); ?> </div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <?php print("<del class='orignal_price'>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€  </span>"); ?> </div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <?php print("<del class='orignal_price'>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ </span> "); ?> </div>
 											<?php } else { ?>
-												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br><span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
-												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Pack  <br><span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
+												<div class="piece_prise price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <span><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</span></div>
+												<div class="piece_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <span><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</span></div>
 									<?php
 											}
 										}

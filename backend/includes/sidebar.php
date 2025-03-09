@@ -56,6 +56,9 @@ $cu = 'active';
             <li>
                 <a href="manage_orders.php" title="Auftragsverwaltung Management" ><span class="material-icons icon">inventory</span> <span class="text">Auftragsverwaltung</span> </a>
             </li>
+            <li>
+                <a href="manage_contact_request.php" title="Kontakt Formular Management" ><span class="material-icons icon">mail</span> <span class="text">Kontakt Formular</span> </a>
+            </li>
         </ul>
         <ul class="accordion-menu border-top border-black">
             <li>

@@ -343,7 +343,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT u.*, ut.utype_name, usa.usa_zipcode, usa.usa_street, usa.usa_address FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id LEFT OUTER JOIN user_shipping_address AS usa ON usa.user_id = u.user_id AND usa.usa_defualt = '1' WHERE u." . $utype_where . " " . $searchQuery . " ";
+                                    $Query = "SELECT u.*, ut.utype_name, usa.usa_zipcode, usa.usa_street, usa.usa_address FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id LEFT OUTER JOIN user_shipping_address AS usa ON usa.user_id = u.user_id AND usa.usa_defualt = '1' WHERE u." . $utype_where . " " . $searchQuery . " ORDER BY u.user_datecreated DESC ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;

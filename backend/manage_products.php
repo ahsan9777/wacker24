@@ -10,7 +10,8 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $xml = simplexml_load_file("BMEcat2005_schulranzen.xml") or die("Error: Cannot create object");
         mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '".$pro_type."'") or die(mysqli_error($GLOBALS['conn']));
     } else{
-        $xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
+        //$xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
+        $xml = simplexml_load_file("artical.xml") or die("Error: Cannot create object");
         mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '".$pro_type."'") or die(mysqli_error($GLOBALS['conn']));
     }
     //print('<pre>');

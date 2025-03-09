@@ -33,7 +33,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		$dinfo_address = $rw->usa_address;
 		$dinfo_countries_id = $rw->countries_id;
 		$dinfo_usa_zipcode = $rw->usa_zipcode;
-		$dinfo_additional_info = $rw->usa_additional_info;
+		$dinfo_additional_info = !empty($rw->usa_additional_info) ? $rw->usa_additional_info : ' ';
 	}
 
 	$orders_table_check = 0;

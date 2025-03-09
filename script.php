@@ -50,7 +50,7 @@ if (isset($_REQUEST['action'])) {
                         $gen_id = 2;
                     }
                     $status_id = $row->status;
-                    $countries_id = 162;
+                    $countries_id = 81;
                     $user_datecreated = $row->created_date;
                     $utype_id = 3;;
                     if ($row->cusType == 1) {
@@ -62,7 +62,7 @@ if (isset($_REQUEST['action'])) {
                     $user_fname = $row->fname;
                     $user_lname = $row->lname;
                     $user_id = getMaximum("users", "user_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, id, customer_id, special_status, user_invoice_payment, user_sepa_payment, user_name, user_password, gen_id, status_id, user_datecreated, utype_id, user_company_name, user_tax_no, user_phone, user_fname, user_lname) VALUES ('" . $user_id . "', '" . $id . "', '" . $customer_id . "', '" . $special_status . "', '" . $user_invoice_payment . "', '" . $user_sepa_payment . "', '" . $user_name . "', '" . $user_password . "', '" . $gen_id . "', '" . $status_id . "', '" . $user_datecreated . "', '" . $utype_id . "', '" . $user_company_name . "', '" . $user_tax_no . "', '" . $user_phone . "', '" . $user_fname . "', '" . $user_lname . "')") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, id, customer_id, special_status, user_invoice_payment, user_sepa_payment, user_name, user_password, gen_id, status_id, user_datecreated, utype_id, user_company_name, user_tax_no, user_phone, user_fname, user_lname, countries_id) VALUES ('" . $user_id . "', '" . $id . "', '" . $customer_id . "', '" . $special_status . "', '" . $user_invoice_payment . "', '" . $user_sepa_payment . "', '" . $user_name . "', '" . $user_password . "', '" . $gen_id . "', '" . $status_id . "', '" . $user_datecreated . "', '" . $utype_id . "', '" . $user_company_name . "', '" . $user_tax_no . "', '" . $user_phone . "', '" . $user_fname . "', '" . $user_lname . "', '".$countries_id."')") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record added: " . $counter);
@@ -80,7 +80,7 @@ if (isset($_REQUEST['action'])) {
                     $usa_street = $row->street;
                     $usa_house_no = $row->house;
                     $usa_zipcode = $row->location;
-                    $countries_id = 162;
+                    $countries_id = 81;
                     $usa_contactno = $row->phone;
                     $old_user_id = $row->user_id;
                     $user_id = returnName("user_id", "users", "id", $old_user_id);
@@ -97,8 +97,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'order_data':
-            print("order_data");
-            die();
+            print("order_data");die();
             $counter = 0;
             $Query = "SELECT * FROM order_manager ORDER BY order_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -132,8 +131,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'order_items_data':
-            print("order_items_data");
-            die();
+            print("order_items_data");die();
             $counter = 0;
             $Query = "SELECT * FROM users_orders ORDER BY order_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -198,5 +196,47 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record added: " . $counter);
             }
             break;
+
+            case 'shopping_list':
+                print("shopping_list");die();
+                $counter = 0;
+                $Query = "SELECT * FROM list_section ORDER BY id ASC";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $old_id = $row->id;
+                        $old_user_id = $row->user_id;
+                        $user_id = returnName("user_id", "users", "id", $old_user_id);
+                        $sl_title = $row->name;
+                        
+                        $sl_id = getMaximum("shopping_list", "sl_id");
+                        mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, old_id, old_user_id, user_id, sl_title) VALUES ('" . $sl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $sl_title . "')") or die(mysqli_error($GLOBALS['conn']));
+                        $counter++;
+                    }
+                    print("Total no of record added: " . $counter);
+                }
+                break;
+
+            case 'wishlist':
+                print("wishlist");die();
+                $counter = 0;
+                $Query = "SELECT * FROM mylist ORDER BY id ASC";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $old_id = $row->id;
+                        $old_user_id = $row->user_id;
+                        $old_section_id = $row->section_id;
+                        $user_id = returnName("user_id", "users", "id", $old_user_id);
+                        $sl_id = returnName("sl_id", "shopping_list", "old_id", $old_section_id);
+                        $supplier_id = $row->supplier_aid;
+                        
+                        $wl_id = getMaximum("wishlist", "wl_id");
+                        mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, old_id, old_user_id, user_id, old_section_id, sl_id, supplier_id) VALUES ('" . $wl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $old_section_id . "', '".$sl_id."', '".$supplier_id."')") or die(mysqli_error($GLOBALS['conn']));
+                        $counter++;
+                    }
+                    print("Total no of record added: " . $counter);
+                }
+                break;
     }
 }
