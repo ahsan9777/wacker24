@@ -1,6 +1,13 @@
 <?php
 include("../lib/session_head.php");
 
+if (isset($_REQUEST['cu_is_viewed'])) {
+    mysqli_query($GLOBALS['conn'], "UPDATE contact_us_request SET cu_is_viewed = '".$_REQUEST['cu_is_viewed']."' WHERE cu_id = '" . $_REQUEST['cu_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    header("Location: " . $_SERVER['PHP_SELF'] . "?cu_id=" . $_REQUEST['cu_id'] . "&op=2");
+} elseif (isset($_REQUEST['btnDelete'])) {
+    mysqli_query($GLOBALS['conn'], "DELETE FROM `contact_us_request` WHERE cu_id = '" . $_REQUEST['cu_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    header("Location: " . $_SERVER['PHP_SELF'] . "?op=5");
+}
 
 include("includes/messages.php");
 
@@ -24,56 +31,10 @@ include("includes/messages.php");
 
             <!-- Content -->
             <section class="content" id="main-content">
-                <?php if ($class != "") { ?>
-                    <div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert">×</a></div>
-                <?php } ?>
-                <style>
-                    .tab_container {
-                        text-decoration: none;
-                        display: flex;
-                        flex-direction: row;
-                        gap: 10px;
-                        align-items: center;
-                        color: #000;
-                    }
-
-                    .tab_img {
-                        width: 40px;
-
-                    }
-
-                    .tab_img img {
-                        width: 100%;
-                    }
-
-                    .contact_detail {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 30px;
-                        top: 10px;
-
-                    }
-
-                    .contact_detail .contact_user_info {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 15px;
-                    }
-
-                    .contact_detail_user_info {
-                        display: flex;
-                        flex-direction: row;
-                        gap: 10px;
-                        align-items: center;
-                    }
-
-                    .contact_detail_user_info .user_info_detail {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 10px;
-                    }
-                </style>
                 <div class="container text-start">
+                    <?php if ($class != "") { ?>
+                        <div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert">×</a></div>
+                    <?php } ?>
                     <h2 class="text-white">
                         Kontakt Formular
                     </h2>
@@ -85,73 +46,89 @@ include("includes/messages.php");
                             if (mysqli_num_rows($rs1)) {
                                 while ($row1 = mysqli_fetch_object($rs1)) {
                             ?>
-                                <a href="javascript:void(0);" class="tab_container p-3 border-bottom">
-                                    <div class="tab_img rounded">
-                                        <img src="../images/user_img.png" alt="">
-                                    </div>
-                                    <div class="tab_detail">
-                                        <div class="user_detail">
-                                            <?php 
-                                            print($row1->cu_name);
-                                            if($row1->cu_is_viewed > 0){
-                                                print('<span class="ms-2 p-2 mb-3 text-bg-success rounded-3"> Close</span>');
-                                            } else{
-                                                print('<span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>');
-                                            }
-                                            ?> 
+                                    <a href="<?php print($_SERVER['PHP_SELF'] . "?cu_id=" . $row1->cu_id); ?>" class="tab_container p-3 border-bottom">
+                                        <div class="tab_img rounded">
+                                            <img src="../images/user_img.png" alt="">
                                         </div>
-                                        <div class="contact_date">
-                                            <?php print($row1->cu_date); ?>
+                                        <div class="tab_detail">
+                                            <div class="user_detail">
+                                                <?php
+                                                print($row1->cu_name);
+                                                if ($row1->cu_is_viewed > 0) {
+                                                    print('<span class="ms-2 p-2 mb-3 text-bg-success rounded-3"> Close</span>');
+                                                } else {
+                                                    print('<span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>');
+                                                }
+                                                ?>
+                                            </div>
+                                            <div class="contact_date">
+                                                <?php print(date('F j, Y H:i', strtotime($row1->cu_date))); ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
                             <?php
                                 }
                             }
                             ?>
                         </div>
                         <div class="col-md-9 col-12 bg-dark rounded-3 p-3">
-                            <div class="contact_detail position-sticky">
-                                <div class="contact_user_info border-bottom pb-3">
-                                    <div class="contact_date">
-                                        Mon 07, 2025 09:33
-                                    </div>
-                                    <h3 class="from text-white">
-                                        From: Test data
-                                    </h3>
-                                    <div class="contact_detail_user_info">
-                                        <div class="tab_img rounded">
-                                            <img src="../images/user_img.png" alt="">
+                            <?php
+                            $searchQuery = "ORDER BY cu_id DESC LIMIT 0,1";
+                            if (isset($_REQUEST['cu_id']) && $_REQUEST['cu_id'] > 0) {
+                                $searchQuery = "WHERE cu_id = '" . $_REQUEST['cu_id'] . "'";
+                            }
+                            $Query2 = "SELECT * FROM contact_us_request " . $searchQuery . "";
+                            $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                            if (mysqli_num_rows($rs2) > 0) {
+                                $row2 = mysqli_fetch_object($rs2);
+                            ?>
+                                <div class="contact_detail position-sticky">
+                                    <div class="contact_user_info border-bottom pb-3">
+                                        <div class="contact_date">
+                                            <?php print(date('F j, Y H:i', strtotime($row2->cu_date))); ?>
                                         </div>
-                                        <div class="user_info_detail">
-                                            <div class="user_detail">
-                                                ahsannawaz9777@gmail.com
+                                        <h3 class="from text-white">
+                                            From: Test data
+                                        </h3>
+                                        <div class="contact_detail_user_info">
+                                            <div class="tab_img rounded">
+                                                <img src="../images/user_img.png" alt="">
                                             </div>
-                                            <div class="contact_date">
-                                                To: <span class="ms-1 p-1 mb-3 text-bg-info rounded-3 text-white"> Wacker</span>
+                                            <div class="user_info_detail">
+                                                <div class="user_detail">
+                                                    <?php print($row2->cu_email); ?>
+                                                </div>
+                                                <div class="contact_date">
+                                                    To: <span class="ms-1 p-1 mb-3 text-bg-info rounded-3 text-white"> Wacker</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="contact_message border-bottom pb-3">
+                                        <?php print($row2->cu_message); ?>
+                                    </div>
+                                    <div class="contact_name border-bottom pb-3 fs-5 text-white">
+                                        Name: <?php print($row2->cu_name); ?>
+                                    </div>
+                                    <div class="contact_email border-bottom pb-3 fs-5 text-white">
+                                        Email: <?php print($row2->cu_email); ?>
+                                    </div>
+                                    <div class="contact_phone border-bottom pb-3 fs-5 text-white">
+                                        Phone: <?php print($row2->cu_phone); ?>
+                                    </div>
+                                    <div class="contact_topic border-bottom pb-3 fs-5 text-white">
+                                        Topic: <?php print($row2->cu_subject); ?>
+                                    </div>
+                                    <div class="bottom_btndelete text-end">
+                                        <?php if ($row2->cu_is_viewed > 0) { ?>
+                                            <a href="<?php print($_SERVER['PHP_SELF'] . "?cu_is_viewed=0&cu_id=" . $row2->cu_id); ?>" class="btn btn-danger btn-style-light w-auto">Open</a>
+                                        <?php } else { ?>
+                                            <a href="<?php print($_SERVER['PHP_SELF'] . "?cu_is_viewed=1&cu_id=" . $row2->cu_id); ?>" class="btn btn-success btn-style-light w-auto">Close</a>
+                                        <?php } ?>
+                                        <a href="<?php print($_SERVER['PHP_SELF'] . "?btnDelete&cu_id=" . $row2->cu_id); ?>" class="btn btn-danger btn-style-light w-auto">Delete</a>
+                                    </div>
                                 </div>
-                                <div class="contact_message border-bottom pb-3">
-                                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim illum minus, laudantium ea ullam deserunt quo possimus quos reiciendis? Maxime, voluptatibus, commodi saepe odio incidunt placeat sapiente corrupti repellendus ab magnam aperiam quibusdam rem cupiditate dignissimos perspiciatis dolorem voluptatem maiores. Ea hic ullam aperiam aspernatur rem minima officia in magnam sint minus, similique corporis officiis! Eligendi hic tempora doloremque? Culpa repellat dolorum commodi ut voluptatum eius saepe voluptatem iste nisi rem. Praesentium illum esse corporis, quas rem, velit suscipit expedita harum blanditiis eligendi, impedit ad vel consequuntur alias! Est deserunt accusamus libero commodi perferendis at, ad tempore officia eius iste.
-                                </div>
-                                <div class="contact_name border-bottom pb-3 fs-5 text-white">
-                                    Name: Hafiz Ahsan Nawaz
-                                </div>
-                                <div class="contact_email border-bottom pb-3 fs-5 text-white">
-                                    Email: ahsannawaz9777@gmail.com
-                                </div>
-                                <div class="contact_phone border-bottom pb-3 fs-5 text-white">
-                                    Phone: 03347474009
-                                </div>
-                                <div class="contact_topic border-bottom pb-3 fs-5 text-white">
-                                    Topic: Bitte auswählen
-                                </div>
-                                <div class="bottom_btndelete text-end">
-                                    <a href="" class="btn btn-danger btn-style-light w-auto">Delete</a>
-                                </div>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

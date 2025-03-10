@@ -1,18 +1,23 @@
 <?php
 include("../lib/session_head.php");
 
+
+if(isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0){
+    $pro_status = $_REQUEST['pro_status'];
+    $qryStrURL .= "pro_status=".$pro_status."&";
+}
 if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
     //print_r($_REQUEST);die();
     //$xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
     $pro_type = 0;
-    if(isset($_REQUEST['btnImportSchulranzen'])){
+    if (isset($_REQUEST['btnImportSchulranzen'])) {
         $pro_type = 20;
         $xml = simplexml_load_file("BMEcat2005_schulranzen.xml") or die("Error: Cannot create object");
-        mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '".$pro_type."'") or die(mysqli_error($GLOBALS['conn']));
-    } else{
+        mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '" . $pro_type . "'") or die(mysqli_error($GLOBALS['conn']));
+    } else {
         //$xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
         $xml = simplexml_load_file("artical.xml") or die("Error: Cannot create object");
-        mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '".$pro_type."'") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '" . $pro_type . "'") or die(mysqli_error($GLOBALS['conn']));
     }
     //print('<pre>');
     //print_r($xml->T_NEW_CATALOG->PRODUCT);
@@ -38,7 +43,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $pro_referance_feature_group_id = isset($rl->PRODUCT_FEATURES[0]->REFERENCE_FEATURE_GROUP_ID) ? $rl->PRODUCT_FEATURES[0]->REFERENCE_FEATURE_GROUP_ID : '';
         $pro_feature = isset($rl->PRODUCT_FEATURES[1]->FEATURE) ? $rl->PRODUCT_FEATURES[1]->FEATURE : ''; // product_feature
         $referance_feature_group_id = isset($rl->PRODUCT_FEATURES[2]->REFERENCE_FEATURE_GROUP_ID) ? $rl->PRODUCT_FEATURES[2]->REFERENCE_FEATURE_GROUP_ID : '';
-        
+
         $pro_order_unit = isset($rl->PRODUCT_ORDER_DETAILS->ORDER_UNIT) ? $rl->PRODUCT_ORDER_DETAILS->ORDER_UNIT : '';
         $pro_count_unit = isset($rl->PRODUCT_ORDER_DETAILS->CONTENT_UNIT) ? $rl->PRODUCT_ORDER_DETAILS->CONTENT_UNIT : '';
         $pro_no_cu_per_ou = isset($rl->PRODUCT_ORDER_DETAILS->NO_CU_PER_OU) ? $rl->PRODUCT_ORDER_DETAILS->NO_CU_PER_OU : '';
@@ -72,10 +77,10 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $row2 = mysqli_fetch_object($rs2);
             $pro_uid = $row2->pro_id;
             $pro_id = $row2->pro_id;
-            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_udx_seo_epag_id = '".dbStr(trim($pro_udx_seo_epag_id))."', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_udx_seo_epag_id = '" . dbStr(trim($pro_udx_seo_epag_id)) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
         } else {
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_type, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_udx_seo_epag_id, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '".$pro_type."', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '".dbStr(trim($pro_udx_seo_epag_id))."', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_type, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_udx_seo_epag_id, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '" . $pro_type . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         if (!empty($pro_keyword)) {
@@ -101,7 +106,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                     $pf_fvalue_details = isset($pro_feature[$i]->FVALUE_DETAILS) ? $pro_feature[$i]->FVALUE_DETAILS : '';
                     //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
                     $pf_id = getMaximum("products_feature", "pf_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '".dbStr(trim($pro_udx_seo_epag_id))."', '".$pro_referance_feature_group_id."', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "') ") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "') ") or die(mysqli_error($GLOBALS['conn']));
                 }
             }
         }
@@ -116,7 +121,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
             //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '".$pro_type."')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         if (!empty($pro_artical_price)) {
@@ -169,16 +174,16 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                 $pq_quantity = dbStr(trim($row_data[1]));
                 $pq_upcomming_quantity = dbStr(trim($row_data[2]));
                 $pq_status = dbStr(trim($row_data[3]));
-                
+
                 $Query = "SELECT * FROM products_quantity WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' ";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     $row = mysqli_fetch_object($rs);
                     $pq_id = $row->pq_id;
-                    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . $pq_quantity . "', pq_upcomming_quantity = '" . $pq_upcomming_quantity . "', pq_status = '".$pq_status."' WHERE pq_id = '".$pq_id."'") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . $pq_quantity . "', pq_upcomming_quantity = '" . $pq_upcomming_quantity . "', pq_status = '" . $pq_status . "' WHERE pq_id = '" . $pq_id . "'") or die(mysqli_error($GLOBALS['conn']));
                 } else {
                     mysqli_query($GLOBALS['conn'], "INSERT INTO products_quantity (pq_id, supplier_id, pq_quantity, pq_upcomming_quantity, pq_status) VALUES ('" . $pq_id . "', '" . $supplier_id . "', '" . $pq_quantity . "', '" . $pq_upcomming_quantity . "', '" . $pq_status . "')") or die(mysqli_error($GLOBALS['conn']));
-                }   
+                }
             }
             $i++;
         }
@@ -272,7 +277,7 @@ include("includes/messages.php");
         <div class="main-content">
             <!-- Top bar -->
             <?php include("includes/topbar.php"); ?>
-            
+
             <!-- Content -->
             <section class="content" id="main-content">
                 <?php if ($class != "") { ?>
@@ -319,16 +324,16 @@ include("includes/messages.php");
                                         while ($row = mysqli_fetch_object($rs)) {
                                             $counter++;
                                     ?>
-                                        <div class="col-md-3 col-12 mt-3">
-                                            <label for="">Keywowd <?php print($counter); ?> </label>
-                                            <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
-                                            <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
-                                        </div>
-                                <?php
+                                            <div class="col-md-3 col-12 mt-3">
+                                                <label for="">Keywowd <?php print($counter); ?> </label>
+                                                <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
+                                                <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
+                                            </div>
+                                    <?php
                                         }
                                     }
                                 } elseif ($_REQUEST['action'] == 3) { ?>
-                                <div class="col-md-12 col-12 mt-3">
+                                    <div class="col-md-12 col-12 mt-3">
                                         <label for="">File</label>
                                         <div class="">
                                             <label for="file-upload" class="upload-btn">
@@ -338,15 +343,19 @@ include("includes/messages.php");
                                             <input id="file-upload" type="file" class="file-input" name="doc_ImportQuantity">
                                         </div>
                                     </div>
-                                <?php }?>
+                                <?php } ?>
                                 <?php if ($_REQUEST['action'] == 2) { ?>
                                     <div class="padding_top_bottom mt-3">
                                         <button class="btn btn-primary" type="submit" name="btnUpdate" id="btnImport">Update</button>
-                                    <?php } else { 
-                                        $btn_name = "btnImport";
-                                        if($_REQUEST['action'] == 3){ $btn_name = "btnImportQuantity"; } elseif($_REQUEST['action'] == 4){ $btn_name = "btnImportSchulranzen"; }
-                                        ?>
-                                        <div class=" <?php print( ($_REQUEST['action'] == 1 || $_REQUEST['action'] == 4)? 'text_align_center' : ''); ?> mt-3">
+                                    <?php } else {
+                                    $btn_name = "btnImport";
+                                    if ($_REQUEST['action'] == 3) {
+                                        $btn_name = "btnImportQuantity";
+                                    } elseif ($_REQUEST['action'] == 4) {
+                                        $btn_name = "btnImportSchulranzen";
+                                    }
+                                    ?>
+                                        <div class=" <?php print(($_REQUEST['action'] == 1 || $_REQUEST['action'] == 4) ? 'text_align_center' : ''); ?> mt-3">
                                             <button class="btn btn-primary" type="submit" name="<?php print($btn_name); ?>" id="btnImport">Upload</button>
                                         <?php } ?>
                                         <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
@@ -370,6 +379,7 @@ include("includes/messages.php");
                     <div class="main_table_container">
                         <?php
                         $pro_id = 0;
+                        $pro_status = 0;
                         $pro_description_short = "";
                         $searchQuery = "";
 
@@ -380,12 +390,28 @@ include("includes/messages.php");
                                 $searchQuery .= " AND pro.pro_id = '" . $_REQUEST['pro_id'] . "'";
                             }
                         }
+                        if(isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0){
+                            $pro_status = $_REQUEST['pro_status'];
+                            if($pro_status == 1){
+                                $searchQuery .= " AND pro.pro_status = '1'";
+                            } else {
+                                $searchQuery .= " AND pro.pro_status = '0'";
+                            }
+                        }
                         ?>
-                        <form class="row" name="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row flex-row" name="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-4 col-12 mt-2">
                                 <label for="" class="text-white">Title</label>
                                 <input type="hidden" name="pro_id" id="pro_id" value="<?php print($pro_id); ?>">
                                 <input type="text" class="input_style pro_description_short" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
+                            </div>
+                            <div class=" col-md-2 col-12 mt-2">
+                                <label for="" class="text-white">Status</label>
+                                <select name="pro_status" id="pro_status" class="input_style" onchange="javascript: frm_search.submit();">
+                                    <option value="0" <?php print( ($pro_status == 0) ? 'selected' : '' ); ?> >N/A</option>
+                                    <option value="1" <?php print( ($pro_status == 1) ? 'selected' : '' ); ?> >Live</option>
+                                    <option value="2" <?php print( ($pro_status == 2) ? 'selected' : '' ); ?> >Offline</option>
+                                </select>
                             </div>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -418,7 +444,7 @@ include("includes/messages.php");
                                             $counter++;
                                             $strClass = 'label  label-danger';
                                             $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
-                                            
+
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pro_id); ?>"></td>
