@@ -106,6 +106,7 @@
     .login_page.register_page .login_inner{max-width: 100%;}
     .login_page .login_box{width: auto;}
     .pd_tag{font-size: 14px;}
+    .not_ailable{width: 300px;}
 }
 @media screen and (max-width: 800px) and (min-width: 240px){}
 

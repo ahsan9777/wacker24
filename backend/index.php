@@ -263,7 +263,7 @@
                         </a>
                     </div>
                     <div class="col-md-5 col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="javascript:void(0)">
+                        <a class="text-decoration-none" href="manage_contact_request.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-danger btn-style-light">
                                     <i class="material-icons icon fs-3">mail</i>
@@ -271,8 +271,16 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Kontakt Formular</label>
-                                        <h2>0</h2>
+                                        <h2><?php print(TotalRecords("cu_id", "contact_us_request", "WHERE 1 = 1")); ?></h2>
                                     </div>
+                                    <?php $contact_us_request_pending_count = TotalRecords("cu_id", "contact_us_request", "WHERE cu_is_viewed = '0' ");
+                                    if ($contact_us_request_pending_count > 0) {
+                                    ?>
+                                        <a href="manage_contact_request.php" class="cart_text_right text-decoration-none">
+                                            <p> <?php print($contact_us_request_pending_count); ?> ausstehend</p>
+                                        </a>
+                                    <?php } ?>
+                                </div>
                                 </div>
                             </div>
                         </a>

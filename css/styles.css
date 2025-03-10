@@ -963,3 +963,9 @@ body.body-white{background-color: #fff !important;}
   border-radius: 4px;
   transition: width 0.3s ease-in-out;
 }
+
+.not_ailable{
+  width: 500px;
+  margin: auto;
+  padding: 100px 0px;
+}

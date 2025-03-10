@@ -2,7 +2,7 @@
 
 include("includes/php_includes_top.php");
 
-$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -42,6 +42,8 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_title_two = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_two);
 	$cat_id_three = $row->cat_id_three;
 	$cat_title_three = $row->cat_title_three;
+} else{
+	header("Location: not_available.php");
 }
 
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
@@ -205,6 +207,7 @@ include("includes/message.php");
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
 									$Query = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = 'Farbe'";
+									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$count = mysqli_num_rows($rs);
 									if ($count > 1) {
