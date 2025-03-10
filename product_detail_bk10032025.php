@@ -25,7 +25,6 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_count_unit = $row->pro_count_unit;
 	$pro_no_cu_per_ou = $row->pro_no_cu_per_ou;
 	$pro_udx_seo_epag_id = $row->pro_udx_seo_epag_id;
-	$pro_udx_seo_selection_feature = $row->pro_udx_seo_selection_feature;
 	$pro_price_quantity = $row->pro_price_quantity;
 	$pro_quantity_min = $row->pro_quantity_min;
 	$pro_quantity_interval = $row->pro_quantity_interval;
@@ -207,7 +206,7 @@ include("includes/message.php");
 									<?php }
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
-									$Query = "SELECT * FROM products_feature AS pf WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$pro_udx_seo_selection_feature."'";
+									$Query = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = 'Farbe'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$count = mysqli_num_rows($rs);
@@ -215,14 +214,14 @@ include("includes/message.php");
 										if (mysqli_num_rows($rs) > 0) {
 									?>
 											<div class="pd_detail_shirt">
-												<h2>Farbvariante: <span id="color_title"><?php print($pro_udx_seo_selection_feature); ?></span> </h2>
+												<h2>Farbvariante: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = 'Farbe'")); ?></span> </h2>
 												<ul>
 													<?php while ($row = mysqli_fetch_object($rs)) { ?>
 														<li>
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
 																<span>
-																	<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" ><?php print($row->pf_fvalue); ?></label>
+																	<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
 																</span>
 															</label>
 														</li>
@@ -696,6 +695,18 @@ include("includes/message.php");
 		var $clicked = $(e.target);
 		if (!$clicked.parents().hasClass("drop-down_2"))
 			$(".drop-down_2 .options ul").hide();
+	});
+
+	$(".color_tab").on("mouseover", function() {
+		let color_title = $(this).attr('title');
+		//console.log("color_tab: "+color_title);
+		$("#color_title").text(color_title);
+	});
+	$(".color_tab").on("mouseout", function() {
+		let color_radio = $('input[name="color_radio"]:checked').val();;
+		let color_title = $("#color_tab_" + color_radio).attr('title');
+		//console.log("mouseout: "+color_title);
+		$("#color_title").text(color_title);
 	});
 	$(".color_tab").on("click", function() {
 		let supplier_id = $(this).attr("data-id");

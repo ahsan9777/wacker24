@@ -228,21 +228,21 @@ if (isset($_REQUEST['sortby'])) {
 														<?php
 														$count = 0;
 														if($row->pro_udx_seo_epag_id > 0){
-														$Query1 = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = 'Farbe'";
+														$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$row->pro_udx_seo_selection_feature."'";
 														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 														$count = mysqli_num_rows($rs1);
 														if ($count > 1) {
 															if (mysqli_num_rows($rs1) > 0) {
 														?>
 																<div class="pd_detail_shirt detail_data_show">
-																	<h2>Farbvariante: <span id="color_title_<?php print($counter); ?>"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = 'Farbe'")); ?></span> </h2>
+																	<h2>Farbvariante: <span id="color_title_<?php print($counter); ?>"><?php print($row->pro_udx_seo_selection_feature); ?></span> </h2>
 																	<ul>
 																		<?php while ($row1 = mysqli_fetch_object($rs1)) { ?>
 																			<li>
 																				<input type="radio" class="color" id="color_<?php print($counter); ?>" name="color_radio_<?php print($counter) ?>" data-id="<?php print($counter); ?>" value="<?php print($row1->supplier_id); ?>" <?php print(($row1->supplier_id == $row->supplier_id) ? 'checked' : ''); ?>>
 																				<label for="color_<?php print($counter); ?>">
 																					<span>
-																						<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
+																						<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" ><?php print($row1->pf_fvalue); ?></label>
 																					</span>
 																				</label>
 																			</li>
@@ -343,20 +343,6 @@ if (isset($_REQUEST['sortby'])) {
 </body>
 <script>
 
-$(".color_tab").on("mouseover", function() {
-		let color_title = $(this).attr('title');
-		let data_id = $(this).attr('data-id');
-		//let supplier_id = $(this).attr('data-supplier-id');
-		//console.log("color_tab: "+data_id+" supplier_id: "+supplier_id);
-		$("#color_title_"+data_id).text(color_title);
-	});
-	$(".color_tab").on("mouseout", function() {
-		let data_id = $(this).attr('data-id');
-		let color_radio = $('input[name="color_radio_'+data_id+'"]:checked').val();
-		let color_title = $("#color_tab_"+color_radio).attr('title');
-		//console.log("mouseout: "+color_radio);
-		$("#color_title_"+data_id).text(color_title);
-	});
 	$(".color_tab").on("click", function() {
 		let supplier_id = $(this).attr("data-supplier-id");
 		//console.log("color_tab: "+supplier_id);
