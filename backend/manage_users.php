@@ -338,7 +338,7 @@ include("includes/messages.php");
                                             <th class="text-end" width="190">Payment Methods</th>
                                         <?php } ?>
                                         <th width="50">Status</th>
-                                        <th width="120">Action</th>
+                                        <th width="140">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -404,16 +404,21 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Change Password" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=3&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">key</span></button>
-                                                    <?php if ($utype_id > 0) { ?>
+                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto mt-2" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto mt-2" title="Change Password" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=3&" . $qryStrURL . "user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">key</span></button>
+                                                    <?php 
+                                                    $user_wishlist_count = TotalRecords("wl_id", "wishlist", "WHERE user_id = '" . $row->user_id . "' ");
+                                                    if ($user_wishlist_count > 0) {
+                                                    ?>
+                                                    <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto mt-2" title="Wish List" onClick="javascript: window.location = '<?php print("manage_users_wishlish.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">list</span></button>
+                                                    <?php } if ($utype_id > 0) { ?>
                                                         <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto mt-2" title="Special Price" onClick="javascript: window.location = '<?php print("manage_special_price.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">sell</span></button>
                                                     <?php } ?>
                                                     <?php
                                                     $user_order_count = TotalRecords("ord_id", "orders", "WHERE user_id = '" . $row->user_id . "' ");
                                                     if ($user_order_count > 0) {
                                                     ?>
-                                                        <button type="button" class="btn btn-xs btn-info btn-style-light w-auto mt-2" title="User Order" onClick="javascript: window.location = '<?php print("manage_user_orders.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">shopping_cart</span></button>
+                                                        <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto mt-2" title="User Order" onClick="javascript: window.location = '<?php print("manage_user_orders.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">shopping_cart</span></button>
                                                     <?php } ?>
                                                     <!--<button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="Add Product List" onClick="javascript: window.location = '<?php print("manage_add_product_list.php?user_id=" . $row->user_id); ?>';"><span class="material-icons icon material-xs">add</span></button>-->
                                                 </td>

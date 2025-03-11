@@ -26,7 +26,7 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 		$search_keyword_array_data = "";
 		if (!empty($search_keyword_array[$i])) {
 			$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
-			$search_keyword_case .= "(CASE WHEN (pro.supplier_id = '".$_REQUEST['search_keyword']."' OR pro.pro_manufacture_aid = '".$_REQUEST['search_keyword']."' OR pro.pro_ean = '".$_REQUEST['search_keyword']."') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
+			$search_keyword_case .= "(CASE WHEN (pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_manufacture_aid = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_ean = '".dbStr(trim($_REQUEST['search_keyword']))."') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
 			$search_keyword_where .= $search_keyword_array_data;
 		}
 	}
@@ -162,7 +162,7 @@ if (isset($_REQUEST['sortby'])) {
 						<div class="pd_right">
 
 							<?php
-							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE ( (pro.supplier_id = '".$_REQUEST['search_keyword']."' OR pro.pro_manufacture_aid = '".$_REQUEST['search_keyword']."' OR pro.pro_ean = '".$_REQUEST['search_keyword']."') OR " . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " ".$order_by."";
+							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE ( (pro.supplier_id = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_manufacture_aid = '".dbStr(trim($_REQUEST['search_keyword']))."' OR pro.pro_ean = '".dbStr(trim($_REQUEST['search_keyword']))."') OR " . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " ".$order_by."";
 							//print($Query_search);
 							$counter = 0;
 							$limit = 28;
