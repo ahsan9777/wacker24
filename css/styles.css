@@ -912,7 +912,7 @@ body.body-white{background-color: #fff !important;}
 .pd_detail_shirt input[type="radio"] {display:none;}
 .pd_detail_shirt input[type="radio"] + label {color:blue;font-family:Arial, sans-serif;}
 /*.pd_detail_shirt input[type="radio"] + label span { display:inline-block;padding: 5px;display: flex; align-items: center; justify-content: center; width: 60px; height: 60px;  background-color: #fff; border: 1px solid #DFDFDF; margin:0px 0px 0 0;  background-color: #fff; border: 1px solid #DFDFDF;  top: 0px; left: 0px; color: #333333; z-index:99; cursor:pointer;}*/
-.pd_detail_shirt input[type="radio"] + label span { display:inline-block;padding: 5px;display: flex; align-items: center; justify-content: center; min-width: 50px; height: 30px;  background-color: #fff; border: 1px solid #DFDFDF; margin:0px 0px 0 0;  background-color: #fff; border: 1px solid #DFDFDF;  top: 0px; left: 0px; color: #333333; z-index:99; cursor:pointer;}
+.pd_detail_shirt input[type="radio"] + label span { display:inline-block;padding: 5px;display: flex; align-items: center; justify-content: center; min-width: 50px; max-width: 60px;  background-color: #fff; border: 1px solid #DFDFDF; margin:0px 0px 0 0;  background-color: #fff; border: 1px solid #DFDFDF;  top: 0px; left: 0px; color: #333333; z-index:99; cursor:pointer;}
 .pd_detail_shirt input[type="radio"] + label span label {cursor:pointer;}
 .pd_detail_shirt input[type="radio"] + label span:hover{border: 1px solid #620613;}
 .pd_detail_shirt input[type="radio"]:checked + label span {  padding: 0px 5px; top: 0px; left: 0px;  border: 1px solid #620613;z-index:99;}

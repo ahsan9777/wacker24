@@ -228,7 +228,7 @@ if (isset($_REQUEST['sortby'])) {
 														<?php
 														$count = 0;
 														if($row->pro_udx_seo_epag_id > 0){
-														$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$row->pro_udx_seo_selection_feature."'";
+														$Query1 = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$row->pro_udx_seo_selection_feature."'";
 														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 														$count = mysqli_num_rows($rs1);
 														if ($count > 1) {
@@ -241,8 +241,12 @@ if (isset($_REQUEST['sortby'])) {
 																			<li>
 																				<input type="radio" class="color" id="color_<?php print($counter); ?>" name="color_radio_<?php print($counter) ?>" data-id="<?php print($counter); ?>" value="<?php print($row1->supplier_id); ?>" <?php print(($row1->supplier_id == $row->supplier_id) ? 'checked' : ''); ?>>
 																				<label for="color_<?php print($counter); ?>">
-																					<span>
-																						<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" ><?php print($row1->pf_fvalue); ?></label>
+																					<span style="<?php print( (($row->pro_udx_seo_selection_feature == 'Farbe') ? 'height: 60px;' : 'height: 30px;') ); ?>">
+																					<?php if($row->pro_udx_seo_selection_feature == 'Farbe'){?>
+																						<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($row1->supplier_id); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
+																					<?php } else { ?>
+																						<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" title="<?php print($row1->pf_fvalue); ?>" ><?php print($row1->pf_fvalue); ?></label>
+																					<?php } ?>
 																					</span>
 																				</label>
 																			</li>

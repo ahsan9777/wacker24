@@ -207,7 +207,7 @@ include("includes/message.php");
 									<?php }
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
-									$Query = "SELECT * FROM products_feature AS pf WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$pro_udx_seo_selection_feature."'";
+									$Query = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$pro_udx_seo_selection_feature."'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$count = mysqli_num_rows($rs);
@@ -221,8 +221,12 @@ include("includes/message.php");
 														<li>
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
-																<span>
-																	<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" ><?php print($row->pf_fvalue); ?></label>
+																<span style="<?php print( (($pro_udx_seo_selection_feature == 'Farbe') ? 'height: 60px;' : 'height: 30px;') ); ?>">
+																	<?php if($pro_udx_seo_selection_feature == 'Farbe'){?>
+																		<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
+																	<?php } else { ?>
+																		<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" title="<?php print($row->pf_fvalue); ?>" ><?php print($row->pf_fvalue); ?></label>
+																	<?php } ?>
 																</span>
 															</label>
 														</li>
