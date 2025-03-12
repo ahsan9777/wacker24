@@ -11,8 +11,8 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$usa_id = $_REQUEST['usa_id'];
 	$pm_id = $_REQUEST['pm_id'];
 	if ($pm_id == 1) {
-		//$usa_id = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
-		if (empty($usa_id)) {
+		$usa_id_billing = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
+		if (empty($usa_id_billing)) {
 			header("Location: my_address.php");
 			die();
 		}
@@ -96,7 +96,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 					$parameters .=  $value->name . "=" . $value->value . "&";
 				}
 				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters);
+				header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters."&op=2");
 			}
 		} elseif (in_array($pm_id, array(4, 5))) {
 			$data['cardnumber'] = $_REQUEST['cardnumber'];
@@ -417,6 +417,7 @@ include("includes/message.php");
 														<li><?php print($row->usa_zipcode); ?></li>
 														<li><?php print($row->countries_name); ?></li>
 														<li><?php print($row->usa_address); ?></li>
+														<li><a href="my_address.php" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
 													</ul>
 												</div>
 											</div>
@@ -427,7 +428,8 @@ include("includes/message.php");
 										$checkout_click_href = "my_address.php";
 									}
 
-									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id WHERE usa.usa_type = '1' AND usa.user_id = '" . $_SESSION["UID"] . "'";
+									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE u.user_invoice_payment = '1' AND usa.usa_type = '1' AND usa.user_id = '" . $_SESSION["UID"] . "'";
+									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										$row = mysqli_fetch_object($rs);
@@ -446,6 +448,7 @@ include("includes/message.php");
 													<li><?php print($row->usa_zipcode); ?></li>
 													<li><?php print($row->countries_name); ?></li>
 													<li><?php print($row->usa_address); ?></li>
+													<li><a href="my_address.php" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>
 										</div>
@@ -533,7 +536,7 @@ include("includes/message.php");
 													<?php } elseif ($row->pm_id != 1) { ?>
 														<li>
 															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
-																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 1) ? 'checked' :  '') ?>>
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 2 && $user_invoice_payment == 0) ? 'checked' :  '') ?>>
 																<span class="checkmark">
 																	<div class="payment_card">
 																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
