@@ -11,7 +11,8 @@ class Mailer {
         $username = "";
         $password = "";
             $subject = "Mail Test";
-            $to = "ahsannawaz9777@gmail.com";
+            $to1 = "ahsannawaz9777@gmail.com";
+            //$to2 = "hussaini@wacker-systems.de";
             //$to = "sayedkamalhussaini6@gmail.com";
             //$to = "ahsannawaz9777@gmx.com";
             //$to = " w-test@mail.de";
@@ -22,7 +23,8 @@ class Mailer {
 				<br><br>This is an automatic generated message. Do not reply to this message.";
 
 
-                $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
+                //$this->sendEmail($username, $password, $to2, $subject, $message, 1, 0);
+                $this->sendEmail($username, $password, $to1, $subject, $message, 1, 0);
             //print($ret);
     }
     

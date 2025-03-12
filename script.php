@@ -169,7 +169,7 @@ if (isset($_REQUEST['action'])) {
                     $ord_id = $row->ord_id;
                     $billing_address_id = $row->billing_address_id;
                     $ord_shipping_charges = 0;
-                    if ($row->ord_gross_total <= config_condition_courier_amount) {
+                    if ($row->ord_amount <= config_condition_courier_amount) {
                         $ord_shipping_charges = config_courier_fix_charges;
                     }
                     $Query1 = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.id = '".$billing_address_id."'";

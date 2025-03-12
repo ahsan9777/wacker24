@@ -33,7 +33,7 @@ if (isset($_POST['btnLogin'])) {
                     }
                     $_SESSION["UserID"] = $row->user_id;
                     $_SESSION["UserName"] = $row->user_name;
-                    $_SESSION["UType"] = $row->utype_id;
+                    $_SESSION["UserType"] = $row->utype_id;
                     header("location:index.php");
                 } else {
                     $strMSG = '<div class="alert alert-danger" style="width:100%; ">Invalid Login / Password <a class="close" data-dismiss="alert">×</a></div>';

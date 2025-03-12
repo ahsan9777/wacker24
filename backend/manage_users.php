@@ -308,9 +308,9 @@ include("includes/messages.php");
                         <?php if ($utype_id > 0) { ?>
                             <form class="row flex-row" name="frm_search" id="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                                 <div class=" col-md-3 col-12 mt-2">
-                                    <label for="" class="text-white">Title</label>
+                                    <label for="" class="text-white">Name</label>
                                     <input type="hidden" name="user_id" id="user_id" value="<?php print($user_id); ?>">
-                                    <input type="text" class="input_style user_full_name" name="user_full_name" id="user_full_name" value="<?php print($user_full_name); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
+                                    <input type="text" class="input_style user_full_name" name="user_full_name" id="user_full_name" value="<?php print($user_full_name); ?>" placeholder="Name:" autocomplete="off" onchange="javascript: frm_search.submit();">
                                 </div>
                                 <div class=" col-md-2 col-12 mt-2">
                                     <label for="" class="text-white">Type</label>
