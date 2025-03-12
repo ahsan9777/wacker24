@@ -31,6 +31,11 @@ include("includes/message.php");
 
 <head>
 	<?php include("includes/html_header.php"); ?>
+	<style>
+		#calendar .ui-datepicker {
+			font-family: <?php print(config_fonts); ?>;
+		}
+	</style>
 </head>
 
 <body style="background-color: #fff !important;">
