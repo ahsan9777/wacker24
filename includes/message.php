@@ -60,6 +60,10 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-success";
 			$strMSG = "Record already exists";
 			break;
+		case 15:
+			$class = "alert alert-success";
+			$strMSG = "<strong>Bestellung aufgegeben!</strong> Herzlichen Glückwunsch Ihre Bestellung wurde erfolgreich aufgegeben";
+			break;
 	}
 }
 ?>

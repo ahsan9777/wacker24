@@ -151,6 +151,7 @@ include("includes/messages.php");
                                 <div class="col-md-3 col-12 mt-3">
                                     <label for="">Manufacture</label>
                                     <select class="input_style" name="manf_id" id="manf_id">
+                                        <option value="0">N/A</option>
                                         <?php FillSelected2("manufacture", "manf_id", "manf_name", $manf_id, "manf_status > 0"); ?>
                                     </select>
                                 </div>

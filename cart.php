@@ -77,7 +77,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		}
 		if ($pm_id == 1) {
 			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-			header('Location: my_order.php?op=2');
+			header('Location: my_order.php?op=15');
 		} elseif ($pm_id == 2) {
 			//$PaypalResponseData = "";
 			$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
@@ -96,7 +96,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 					$parameters .=  $value->name . "=" . $value->value . "&";
 				}
 				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters."&op=2");
+				header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters."&op=15");
 			}
 		} elseif (in_array($pm_id, array(4, 5))) {
 			$data['cardnumber'] = $_REQUEST['cardnumber'];
@@ -119,7 +119,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 				print("</pre>");die();*/
 			if ($cardresponsedata->result->code == "000.100.110") {
 				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata->id)) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata->descriptor)) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: my_order.php?op=2');
+				header('Location: my_order.php?op=15');
 			}
 		}
 	}
