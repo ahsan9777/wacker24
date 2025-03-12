@@ -127,10 +127,11 @@ include("includes/messages.php");
                                     <tr>
                                         <th width="100">Order ID</th>
                                         <th width="250">User Info </th>
-                                        <th width="100">Company</th>
+                                        <th width="100">Shipping</th>
                                         <th width="250">Delivery</th>
                                         <th>Amount </th>
                                         <th>Payment Type</th>
+                                        <th>Transaction ID</th>
                                         <th width="147">Date / Time</th>
                                         <th>Payment Status</th>
                                         <th width="166">Delivery Status</th>
@@ -140,7 +141,7 @@ include("includes/messages.php");
                                 <tbody>
                                     <?php
                                     $ord_note = "";
-                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_address, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "' ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1' WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "' ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                                     if (mysqli_num_rows($rs) > 0) {
@@ -151,6 +152,9 @@ include("includes/messages.php");
                                             $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
                                         } else {
                                             $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                        }
+                                        if (!empty($user_company_name)) {
+                                            $user_info .= $user_company_name . "<br>";
                                         }
                                         if (!empty($row->deliver_full_name)) {
                                             $user_info .= $row->deliver_full_name . "<br>";
@@ -175,15 +179,31 @@ include("includes/messages.php");
                                         if (!empty($row->dinfo_address)) {
                                             $delivery_info .= $row->dinfo_address . "<br>";
                                         }
+                                        $shipping_info = "";
+                                        if ($row->ord_payment_method == 1) {
+                                            if (!empty($row->shipping_street_house)) {
+                                                $shipping_info .= $row->shipping_street_house . "<br>";
+                                            }
+                                            if (!empty($row->usa_zipcode)) {
+                                                $shipping_info .= $row->usa_zipcode . "<br>";
+                                            }
+                                            if (!empty($row->shipping_countrie_id)) {
+                                                $shipping_info .= returnName("countries_name", "countries", "countrie_id", $row->shipping_countrie_id) . "<br>";
+                                            }
+                                            if (!empty($row->usa_address)) {
+                                                $shipping_info .= $row->usa_address . "<br>";
+                                            }
+                                        }
                                         $ord_note = $row->ord_note;
                                     ?>
                                         <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
                                             <td><?php print($row->ord_id); ?></td>
                                             <td><?php print($user_info); ?></td>
-                                            <td><?php print(returnName("user_company_name", "users", "user_id", $row->user_id)); ?></td>
+                                            <td><?php print($shipping_info); ?></td>
                                             <td><?php print($delivery_info); ?></td>
                                             <td><?php print(price_format($row->ord_amount + $row->ord_shipping_charges)); ?> €</td>
                                             <td><?php print($row->pm_title); ?></td>
+                                            <td><?php print($row->ord_payment_transaction_id); ?></td>
                                             <td><?php print($row->ord_datetime); ?></td>
                                             <td>
                                                 <?php
@@ -309,19 +329,19 @@ include("includes/messages.php");
                                         <?php } ?>
                                         <tr>
                                             <th colspan="7" class="text-end text-white fs-6">Nettobetrag:</th>
-                                            <td class="text-white fs-6"><?php print($ord_gross_total);?></td>
+                                            <td class="text-white fs-6"><?php print($ord_gross_total); ?></td>
                                         </tr>
                                         <tr>
                                             <th colspan="7" class="text-end text-white fs-6">Mwstbetrag:</th>
-                                            <td class="text-white fs-6" ><?php print($ord_gst);?></td>
+                                            <td class="text-white fs-6"><?php print($ord_gst); ?></td>
                                         </tr>
                                         <tr>
                                             <th colspan="7" class="text-end text-white fs-6">Versand:</th>
-                                            <td class="text-white fs-6"><?php print($ord_shipping_charges);?></td>
+                                            <td class="text-white fs-6"><?php print($ord_shipping_charges); ?></td>
                                         </tr>
                                         <tr>
                                             <th colspan="7" class="text-end text-white fs-6">Rechnungsbetrag:</th>
-                                            <td class="text-white fs-6"><?php print($ord_amount);?></td>
+                                            <td class="text-white fs-6"><?php print($ord_amount); ?></td>
                                         </tr>
                                     <?php } else {
                                         print('<tr><td colspan="100%" class="text-center">No record found!</td></tr>');
@@ -377,21 +397,21 @@ include("includes/messages.php");
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th>Order ID</th>
                                         <th>User Info </th>
-                                        <th>Company</th>
-                                        <th>Delivery</th>
+                                        <th width="100">Shipping</th>
+                                        <th width="100">Delivery</th>
                                         <th width="100">Amount </th>
                                         <th>Payment Type</th>
                                         <th>Transaction ID</th>
                                         <th width="147">Date / Time</th>
                                         <th>Payment Status</th>
-                                        <th width="166">Delivery Status</th>
+                                        <th width="170">Delivery Status</th>
                                         <th>Order Status</th>
                                         <th width="50">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id  " . $searchQuery . " ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1'  " . $searchQuery . " ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 50;
@@ -408,6 +428,10 @@ include("includes/messages.php");
                                                 $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
                                             } else {
                                                 $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                            }
+                                            $user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
+                                            if (!empty($user_company_name)) {
+                                                $user_info .= $user_company_name . "<br>";
                                             }
                                             if (!empty($row->deliver_full_name)) {
                                                 $user_info .= $row->deliver_full_name . "<br>";
@@ -431,12 +455,27 @@ include("includes/messages.php");
                                             if (!empty($row->dinfo_address)) {
                                                 $delivery_info .= $row->dinfo_address . "<br>";
                                             }
+                                            $shipping_info = "";
+                                            if ($row->ord_payment_method == 1) {
+                                                if (!empty($row->shipping_street_house)) {
+                                                    $shipping_info .= $row->shipping_street_house . "<br>";
+                                                }
+                                                if (!empty($row->usa_zipcode)) {
+                                                    $shipping_info .= $row->usa_zipcode . "<br>";
+                                                }
+                                                if (!empty($row->shipping_countrie_id)) {
+                                                    $shipping_info .= returnName("countries_name", "countries", "countrie_id", $row->shipping_countrie_id) . "<br>";
+                                                }
+                                                if (!empty($row->usa_address)) {
+                                                    $shipping_info .= $row->usa_address . "<br>";
+                                                }
+                                            }
                                     ?>
                                             <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->ord_id); ?>"></td>
                                                 <td><?php print($row->ord_id); ?></td>
                                                 <td><?php print($user_info); ?></td>
-                                                <td><?php print(returnName("user_company_name", "users", "user_id", $row->user_id)); ?></td>
+                                                <td><?php print($shipping_info); ?></td>
                                                 <td><?php print($delivery_info); ?></td>
                                                 <td><?php print(((!empty($row->ord_note)) ? '<span class="btn btn-success btn-style-light w-auto">Benachrichtigung</span><br><br>' : '') . number_format($row->ord_amount + $row->ord_shipping_charges, "2", ",", ".")); ?> €</td>
                                                 <td><?php print($row->pm_title); ?></td>

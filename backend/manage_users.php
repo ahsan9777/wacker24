@@ -399,7 +399,7 @@ include("includes/messages.php");
                                                     if ($row->status_id == 0) {
                                                         echo '<span class="btn btn-danger btn-style-light w-auto">Offline</span>';
                                                     } else {
-                                                        echo '<span class="btn btn-success btn-style-light w-auto">Live</span>';
+                                                        echo '<span class="btn btn-success btn-style-light w-auto">Varified</span>';
                                                     }
                                                     ?>
                                                 </td>
@@ -448,10 +448,10 @@ include("includes/messages.php");
                             <?php } ?>
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                    <input type="submit" name="btnActive" value="Varified" class="btn btn-success btn-style-light w-100">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                    <input type="submit" name="btnInactive" value="Offline" class="btn btn-danger btn-style-light w-100">
                                 </div>
                             </div>
                             <!--<input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">-->
