@@ -19,7 +19,7 @@ if ((isset($_REQUEST['level_two']) && $_REQUEST['level_two'] > 0) || (isset($_RE
 ?>
 
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword']) ? 'style="width: 420px;"' : ''); ?>>
-    <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="POST" action="search_result.php" role="form" enctype="multipart/form-data">
+    <form class="categroy_list sticky" name="frm_left_search" id="frm_left_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
         <h2>Kategorie <div class="categroy_close_mb">X</div>
         </h2>
         <input type="hidden" name="search_keyword" value="<?php print($search_keyword); ?>">
