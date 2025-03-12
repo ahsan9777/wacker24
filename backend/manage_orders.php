@@ -7,10 +7,10 @@ if (isset($_SERVER['HTTP_REFERER'])) {
     $ref = $_SERVER['HTTP_REFERER'];
 }
 $searchQuery = "WHERE 1 = 1";
-if(isset($user_id) && $user_id > 0){
-	$user_id = $user_id;
-    $searchQuery .= " AND ord.user_id = '".$user_id."'";
-} else{
+if (isset($user_id) && $user_id > 0) {
+    $user_id = $user_id;
+    $searchQuery .= " AND ord.user_id = '" . $user_id . "'";
+} else {
     $user_id = 0;
     $pHead = "Order Management";
 }
@@ -24,7 +24,7 @@ if (isset($_REQUEST['ord_id']) && gettype($_REQUEST['ord_id']) != "array" && $_R
 
 if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
 
-    $qryStrURL .= "user_id=".$_REQUEST['user_id']."&";
+    $qryStrURL .= "user_id=" . $_REQUEST['user_id'] . "&";
 }
 
 
@@ -110,7 +110,7 @@ include("includes/messages.php");
         <div class="main-content">
             <!-- Top bar -->
             <?php include("includes/topbar.php"); ?>
-            
+
             <!-- Content -->
             <section class="content" id="main-content">
                 <?php if ($class != "") { ?>
@@ -126,7 +126,7 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="100">Order ID</th>
-                                        <th  width = "250">User Info </th>
+                                        <th width="250">User Info </th>
                                         <th width="100">Company</th>
                                         <th width="250">Delivery</th>
                                         <th>Amount </th>
@@ -139,87 +139,88 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
+                                    $ord_note = "";
                                     $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_address, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "' ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                                     if (mysqli_num_rows($rs) > 0) {
-                                        while ($row = mysqli_fetch_object($rs)) {
-                                            $strClass = 'label  label-danger';
-                                            $user_info = "";
-                                            if ($row->utype_id == 3) {
-                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
-                                            } else {
-                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
-                                            }
-                                            if (!empty($row->deliver_full_name)) {
-                                                $user_info .= $row->deliver_full_name . "<br>";
-                                            }
-                                            if (!empty($row->dinfo_phone)) {
-                                                $user_info .= $row->dinfo_phone . "<br>";
-                                            }
-                                            if (!empty($row->dinfo_email)) {
-                                                $user_info .= $row->dinfo_email . "<br>";
-                                            }
-
-                                            $delivery_info = "";
-                                            if (!empty($row->dinfo_street)) {
-                                                $delivery_info .= $row->dinfo_street." ".$row->dinfo_house_no. "<br>";
-                                            }
-                                            if (!empty($row->dinfo_usa_zipcode)) {
-                                                $delivery_info .= $row->dinfo_usa_zipcode . "<br>";
-                                            }
-                                            if (!empty($row->countries_name)) {
-                                                $delivery_info .= $row->countries_name . "<br>";
-                                            }
-                                            if (!empty($row->dinfo_address)) {
-                                                $delivery_info .= $row->dinfo_address . "<br>";
-                                            }
-                                    ?>
-                                            <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
-                                                <td><?php print($row->ord_id); ?></td>
-                                                <td><?php print($user_info); ?></td>
-                                                <td><?php print(returnName("user_company_name", "users", "user_id", $row->user_id)); ?></td>
-                                                <td><?php print($delivery_info); ?></td>
-                                                <td><?php print(number_format($row->ord_amount + $row->ord_shipping_charges, "2", ",", "")); ?> €</td>
-                                                <td><?php print($row->pm_title); ?></td>
-                                                <td><?php print(date('D F j, Y H:i', strtotime($row->ord_datetime))); ?></td>
-                                                <td>
-                                                    <?php
-                                                    if ($row->ord_payment_status == 0) {
-                                                        echo '<span class="btn btn-warning btn-style-light w-auto">Pending</span>';
-                                                    } else {
-                                                        echo '<span class="btn btn-success btn-style-light w-auto">Success</span>';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php if ($row->ord_delivery_status == 0) { ?>
-                                                        <div class="row">
-                                                            <div class="col-md-12 col-12 mt-3">
-                                                                <input type="hidden" name="ord_id" value="<?php print($row->ord_id); ?>">
-                                                                <select name="d_status_id" class="input_style" id="d_status_id" onchange="javascript: frm_table_order.submit();">
-                                                                    <?php FillSelected2("deli_status", "d_status_id", "d_status_name", "", "d_status_id >= 0"); ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    <?php } elseif ($row->ord_delivery_status == 1) { ?>
-                                                        <span class="btn btn-success btn-style-light w-auto"> <?php print($row->d_status_name); ?> </span>
-                                                    <?php } elseif ($row->ord_delivery_status == 2) { ?>
-                                                        <span class="btn btn-danger btn-style-light w-auto"> <?php print($row->d_status_name); ?> </span>
-                                                    <?php } ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if ($row->ord_conform_status == 0) {
-                                                        echo '<span class="btn btn-warning btn-style-light w-auto">Open</span>';
-                                                    } else {
-                                                        echo '<span class="btn btn-success btn-style-light w-auto">Close</span>';
-                                                    }
-                                                    ?>
-                                                </td>
-                                            </tr>
-                                    <?php
+                                        $row = mysqli_fetch_object($rs);
+                                        $strClass = 'label  label-danger';
+                                        $user_info = "";
+                                        if ($row->utype_id == 3) {
+                                            $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                        } else {
+                                            $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
                                         }
+                                        if (!empty($row->deliver_full_name)) {
+                                            $user_info .= $row->deliver_full_name . "<br>";
+                                        }
+                                        if (!empty($row->dinfo_phone)) {
+                                            $user_info .= $row->dinfo_phone . "<br>";
+                                        }
+                                        if (!empty($row->dinfo_email)) {
+                                            $user_info .= $row->dinfo_email . "<br>";
+                                        }
+
+                                        $delivery_info = "";
+                                        if (!empty($row->dinfo_street)) {
+                                            $delivery_info .= $row->dinfo_street . " " . $row->dinfo_house_no . "<br>";
+                                        }
+                                        if (!empty($row->dinfo_usa_zipcode)) {
+                                            $delivery_info .= $row->dinfo_usa_zipcode . "<br>";
+                                        }
+                                        if (!empty($row->countries_name)) {
+                                            $delivery_info .= $row->countries_name . "<br>";
+                                        }
+                                        if (!empty($row->dinfo_address)) {
+                                            $delivery_info .= $row->dinfo_address . "<br>";
+                                        }
+                                        $ord_note = $row->ord_note;
+                                    ?>
+                                        <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
+                                            <td><?php print($row->ord_id); ?></td>
+                                            <td><?php print($user_info); ?></td>
+                                            <td><?php print(returnName("user_company_name", "users", "user_id", $row->user_id)); ?></td>
+                                            <td><?php print($delivery_info); ?></td>
+                                            <td><?php print(price_format($row->ord_amount + $row->ord_shipping_charges)); ?> €</td>
+                                            <td><?php print($row->pm_title); ?></td>
+                                            <td><?php print($row->ord_datetime); ?></td>
+                                            <td>
+                                                <?php
+                                                if ($row->ord_payment_status == 0) {
+                                                    echo '<span class="btn btn-warning btn-style-light w-auto">Pending</span>';
+                                                } else {
+                                                    echo '<span class="btn btn-success btn-style-light w-auto">Success</span>';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php if ($row->ord_delivery_status == 0) { ?>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-12 mt-3">
+                                                            <input type="hidden" name="ord_id" value="<?php print($row->ord_id); ?>">
+                                                            <select name="d_status_id" class="input_style" id="d_status_id" onchange="javascript: frm_table_order.submit();">
+                                                                <?php FillSelected2("deli_status", "d_status_id", "d_status_name", "", "d_status_id >= 0"); ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                <?php } elseif ($row->ord_delivery_status == 1) { ?>
+                                                    <span class="btn btn-success btn-style-light w-auto"> <?php print($row->d_status_name); ?> </span>
+                                                <?php } elseif ($row->ord_delivery_status == 2) { ?>
+                                                    <span class="btn btn-danger btn-style-light w-auto"> <?php print($row->d_status_name); ?> </span>
+                                                <?php } ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if ($row->ord_conform_status == 0) {
+                                                    echo '<span class="btn btn-warning btn-style-light w-auto">Open</span>';
+                                                } else {
+                                                    echo '<span class="btn btn-success btn-style-light w-auto">Close</span>';
+                                                }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php
                                     } else {
                                         print('<tr><td colspan="100%" class="text-center" >No record found!</td></tr>');
                                     }
@@ -229,11 +230,18 @@ include("includes/messages.php");
                         </form>
 
                     </div>
-
+                    <?php if (!empty($ord_note)) { ?>
+                        <div class="table-controls mt-3">
+                            <h1 class="text-white">Bestellhinweis</h1>
+                        </div>
+                        <div class="main_table_container">
+                            <?php print($ord_note); ?>
+                        </div>
+                    <?php } ?>
                     <div class="table-controls mt-3">
                         <h1 class="text-white">Order Detail</h1>
                         <!--<a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>-->
-                        <a target="_blank" href="order_invoice.php?ord_id=<?php print($_REQUEST['ord_id']); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>
+                        <a target="_blank" href="manage_order_invoice.php?ord_id=<?php print($_REQUEST['ord_id']); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>
 
                     </div>
                     <div class="main_table_container">
@@ -254,12 +262,22 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT oi.*, pro.pro_description_short, pg.pg_mime_source_url FROM order_items AS oi LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE oi.ord_id =  '" . $_REQUEST['ord_id'] . "' ORDER BY oi.oi_id ASC";
+                                    $ord_gross_total = 0;
+                                    $ord_gst = 0;
+                                    $ord_discount = 0;
+                                    $ord_shipping_charges = 0;
+                                    $ord_amount = 0;
+                                    $Query = "SELECT oi.*, pro.pro_description_short, pg.pg_mime_source_url, ord.ord_gross_total, ord.ord_gst, ord.ord_discount, ord.ord_amount, ord.ord_shipping_charges FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE oi.ord_id =  '" . $_REQUEST['ord_id'] . "' ORDER BY oi.oi_id ASC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                                     if (mysqli_num_rows($rs) > 0) {
                                         while ($row = mysqli_fetch_object($rs)) {
                                             $strClass = 'label  label-danger';
+                                            $ord_gross_total = price_format($row->ord_gross_total);
+                                            $ord_gst = price_format($row->ord_gst);
+                                            $ord_discount = price_format($row->ord_discount);
+                                            $ord_shipping_charges = price_format($row->ord_shipping_charges);
+                                            $ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
                                     ?>
                                             <tr>
                                                 <td>
@@ -273,10 +291,10 @@ include("includes/messages.php");
                                                 <td><?php print($row->pro_description_short); ?></td>
                                                 <td>
                                                     <?php
-                                                    if($row->oi_discount_value > 0){
-                                                        print("<del class = 'text-danger fs-6'>".number_format($row->pbp_price_amount * (1 + config_gst), "2", ",", "")."€</del><br> <span class = 'text-success'>".str_replace(".", ",", $row->oi_amount)."€ ".$row->oi_discount_value.( ($row->oi_discount_type > 0)? '€' : '%' )."</span>" );
-                                                    } else{
-                                                        print(str_replace(".", ",", $row->oi_amount)."€");
+                                                    if ($row->oi_discount_value > 0) {
+                                                        print("<del class = 'text-danger fs-6'>" . price_format($row->pbp_price_amount * (1 + config_gst)) . "€</del><br> <span class = 'text-success'>" . str_replace(".", ",", $row->oi_amount) . "€ " . $row->oi_discount_value . (($row->oi_discount_type > 0) ? '€' : '%') . "</span>");
+                                                    } else {
+                                                        print(str_replace(".", ",", $row->oi_amount) . "€");
                                                     }
                                                     ?>
                                                 </td>
@@ -288,9 +306,24 @@ include("includes/messages.php");
                                                     <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
                                                 </td>-->
                                             </tr>
-                                    <?php
-                                        }
-                                    } else {
+                                        <?php } ?>
+                                        <tr>
+                                            <th colspan="7" class="text-end text-white fs-6">Nettobetrag:</th>
+                                            <td class="text-white fs-6"><?php print($ord_gross_total);?></td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="7" class="text-end text-white fs-6">Mwstbetrag:</th>
+                                            <td class="text-white fs-6" ><?php print($ord_gst);?></td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="7" class="text-end text-white fs-6">Versand:</th>
+                                            <td class="text-white fs-6"><?php print($ord_shipping_charges);?></td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="7" class="text-end text-white fs-6">Rechnungsbetrag:</th>
+                                            <td class="text-white fs-6"><?php print($ord_amount);?></td>
+                                        </tr>
+                                    <?php } else {
                                         print('<tr><td colspan="100%" class="text-center">No record found!</td></tr>');
                                     }
                                     ?>
@@ -312,9 +345,9 @@ include("includes/messages.php");
                         $order_user_id = "";
                         $order_user_title = "";
                         if (isset($_REQUEST['ord_id']) && in_array(gettype($_REQUEST['ord_id']), array("integer", "double", "string")) && $_REQUEST['ord_id'] > 0) {
-                            
-                                $ord_id = $_REQUEST['ord_id'];
-                                $searchQuery .= " AND ord.ord_id = '" . $_REQUEST['ord_id'] . "'";
+
+                            $ord_id = $_REQUEST['ord_id'];
+                            $searchQuery .= " AND ord.ord_id = '" . $_REQUEST['ord_id'] . "'";
                         }
                         if (isset($_REQUEST['order_user_id']) && $_REQUEST['order_user_id'] > 0) {
                             if (!empty($_REQUEST['order_user_title'])) {
@@ -329,12 +362,12 @@ include("includes/messages.php");
                                 <label for="" class="text-white">Order ID</label>
                                 <input type="number" class="input_style ord_id" name="ord_id" value="<?php print($ord_id); ?>" placeholder="Order ID:" autocomplete="off" onchange="javascript: frmCat.submit();">
                             </div>
-                            <?php if(!isset($_REQUEST['user_id'])){?>
-                            <div class=" col-md-3 col-12 mt-2">
-                                <label for="" class="text-white">Title</label>
-                                <input type="hidden" name="order_user_id" id="order_user_id" value="<?php print($order_user_id); ?>">
-                                <input type="text" class="input_style order_user_title" name="order_user_title" value="<?php print($order_user_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
-                            </div>
+                            <?php if (!isset($_REQUEST['user_id'])) { ?>
+                                <div class=" col-md-3 col-12 mt-2">
+                                    <label for="" class="text-white">Title</label>
+                                    <input type="hidden" name="order_user_id" id="order_user_id" value="<?php print($order_user_id); ?>">
+                                    <input type="text" class="input_style order_user_title" name="order_user_title" value="<?php print($order_user_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frmCat.submit();">
+                                </div>
                             <?php } ?>
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -342,10 +375,10 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
-                                        <th >Order ID</th>
-                                        <th >User Info </th>
-                                        <th >Company</th>
-                                        <th >Delivery</th>
+                                        <th>Order ID</th>
+                                        <th>User Info </th>
+                                        <th>Company</th>
+                                        <th>Delivery</th>
                                         <th width="100">Amount </th>
                                         <th>Payment Type</th>
                                         <th>Transaction ID</th>
@@ -358,7 +391,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id  ".$searchQuery." ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id  " . $searchQuery . " ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 50;
@@ -372,9 +405,9 @@ include("includes/messages.php");
                                             $strClass = 'label  label-danger';
                                             $user_info = "";
                                             if ($row->utype_id == 3) {
-                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' .rtrim($row->utype_name, "Customer"). '</span><br>';
+                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
                                             } else {
-                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' .rtrim($row->utype_name, "Customer"). '</span><br>';
+                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
                                             }
                                             if (!empty($row->deliver_full_name)) {
                                                 $user_info .= $row->deliver_full_name . "<br>";
@@ -387,7 +420,7 @@ include("includes/messages.php");
                                             }
                                             $delivery_info = "";
                                             if (!empty($row->dinfo_street)) {
-                                                $delivery_info .= $row->dinfo_street." ".$row->dinfo_house_no. "<br>";
+                                                $delivery_info .= $row->dinfo_street . " " . $row->dinfo_house_no . "<br>";
                                             }
                                             if (!empty($row->dinfo_usa_zipcode)) {
                                                 $delivery_info .= $row->dinfo_usa_zipcode . "<br>";
@@ -405,7 +438,7 @@ include("includes/messages.php");
                                                 <td><?php print($user_info); ?></td>
                                                 <td><?php print(returnName("user_company_name", "users", "user_id", $row->user_id)); ?></td>
                                                 <td><?php print($delivery_info); ?></td>
-                                                <td><?php print(number_format($row->ord_amount + $row->ord_shipping_charges, "2", ",", "")); ?> €</td>
+                                                <td><?php print(((!empty($row->ord_note)) ? '<span class="btn btn-success btn-style-light w-auto">Benachrichtigung</span><br><br>' : '') . number_format($row->ord_amount + $row->ord_shipping_charges, "2", ",", ".")); ?> €</td>
                                                 <td><?php print($row->pm_title); ?></td>
                                                 <td><?php print($row->ord_payment_transaction_id); ?></td>
                                                 <td><?php print($row->ord_datetime); ?></td>

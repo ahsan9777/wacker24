@@ -2658,6 +2658,10 @@ function calculateDeliveryDate($order_date, $order_day_num, $order_time, $delive
     return "Lieferung " . date('M d, Y', strtotime("next " . $delivery_days[0], strtotime($order_date)));
 }
 
+function price_format($price){
+	return number_format($price, "2", ",", ".");
+}
+
 
 
 
