@@ -6,7 +6,11 @@ if (mysqli_num_rows($rs) > 0) {
 	$row = mysqli_fetch_object($rs);
 	$ord_id = $row->ord_id;
 	$user_id = $row->user_id;
-	$ord_datetime = date('D F j, Y', strtotime($row->ord_datetime));
+	$customer_id = returnName("customer_id", "users", "user_id", $user_id);
+	if(!empty($customer_id)){
+		$user_id = $customer_id;
+	}
+	$ord_datetime = date('d/m/Y', strtotime($row->ord_datetime));
 	$ord_gross_total = price_format($row->ord_gross_total);
 	$ord_gst = price_format($row->ord_gst);
 	$ord_discount = price_format($row->ord_discount);

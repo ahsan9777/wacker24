@@ -2609,8 +2609,11 @@ function get_font_link($font, $path = "") {
 }
 
 function get_image_link($replace, $link){
-
-	return str_replace("/2000/","/".$replace."/",$link);
+	$get_image_link = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
+	if(!empty($link)){
+		$get_image_link = str_replace("/2000/","/".$replace."/",$link);
+	}
+	return $get_image_link;
 }
 
 function getShippingTiming($plz)
