@@ -96,8 +96,9 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         </div>
                     </li>
                     <li>
-                        <div class="hdr_icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
-                        <div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
+                        <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
+                        <!--<div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>-->
+                        <div class="hdr_text"><a href="<?php print(isset($_SESSION['header_quantity']) ? 'cart.php' : 'javascript:void(0)'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
                         <div class="hdr_side_cart">
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">

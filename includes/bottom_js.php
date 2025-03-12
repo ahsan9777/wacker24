@@ -86,14 +86,16 @@
 				const obj = JSON.parse(response);
 				//console.log(obj);
 				if(obj.status == 1){
-					$("#header_quantity").text(obj.count+" items");
+					$("#header_quantity").text(obj.count+" Artikel");
 					$("#show_card_body").html(obj.show_card_body);
 					$("#cart_amount").text(obj.cart_amount+" €");
+					$("#cart_click_href").attr("href", "cart.php");
 					$("#cart_href").attr("href", "cart.php");
 				} else{
-					$("#header_quantity").text(obj.count+" items");
+					$("#header_quantity").text(obj.count+" Artikel");
                     $("#show_card_body").html(obj.show_card_body);
 					$("#cart_amount").text(obj.cart_amount+" €");
+					$("#cart_click_href").attr("href", "javascript:void(0)");
 					$("#cart_href").attr("href", "javascript:void(0)");
                 }
 			}

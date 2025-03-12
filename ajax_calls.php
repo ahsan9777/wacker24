@@ -270,7 +270,7 @@ if (isset($_REQUEST['action'])) {
                     $retValue = array("status" => "0", "message" => "Record not found!", "count" => $count, "cart_amount" => str_replace(".", ",", $cart_amount), "show_card_body" => $show_card_body);
                 }
             } else {
-                $retValue = array("status" => "0", "message" => "Record not found!");
+                $retValue = array("status" => "0", "message" => "Record not found!", "count" => 0, "cart_amount" => 0, "show_card_body" => "");
             }
             $jsonResults = json_encode($retValue);
             print($jsonResults);
