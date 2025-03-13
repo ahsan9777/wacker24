@@ -49,6 +49,10 @@ include("includes/message.php");
 					$rs = mysqli_query($GLOBALS['conn'], $Query);
 					if (mysqli_num_rows($rs) > 0) {
 						while ($row = mysqli_fetch_object($rs)) {
+							$oi_gst_value = 1;
+							if($_SESSION["Utype"] == 3){
+								$oi_gst_value = 1 + $row->oi_gst_value;
+							}
 					?>
 							<div class="my_order_box">
 								<div class="order_place_bar">
@@ -61,9 +65,9 @@ include("includes/message.php");
 										<div class="place_div">
 											<?php
 											if ($row->oi_discount_value > 0) {
-												print("<del class = 'orignal_price'>" . price_format($row->pbp_price_amount * (1 + config_gst)) . "€</del><br> <span class = 'pd_prise_discount'>" . price_format($row->oi_amount) . "€ " . $row->oi_discount_value . (($row->oi_discount_type > 0) ? '€' : '%') . "</span>");
+												print("<del class = 'orignal_price'>" . price_format($row->pbp_price_amount * ($oi_gst_value)) . "€</del><br> <span class = 'pd_prise_discount'>" . price_format($row->oi_amount) . "€ " . $row->oi_discount_value . (($row->oi_discount_type > 0) ? '€' : '%') . "</span>");
 											} else {
-												print(price_format($row->oi_amount) . "€");
+												print(price_format($row->oi_amount * ($oi_gst_value)) . "€");
 											}
 											?>
 										</div>

@@ -300,8 +300,8 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         let packing = (obj.delivery_charges.packing).toFixed(2)
                         let shipping = (obj.delivery_charges.shipping).toFixed(2)
                         let total = (obj.delivery_charges.total).toFixed(2)
-                        $("#packing").text("Packaging fee (" + packing.replace(".", ",") + " €)");
-                        $("#shipping").text("Shipping costs (" + shipping.replace(".", ",") + " €)");
+                        $("#packing").text("Verpackungspauschale  (" + packing.replace(".", ",") + " €)");
+                        $("#shipping").text("Versandkosten (" + shipping.replace(".", ",") + " €)");
                         $("#total").text(total.replace(".", ",") + " €");
                     } else {
                         if (obj.utype_id == 4) {

@@ -60,7 +60,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','".$row2->ci_gst_value."', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
 			$order_items_table_check = 1;
 		}
 	}
@@ -139,6 +139,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 				$pbp_id = $get_pro_price['pbp_id'];
 				$pbp_price_amount = $get_pro_price['ci_amount'];
 				$ci_amount = $get_pro_price['ci_amount'];
+				$ci_gst_value = $get_pro_price['ci_gst_value'];
 				$ci_discount_type = $row->ci_discount_type;
 				$ci_discount_value = $row->ci_discount_value;
 				$ci_discounted_amount = 0;
@@ -149,13 +150,13 @@ if (isset($_REQUEST['btn_checkout'])) {
 					$ci_discounted_amount = $pbp_price_amount - $ci_amount;
 
 					$ci_discounted_amount_gross = $ci_discounted_amount * ($_REQUEST['ci_qty'][$i]);
-					$ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * config_gst);
+					$ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * $ci_gst_value);
 				}
 				$ci_gross_total = $ci_amount * ($_REQUEST['ci_qty'][$i]);
-				$ci_gst = $ci_gross_total * config_gst;
+				$ci_gst = $ci_gross_total * $ci_gst_value;
 				$ci_total = $ci_gross_total + $ci_gst;
 
-				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total' , ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total', ci_gst_value = '".$ci_gst_value."', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
 				$update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
 				$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
 				if ($updated_cart_item == true && $update_cart == true) {
@@ -296,9 +297,10 @@ include("includes/message.php");
 											$cart_gross_total = $row->cart_gross_total;
 											$cart_gst = $row->cart_gst;
 											$cart_amount = $row->cart_amount;
+											$ci_gst_value = $row->ci_gst_value;
 											$ci_total = $ci_total + $row->ci_total;
-											$gst = $row->ci_amount * config_gst;
-											$gst_orignal = $row->pbp_price_amount * config_gst;
+											$gst = $row->ci_amount * $ci_gst_value;
+											$gst_orignal = $row->pbp_price_amount * $ci_gst_value;
 											$delivery_charges = get_delivery_charges($cart_amount);
 											$pro_description_short = explode(' ', $row->pro_description_short);
 
@@ -343,28 +345,28 @@ include("includes/message.php");
 													</div>
 													<div class="cart_pd_col2">
 														<?php if ($row->ci_discount_value > 0) { ?>
-															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <del class="orignal_price"><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?> €</del> <br> <span class="pd_prise_discount"> <?php print(str_replace(".", ",", $row->ci_amount) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%')); ?> </span></div>
-															<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <del class="orignal_price"><?php print(number_format($row->pbp_price_amount + $gst_orignal, "2", ",", "")); ?> €</del> <br> <span class="pd_prise_discount"> <?php print(number_format($row->ci_amount + $gst, "2", ",", "") . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%')); ?> </span> </div>
+															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <del class="orignal_price"><?php print(price_format($row->pbp_price_amount)); ?> €</del> <br> <span class="pd_prise_discount"> <?php print(str_replace(".", ",", $row->ci_amount) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%')); ?> </span></div>
+															<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <del class="orignal_price"><?php print(price_format($row->pbp_price_amount + $gst_orignal)); ?> €</del> <br> <span class="pd_prise_discount"> <?php print(number_format($row->ci_amount + $gst, "2", ",", "") . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%')); ?> </span> </div>
 														<?php } else { ?>
-															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(str_replace(".", ",", $row->ci_amount)); ?> €</div>
-															<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(number_format($row->ci_amount + $gst, "2", ",", "")); ?> €</div>
+															<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(price_format($row->ci_amount)); ?> €</div>
+															<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(price_format($row->ci_amount + $gst)); ?> €</div>
 														<?php } ?>
 
-														<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(str_replace(".", ",", $row->ci_gross_total)); ?> €</div>
-														<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(str_replace(".", ",", $row->ci_total)); ?> €</div>
+														<div class="cart_price price_without_tex" <?php print($price_without_tex_display); ?>> <?php print(price_format($row->ci_gross_total)); ?> €</div>
+														<div class="cart_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print(price_format($row->ci_total)); ?> €</div>
 													</div>
 												</div>
 											</div>
 									<?php
 										}
 									}
-
 									$shipping_one = 0;
 									$shipping_two = 0;
 									$delivery_charges_packing = 0;
 									$delivery_charges_shipping = 0;
 									$delivery_charges_total = 0;
 									$delivery_charges_tex = 0;
+									
 									if ($count > 0) {
 										if ($delivery_charges['total'] > 0) {
 											$display = "";
@@ -381,7 +383,7 @@ include("includes/message.php");
 									?>
 									<div class="cart_pd_total">
 										<div class="cart_note"><input type="checkbox" class="checknote_click"> Notiz zur Bestellung hinzufügen</div>
-										<div class="total_prise_text"><span>Gesamtbetrag (<?php print($count); ?> Artikel):</span> <?php print(str_replace(".", ",", $cart_amount)); ?> €</div>
+										<div class="total_prise_text"><span>Gesamtbetrag (<?php print($count); ?> Artikel):</span> <?php print(price_format($cart_amount)); ?> €</div>
 									</div>
 								</div>
 							</div>
@@ -467,35 +469,41 @@ include("includes/message.php");
 										<li>
 											<div class="cart_prise_lb"><span>Warenwert </span></div>
 											<input type="hidden" class="get_delivery_charges" name="ci_total" id="ci_total" value="<?php print($ci_total); ?>">
-											<div class="cart_prise_vl price_without_tex" <?php print($price_without_tex_display); ?>><span> <?php print(number_format($cart_gross_total, "2", ",", "")); ?> €</span></div>
-											<div class="cart_prise_vl pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><span> <?php print(number_format($ci_total, "2", ",", "")); ?> €</span></div>
+											<div class="cart_prise_vl price_without_tex" <?php print($price_without_tex_display); ?>><span> <?php print(price_format($cart_gross_total)); ?> €</span></div>
+											<div class="cart_prise_vl pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><span> <?php print(price_format($ci_total)); ?> €</span></div>
 										</li>
 										<li>
 											<div class="cart_prise_lb">
-												<div class="packing_cost" id="packing" <?php print($display); ?>>Verpackungspauschale (<?php print(number_format($delivery_charges_packing, "2", ",", "")); ?> €)</div>
-												<div class="packing_cost" id="shipping" <?php print($display); ?>>Versandkosten (<?php print(number_format($delivery_charges_shipping, "2", ",", "")); ?> €)</div>
+												<div class="packing_cost" id="packing" <?php print($display); ?>>Verpackungspauschale (<?php print(price_format($delivery_charges_packing)); ?> €)</div>
+												<div class="packing_cost" id="shipping" <?php print($display); ?>>Versandkosten (<?php print(price_format($delivery_charges_shipping)); ?> €)</div>
 												<div>Versand & Verpackung gesamt:</div>
 											</div>
-											<div class="cart_prise_vl" id="total"> <?php print(number_format($delivery_charges_total, "2", ",", "")); ?> €</div>
+											<div class="cart_prise_vl" id="total"> <?php print(price_format($delivery_charges_total)); ?> €</div>
 										</li>
 										<li id="cart_subtotal" <?php print($display_check); ?>>
 											<div class="cart_prise_lb">
 												<div class="packing_cost">Zwischensumme</div>
 											</div>
-											<div class="cart_prise_vl"><?php print(number_format($cart_gross_total + $shipping_one, "2", ",", "")); ?> €</div>
+											<div class="cart_prise_vl"><?php print(price_format($cart_gross_total + $shipping_one)); ?> €</div>
 										</li>
-										<li id="cart_vat" <?php print($display_check); ?>>
+										<!--<li id="cart_vat" <?php print($display_check); ?>>
 											<div class="cart_prise_lb">
 												<div class="packing_cost">zzgl. MwSt. <?php print(config_gst * 100); ?>%</div>
 											</div>
-											<div class="cart_prise_vl"><?php print(number_format(($cart_gross_total + $shipping_two) * config_gst, "2", ",", "")); ?> €</div>
+											<div class="cart_prise_vl"><?php print(price_format(($cart_gross_total + $shipping_two) * config_gst, "2", ",", "")); ?> €</div>
+										</li>-->
+										<li id="cart_vat" <?php print($display_check); ?>>
+											<div class="cart_prise_lb">
+												<div class="packing_cost">zzgl. MwSt.</div>
+											</div>
+											<div class="cart_prise_vl"><?php print(price_format($cart_gst + $delivery_charges_tex +  ((isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4) ? 0 : 1.33) )); ?> €</div>
 										</li>
 										<li>
 											<div class="cart_prise_lb"><span>Gesamtbetrag:</span></div>
-											<div class="cart_prise_vl"><span><?php print(number_format($cart_amount, "2", ",", "")); ?> €</span></div>
+											<div class="cart_prise_vl"><span><?php print(price_format($cart_amount)); ?> €</span></div>
 										</li>
 										<li <?php print($display); ?>>
-											<div class="success_message">Kaufen Sie nur noch für <b><?php print(number_format($schipping_cost_waived, "2", ",", "")); ?> €</b> ein und die <b>Kosten der Verpackungspauschale und Versandkosten entfallen.</b></div>
+											<div class="success_message">Kaufen Sie nur noch für <b><?php print(price_format($schipping_cost_waived)); ?> €</b> ein und die <b>Kosten der Verpackungspauschale und Versandkosten entfallen.</b></div>
 										</li>
 										<li>
 											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Zur Kasse</a>
