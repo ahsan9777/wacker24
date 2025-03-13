@@ -164,8 +164,9 @@ if (isset($_REQUEST['action'])) {
                 $show_card_body = "";
                 $count = 0;
                 $cart_amount = 0;
-                $Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
-                //print($Query);
+                //$Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, rg.pg_mime_source_url FROM cart_items AS ci LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                //print($Query);die();
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     $_SESSION['header_quantity'] = $count = TotalRecords("ci_id", "cart_items", "WHERE cart_id=" . $_SESSION['cart_id']);

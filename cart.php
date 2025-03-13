@@ -287,7 +287,8 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
