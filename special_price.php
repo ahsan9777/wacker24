@@ -116,7 +116,6 @@ $page = 1;
 									} else {
 										print("Record not found!");
 									}
-								}
 								?>
 							</div>
 							<?php if ($counter > 0) { ?>
@@ -132,7 +131,7 @@ $page = 1;
 										</td>
 									</tr>
 								</table>
-							<?php } ?>
+							<?php }  }?>
 						</div>
 
 					</div>
