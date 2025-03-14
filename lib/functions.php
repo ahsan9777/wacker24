@@ -2503,10 +2503,10 @@ function user_special_price($parameter, $value, $user_id = 0, $price_type = 0){
 	return $special_price;
 }
 
-function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_value, $with_tax_price = 0){
+function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_value, $pbp_tax = 0, $cart_calculation = 0){
 		$usp_discounted_price = 0;
-		if($with_tax_price == 1){
-			$pbp_price_amount = number_format(($pbp_price_amount / (1 + config_gst)), "2", ".", "");
+		if($pbp_tax > 0 && $cart_calculation != 1){
+			$pbp_price_amount = number_format(($pbp_price_amount / (1 + $pbp_tax)), "2", ".", "");
 		}
 		if ($usp_price_type > 0) {
 			$usp_discounted_price = number_format(($pbp_price_amount - $usp_discounted_value), "2", ".", "");
@@ -2514,8 +2514,8 @@ function discounted_price($usp_price_type, $pbp_price_amount, $usp_discounted_va
 			$percentage_value = ($pbp_price_amount * $usp_discounted_value) / 100;
 			$usp_discounted_price = number_format(($pbp_price_amount - $percentage_value), "2", ".", "");
 		}
-		if($with_tax_price == 1){
-			$usp_discounted_price = number_format(($usp_discounted_price * (1 + config_gst)), "2", ".", "");
+		if($pbp_tax > 0 && $cart_calculation != 1){
+			$usp_discounted_price = number_format(($usp_discounted_price * (1 + $pbp_tax)), "2", ".", "");
 		}
 		
 	return $usp_discounted_price;

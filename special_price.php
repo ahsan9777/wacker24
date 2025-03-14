@@ -41,7 +41,7 @@ $page = 1;
 							<h2>Meine Sonderpreise</h2>
 							<div class="gerenric_product_inner">
 								<?php
-								$supplier_id = 0;
+								$supplier_id = array();
 								$level_two_id = 0;
 								$level_one_id = 0;
 								$whereclause = "";
@@ -51,7 +51,7 @@ $page = 1;
 								if (mysqli_num_rows($rs1) > 0) {
 									while ($row1 = mysqli_fetch_object($rs1)) {
 										if ($row1->supplier_id > 0) {
-											$supplier_id = $row1->supplier_id;
+											$supplier_id[] = $row1->supplier_id;
 											$whereclause .= " OR supplier_id = '" . $row1->supplier_id . "'";
 										} elseif ($row1->level_two_id > 0) {
 											$level_two_id = $row1->level_two_id;
@@ -78,8 +78,8 @@ $page = 1;
 											$sub_group_ids = explode(",", $row2->sub_group_ids);
 											//print_r($sub_group_ids);//die();
 											//print($level_two_id);die();
-											if ($supplier_id > 0 && ($supplier_id == $row2->supplier_id)) {
-												$special_price = user_special_price("supplier_id", $supplier_id);
+											if (!empty($supplier_id) > 0 && in_array($row2->supplier_id, $supplier_id)) {
+												$special_price = user_special_price("supplier_id", $row2->supplier_id);
 												//print_r($special_price);
 											} elseif ($level_two_id > 0 && ($level_two_id == $sub_group_ids[0])) {
 												$special_price = user_special_price("level_two", $level_two_id);

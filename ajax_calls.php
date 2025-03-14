@@ -50,7 +50,6 @@ if (isset($_REQUEST['action'])) {
             $pbp_id = $get_pro_price['pbp_id'];
             $pbp_price_amount = $get_pro_price['ci_amount'];
             $ci_amount = $get_pro_price['ci_amount'];
-            //$ci_gst_value = $get_pro_price['ci_gst_value'];
             $ci_gst_value = $get_pro_price['ci_gst_value'];
             $ci_discount_type = $_REQUEST['ci_discount_type'];
             $ci_discount_value = $_REQUEST['ci_discount_value'];
@@ -59,7 +58,7 @@ if (isset($_REQUEST['action'])) {
             //print($ci_amount);die();
             if ($ci_discount_value > 0) {
                 $ci_discounted_amount_gross = 0;
-                $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value);
+                $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value, $ci_gst_value, 1);
                 $ci_discounted_amount = $pbp_price_amount - $ci_amount;
 
                 $ci_discounted_amount_gross = $ci_discounted_amount * $ci_qty;
@@ -94,9 +93,11 @@ if (isset($_REQUEST['action'])) {
                         $ci_discount_value = $row->ci_discount_value;
                         $ci_discounted_amount = 0;
                         $ci_discount = 0;
+                        //print($ci_discount_value);die();
                         if ($ci_discount_value > 0) {
                             $ci_discounted_amount_gross = 0;
-                            $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value);
+                            
+                            $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value, $ci_gst_value, 1);
                             $ci_discounted_amount = $pbp_price_amount - $ci_amount;
 
                             $ci_discounted_amount_gross = $ci_discounted_amount * ($ci_qty + $cart_quantity);
