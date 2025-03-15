@@ -221,21 +221,21 @@ if (isset($_REQUEST['sortby'])) {
 												//}
 										?>
 												<div class="pd_card pd_card_five">
-													<div class="pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 													<div class="pd_detail">
-														<h3 class="detail_data_show"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
-														<h5><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+														<h3 class="detail_data_show"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
+														<h5><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 														<?php
 														$count = 0;
 														if ($row->pro_udx_seo_epag_id > 0) {
-															$Query1 = "SELECT pf.*, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
+															$Query1 = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
 															$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 															$count = mysqli_num_rows($rs1);
 															if ($count > 1) {
 																if (mysqli_num_rows($rs1) > 0) {
 														?>
 																	<div class="pd_detail_shirt detail_data_show">
-																		<h2><?php print($row->pro_udx_seo_selection_feature); ?>: <span id="color_title_<?php print($counter); ?>"></span> </h2>
+																		<h2><?php print($row->pro_udx_seo_selection_feature); ?>: <span id="color_title_<?php print($counter); ?>"> <?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = '" . $row->pro_udx_seo_selection_feature . "'")); ?> </span> </h2>
 																		<ul>
 																			<?php while ($row1 = mysqli_fetch_object($rs1)) { ?>
 																				<li>
@@ -243,9 +243,9 @@ if (isset($_REQUEST['sortby'])) {
 																					<label for="color_<?php print($counter); ?>">
 																						<span style="<?php print((($row->pro_udx_seo_selection_feature == 'Farbe') ? 'height: 60px;' : 'height: 30px;')); ?>">
 																							<?php if ($row->pro_udx_seo_selection_feature == 'Farbe') { ?>
-																								<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($row1->supplier_id); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
+																								<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
 																							<?php } else { ?>
-																								<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" title="<?php print($row1->pf_fvalue); ?>"><?php print($row1->pf_fvalue); ?></label>
+																								<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" title="<?php print($row1->pf_fvalue); ?>"><?php print($row1->pf_fvalue); ?></label>
 																							<?php } ?>
 																						</span>
 																					</label>
@@ -288,11 +288,11 @@ if (isset($_REQUEST['sortby'])) {
 															</ul>
 														</div>
 														<?php if (!empty($special_price)) { ?>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . $row->pbp_price_without_tax . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value']) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . $row->pbp_price_amount . "€</del> <span class='pd_prise_discount'>" . discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], 1) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format($row->pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format($row->pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 														<?php } else { ?>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_without_tax)); ?>€</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(str_replace(".", ",", $row->pbp_price_amount)); ?>€</div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format($row->pbp_price_without_tax)); ?>€</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format($row->pbp_price_amount)); ?>€</div>
 														<?php } ?>
 														<div class="pd_btn">
 															<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
@@ -362,8 +362,9 @@ if (isset($_REQUEST['sortby'])) {
 	});
 	$(".color_tab").on("click", function() {
 		let supplier_id = $(this).attr("data-supplier-id");
+		let pro_description = $(this).attr("data-pro-description");
 		//console.log("color_tab: "+supplier_id);
-		window.location.href = "<?php print($GLOBALS['siteURL'] . "product_detail.php?supplier_id="); ?>" + supplier_id;
+		window.location.href = "product/" + supplier_id + "/" + pro_description;
 	});
 	//TOGGLING NESTED ul
 	$(".drop-down_2 .selected a").click(function() {
