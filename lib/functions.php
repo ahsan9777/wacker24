@@ -2667,6 +2667,34 @@ function price_format($price){
 	return number_format($price, "2", ",", ".");
 }
 
+function checkQuantity ($supplier_id, $quantity){
+	$quantity_remaning = 0;
+	$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
+	print($Query);
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		$row = mysqli_fetch_object($rs);
+		$pq_quantity = $row->pq_quantity;
+		$pq_status = $row->pq_status;
+		if ($pq_quantity == 0 && $pq_status == 'true') {
+			quantityUpdate("pq_upcomming_quantity", $supplier_id, $quantity);
+		} elseif ($pq_quantity > 0 && $pq_status == 'false') {
+			if($quantity > $pq_quantity){
+				$quantity_remaning = $quantity - $pq_quantity;
+				quantityUpdate("pq_quantity", $supplier_id, $pq_quantity);
+				quantityUpdate("pq_upcomming_quantity", $supplier_id, $quantity_remaning);
+			} else{
+				quantityUpdate("pq_quantity", $supplier_id, $quantity);
+			}
+		} 
+	}
+}
+
+function quantityUpdate($field, $supplier_id, $quantity){
+
+	mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." - '".$quantity."' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+}
+
 
 
 

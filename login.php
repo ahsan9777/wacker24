@@ -1,6 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 
+//print(checkQuantity(170657750, 12));
 $ref = "";
 $ref_check = array();
 if (isset($_REQUEST['referer'])) {
