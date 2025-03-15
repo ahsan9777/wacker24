@@ -69,8 +69,34 @@ if (isset($_REQUEST['action'])) {
             }
             break;
 
-        case 'user_address_data':
-            print("user_address_data");die();
+        case 'user_shipping_address_data':
+            print("user_shipping_address_data");die();
+            $counter = 0;
+            $Query = "SELECT * FROM invoice_address ORDER BY id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $id = $row->id;
+                    $usa_street = $row->street;
+                    $usa_house_no = $row->house;
+                    $usa_zipcode = $row->location;
+                    $countries_id = 81;
+                    $usa_contactno = $row->phone;
+                    $old_user_id = $row->user_id;
+                    $user_id = returnName("user_id", "users", "id", $old_user_id);
+                    $usa_fname = $row->name;
+                    $usa_additional_info = $row->additional_info;
+
+                    $usa_id = getMaximum("user_shipping_address", "usa_id");
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_type, usa_street, usa_house_no, usa_zipcode, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '1', '" . $usa_street . "', '" . $usa_house_no . "', '".$usa_zipcode."', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record added: " . $counter);
+            }
+            break;
+
+        case 'user_delivery_address_data':
+            print("user_delivery_address_data");die();
             $counter = 0;
             $Query = "SELECT * FROM addressbook ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -172,7 +198,7 @@ if (isset($_REQUEST['action'])) {
                     if ($row->ord_amount <= config_condition_courier_amount) {
                         $ord_shipping_charges = config_courier_fix_charges;
                     }
-                    $Query1 = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.id = '".$billing_address_id."'";
+                    $Query1 = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.id = '".$billing_address_id."' AND usa_type = '0'";
                     $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
                     if (mysqli_num_rows($rs1) > 0) {
                         $rw = mysqli_fetch_object($rs1);
@@ -233,6 +259,37 @@ if (isset($_REQUEST['action'])) {
                         
                         $wl_id = getMaximum("wishlist", "wl_id");
                         mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, old_id, old_user_id, user_id, old_section_id, sl_id, supplier_id) VALUES ('" . $wl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $old_section_id . "', '".$sl_id."', '".$supplier_id."')") or die(mysqli_error($GLOBALS['conn']));
+                        $counter++;
+                    }
+                    print("Total no of record added: " . $counter);
+                }
+                break;
+
+            case 'user_special_price':
+                print("user_special_price");die();
+                $counter = 0;
+                $Query = "SELECT * FROM special_price ORDER BY id ASC";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $old_id = $row->id;
+                        $old_user_id = $row->user_id;
+                        $user_id = returnName("user_id", "users", "id", $old_user_id);
+                        $supplier_id = $row->supplier_aid;
+                        $level_one_id = $row->cat_id;
+                        $level_two_id = $row->sub_cat_id;
+                        if($row->fixed > 0){
+                            $usp_price_type = 1;
+                            $usp_discounted_value = $row->fixed;
+                        } else{
+                            $usp_price_type = 0;
+                            $usp_discounted_value = $row->percentage;
+                        }
+                        $usp_addedby = 2;
+                        $usp_cdate = $row->date;
+                        
+                        $usp_id = getMaximum("user_special_price", "usp_id");
+                        mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, old_id, old_user_id, user_id, supplier_id, level_one_id, level_two_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $supplier_id . "', '".$level_one_id."', '".$level_two_id."', '".$usp_price_type."', '".$usp_discounted_value."', '".$usp_addedby."', '".$usp_cdate."')") or die(mysqli_error($GLOBALS['conn']));
                         $counter++;
                     }
                     print("Total no of record added: " . $counter);

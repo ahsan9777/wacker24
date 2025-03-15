@@ -23,8 +23,7 @@ if (isset($_REQUEST['btn_login'])) {
 	if (empty($username)) {
 		$valid = false;
 		$class = "alert alert-danger";
-		$strMSG = "Dear Cuctomer, <br>
-					Please enter user Name";
+		$strMSG = "Lieber Cuctomer, <br> Bitte Benutzernamen eingeben";
 	}
 	if ($valid) {
 		//echo "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '1'";die();
@@ -56,8 +55,7 @@ if (isset($_REQUEST['btn_login'])) {
 			} else {
 
 				$class = "alert alert-danger";
-				$strMSG = "Dear Cuctomer, <br>
-						Invalid login credential try again";
+				$strMSG = "Lieber Cuctomer, <br> Ungültige Anmeldedaten, bitte versuchen Sie es erneut";
 			}
 
 			//header("location:".$GLOBALS['siteURL']."my_account.php");
