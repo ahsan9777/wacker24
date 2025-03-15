@@ -300,7 +300,7 @@ include("includes/message.php");
 												$quantity_lenght = 500;
 											}
 											print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
-										} elseif ($pq_quantity == 0 && $pq_status == 'false') {
+										} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
 											print('<div class="product_order_title red">Auf Anfrage</div>');
 										}
 									}
