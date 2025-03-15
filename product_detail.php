@@ -216,7 +216,7 @@ include("includes/message.php");
 										if (mysqli_num_rows($rs) > 0) {
 									?>
 											<div class="pd_detail_shirt">
-												<h2>Farbvariante: <span id="color_title"><?php print($pro_udx_seo_selection_feature); ?></span> </h2>
+												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"></span> </h2>
 												<ul>
 													<?php while ($row = mysqli_fetch_object($rs)) { ?>
 														<li>
@@ -353,7 +353,7 @@ include("includes/message.php");
 												<div class="location_text location_trigger"> Lieferung an Standort aktualisieren</div>
 											</a>
 											<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) { ?>
-												<div class="location_text location_trigger">Lieferung PLZ: <?php print($_SESSION['plz']); ?></div>
+												<!--<div class="location_text location_trigger">Lieferung PLZ: <?php print($_SESSION['plz']); ?></div>-->
 												<div class="location_text location_trigger"><?php print(getShippingTiming($_SESSION['plz'])); ?></div>
 											<?php } ?>
 										</div>
@@ -704,6 +704,19 @@ include("includes/message.php");
 		if (!$clicked.parents().hasClass("drop-down_2"))
 			$(".drop-down_2 .options ul").hide();
 	});
+
+	$(".color_tab").on("mouseover", function() {
+		let color_title = $(this).attr('title');
+		//console.log("color_tab: "+color_title);
+		$("#color_title").text(color_title);
+	});
+	$(".color_tab").on("mouseout", function() {
+		let color_radio = $('input[name="color_radio"]:checked').val();;
+		let color_title = $("#color_tab_" + color_radio).attr('title');
+		//console.log("mouseout: "+color_title);
+		$("#color_title").text(color_title);
+	});
+
 	$(".color_tab").on("click", function() {
 		let supplier_id = $(this).attr("data-id");
 		//console.log("color_tab: "+supplier_id);

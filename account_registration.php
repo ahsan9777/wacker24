@@ -22,7 +22,7 @@
 		<section id="content_section">
 			<div class="appointment_booking gerenric_padding">
 				<div class="page_width">
-					<h2 class="txt_align_center">Account Registration</h2>
+					<h2 class="txt_align_center">Konto-Registrierung</h2>
 
 					<div class="txt_align_center">
 						<div class="alert alert-success">Ihr Konto wurde erfolgreich registriert. <br>Zum Abschluss des Vorgangs Überprüfen Sie bitte Ihre E-Mail-Adresse <br></div>

@@ -126,7 +126,7 @@ include("includes/message.php");
 											<li <?php print(($count == 1) ? 'class="active"' : ''); ?>>
 												<a href="#tab<?php print($row1->sl_id); ?>">
 													<div class="tab_title"><?php print($row1->sl_title); ?></div>
-													<div class="tab_private"><?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde' : 'Geschäftskunde' ); ?></div>
+													<!--<div class="tab_private"><?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde' : 'Geschäftskunde' ); ?></div>-->
 												</a>
 											</li>
 									<?php
@@ -250,7 +250,7 @@ include("includes/message.php");
 														<?php
 															}
 														} else {
-															print('<div class="margin_top_30 txt_align_center wd_100">Record not found!</div>');
+															print('<div class="margin_top_30 txt_align_center wd_100">Leerer Eintrag!</div>');
 														}
 														?>
 													</div>

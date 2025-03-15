@@ -39,12 +39,14 @@ if (isset($_REQUEST['btn_login'])) {
 				$_SESSION["FullName"] = $row->user_fname . " " . $row->user_lname;
 				$_SESSION["Utype"] = $row->utype_id;
 				$_SESSION["utype_id"] = $row->utype_id;
+				$plz = explode(" ", returnName("usa_zipcode", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'"));
+				$_SESSION['plz'] = $plz[0];
 				if (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) {
 				$_SESSION["cart_check"] = true;
 				}
 
 				//echo $ref_check[0];die();
-				if ($ref == $GLOBALS['siteURL'] . "login.php" || $ref == $GLOBALS['siteURL'] . "register.php" || $ref_check[0] == $GLOBALS['siteURL'] . "account_verification.php"  || $ref_check[0] == $GLOBALS['siteURL'] . "account_registration.php" ) {
+				if ($ref == $GLOBALS['siteURL'] . "login.php" || $ref == $GLOBALS['siteURL'] . "register.php" || $ref_check[0] == $GLOBALS['siteURL'] . "account_verification.php"  || $ref_check[0] == $GLOBALS['siteURL'] . "account_registration.php" ||  $ref_check[0] == $GLOBALS['siteURL'] . "account_forgot_password.php") {
 					header("Location:" . $GLOBALS['siteURL'] . "index.php");
 				} elseif (!empty($ref)) {
 					header("Location:" . $ref);

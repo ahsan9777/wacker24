@@ -127,7 +127,7 @@ if(isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0){
 									<?php
 										}
 									} else {
-										print("Record not found!");
+										print("Leerer Eintrag!");
 									}
 									?>
 								</div>

@@ -16,6 +16,8 @@ unset($_SESSION['UName']);
 unset($_SESSION['FirstName']);
 unset($_SESSION['FullName']);
 unset($_SESSION['Utype']);
+unset($_SESSION['plz']);
+unset($_SESSION['ort']);
 header("Location: index.php");
 ob_end_flush();
 ?>

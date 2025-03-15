@@ -18,6 +18,9 @@ if (isset($_REQUEST['set_defualt'])) {
 	//print_r($_REQUEST);die();
 	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '0' WHERE user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
 	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '1' WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
+	$plz = explode(" ", returnName("usa_zipcode", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'"));
+	$_SESSION['plz'] = $plz[0];
+	getShippingTiming($plz[0]);
 	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 }
 if (isset($_REQUEST['deleted'])) {
@@ -233,7 +236,7 @@ include("includes/message.php");
 										<div class="address_col">
 											<div class="address_card">
 												<div class="address_detail">
-													<h2> Standardadresse</h2>
+													<h2> Lieferadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
 															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
@@ -265,7 +268,7 @@ include("includes/message.php");
 														<li><?php print($row->usa_additional_info); ?></li>
 													</ul>
 													<div class="btn_address">
-														<a href="<?php print($_SERVER['PHP_SELF'] . "?set_defualt&usa_id=" . $row->usa_id); ?>">Als Standard einstellen</a> |
+														<a href="<?php print($_SERVER['PHP_SELF'] . "?set_defualt&usa_id=" . $row->usa_id); ?>">Als Lieferadresse einstellen</a> |
 														<a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Entfernen</a>
 													</div>
 												</div>

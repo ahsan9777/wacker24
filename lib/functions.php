@@ -2634,13 +2634,14 @@ function getShippingTiming($plz)
 
     if ($rowShipp = $resultShipping->fetch_assoc()) {
         $delivery_days = [$rowShipp['day_of_delivery1'], $rowShipp['day_of_delivery2']];
-        $_SESSION['ort'] = $rowShipp['ort'];
+        $_SESSION['ort'] = $rowShipp['plz']." ".$rowShipp['ort'];
         $delivery_days = array_filter($delivery_days); // Remove empty values
 
         return calculateDeliveryDate($order_date, $order_day_num, $order_time, $delivery_days);
     }
-	$_SESSION['ort'] = "";
-    return "Lieferung nicht verfügbar"; // Return if no shipping info found
+	$_SESSION['ort'] = (isset($_SESSION["UID"])) ? returnName("usa_zipcode", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'") : '';
+    //return "Lieferung nicht verfügbar"; // Return if no shipping info found
+    return print("Lieferung ".date('d-m-Y', strtotime("+7 day", strtotime(date_time)))); // Return if no shipping info found
 }
 
 function calculateDeliveryDate($order_date, $order_day_num, $order_time, $delivery_days)
@@ -2654,12 +2655,12 @@ function calculateDeliveryDate($order_date, $order_day_num, $order_time, $delive
         if ($order_day_num == $delivery_day_num && $order_time <= "09:00") {
             return "Lieferung heute";
         } elseif ($order_day_num <= $delivery_day_num) {
-            return "Lieferung " . date('M d, Y', strtotime("next $delivery_day", strtotime($order_date)));
+            return "Lieferung " . date('d-m-Y', strtotime("next $delivery_day", strtotime($order_date)));
         }
     }
 
     // If order day is past the delivery days in the week, pick the next week's first delivery day
-    return "Lieferung " . date('M d, Y', strtotime("next " . $delivery_days[0], strtotime($order_date)));
+    return "Lieferung " . date('d-m-Y', strtotime("next " . $delivery_days[0], strtotime($order_date)));
 }
 
 function price_format($price){

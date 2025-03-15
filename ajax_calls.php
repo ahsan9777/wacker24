@@ -476,11 +476,13 @@ if (isset($_REQUEST['action'])) {
             //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
-                $retValue = array("status" => "1", "message" => "Record already exists!");
+                //$retValue = array("status" => "1", "message" => "Record already exists!");
+                $retValue = array("status" => "1", "message" => "Eintrag bereits vorhanden");
             } else {
                 $wl_id = getMaximum("wishlist", "wl_id");
                 mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, user_id, sl_id, supplier_id) VALUES ('" . $wl_id . "', '" . $_SESSION['UID'] . "', '" . $_REQUEST['sl_id'] . "', '" . $_REQUEST['supplier_id'] . "')") or die(mysqli_error($GLOBALS['conn']));
-                $retValue = array("status" => "1", "message" => "Add into list");
+                //$retValue = array("status" => "1", "message" => "Add into list");
+                $retValue = array("status" => "1", "message" => "Zur Liste hinzufügen");
             }
 
             $jsonResults = json_encode($retValue);

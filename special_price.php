@@ -114,7 +114,7 @@ $page = 1;
 								<?php
 										}
 									} else {
-										print("Record not found!");
+										print("Leerer Eintrag!");
 									}
 								?>
 							</div>

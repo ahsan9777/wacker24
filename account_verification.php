@@ -32,11 +32,11 @@ if (isset($_REQUEST['verification_code'])) {
 		<section id="content_section">
 			<div class="appointment_booking gerenric_padding">
 				<div class="page_width">
-					<h2 class="txt_align_center" >Account Verification</h2>
+					<h2 class="txt_align_center" >Konto-Verifizierung</h2>
 
 					<div class="txt_align_center">
 						<?php if ($account_verification > 0) { ?>
-							<h4>Your account has been verified successfully</h4>
+							<h4>Ihr Konto wurde erfolgreich verifiziert</h4>
 							<dotlottie-player src="https://lottie.host/c255556c-8b33-4000-a5e3-69a68271fbdc/5lxOCkhCdm.json" background="transparent" speed="0.5" style="width: 300px; height: 300px; margin: auto;" autoplay></dotlottie-player>
 							<script>
 								setTimeout(
@@ -45,7 +45,7 @@ if (isset($_REQUEST['verification_code'])) {
 									}, 10000);
 							</script>
 						<?php } else { ?>
-							<h4>Your account has not been verified. please contact our team</h4>
+							<h4>Ihr Konto wurde nicht verifiziert. Bitte kontaktieren Sie unser Team</h4>
 							<dotlottie-player src="https://lottie.host/c87563de-d0b0-4260-b4e0-171b1047cb1a/RrwIU1dos6.json" background="transparent" speed="0.5" style="width: 300px; height: 300px; margin: auto;" autoplay></dotlottie-player>
 						<?php } ?>
 					</div>

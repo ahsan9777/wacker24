@@ -3,6 +3,7 @@ include("includes/php_includes_top.php");
 if (isset($_REQUEST['as_id']) && $_REQUEST['as_id'] > 0) {
 	$qryStrURL = "as_id=" . $_REQUEST['as_id'] . "&";
 }
+$$as_title = "";
 $Query = "SELECT asch.as_id, asch.as_duration, asch.as_delay, asch.as_title_de AS as_title, asch.as_detail_de AS as_detail, asch.as_image FROM appointment_schedule AS asch WHERE asch.as_status = '1' AND asch.as_id = '" . $_REQUEST['as_id'] . "'";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -20,6 +21,10 @@ if (isset($_REQUEST['btn_appointmentBook'])) {
 	} else {
 		$app_id = getMaximum("appointments", "app_id");
 		mysqli_query($GLOBALS['conn'], "INSERT INTO appointments (app_id, as_id, app_time, app_date, app_gender, app_fname, app_lname, app_street, app_zipcode, app_place, app_contactno, app_email, app_remarks, app_cdate)  VALUES ('" . $app_id . "', '" . dbStr(trim($_REQUEST['as_id'])) . "', '" . dbStr(trim($_REQUEST['app_time'])) . "', '" . dbStr(trim($_REQUEST['app_date'])) . "', '" . dbStr(trim($_REQUEST['app_gender'])) . "', '" . dbStr(trim($_REQUEST['app_fname'])) . "', '" . dbStr(trim($_REQUEST['app_lname'])) . "', '" . dbStr(trim($_REQUEST['app_street'])) . "', '" . dbStr(trim($_REQUEST['app_zipcode'])) . "', '" . dbStr(trim($_REQUEST['app_place'])) . "', '" . dbStr(trim($_REQUEST['app_contactno'])) . "', '" . dbStr(trim($_REQUEST['app_email'])) . "', '" . dbStr(trim($_REQUEST['app_remarks'])) . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+		$$app_gender = "";
+		if($_REQUEST['app_gender'] == 2){ $app_gender == 'Frau'; } elseif($_REQUEST['app_gender'] == 3){ $app_gender == 'Keine'; } else{ $app_gender == 'Herr'; }
+		$mailer->appointment_email_user($app_gender, $_REQUEST['app_email'], $_REQUEST['app_lname'], $_REQUEST['app_date_show'], $_REQUEST['app_time']);
+		$mailer->appointment_email_admin($as_title, $app_gender, $_REQUEST['app_email'], $_REQUEST['app_lname'], $_REQUEST['app_date_show'], $_REQUEST['app_time']);
 		header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 	}
 }
@@ -94,7 +99,7 @@ include("includes/message.php");
 										<div class="form_input_three">
 											<div class="form_label">Anrede</div>
 											<div class="form_field">
-												<select class="gerenric_input" name="app_gender" id="app_gender">
+												<select class="gerenric_input" name="app_gender" id="app_gender" required>
 													<option value="1">Herr</option>
 													<option value="2">Frau</option>
 													<option value="3">Keine</option>
@@ -107,7 +112,7 @@ include("includes/message.php");
 										</div>
 										<div class="form_input_three">
 											<div class="form_label">Nachname *</div>
-											<div class="form_field"><input type="text" class="gerenric_input" name="app_lname" id="app_lname"></div>
+											<div class="form_field"><input type="text" class="gerenric_input" required name="app_lname" id="app_lname"></div>
 										</div>
 									</div>
 								</li>
@@ -151,7 +156,10 @@ include("includes/message.php");
 										</div>
 										<div class="form_right">
 											<div class="form_label">Datum *</div>
-											<div class="form_field"><input type="text" class="gerenric_input" readonly name="app_date" id="app_date"></div>
+											<div class="form_field">
+												<input type="text" class="gerenric_input" readonly name="app_date_show" id="app_date_show">
+												<input type="hidden" class="gerenric_input" readonly name="app_date" id="app_date">
+											</div>
 										</div>
 									</div>
 								</li>
@@ -211,9 +219,11 @@ include("includes/message.php");
 			return [true, '', '']; // All other days enabled
 		},
 		onSelect: function(dateText, inst) {
+			let selected_date_show = $.datepicker.formatDate('dd-mm-yy', new Date(dateText));
 			let selected_date = $.datepicker.formatDate('yy-mm-dd', new Date(dateText));
 			//console.log('Selected Date:', selected_date);
 			$("#appointment_form").hide();
+			$("#app_date_show").val(selected_date_show);
 			$("#app_date").val(selected_date);
 			get_appointment_schedule(selected_date);
 		},
@@ -247,10 +257,12 @@ include("includes/message.php");
 
 	$(document).ready(function() {
 		const currentDate = new Date();
+		const formattedDate_show = $.datepicker.formatDate('dd-mm-yy', currentDate);
 		const formattedDate = $.datepicker.formatDate('yy-mm-dd', currentDate);
 		//console.log('Triggering AJAX for current date:', formattedDate);
 
 		$('#calendar').datepicker('setDate', currentDate);
+		$("#app_date_show").val(formattedDate_show);
 		$("#app_date").val(formattedDate);
 		get_appointment_schedule(formattedDate);
 	});

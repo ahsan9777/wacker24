@@ -13,7 +13,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	if ($pm_id == 1) {
 		$usa_id_billing = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
 		if (empty($usa_id_billing)) {
-			header("Location: my_address.php");
+			header("Location: my_address.php?op=16");
 			die();
 		}
 	}
