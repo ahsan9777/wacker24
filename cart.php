@@ -307,10 +307,10 @@ include("includes/message.php");
 											$smiller_product_url = $GLOBALS['siteURL']."search_result.php?search_keyword=".implode(' ', array_slice($pro_description_short, 0, 2));
 									?>
 											<div class="cart_pd_row">
-												<div class="cart_pd_image"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="cart_pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
-														<div class="cart_pd_title"><a href="product_detail.php?supplier_id=<?php print($row->supplier_id); ?>"><?php print($row->pro_description_short); ?></a></div>
+														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";

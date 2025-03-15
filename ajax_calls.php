@@ -169,7 +169,7 @@ if (isset($_REQUEST['action'])) {
                 $count = 0;
                 $cart_amount = 0;
                 //$Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
-                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, rg.pg_mime_source_url FROM cart_items AS ci LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_description_short, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
                 //print($Query);die();
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
@@ -202,15 +202,15 @@ if (isset($_REQUEST['action'])) {
                         }
                         $cart_price_data = "";
                         if ($row->ci_discount_value > 0) {
-                            $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" ' . $display_one . ' > <del class="orignal_price"> ' . str_replace(".", ",", $row->pbp_price_amount) . ' €</del> <br> <span class="pd_prise_discount"> ' . str_replace(".", ",", $row->ci_amount) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? "€" : "%") . ' </span></div>';
-                            $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" ' . $display_two . ' > <del class="orignal_price"> ' . number_format($row->pbp_price_amount + $gst_orignal, "2", ",", "") . ' €</del> <br> <span class="pd_prise_discount"> ' . number_format($row->ci_amount + $gst, "2", ",", "") . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%') . ' </span> </div>';
+                            $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" ' . $display_one . ' > <del class="orignal_price"> ' . price_format($row->pbp_price_amount) . ' €</del> <br> <span class="pd_prise_discount"> ' . price_format($row->ci_amount) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? "€" : "%") . ' </span></div>';
+                            $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" ' . $display_two . ' > <del class="orignal_price"> ' . price_format($row->pbp_price_amount + $gst_orignal) . ' €</del> <br> <span class="pd_prise_discount"> ' . price_format($row->ci_amount + $gst) . "€ " . $row->ci_discount_value . (($row->ci_discount_type > 0) ? '€' : '%') . ' </span> </div>';
                         } else {
-                            $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" ' . $display_one . ' >' . number_format($row->ci_amount, "2", ",", "") . ' €</div>';
-                            $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" ' . $display_two . ' >' . number_format($row->ci_amount + $gst, "2", ",", "") . ' €</div>';
+                            $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" ' . $display_one . ' >' . price_format($row->ci_amount) . ' €</div>';
+                            $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" ' . $display_two . ' >' . price_format($row->ci_amount + $gst) . ' €</div>';
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="product_detail.php?supplier_id=' . $row->supplier_id . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
+                                    <div class="side_cart_pd_image"><a href="product/' . $row->supplier_id . '/'.url_clean($row->pro_description_short).'"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
