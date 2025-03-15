@@ -216,7 +216,7 @@ include("includes/message.php");
 										if (mysqli_num_rows($rs) > 0) {
 									?>
 											<div class="pd_detail_shirt">
-												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"></span> </h2>
+												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = '".$pro_udx_seo_selection_feature."'")); ?></span> </h2>
 												<ul>
 													<?php while ($row = mysqli_fetch_object($rs)) { ?>
 														<li>
@@ -359,7 +359,7 @@ include("includes/message.php");
 										</div>
 									</div>
 									<div class="product_create_liste">
-										<div id="alert_wishlist" class="alert alert-success" style="display: none;"><span id="alert_wishlist_txt"></span><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+										<div id="alert_wishlist" style="display: none;"><span id="alert_wishlist_txt"></span><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 										<div class="drop-down">
 											<div class="selected <?php print(isset($_SESSION["UID"]) ? 'show' : ''); ?>">
 												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Auf die Liste</span></a>
@@ -678,6 +678,9 @@ include("includes/message.php");
 				console.log(obj);
 				if (obj.status == 1) {
 					$("#alert_wishlist_txt").text(obj.message);
+					$("#alert_wishlist").removeClass("alert alert-danger");
+					$("#alert_wishlist").removeClass("alert alert-success");
+					$("#alert_wishlist").addClass(obj.class);
 					$("#alert_wishlist").show();
 				}
 			}
