@@ -120,17 +120,17 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <ul>
                 <li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> Alle</a></li>
                 <?php
-                $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND parent_id = '0'";
+                $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE cat_status = '1' AND parent_id = '0'";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
                 ?>
-                        <li><a href="product_category.php?level_one=<?php print($row->group_id); ?>"> <?php print($row->cat_title); ?> </a></li>
+                        <li><a href="unterkategorien/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
                 <?php
                     }
                 }
                 ?>
-                <li><a href="product_category.php?level_one=20">Schulranzen</a></li>
+                <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
                 <li><a href="javascript:void(0);" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
@@ -139,17 +139,17 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 </div>
                 <ul>
                     <?php
-                    $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND parent_id = '0'";
+                    $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE cat_status = '1' AND parent_id = '0'";
                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                     if (mysqli_num_rows($rs) > 0) {
                         while ($row = mysqli_fetch_object($rs)) {
                     ?>
-                            <li><a href="product_category.php?level_one=<?php print($row->group_id); ?>"> <?php print($row->cat_title); ?> </a></li>
+                            <li><a href="unterkategorien/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
                     <?php
                         }
                     }
                     ?>
-                    <li><a href="product_category.php?level_one=20">Schulranzen</a></li>
+                    <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
                 </ul>
                 <div class="nav_overlay"></div>
             </div>

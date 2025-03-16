@@ -295,5 +295,22 @@ if (isset($_REQUEST['action'])) {
                     print("Total no of record added: " . $counter);
                 }
                 break;
+
+            case 'manufacture_paramer':
+                print("manufacture_paramer");die();
+                $counter = 0;
+                $Query = "SELECT * FROM manufacture ORDER BY manf_id ASC";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $manf_id = $row->manf_id;
+                        $manf_name_params = url_clean($row->manf_name);
+                        
+                        mysqli_query($GLOBALS['conn'], "UPDATE manufacture SET manf_name_params = '".dbStr(trim($manf_name_params))."' WHERE manf_id = '".$manf_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                        $counter++;
+                    }
+                    print("Total no of record added: " . $counter);
+                }
+                break;
     }
 }

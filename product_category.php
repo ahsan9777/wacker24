@@ -3,12 +3,16 @@ include("includes/php_includes_top.php");
 $pro_type = 0;
 //$qryStrURL = "";
 $pro_typeURL = "";
-$level_one = $_REQUEST['level_one'];
-if ($_REQUEST['level_one'] == 20) {
-	$pro_type = $_REQUEST['level_one'];
+$cat_params = "";
+//$level_one = $_REQUEST['level_one'];
+$level_one =  ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 19;
+$level_one_request = ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 20;
+$cat_params = $_REQUEST['cat_params_one'];
+if ($level_one_request == 20) {
+	$pro_type = $level_one_request;
 	$level_one = 19;
-	$pro_typeURL = "pro_type=" . $_REQUEST['level_one'] . "&";
-	$qryStrURL = "pro_type=" . $_REQUEST['level_one'] . "&";
+	$pro_typeURL = "pro_type=" . $level_one_request . "&";
+	$qryStrURL = "pro_type=" . $level_one_request . "&";
 }
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 $special_price = user_special_price("level_one", $level_one);
@@ -49,12 +53,12 @@ $special_price = user_special_price("level_one", $level_one);
 								<h2>Ausgewählte Kategorien</h2>
 								<div class="product_category_inner">
 									<?php
-									$Query1 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, (SELECT GROUP_CONCAT(pg.pg_mime_source_url) FROM products_gallery AS pg WHERE  pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' AND pg.supplier_id = (SELECT cm.supplier_id FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) LIMIT 0,1)) AS pg_mime_source FROM category AS cat  WHERE cat.parent_id = '" . $level_one . "' ORDER BY cat.group_id ASC";
+									$Query1 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params,  (SELECT GROUP_CONCAT(pg.pg_mime_source_url) FROM products_gallery AS pg WHERE  pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' AND pg.supplier_id = (SELECT cm.supplier_id FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) LIMIT 0,1)) AS pg_mime_source FROM category AS cat  WHERE cat.parent_id = '" . $level_one . "' ORDER BY cat.group_id ASC";
 									//print($Query1);die();
 									$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 									if (mysqli_num_rows($rs1) > 0) {
 										while ($row1 = mysqli_fetch_object($rs1)) {
-											if ($_REQUEST['level_one'] == 20 && empty($row1->pg_mime_source)) {
+											if ($level_one_request == 20 && empty($row1->pg_mime_source)) {
 												continue;
 											}
 											$pg_mime_source_href = "files/no_img_1.jpg";
@@ -65,21 +69,21 @@ $special_price = user_special_price("level_one", $level_one);
 											}
 									?>
 											<div class="pd_card">
-												<div class="pd_image"><a href="products.php?level_two=<?php print($row1->group_id . "&" . $pro_typeURL); ?>">
+												<div class="pd_image"><a href="artikelarten/<?php print($row1->cat_params . "&" . $pro_typeURL); ?>">
 														<div class="pd_image_inner"><img loading="lazy" src="<?php print(get_image_link(160, $pg_mime_source_href)); ?>" alt=""></div>
 													</a></div>
 												<div class="pd_detail">
-													<div class="pd_title"><a href="products.php?level_two=<?php print($row1->group_id . "&" . $pro_typeURL); ?>"> <?php print($row1->cat_title); ?> </a></div>
+													<div class="pd_title"><a href="artikelarten/<?php print($row1->cat_params . "&" . $pro_typeURL); ?>"> <?php print($row1->cat_title); ?> </a></div>
 													<ul>
 														<?php
 														//$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, (SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) AS count_sub_group_ids FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' HAVING count_sub_group_ids > 0 ORDER BY  RAND() LIMIT 0,3";
 														$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) ORDER BY  RAND() LIMIT 0,3";
-														//print($Query2);die();
+														//print($Query2);//die();
 														$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
 														if (mysqli_num_rows($rs2) > 0) {
 															while ($row2 = mysqli_fetch_object($rs2)) {
 														?>
-																<li><a href="products.php?level_three=<?php print($row2->group_id . "&" . $pro_typeURL); ?>"> <?php print($row2->cat_title); ?> </a></li>
+																<li><a href="artikelarten/<?php print($row1->cat_params."/".$row2->cat_params . "&" . $pro_typeURL); ?>"> <?php print($row2->cat_title); ?> </a></li>
 														<?php
 															}
 														}
