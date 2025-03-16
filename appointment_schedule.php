@@ -1,9 +1,9 @@
 <?php
 include("includes/php_includes_top.php");
 if (isset($_REQUEST['as_id']) && $_REQUEST['as_id'] > 0) {
-	$qryStrURL = "as_id=" . $_REQUEST['as_id'] . "&";
+	$qryStrURL =$_REQUEST['as_id'];
 }
-$$as_title = "";
+$as_title = "";
 $Query = "SELECT asch.as_id, asch.as_duration, asch.as_delay, asch.as_title_de AS as_title, asch.as_detail_de AS as_detail, asch.as_image FROM appointment_schedule AS asch WHERE asch.as_status = '1' AND asch.as_id = '" . $_REQUEST['as_id'] . "'";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -17,7 +17,7 @@ if (mysqli_num_rows($rs) > 0) {
 
 if (isset($_REQUEST['btn_appointmentBook'])) {
 	if ($_REQUEST['confirm_code'] != $_REQUEST['reconfirm_code']) {
-		header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=13");
+		header("Location: terminauswählen/".$qryStrURL . "/13");
 	} else {
 		$app_id = getMaximum("appointments", "app_id");
 		mysqli_query($GLOBALS['conn'], "INSERT INTO appointments (app_id, as_id, app_time, app_date, app_gender, app_fname, app_lname, app_street, app_zipcode, app_place, app_contactno, app_email, app_remarks, app_cdate)  VALUES ('" . $app_id . "', '" . dbStr(trim($_REQUEST['as_id'])) . "', '" . dbStr(trim($_REQUEST['app_time'])) . "', '" . dbStr(trim($_REQUEST['app_date'])) . "', '" . dbStr(trim($_REQUEST['app_gender'])) . "', '" . dbStr(trim($_REQUEST['app_fname'])) . "', '" . dbStr(trim($_REQUEST['app_lname'])) . "', '" . dbStr(trim($_REQUEST['app_street'])) . "', '" . dbStr(trim($_REQUEST['app_zipcode'])) . "', '" . dbStr(trim($_REQUEST['app_place'])) . "', '" . dbStr(trim($_REQUEST['app_contactno'])) . "', '" . dbStr(trim($_REQUEST['app_email'])) . "', '" . dbStr(trim($_REQUEST['app_remarks'])) . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
@@ -25,7 +25,7 @@ if (isset($_REQUEST['btn_appointmentBook'])) {
 		if($_REQUEST['app_gender'] == 2){ $app_gender == 'Frau'; } elseif($_REQUEST['app_gender'] == 3){ $app_gender == 'Keine'; } else{ $app_gender == 'Herr'; }
 		$mailer->appointment_email_user($app_gender, $_REQUEST['app_email'], $_REQUEST['app_lname'], $_REQUEST['app_date_show'], $_REQUEST['app_time']);
 		$mailer->appointment_email_admin($as_title, $app_gender, $_REQUEST['app_email'], $_REQUEST['app_lname'], $_REQUEST['app_date_show'], $_REQUEST['app_time']);
-		header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+		header("Location: terminauswählen/".$qryStrURL . "/1");
 	}
 }
 
@@ -83,7 +83,7 @@ include("includes/message.php");
 								<div class="full_width txt_align_center">
 									<div class="appointment_time"><?php print($as_duration); ?> minutes</div>
 								</div>
-								<div class="full_width txt_align_center"><a href="appointments.php">
+								<div class="full_width txt_align_center"><a href="termine">
 										<div class="gerenric_btn">Ändern</div>
 									</a></div>
 							</div>

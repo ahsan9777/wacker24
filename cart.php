@@ -161,9 +161,10 @@ if (isset($_REQUEST['btn_checkout'])) {
 				$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
 				if ($updated_cart_item == true && $update_cart == true) {
 					//echo "success";
-					header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+					header("Location: einkaufswagen/2");
 				} else {
-					header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=10");
+					//header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=10");
+					header("Location: einkaufswagen/10");
 				}
 			}
 		}
@@ -179,11 +180,12 @@ if (isset($_REQUEST['product_remove'])) {
 		mysqli_query($GLOBALS['conn'], "UPDATE cart SET  cart_gross_total = cart_gross_total - '" . $row->ci_gross_total . "', cart_gst = cart_gst - '" . $row->ci_gst . "', cart_discount = cart_discount - '" . $row->ci_discount . "', cart_amount = cart_amount - '" . $row->ci_total . "' WHERE cart_id = '" . $row->cart_id . "'") or die(mysqli_error($GLOBALS['conn']));
 		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE `ci_id` = '" . $_REQUEST['ci_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
 		$_SESSION['header_quantity'] = $_SESSION['header_quantity'] - 1;
-		header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
+		//header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
+		header("Location: einkaufswagen/3");
 	}
 }
 $checkout_click = "";
-$checkout_click_href = "login.php";
+$checkout_click_href = "anmelden";
 
 if (isset($_SESSION['UID']) && $_SESSION['UID'] > 0) {
 	$checkout_click = "checkout_click";

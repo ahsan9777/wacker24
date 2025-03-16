@@ -89,7 +89,7 @@ if (isset($_REQUEST['btn_login'])) {
 	<meta charset="utf-8">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-	<title>Wacker 24</title>
+	<title>Anmelden</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
@@ -124,7 +124,7 @@ if (isset($_REQUEST['btn_login'])) {
 								</li>
 								<li><button type="submit" name="btn_login" class="gerenric_btn full_btn">Einloggen</button></li>
 								<li>
-									<div class="forgot_password"><a href="forgot_password.php">Passwort vergessen?</a></div>
+									<div class="forgot_password"><a href="passwortvergessen">Passwort vergessen?</a></div>
 								</li>
 								<li>
 									<div class="form_term">Mit Ihrer Anmeldung stimmen Sie unseren <a href="term">Allgemeinen Geschäftsbedingungen</a> zu.Bitte lesen Sie unsere <a href="privacy">Datenschutzerklärung </a>, unser <a href="javascript:void(0)"> Hinweis auf Cookies und unser Hinweis auf interessenbezogener Werbung.</a></div>
@@ -135,7 +135,7 @@ if (isset($_REQUEST['btn_login'])) {
 					<div class="or_div">
 						<div class="or_div_inner">Neu bei Wacker24?</div>
 					</div>
-					<div class="new_account_btn"><a href="registration.php">
+					<div class="new_account_btn"><a href="registrierung">
 							<div class="gerenric_btn">Erstellen Sie hier Ihr Wacker24 Konto</div>
 						</a>
 					</div>

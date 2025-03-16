@@ -61,7 +61,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             </form>
             <div class="header_account">
                 <ul>
-                    <li><a href="appointments.php">
+                    <li><a href="termine">
                             <div class="appointment_booking"><i class="fa fa-check-square-o" aria-hidden="true"></i> Terminbuchung</div>
                         </a></li>
                     <li>
@@ -73,10 +73,10 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                 <ul>
                                     <li>
                                         <?php if (!isset($_SESSION["FullName"])) { ?>
-                                            <div class="full_width txt_align_center mb-10"><a class="href_login" href="login.php" >
+                                            <div class="full_width txt_align_center mb-10"><a class="href_login" href="anmelden" >
                                                     <div class="gerenric_btn">Anmelden</div>
                                                 </a></div>
-                                            <div class="full_width txt_align_center">Neues Konto? <a href="registration.php"><b>Erstellen Sie hier.</b></a></div>
+                                            <div class="full_width txt_align_center">Neues Konto? <a href="registrierung"><b>Erstellen Sie hier.</b></a></div>
                                         <?php } ?>
                                     </li>
                                     <li><span>Meine Listen</span></li>
@@ -98,7 +98,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     <li>
                         <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
                         <!--<div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>-->
-                        <div class="hdr_text"><a href="<?php print(isset($_SESSION['header_quantity']) ? 'cart.php' : 'javascript:void(0)'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
+                        <div class="hdr_text"><a href="<?php print(isset($_SESSION['header_quantity']) ? 'einkaufswagen' : 'javascript:void(0)'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
                         <div class="hdr_side_cart">
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">

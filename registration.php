@@ -111,7 +111,7 @@ include("includes/message.php");
 	<meta charset="utf-8">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-	<title>Wacker 24</title>
+	<title>Registrierung</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />

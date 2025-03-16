@@ -89,8 +89,8 @@
 					$("#header_quantity").text(obj.count+" Artikel");
 					$("#show_card_body").html(obj.show_card_body);
 					$("#cart_amount").text(obj.cart_amount+" €");
-					$("#cart_click_href").attr("href", "cart.php");
-					$("#cart_href").attr("href", "cart.php");
+					$("#cart_click_href").attr("href", "einkaufswagen");
+					$("#cart_href").attr("href", "einkaufswagen");
 				} else{
 					$("#header_quantity").text(obj.count+" Artikel");
                     $("#show_card_body").html(obj.show_card_body);

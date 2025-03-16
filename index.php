@@ -386,7 +386,7 @@ $page = 1;
 					</div>
 					<div class="gerenric_white_box">
 						<div class="hm_register">
-							<div class="full_width txt_align_center"><a href="login.php">
+							<div class="full_width txt_align_center"><a href="anmelden">
 									<div class="gerenric_btn">Anmelden</div>
 								</a></div>
 							<p>Neues Konto? <a href="registration.php">Erstellen Sie hier.</a></p>
