@@ -1,7 +1,7 @@
 Options +FollowSymlinks
 RewriteEngine On
 #RewriteBase /wacker24/
-RewriteBase /
+#RewriteBase /
 
 <ifModule mod_gzip.c>
 mod_gzip_on Yes
@@ -39,7 +39,11 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\s\/]+)/?$ page.php?cnt_slug=$1 [L,QSA]
 RewriteRule ^unterkategorien/(.*)?$ product_category.php?cat_params_one=$1 [L]
+RewriteRule ^artikelarten/marke/([0-9]+)/([0-9]+)/(.*)/(.*)?$ products.php?page=$1&level=$2&cat_params_request=$3&manf_name_params=$4 [L]
 RewriteRule ^artikelarten/marke/([0-9]+)/(.*)/(.*)?$ products.php?level=$1&cat_params_request=$2&manf_name_params=$3 [L]
+
+RewriteRule ^artikelarten/([0-9]+)/(.*)/(.*)?$ products.php?page=$1&cat_params_two=$2&cat_params_three=$3 [L]
+RewriteRule ^artikelarten/([0-9]+)/(.*)?$ products.php?page=$1&cat_params_two=$2 [L]
 RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?cat_params_two=$1&cat_params_three=$2 [L]
 RewriteRule ^artikelarten/(.*)?$ products.php?cat_params_two=$1 [L]
 RewriteRule ^product/([A-Za-z0-9]+)/(.*)?$ product_detail.php?supplier_id=$1 [L]

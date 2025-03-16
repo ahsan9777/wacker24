@@ -181,7 +181,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                     ?>
                                             <div class="sub_menu_col">
 
-                                                <h3><a href="products.php?level_two=<?php print($row22[$i]->group_id); ?>"><?php print($row22[$i]->cat_title); ?></a></h3>
+                                                <h3><a href="artikelarten/<?php print($row22[$i]->cat_params); ?>"><?php print($row22[$i]->cat_title); ?></a></h3>
                                                 <ul>
                                                     <?php
                                                     $Query3 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.parent_id = '" . $row22[$i]->group_id . "' ORDER BY  RAND() LIMIT 0,6";
@@ -189,7 +189,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                                     if (mysqli_num_rows($rs3)) {
                                                         while ($row3 = mysqli_fetch_object($rs3)) {
                                                     ?>
-                                                            <li><a href="products.php?level_three=<?php print($row3->group_id); ?>"><?php print($row3->cat_title); ?></a></li>
+                                                            <li><a href="artikelarten/<?php print($row22[$i]->cat_params."/".$row3->cat_params); ?>"><?php print($row3->cat_title); ?></a></li>
                                                     <?php
                                                         }
                                                     }
@@ -197,7 +197,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                                 </ul>
                                                 <?php $i++;
                                                 if ($i < count($row22)) { ?>
-                                                    <h3><a href="products.php?level_two=<?php print($row22[$i]->group_id); ?>"><?php print($row22[$i]->cat_title); ?></a></h3>
+                                                    <h3><a href="artikelarten/<?php print($row22[$i]->cat_params); ?>"><?php print($row22[$i]->cat_title); ?></a></h3>
                                                     <ul>
                                                         <?php
                                                         $Query3 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.parent_id = '" . $row22[$i]->group_id . "' ORDER BY  RAND() LIMIT 0,6";
@@ -205,7 +205,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                                         if (mysqli_num_rows($rs3)) {
                                                             while ($row3 = mysqli_fetch_object($rs3)) {
                                                         ?>
-                                                                <li><a href="products.php?level_three=<?php print($row3->group_id); ?>"><?php print($row3->cat_title); ?></a></li>
+                                                                <li><a href="artikelarten/<?php print($row22[$i]->cat_params."/".$row3->cat_params); ?>"><?php print($row3->cat_title); ?></a></li>
                                                         <?php
                                                             }
                                                         }

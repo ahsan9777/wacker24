@@ -1,6 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
-
+require_once("lib/class.pager1.php");
+$p = new Pager1;
 //print_r($_REQUEST);die();
 $heading_title = "";
 $search_whereclause = "";

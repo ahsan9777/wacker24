@@ -1,6 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 $AND = "";
+$marke = "";
 $cat_params = "";
 $group_id_check = 0;
 //print_r($_REQUEST);die();
@@ -36,31 +37,34 @@ if($group_id_check > 0){
 	}
 }
 if (isset($manf_params_id) && $manf_params_id > 0) {
+	$marke = "/marke";
 	$whereclause = "WHERE cm.manf_id = '" . $manf_params_id . "' ";
-	$qryStrURL .= "manf_id=" . $manf_params_id . "&";
+	//$qryStrURL .= "manf_id=" . $manf_params_id . "&";
 	if (isset($level_one_request) && $level_one_request > 0) {
 
 		$whereclause .= " AND FIND_IN_SET(" . $level_one_request . ", cm.sub_group_ids)";
 		//$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_one_request);
-		$qryStrURL .= "level_one=" . $level_one_request . "&";
+		$qryStrURL .= "level_one=" . $level_one_request . "/";
 	} elseif (isset($level_two_request_manf) && $level_two_request_manf > 0) {
 
 		$whereclause .= " AND FIND_IN_SET(" . $level_two_request . ", cm.sub_group_ids)";
-		$qryStrURL .= "level_two=" . $level_two_request . "&";
+		$qryStrURL .= "2/".$_REQUEST['cat_params_request']. "/";
 	} elseif (isset($level_three_request_manf) && $level_three_request_manf > 0) {
 
 		$whereclause = "WHERE cm.cat_id = '" . $level_three_request_manf . "' ";
-		$qryStrURL .= "level_three=" . $level_three_request_manf . "&";
+		$qryStrURL .= "3/".$_REQUEST['cat_params_request'] . "/";
 	}
+	$qryStrURL .= $_REQUEST['manf_name_params'] . "/";
 	$heading_title = returnName("manf_name", "manufacture", "manf_id", $manf_params_id);
 } else if (isset($level_three_request) && $level_three_request > 0) {
 	$whereclause = "WHERE cm.cat_id = '" . $level_three_request . "' ";
-	$qryStrURL .= "level_three=" . $level_three_request . "&";
+	$qryStrURL .= $_REQUEST['cat_params_two'] . "/";
+	$qryStrURL .= $_REQUEST['cat_params_three'] . "/";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $level_three_request);
 	$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_three_request);
 } else {
 	$whereclause = "WHERE FIND_IN_SET(" . $level_two_request . ", cm.sub_group_ids)";
-	$qryStrURL .= "level_two=" . $level_two_request . "&";
+	$qryStrURL .= $_REQUEST['cat_params_two'] . "/";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $level_two_request);
 	$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_two_request);
 	//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
@@ -175,7 +179,8 @@ if (isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0) {
 											<td align="center">
 												<ul class="pagination" style="margin: 0px;">
 													<?php
-													$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
+													//$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
+													$pageList = $p->pageList($_GET['page'], "artikelarten".$marke, $pages, '/' . rtrim($qryStrURL, "/"));
 													print($pageList);
 													?>
 												</ul>
