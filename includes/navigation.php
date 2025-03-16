@@ -222,9 +222,9 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         while ($row4 = mysqli_fetch_object($rs4)) {
                                         ?>
                                             <div class="sub_menu_col">
-                                                <a class="sub_menu_div" href="<?php print(!empty($row4->gimg_link) ? $row4->gimg_link : 'javascript:void(0);'); ?>">
+                                                <a class="sub_menu_div" href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : 'javascript:void(0);'); ?>">
                                                     <div class="sub_menu_image"><img src="<?php print($GLOBALS['siteURL'] . "files/gallery_images/special_category/" . $row4->scat_id . "/" . $row4->gimg_file); ?>" alt=""></div>
-                                                    <div class="sub_menu_title"><a href="<?php print(!empty($row4->gimg_link) ? $row4->gimg_link : 'javascript:void(0);'); ?>"><?php print($row4->gimg_title); ?></a></div>
+                                                    <div class="sub_menu_title"><a href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : 'javascript:void(0);'); ?>"><?php print($row4->gimg_title); ?></a></div>
                                                 </a>
                                             </div>
                                     <?php
