@@ -1,7 +1,7 @@
 Options +FollowSymlinks
 RewriteEngine On
 #RewriteBase /wacker24/
-RewriteBase /
+#RewriteBase /
 
 <ifModule mod_gzip.c>
 mod_gzip_on Yes
