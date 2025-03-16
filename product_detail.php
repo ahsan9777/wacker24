@@ -46,7 +46,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_title_three = $row->cat_title_three;
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else{
-	header("Location: not_available.php");
+	header("Location: not_available");
 }
 
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
@@ -69,11 +69,12 @@ if (isset($_REQUEST['btnAdd_to_list'])) {
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
-		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
+		//header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
+		header("Location: product/".$supplier_id."/".url_clean($pro_description_short)."/14");
 	} else {
 		$sl_id = getMaximum("shopping_list", "sl_id");
 		mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=1");
+		header("Location: product/".$supplier_id."/".url_clean($pro_description_short)."/1");
 	}
 }
 

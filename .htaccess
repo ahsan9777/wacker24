@@ -1,7 +1,7 @@
 Options +FollowSymlinks
 RewriteEngine On
 #RewriteBase /wacker24/
-#RewriteBase /
+RewriteBase /
 
 <ifModule mod_gzip.c>
 mod_gzip_on Yes
@@ -34,6 +34,10 @@ RewriteRule ^adressen/([0-9]+)?$ my_address.php?op=$1 [L]
 RewriteRule ^adressen? my_address.php [L]
 RewriteRule ^bestellungen/([0-9]+)?$ my_order.php?op=$1 [L]
 RewriteRule ^bestellungen? my_order.php [L]
+RewriteRule ^konto-vergessen-kennwort? account_forgot_password.php [L]
+RewriteRule ^konto-registrierung? account_registration.php [L]
+RewriteRule ^konto-bestätigung? account_verification.php [L]
+RewriteRule ^nicht-verfügbar? not_available.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -46,6 +50,7 @@ RewriteRule ^artikelarten/([0-9]+)/(.*)/(.*)?$ products.php?page=$1&cat_params_t
 RewriteRule ^artikelarten/([0-9]+)/(.*)?$ products.php?page=$1&cat_params_two=$2 [L]
 RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?cat_params_two=$1&cat_params_three=$2 [L]
 RewriteRule ^artikelarten/(.*)?$ products.php?cat_params_two=$1 [L]
+RewriteRule ^product/([A-Za-z0-9]+)/(.*)/([0-9]+)?$ product_detail.php?supplier_id=$1&op=$3 [L]
 RewriteRule ^product/([A-Za-z0-9]+)/(.*)?$ product_detail.php?supplier_id=$1 [L]
 
 # END OF RULE 1

@@ -30,7 +30,7 @@
 						<script>
 							setTimeout(
 								function() {
-									window.location.href = "login.php";
+									window.location.href = "anmelden";
 								}, 10000);
 						</script>
 					</div>

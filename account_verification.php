@@ -41,7 +41,7 @@ if (isset($_REQUEST['verification_code'])) {
 							<script>
 								setTimeout(
 									function() {
-										window.location.href = "login.php";
+										window.location.href = "anmelden";
 									}, 10000);
 							</script>
 						<?php } else { ?>

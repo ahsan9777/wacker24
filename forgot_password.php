@@ -12,7 +12,7 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 		$user_password = create_password(8);
 		mysqli_query($GLOBALS['conn'], "UPDATE users SET user_password = '" . dbStr(password_hash(trim($user_password), PASSWORD_BCRYPT)) . "' WHERE user_id = '" . $row->user_id . "'") or die(mysqli_error($GLOBALS['conn']));
 		$mailer->forgotPass($row->user_fname . " " . $row->user_lname, $row->user_name, $user_password);
-		header('Location: account_forgot_password.php');
+		header('konto-vergessen-kennwort');
 	} else {
 		$class = "alert alert-danger";
 		$strMSG = "Dear Cuctomer, <br>

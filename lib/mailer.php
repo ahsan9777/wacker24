@@ -45,7 +45,7 @@ class Mailer
         $eml_contents = $get_email_template[0]->eml_contents;
         $eml_contents = str_replace("{customer_name}", $customer_name, $eml_contents);
         $eml_contents = str_replace("{sitelogo}", $GLOBALS['siteURL'] . "images/register_logo.png", $eml_contents);
-        $eml_contents = str_replace("{btnlink}", $GLOBALS['siteURL'] . "account_verification.php?verification_code=" . $user_verification_code, $eml_contents);
+        $eml_contents = str_replace("{btnlink}", $GLOBALS['siteURL'] . "konto-bestätigung?verification_code=" . $user_verification_code, $eml_contents);
         $eml_contents = str_replace("{href_site}", $GLOBALS['siteURL'], $eml_contents);
         $eml_contents = str_replace("{siteName}", $GLOBALS['siteName'], $eml_contents);
         $message = $eml_contents;
@@ -266,10 +266,10 @@ class Mailer
             $mail_username = $username;
             $mail_password = $password;
         } else {
-            /*$mail_username = "noreply@wackersystems.com";
-            $mail_password = "A^tXZxQCCDM4";*/
-            $mail_username = "noreply@esol-tech.com";
-            $mail_password = "#w2nOX5!vAOH";
+            $mail_username = "noreply@wackersystems.com";
+            $mail_password = "A^tXZxQCCDM4";
+            /*$mail_username = "noreply@esol-tech.com";
+            $mail_password = "#w2nOX5!vAOH";*/
         }
         //require_once($dir . "lib/class.phpmailer.php");
 
@@ -287,8 +287,8 @@ class Mailer
             //$mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             //$mail->Host       = "mail.gmx.com";
-            //$mail->Host       = "wackersystems.com";
-            $mail->Host       = "mail.esol-tech.com";
+            $mail->Host       = "wackersystems.com";
+            //$mail->Host       = "mail.esol-tech.com";
             $mail->Username   = $mail_username;
             $mail->Password   = $mail_password;
 

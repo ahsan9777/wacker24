@@ -22,13 +22,14 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$GLOBALS['siteURL'] = "http://localhost/wacker24/";
 } else {
 	$dbServer   = "localhost";
-	/*$dbDatabase = "wackersystems_wacker24demo";
-	$dbUserName = "wackersystems_wacker24demo";*/
-	$dbDatabase = "esoltech_wacker24";
-	$dbUserName = "esoltech_wacker24";
+	$dbDatabase = "wackersystems_wacker24demo";
+	$dbUserName = "wackersystems_wacker24demo";
+	/*$dbDatabase = "esoltech_wacker24";
+	$dbUserName = "esoltech_wacker24";*/
 	$dbPassword = "MU8s)gKIeQyD";
 	$GLOBALS['siteName'] = "www.wackersystems.com";
-	$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
+	//$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
+	$GLOBALS['siteURL'] = "https://wackersystems.com/";
 }
 
 $GLOBALS['conn'] = new mysqli($dbServer, $dbUserName, $dbPassword, $dbDatabase);
