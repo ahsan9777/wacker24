@@ -38,17 +38,17 @@ if(isset($_REQUEST['btnUpdate'])){
 				if($confirm_password == $new_password){
 					$qryUdt .= " user_password='".dbStr(password_hash(trim($new_password), PASSWORD_BCRYPT))."',";
 				} else{
-					header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=11");
+					header("Location: persoenliche-angaben/11");
 				}
 			} else{
-				header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=7");
+				header("Location: persoenliche-angaben/7");
 			}
 		}
 		$qryUdt = rtrim($qryUdt,",");
 		//echo "UPDATE users SET ".$qryUdt." WHERE user_id = '".$_SESSION["UID"]."'";
 		if(!empty($qryUdt)){
 			mysqli_query($GLOBALS['conn'], "UPDATE users SET ".$qryUdt." WHERE user_id = '".$_SESSION["UID"]."'") or die(mysqli_error($GLOBALS['conn']));
-			header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+			header("Location: persoenliche-angaben/2");
 		}
 }
 
@@ -161,7 +161,7 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="benutzerprofile">Meine Daten</a></li>
 						<li><a href="javascript:void(0)">Persönliche Details</a></li>
 					</ul>
 				</div>

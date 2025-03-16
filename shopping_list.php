@@ -9,21 +9,23 @@ if (isset($_REQUEST['btnAdd'])) {
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
-		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
+		//header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
+		header("Location: einkaufslisten/14");
 	} else {
 		$sl_id = getMaximum("shopping_list", "sl_id");
 		mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-		header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=1");
+		//header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=1");
+		header("Location: einkaufslisten/1");
 	}
 }
 
 if (isset($_REQUEST['updatewishlist'])) {
 	mysqli_query($GLOBALS['conn'], "UPDATE wishlist SET sl_id = '" . $_REQUEST['sl_id'] . "' WHERE wl_id = " . $_REQUEST['wl_id']) or die(mysqli_error($_REQUEST['conn']));
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+	header("Location: einkaufslisten/2");
 }
 if (isset($_REQUEST['deletewishlist'])) {
 	mysqli_query($GLOBALS['conn'], "DELETE FROM wishlist WHERE wl_id = " . $_REQUEST['wl_id']) or die(mysqli_error($_REQUEST['conn']));
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
+	header("Location: einkaufslisten/3");
 }
 include("includes/message.php");
 ?>
@@ -96,7 +98,7 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="benutzerprofile">Meine Daten</a></li>
 						<li><a href="javascript:void(0)">Meine Einkaufslisten</a></li>
 					</ul>
 				</div>

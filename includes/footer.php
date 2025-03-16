@@ -31,9 +31,9 @@
             <div class="footer-col">
                 <h2>Kontakt & Anfahrt</h2>
                 <ul>
-                    <li><a href="contact_us">Kontaktformular</a></li>
-                    <li><a href="contact_us">Öffnungszeiten</a></li>
-                    <li><a href="contact_us">Anfahrt</a></li>
+                    <li><a href="kontakt">Kontaktformular</a></li>
+                    <li><a href="kontakt">Öffnungszeiten</a></li>
+                    <li><a href="kontakt">Anfahrt</a></li>
                 </ul>
             </div>
             <div class="footer-col">

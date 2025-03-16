@@ -1,7 +1,7 @@
 Options +FollowSymlinks
 RewriteEngine On
 #RewriteBase /wacker24/
-#RewriteBase /
+RewriteBase /
 
 <ifModule mod_gzip.c>
 mod_gzip_on Yes
@@ -14,7 +14,8 @@ mod_gzip_item_exclude mime ^image/.*
 mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
 </ifModule>
 
-RewriteRule ^contact_us/?$ contact_us.php [L]
+RewriteRule ^kontakt/([0-9]+)?$ contact_us.php?op=$1 [L]
+RewriteRule ^kontakt/?$ contact_us.php [L]
 RewriteRule ^anmelden? login.php [L]
 RewriteRule ^registrierung? registration.php [L]
 RewriteRule ^passwortvergessen? forgot_password.php [L]
@@ -23,6 +24,16 @@ RewriteRule ^terminauswählen/([0-9]+)/([0-9]+)?$ appointment_schedule.php?as_id
 RewriteRule ^termine? appointments.php [L]
 RewriteRule ^einkaufswagen/([0-9]+)?$ cart.php?op=$1 [L]
 RewriteRule ^einkaufswagen? cart.php [L]
+RewriteRule ^sonderpreise? special_price.php [L]
+RewriteRule ^einkaufslisten/([0-9]+)?$ shopping_list.php?op=$1 [L]
+RewriteRule ^einkaufslisten? shopping_list.php [L]
+RewriteRule ^benutzerprofile? personal_data.php [L]
+RewriteRule ^persoenliche-angaben/([0-9]+)?$ my_data.php?op=$1 [L]
+RewriteRule ^persoenliche-angaben? my_data.php [L]
+RewriteRule ^adressen/([0-9]+)?$ my_address.php?op=$1 [L]
+RewriteRule ^adressen? my_address.php [L]
+RewriteRule ^bestellungen/([0-9]+)?$ my_order.php?op=$1 [L]
+RewriteRule ^bestellungen? my_order.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

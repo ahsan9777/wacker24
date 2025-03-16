@@ -39,7 +39,7 @@ $page = 1;
 					<h1><?php print( ($_SESSION["Utype"] == 3) ? 'Privatkunde Konto' : 'Geschäftskunde Konto' ); ?></h1>
 					<div class="my_personal_inner">
 						<div class="my_personal_card">
-							<a href="my_data.php">
+							<a href="persoenliche-angaben">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/PersonalData.svg" alt=""></div>
 									<div class="personal_detail">
@@ -50,7 +50,7 @@ $page = 1;
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="my_address.php">
+							<a href="adressen">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Address.svg" alt=""></div>
 									<div class="personal_detail">
@@ -61,7 +61,7 @@ $page = 1;
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="my_order.php">
+							<a href="bestellungen">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Orders.svg" alt=""></div>
 									<div class="personal_detail">
@@ -84,7 +84,7 @@ $page = 1;
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="<?php print( isset($_SESSION['cart_id'])? "cart.php": "javascript:void(0);"); ?>" >
+							<a href="<?php print( isset($_SESSION['cart_id'])? "einkaufswagen": "javascript:void(0);"); ?>" >
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Cart.svg" alt=""></div>
 									<div class="personal_detail">
@@ -95,7 +95,7 @@ $page = 1;
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="shopping_list.php">
+							<a href="einkaufslisten">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/shoppingList.svg" alt=""></div>
 									<div class="personal_detail">
@@ -107,7 +107,7 @@ $page = 1;
 						</div>
 						<?php $user_special_price_count = TotalRecords("usp_id", "user_special_price", "WHERE user_id  = '".$_SESSION["UID"]."' "); ?>
 						<div class="my_personal_card">
-							<a href="<?php print( ($user_special_price_count > 0) ? 'special_price.php' : 'javascript:void(0);' ); ?>">
+							<a href="<?php print( ($user_special_price_count > 0) ? 'sonderpreise' : 'javascript:void(0);' ); ?>">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/user.png" alt=""></div>
 									<div class="personal_detail">
@@ -118,7 +118,7 @@ $page = 1;
 							</a>
 						</div>
 						<div class="my_personal_card">
-							<a href="contact_us.php">
+							<a href="kontakt">
 								<div class="my_personal_card_inner">
 									<div class="personal_icon"><img src="images/Contact.svg" alt=""></div>
 									<div class="personal_detail">

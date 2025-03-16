@@ -28,7 +28,7 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="benutzerprofile">Meine Daten</a></li>
 						<li><a href="javascript:void(0)">Meine Bestellungen</a></li>
 					</ul>
 				</div>

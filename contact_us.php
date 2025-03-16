@@ -22,7 +22,7 @@
 	} else {
 		$cu_id = getMaximum("contact_us_request", "cu_id");
 		mysqli_query($GLOBALS['conn'], "INSERT INTO contact_us_request (cu_id, cu_name, cu_email, cu_phone, cu_subject, cu_message, cu_date) VALUES ('".$cu_id."', '".dbStr(trim($_REQUEST['cu_name']))."', '".dbStr(trim($_REQUEST['cu_email']))."', '".dbStr(trim($_REQUEST['cu_phone']))."', '".dbStr(trim($_REQUEST['cu_subject']))."', '".dbStr(trim($_REQUEST['cu_message']))."', '".date_time."')") or die(mysqli_error($GLOBALS['conn']));
-		header("Location: " . $_SERVER['PHP_SELF'] . "?op=8");
+		header("Location: kontakt/8");
 	}
  }
 

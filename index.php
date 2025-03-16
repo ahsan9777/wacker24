@@ -389,7 +389,7 @@ $page = 1;
 							<div class="full_width txt_align_center"><a href="anmelden">
 									<div class="gerenric_btn">Anmelden</div>
 								</a></div>
-							<p>Neues Konto? <a href="registration.php">Erstellen Sie hier.</a></p>
+							<p>Neues Konto? <a href="registrierung">Erstellen Sie hier.</a></p>
 						</div>
 					</div>
 				</div>

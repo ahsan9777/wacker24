@@ -11,7 +11,7 @@ if (isset($_REQUEST['btnAdd']) || isset($_REQUEST['btn_Addbilling'])) {
 	//print($usa_defualt);die();
 	if(empty($usa_defualt) && $usa_type == 0){ $usa_defualt = 1; } else { $usa_defualt = 0; }
 	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_type, usa_fname, usa_lname, usa_additional_info, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id, usa_defualt) VALUES ('" . $usa_id . "', '" . $_SESSION["UID"] . "', '" . $usa_type . "', '" . dbStr(trim($_REQUEST['usa_fname'])) . "',  '" . dbStr(trim($_REQUEST['usa_lname'])) . "', '" . dbStr(trim($_REQUEST['usa_additional_info'])) . "', '" . dbStr(trim($_REQUEST['usa_street'])) . "', '" . dbStr(trim($_REQUEST['usa_house_no'])) . "', '" . dbStr(trim($_REQUEST['usa_zipcode'])) . "', '" . dbStr(trim($_REQUEST['usa_contactno'])) . "', '" . dbStr(trim($_REQUEST['countries_id'])) . "', '".$usa_defualt."')") or die(mysqli_error($GLOBALS['conn']));
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+	header("Location: adressen/1");
 }
 
 if (isset($_REQUEST['set_defualt'])) {
@@ -21,12 +21,12 @@ if (isset($_REQUEST['set_defualt'])) {
 	$plz = explode(" ", returnName("usa_zipcode", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'"));
 	$_SESSION['plz'] = $plz[0];
 	getShippingTiming($plz[0]);
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
+	header("Location: adressen/2");
 }
 if (isset($_REQUEST['deleted'])) {
 	//print_r($_REQUEST);die();
 	mysqli_query($GLOBALS['conn'], "DELETE FROM user_shipping_address WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
-	header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=3");
+	header("Location: adressen/3");
 }
 
 include("includes/message.php");
@@ -200,7 +200,7 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="personal_data.php">Meine Daten</a></li>
+						<li><a href="benutzerprofile">Meine Daten</a></li>
 						<li><a href="javascript:void(0)">Adressen</a></li>
 					</ul>
 				</div>

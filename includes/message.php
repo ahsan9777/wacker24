@@ -12,7 +12,7 @@ if(isset($_REQUEST['op'])){
 			$strMSG = "Rekord erfolgreich aktualisiert";
 			break;
         case 3:
-			$class = "alert alert-success";
+			$class = "alert alert-danger";
 			//$strMSG = "Record(s) deleted Successfully";
 			$strMSG = "Datensatz(e) erfolgreich gelöst";
 			break;

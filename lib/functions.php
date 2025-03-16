@@ -2339,7 +2339,7 @@ function PaypalRequest($entityId, $ord_id, $order_net_amount)
 		"&currency=EUR" .
 		"&paymentBrand=PAYPAL" .
 		"&paymentType=DB" .
-		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "my_order.php?op=15";
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/15";
 	//  print_r($data);die;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);

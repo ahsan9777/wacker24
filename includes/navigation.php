@@ -31,7 +31,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
         </ul>
         <ul>
             <li><a href="about_us">Über Wacker 24</a></li>
-            <li><a href="contact_us.php">Kontakt</a></li>
+            <li><a href="kontakt">Kontakt</a></li>
             <li>
                 <div class="header_language">
                     <div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></div>
@@ -80,12 +80,12 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         <?php } ?>
                                     </li>
                                     <li><span>Meine Listen</span></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "special_price.php" : "javascript:void(0);"); ?>"> Sonderpreise </a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "shopping_list.php" : "javascript:void(0);"); ?>"> Einkaufslisten </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "javascript:void(0);"); ?>"> Sonderpreise </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "javascript:void(0);"); ?>"> Einkaufslisten </a></li>
                                     <li><span>Mein Konto</span></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "personal_data.php" : "javascript:void(0);"); ?>"> Persönliche Daten <a href=""></a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_order.php" : "javascript:void(0);"); ?>"> Bestellungen </a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "my_address.php" : "javascript:void(0);"); ?>"> Adressen </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "javascript:void(0);"); ?>"> Persönliche Daten <a href=""></a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "javascript:void(0);"); ?>"> Bestellungen </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "javascript:void(0);"); ?>"> Adressen </a></li>
                                     <li>Zahlungsarten</li>
                                     <?php if (isset($_SESSION["FullName"])) { ?>
                                         <li><a href="logout.php">Abmelden</a></li>
@@ -130,7 +130,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     }
                 }
                 ?>
-                <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
+                <!--<li><a href="unterkategorien/schulranzen">Schulranzen</a></li>-->
                 <li><a href="javascript:void(0);" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
@@ -149,7 +149,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         }
                     }
                     ?>
-                    <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
+                    <!--<li><a href="unterkategorien/schulranzen">Schulranzen</a></li>-->
                 </ul>
                 <div class="nav_overlay"></div>
             </div>
