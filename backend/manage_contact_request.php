@@ -88,7 +88,7 @@ include("includes/messages.php");
                                             <?php print(date('F j, Y H:i', strtotime($row2->cu_date))); ?>
                                         </div>
                                         <h3 class="from text-white">
-                                            From: Test data
+                                            From: <?php  print($row2->cu_name); ?>
                                         </h3>
                                         <div class="contact_detail_user_info">
                                             <div class="tab_img rounded">
@@ -137,32 +137,4 @@ include("includes/messages.php");
     </div>
     <?php include("includes/bottom_js.php"); ?>
 </body>
-<script>
-    $('input.brand_name').autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: 'ajax_calls.php?action=brand_name',
-                dataType: "json",
-                data: {
-                    term: request.term
-                },
-                success: function(data) {
-                    response(data);
-
-                }
-            });
-        },
-        minLength: 1,
-        select: function(event, ui) {
-            var brand_id = $("#brand_id");
-            var brand_name = $("#brand_name");
-            $(brand_id).val(ui.item.brand_id);
-            $(brand_name).val(ui.item.value);
-            //frmCat.submit();
-            //return false;
-            //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-        }
-    });
-</script>
-
 </html>

@@ -1,13 +1,14 @@
 <?php
 include("../lib/session_head.php");
-$Query = "SELECT * FROM orders AS ord WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "'";
+$Query = "SELECT * FROM orders AS ord LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "'";
+//print($Query);
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
 	$row = mysqli_fetch_object($rs);
 	$ord_id = $row->ord_id;
 	$user_id = $row->user_id;
 	$customer_id = returnName("customer_id", "users", "user_id", $user_id);
-	if(!empty($customer_id)){
+	if (!empty($customer_id)) {
 		$user_id = $customer_id;
 	}
 	$ord_datetime = date('d/m/Y', strtotime($row->ord_datetime));
@@ -16,6 +17,20 @@ if (mysqli_num_rows($rs) > 0) {
 	$ord_discount = price_format($row->ord_discount);
 	$ord_shipping_charges = price_format($row->ord_shipping_charges);
 	$ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
+
+	$delivery_info = "";
+	if (!empty($row->dinfo_street)) {
+		$delivery_info .= $row->dinfo_street . " " . $row->dinfo_house_no . "<br>";
+	}
+	if (!empty($row->dinfo_usa_zipcode)) {
+		$delivery_info .= $row->dinfo_usa_zipcode . "<br>";
+	}
+	if (!empty($row->dinfo_countries_id)) {
+		$delivery_info .= returnName("countries_name", "countries", "countries_id", $row->dinfo_countries_id) . "<br>";
+	}
+	if (!empty($row->dinfo_address)) {
+		$delivery_info .= $row->dinfo_address . "<br>";
+	}
 }
 ?>
 <!doctype html>
@@ -60,10 +75,7 @@ if (mysqli_num_rows($rs) > 0) {
 		<tr>
 			<td colspan="2" style="font-size: 12px;line-height: 150%; color: #000;">
 				<b>Wacker Bürocenter GmbH</b> | Chemnitzer Straße 1 | 67433 Neustadt<br>
-				wacker<br>
-				blockfield,26-30<br>
-				67112 Mutterstadt<br>
-				Deutschland
+				<?php print($delivery_info); ?>
 			</td>
 		</tr>
 		<tr>

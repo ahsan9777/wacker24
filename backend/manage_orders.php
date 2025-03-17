@@ -192,7 +192,7 @@ include("includes/messages.php");
                                                 $shipping_info .= $row->usa_zipcode . "<br>";
                                             }
                                             if (!empty($row->shipping_countrie_id)) {
-                                                $shipping_info .= returnName("countries_name", "countries", "countrie_id", $row->shipping_countrie_id) . "<br>";
+                                                $shipping_info .= returnName("countries_name", "countries", "countries_id", $row->shipping_countrie_id) . "<br>";
                                             }
                                             if (!empty($row->usa_address)) {
                                                 $shipping_info .= $row->usa_address . "<br>";

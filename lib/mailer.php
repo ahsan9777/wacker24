@@ -289,7 +289,8 @@ class Mailer
     }
     public function appointment_email_admin($as_title, $app_gender, $app_email, $app_lname, $app_date, $app_time, $username = "", $password = ""){
         $subject = "Benachrichtigung über eine neue Terminbuchung";
-        $to = "hussaini@wacker-systems.de";
+        //$to = "hussaini@wacker-systems.de";
+        $to = "t.wacker@wacker-buerocenter.de";
 
         $message = "<html>
                         <head>
@@ -355,10 +356,10 @@ class Mailer
             $mail_username = $username;
             $mail_password = $password;
         } else {
-            $mail_username = "noreply@wackersystems.com";
-            $mail_password = "A^tXZxQCCDM4";
-            /*$mail_username = "noreply@esol-tech.com";
-            $mail_password = "#w2nOX5!vAOH";*/
+            /*$mail_username = "noreply@wackersystems.com";
+            $mail_password = "A^tXZxQCCDM4";*/
+            $mail_username = "noreply@wacker24.de";
+            $mail_password = "86@TS-AXn}7J";
         }
         //require_once($dir . "lib/class.phpmailer.php");
 
@@ -376,8 +377,8 @@ class Mailer
             //$mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             //$mail->Host       = "mail.gmx.com";
-            $mail->Host       = "wackersystems.com";
-            //$mail->Host       = "mail.esol-tech.com";
+            $mail->Host       = "mail.wacker24.de";
+            //$mail->Host       = "wackersystems.com";
             $mail->Username   = $mail_username;
             $mail->Password   = $mail_password;
 

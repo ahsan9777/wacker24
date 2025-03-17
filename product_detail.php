@@ -46,7 +46,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_title_three = $row->cat_title_three;
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else{
-	header("Location: not_available");
+	header("Location: ".$GLOBALS['siteURL']."nicht-verfügbar");
 }
 
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
