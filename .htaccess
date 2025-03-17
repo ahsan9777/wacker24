@@ -14,6 +14,12 @@ mod_gzip_item_exclude mime ^image/.*
 mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
 </ifModule>
 
+RewriteCond %{REQUEST_FILENAME} !-d 
+
+RewriteCond %{REQUEST_FILENAME}\.php -f 
+
+RewriteRule ^(.*)$ $1.php [L]
+
 RewriteRule ^kontakt/([0-9]+)?$ contact_us.php?op=$1 [L]
 RewriteRule ^kontakt/?$ contact_us.php [L]
 RewriteRule ^anmelden? login.php [L]
@@ -39,6 +45,8 @@ RewriteRule ^konto-registrierung? account_registration.php [L]
 RewriteRule ^konto-bestätigung? account_verification.php [L]
 RewriteRule ^nicht-verfügbar? not_available.php [L]
 
+
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\s\/]+)/?$ page.php?cnt_slug=$1 [L,QSA]
@@ -52,5 +60,6 @@ RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?cat_params_two=$1&cat_params_
 RewriteRule ^artikelarten/(.*)?$ products.php?cat_params_two=$1 [L]
 RewriteRule ^product/([A-Za-z0-9]+)/(.*)/([0-9]+)?$ product_detail.php?supplier_id=$1&op=$3 [L]
 RewriteRule ^product/([A-Za-z0-9]+)/(.*)?$ product_detail.php?supplier_id=$1 [L]
+
 
 # END OF RULE 1

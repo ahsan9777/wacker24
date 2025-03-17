@@ -1,4 +1,5 @@
 <?php
+include("includes/php_includes_top.php");
 ob_start();
 session_start();
 if (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) {
@@ -18,6 +19,6 @@ unset($_SESSION['FullName']);
 unset($_SESSION['Utype']);
 unset($_SESSION['plz']);
 unset($_SESSION['ort']);
-header("Location: index.php");
+header("location:" . $GLOBALS['siteURL']);
 ob_end_flush();
 ?>

@@ -46,12 +46,12 @@ if (isset($_REQUEST['btn_login'])) {
 				}
 
 				//echo $ref_check[0];die();
-				if ($ref == $GLOBALS['siteURL'] . "login.php" || $ref == $GLOBALS['siteURL'] . "register.php" || $ref_check[0] == $GLOBALS['siteURL'] . "account_verification.php"  || $ref_check[0] == $GLOBALS['siteURL'] . "account_registration.php" ||  $ref_check[0] == $GLOBALS['siteURL'] . "account_forgot_password.php") {
-					header("Location:" . $GLOBALS['siteURL'] . "index.php");
+				if ($ref == $GLOBALS['siteURL'] . "anmelden" || $ref == $GLOBALS['siteURL'] . "registrierung" || $ref_check[0] == $GLOBALS['siteURL'] . "konto-bestätigung"  || $ref_check[0] == $GLOBALS['siteURL'] . "konto-registrierung" ||  $ref_check[0] == $GLOBALS['siteURL'] . "konto-vergessen-kennwort") {
+					header("Location:" . $GLOBALS['siteURL']);
 				} elseif (!empty($ref)) {
 					header("Location:" . $ref);
 				} else {
-					header("location:" . $GLOBALS['siteURL'] . "index.php");
+					header("location:" . $GLOBALS['siteURL']);
 				}
 			} else {
 

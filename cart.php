@@ -511,9 +511,9 @@ include("includes/message.php");
 											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Zur Kasse</a>
 										</li>
 										<?php if (!isset($_SESSION["UID"])) { ?>
-											<li>
+											<!--<li>
 												<a href="registration_as_gast.php" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Checkout As Guest</a>
-											</li>
+											</li>-->
 										<?php } ?>
 									</ul>
 								</div>
