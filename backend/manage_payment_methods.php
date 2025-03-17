@@ -25,11 +25,15 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "INSERT INTO payment_method (pm_id, pm_title_de, pm_title_en, pm_currency, pm_brand_name, pm_entity_id, pm_show_detail, pm_image) VALUES ('" . $pm_id . "', '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', '".dbStr(trim($_REQUEST['pm_currency']))."', '".dbStr(trim($_REQUEST['pm_brand_name']))."', '".dbStr(trim($_REQUEST['pm_entity_id']))."', '".dbStr(trim($_REQUEST['pm_show_detail']))."', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
+        $pm_show_detail = 0;
+        if (isset($_REQUEST['pm_show_detail']) && !empty($_REQUEST['pm_show_detail'])) {
+            $pm_show_detail = $_REQUEST['pm_show_detail'];
+        }
+        mysqli_query($GLOBALS['conn'], "INSERT INTO payment_method (pm_id, pm_title_de, pm_title_en, pm_currency, pm_brand_name, pm_entity_id, pm_show_detail, pm_image) VALUES ('" . $pm_id . "', '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', '" . dbStr(trim($_REQUEST['pm_currency'])) . "', '" . dbStr(trim($_REQUEST['pm_brand_name'])) . "', '" . dbStr(trim($_REQUEST['pm_entity_id'])) . "', '" . dbStr(trim($pm_show_detail)) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
-
+    //print_r($_REQUEST);
     $dirName = "../files/payment_method/";
     $mfileName = $_REQUEST['mfileName'];
     if (!empty($_FILES["mFile"]["name"])) {
@@ -41,7 +45,11 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE payment_method SET pm_title_de = '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', pm_title_en = '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', pm_currency = '".dbStr(trim($_REQUEST['pm_currency']))."', pm_brand_name = '".dbStr(trim($_REQUEST['pm_brand_name']))."', pm_entity_id = '".dbStr(trim($_REQUEST['pm_entity_id']))."', pm_show_detail = '".dbStr(trim($_REQUEST['pm_show_detail']))."', pm_image = '" . $mfileName . "' WHERE pm_id= '" . $_REQUEST['pm_id']."'") or die(mysqli_error($GLOBALS['conn']));
+    $pm_show_detail = 0;
+    if (isset($_REQUEST['pm_show_detail']) && !empty($_REQUEST['pm_show_detail'])) {
+        $pm_show_detail = $_REQUEST['pm_show_detail'];
+    }
+    mysqli_query($GLOBALS['conn'], "UPDATE payment_method SET pm_title_de = '" . dbStr(trim($_REQUEST['pm_title_de'])) . "', pm_title_en = '" . dbStr(trim($_REQUEST['pm_title_en'])) . "', pm_currency = '" . dbStr(trim($_REQUEST['pm_currency'])) . "', pm_brand_name = '" . dbStr(trim($_REQUEST['pm_brand_name'])) . "', pm_entity_id = '" . dbStr(trim($_REQUEST['pm_entity_id'])) . "', pm_show_detail = '" . dbStr(trim($pm_show_detail)) . "', pm_image = '" . $mfileName . "' WHERE pm_id= '" . $_REQUEST['pm_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -101,7 +109,7 @@ if (isset($_REQUEST['btnInactive'])) {
 if (isset($_REQUEST['btnOrderby'])) {
     if (isset($_REQUEST['pm_id'])) {
         for ($i = 0; $i < count($_REQUEST['pm_id']); $i++) {
-            mysqli_query($GLOBALS['conn'], "UPDATE payment_method SET pm_orderby='".$_REQUEST['pm_orderby'][$i]."' WHERE pm_id = " . $_REQUEST['pm_id'][$i]);
+            mysqli_query($GLOBALS['conn'], "UPDATE payment_method SET pm_orderby='" . $_REQUEST['pm_orderby'][$i] . "' WHERE pm_id = " . $_REQUEST['pm_id'][$i]);
         }
         $class = "alert alert-success";
         $strMSG = "Record(s) updated successfully";
@@ -207,7 +215,7 @@ include("includes/messages.php");
                                         <th width="100">Logo</th>
                                         <th width="150">Title</th>
                                         <th>Entity ID </th>
-                                        <th width = "100">Order By </th>
+                                        <th width="100">Order By </th>
                                         <th width="50">Status</th>
                                         <th width="50">Action</th>
                                     </tr>
@@ -234,7 +242,7 @@ include("includes/messages.php");
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pm_id); ?>"></td>
                                                 <td><img src="<?php print($image_path); ?>" width="100" style="border-radius: 10px;"></td>
-                                                <td><?php print("<strong>DE: </strong>".$row->pm_title_de."<br> <strong>EN: </strong>".$row->pm_title_en); ?></td>
+                                                <td><?php print("<strong>DE: </strong>" . $row->pm_title_de . "<br> <strong>EN: </strong>" . $row->pm_title_en); ?></td>
                                                 <td><?php print($row->pm_entity_id); ?></td>
                                                 <td>
                                                     <input type="hidden" name="pm_id[]" id="pm_id" value="<?php print($row->pm_id); ?>">

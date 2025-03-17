@@ -3,6 +3,10 @@ include("includes/php_includes_top.php");
 if ($_SESSION["utype_id"] == 5) {
 	header('Location: guest_order.php');
 }
+
+if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
+	mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_payment_transaction_id = '" .$_REQUEST['id']. "' ") or die(mysqli_error($GLOBALS['conn']));
+}
 include("includes/message.php");
 ?>
 <!doctype html>

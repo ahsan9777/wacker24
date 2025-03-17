@@ -17,8 +17,25 @@ if (isset($_REQUEST['btn_checkout'])) {
 			die();
 		}
 	}
+	print($pm_id);
 	//print_r($usa_id);die();
-
+	/*$order_net_amount = number_format(1.5, "2", ".", "");
+	$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+			//$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
+			$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
+			$paypalresponseData = json_decode($paypalrequest, true);
+			echo $ord_payment_transaction_id = $paypalresponseData['id'];
+			echo "<br>".$paypalresponseData['resultDetails']['AcquirerResponse']."<br>";
+			echo "<br>".$paypalresponseData['redirect']['url']."<br>";
+			print_r($paypalresponseData['redirect']['parameters']);
+			$parameters = "";
+			foreach ($paypalresponseData['redirect']['parameters'] as $key => $value) {
+					$parameters .=  $value['name'] . "=" . $value['value'] . "&";
+				}
+				print($parameters);
+			print("<pre>");
+				print_r($paypalresponseData);
+				print("</pre>");die();*/
 	$Query = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.user_id = '" . $user_id . "' AND usa.usa_id ='" . $usa_id . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
@@ -49,8 +66,12 @@ if (isset($_REQUEST['btn_checkout'])) {
 			$ord_shipping_charges = config_courier_fix_charges;
 		}
 		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
-		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '" . trim(dbStr($_REQUEST['ord_note'])) . "', '" . dbStr(trim(date_time)) . "')") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . dbStr(trim($dinfo_fname)) . "', '" . dbStr(trim($dinfo_lname)) . "', '" . dbStr(trim($dinfo_phone)) . "', '" . dbStr(trim($dinfo_email)) . "', '" . dbStr(trim($dinfo_street)) . "', '" . dbStr(trim($dinfo_house_no)) . "', '" . dbStr(trim($dinfo_address)) . "', '" . dbStr(trim($dinfo_countries_id)) . "', '" . $dinfo_usa_zipcode . "', '" . dbStr(trim($dinfo_additional_info)) . "')") or die(mysqli_error($GLOBALS['conn']));
+		$ord_note = "";
+		if(isset($_REQUEST['ord_note']) && !empty($_REQUEST['ord_note'])){
+			$ord_note = dbStr(trim($_REQUEST['ord_note']));
+		}
+		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '".$ord_note."', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" .$dinfo_additional_info. "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
 
@@ -79,24 +100,25 @@ if (isset($_REQUEST['btn_checkout'])) {
 			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 			header('Location: bestellungen/15');
 		} elseif ($pm_id == 2) {
-			//$PaypalResponseData = "";
+			//$paypalresponseData = "";
 			$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+			//$order_net_amount = number_format(0.5, "2", ".", "");
 			$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
-			$paypalresponseData = json_decode($paypalrequest);
-
-			$ord_payment_transaction_id = $paypalresponseData->id;
-			$ord_payment_short_id = $paypalresponseData->descriptor;
-			$ord_payment_info_detail = $paypalrequest;
+			$paypalresponseData = json_decode($paypalrequest, true);
 			/*print("<pre>");
-				print_r($PaypalResponseData);
+				print_r($paypalresponseData);
 				print("</pre>");die();*/
+			$ord_payment_transaction_id = $paypalresponseData['id'];
+			$ord_payment_short_id = $paypalresponseData['descriptor'];
+			$ord_payment_info_detail = $paypalrequest;
+			
 			$parameters = "";
-			if ($paypalresponseData->resultDetails->AcquirerResponse == 'Success') {
-				foreach ($paypalresponseData->redirect->parameters as $key => $value) {
-					$parameters .=  $value->name . "=" . $value->value . "&";
+			if ($paypalresponseData['resultDetails']['AcquirerResponse'] == 'Success') {
+				foreach ($paypalresponseData['redirect']['parameters'] as $key => $value) {
+					$parameters .=  $value['name'] . "=" . $value['value'] . "&";
 				}
-				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: ' . $paypalresponseData->redirect->url . '?' . $parameters."/15");
+				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+				header('Location: ' . $paypalresponseData['redirect']['url'] . '?' . $parameters."/15");
 			}
 		} elseif (in_array($pm_id, array(4, 5))) {
 			$data['cardnumber'] = $_REQUEST['cardnumber'];
@@ -113,12 +135,12 @@ if (isset($_REQUEST['btn_checkout'])) {
 				$data['entityId'] = $row3->pm_entity_id;
 			}
 			$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
-			$cardresponsedata = json_decode($cardrequest);
+			$cardresponsedata = json_decode($cardrequest, true);
 			/*print("<pre>");
 				print_r($cardresponsedata);
 				print("</pre>");die();*/
-			if ($cardresponsedata->result->code == "000.100.110") {
-				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata->id)) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata->descriptor)) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+			if ($cardresponsedata['result']['code'] == "000.100.110") {
+				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata['id'])) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata['descriptor'])) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 				header('Location: bestellungen/12');
 			}
 		}
