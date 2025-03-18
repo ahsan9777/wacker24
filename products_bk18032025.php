@@ -4,7 +4,7 @@ $AND = "";
 $marke = "";
 $cat_params = "";
 $group_id_check = 0;
-//print_r($_REQUEST);//die();
+//print_r($_REQUEST);die();
 if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
 	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two']);
 	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_three'], " AND parent_id = '".$AND."'");
@@ -43,8 +43,8 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 	if (isset($level_one_request) && $level_one_request > 0) {
 
 		$whereclause .= " AND FIND_IN_SET(" . $level_one_request . ", cm.sub_group_ids)";
-		$level_one_request_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_one_request);
-		$qryStrURL .= "1/" . $level_one_request_params . "/";
+		//$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_one_request);
+		$qryStrURL .= "level_one=" . $level_one_request . "/";
 	} elseif (isset($level_two_request_manf) && $level_two_request_manf > 0) {
 
 		$whereclause .= " AND FIND_IN_SET(" . $level_two_request . ", cm.sub_group_ids)";
@@ -53,8 +53,6 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 
 		$whereclause = "WHERE cm.cat_id = '" . $level_three_request_manf . "' ";
 		$qryStrURL .= "3/".$_REQUEST['cat_params_request'] . "/";
-	} elseif(isset($_REQUEST['cat_params_request']) && $_REQUEST['cat_params_request'] == 'schulranzen'){
-		$qryStrURL .= "1/schulranzen/";
 	}
 	$qryStrURL .= $_REQUEST['manf_name_params'] . "/";
 	$heading_title = returnName("manf_name", "manufacture", "manf_id", $manf_params_id);
@@ -65,7 +63,6 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $level_three_request);
 	$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_three_request);
 } else {
-	//echo "else";
 	$whereclause = "WHERE FIND_IN_SET(" . $level_two_request . ", cm.sub_group_ids)";
 	$qryStrURL .= $_REQUEST['cat_params_two'] . "/";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $level_two_request);
@@ -84,10 +81,8 @@ $pro_type = 0;
 $pro_typeURL = "";
 if (isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0) {
 	$pro_type = $_REQUEST['pro_type'];
-	//$pro_typeURL .= "pro_type=" . $_REQUEST['pro_type'] . "&";
-	$pro_typeURL .= "/" . $_REQUEST['pro_type'];
-	//$qryStrURL .= "pro_type=" . $_REQUEST['pro_type'] . "&";
-	$qryStrURL .=$_REQUEST['pro_type'];
+	$pro_typeURL .= "pro_type=" . $_REQUEST['pro_type'] . "&";
+	$qryStrURL .= "pro_type=" . $_REQUEST['pro_type'] . "&";
 }
 
 

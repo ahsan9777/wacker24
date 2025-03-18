@@ -11,8 +11,7 @@ $cat_params = $_REQUEST['cat_params_one'];
 if ($level_one_request == 20) {
 	$pro_type = $level_one_request;
 	$level_one = 19;
-	//$pro_typeURL = "pro_type=" . $level_one_request . "&";
-	$pro_typeURL = "/" . $level_one_request;
+	$pro_typeURL = "pro_type=" . $level_one_request . "&";
 	$qryStrURL = "pro_type=" . $level_one_request . "&";
 }
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
@@ -70,11 +69,11 @@ $special_price = user_special_price("level_one", $level_one);
 											}
 									?>
 											<div class="pd_card">
-												<div class="pd_image"><a href="artikelarten/<?php print($row1->cat_params . $pro_typeURL); ?>">
+												<div class="pd_image"><a href="artikelarten/<?php print($row1->cat_params . "&" . $pro_typeURL); ?>">
 														<div class="pd_image_inner"><img loading="lazy" src="<?php print(get_image_link(160, $pg_mime_source_href)); ?>" alt=""></div>
 													</a></div>
 												<div class="pd_detail">
-													<div class="pd_title"><a href="artikelarten/<?php print($row1->cat_params . $pro_typeURL); ?>"> <?php print($row1->cat_title); ?> </a></div>
+													<div class="pd_title"><a href="artikelarten/<?php print($row1->cat_params . "&" . $pro_typeURL); ?>"> <?php print($row1->cat_title); ?> </a></div>
 													<ul>
 														<?php
 														//$Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, (SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) ) AS count_sub_group_ids FROM category AS cat WHERE cat.parent_id = '" . $row1->group_id . "' HAVING count_sub_group_ids > 0 ORDER BY  RAND() LIMIT 0,3";
@@ -84,7 +83,7 @@ $special_price = user_special_price("level_one", $level_one);
 														if (mysqli_num_rows($rs2) > 0) {
 															while ($row2 = mysqli_fetch_object($rs2)) {
 														?>
-																<li><a href="artikelarten/<?php print($row1->cat_params."/".$row2->cat_params . $pro_typeURL); ?>"> <?php print($row2->cat_title); ?> </a></li>
+																<li><a href="artikelarten/<?php print($row1->cat_params."/".$row2->cat_params . "&" . $pro_typeURL); ?>"> <?php print($row2->cat_title); ?> </a></li>
 														<?php
 															}
 														}

@@ -1,6 +1,5 @@
 <?php
 $leve_id = 11;
-//print_r($_REQUEST);
 $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.cat_id) )";
 if ((isset($level_two_request) && $level_two_request > 0) || (isset($level_three_request) && $level_three_request > 0) || (isset($manf_params_id) && $manf_params_id > 0)) {
     if (isset($level_two_request) && $level_two_request) {
@@ -10,40 +9,27 @@ if ((isset($level_two_request) && $level_two_request > 0) || (isset($level_three
 
         $leve_id = substr($level_three_request, 0, 3);
     } elseif (isset($manf_params_id)) {
+
         $leve_id = 11;
         if(isset($level_one_request) && $level_one_request > 0){
             $leve_id = $level_one_request;
-            $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
-        } elseif(( isset($_REQUEST['cat_params_request']) && $_REQUEST['cat_params_request'] == 'schulranzen') && (isset($_REQUEST['level']) && $_REQUEST['level'] == 1)){
-            $leve_id = 19;
             $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
         }
     }
     $left_filter_cat_title = returnName("cat_title_de", "category", "group_id", $leve_id);
 } else {
     //if (!isset($_REQUEST['search_keyword'])) {
-        if(isset($level_one_request) && $level_one_request > 0){
-            $leve_id = $level_one_request;
-            $left_filter_cat_title = returnName("cat_title_de", "category", "group_id", $leve_id);
-            if($level_one_request == 20){
-                $leve_id = 19;
-                $left_filter_cat_title = "Schulranzen";
-            }
-        } elseif( isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] == 20){
-            $leve_id = 19;
-            $left_filter_cat_title = "Schulranzen";
-        }
-        /*$leve_id = $level_one_request;
+        $leve_id = $level_one_request;
         $left_filter_cat_title = returnName("cat_title_de", "category", "group_id", $leve_id);
         if($level_one_request == 20){
             $leve_id = 19;
             $left_filter_cat_title = "Schulranzen";
-        }*/
+        }
         //$left_filter_cat_subQuery = "(SELECT COUNT(cm.cat_id) FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) ) AS count_sub_group_ids";
         $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
     //}
 }
-$Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier_id FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND cm.cm_type = '".$pro_type."' AND FIND_IN_SET(".$leve_id.", cm.sub_group_ids)), filtered_products AS ( SELECT DISTINCT pro.manf_id FROM products AS pro WHERE EXISTS ( SELECT 1 FROM relevant_suppliers rs WHERE rs.supplier_id = pro.supplier_id ) )";
+$Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(".$leve_id.", cm.sub_group_ids)), filtered_products AS ( SELECT DISTINCT pro.manf_id FROM products AS pro WHERE EXISTS ( SELECT 1 FROM relevant_suppliers rs WHERE rs.supplier_id = pro.supplier_id ) )";
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword'])? 'style="width: 420px;"' : ''); ?> >
     <div class="categroy_list sticky">
@@ -66,7 +52,7 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
                             $cat_link = "artikelarten/".$row->cat_level_params."/". $row->cat_params;
                         }
                 ?>
-                        <li><a href=" <?php print($cat_link.$pro_typeURL); ?> "> <?php print($row->cat_title); ?> </a></li>
+                        <li><a href=" <?php print($cat_link."&".$pro_typeURL); ?> "> <?php print($row->cat_title); ?> </a></li>
                 <?php
                     }
                 }
@@ -85,11 +71,11 @@ $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
                         if (isset($level_one_request)) {
-                            $brand_link = "artikelarten/marke/1/" . $cat_params."/".$row->manf_name_params.$pro_typeURL;
+                            $brand_link = "artikelarten/marke/1/" . $cat_params."/".$row->manf_name_params;
                         } else if (isset($level_two_request)) {
-                            $brand_link = "artikelarten/marke/2/" . $cat_params."/".$row->manf_name_params.$pro_typeURL;
+                            $brand_link = "artikelarten/marke/2/" . $cat_params."/".$row->manf_name_params;
                         } else if (isset($level_three_request)){
-                            $brand_link = "artikelarten/marke/3/" . $cat_params."/".$row->manf_name_params.$pro_typeURL;
+                            $brand_link = "artikelarten/marke/3/" . $cat_params."/".$row->manf_name_params;
                         }
                 ?>
                         <li><a href="<?php print($brand_link); ?>"> <?php print($row->manf_name); ?> </a></li>

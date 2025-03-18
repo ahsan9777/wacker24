@@ -312,5 +312,32 @@ if (isset($_REQUEST['action'])) {
                     print("Total no of record added: " . $counter);
                 }
                 break;
+
+            case 'schulranzen_price_list':
+                print("schulranzen_price_list");die();
+                $counter = 0;
+                $counter1 = 0;
+                $Query = "SELECT * FROM schulranzen_price_list ORDER BY spl_id ASC";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $checkrecord = 0;
+                        $supplier_id = $row->supplier_id;
+                        $pbp_price_amount = $row->pbp_price_amount;
+                        
+                        $checkrecord = checkrecord("pro_id", "products", "supplier_id = '".$supplier_id."'");
+                        if ($checkrecord > 0){
+                            $counter1++;
+                            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1' WHERE supplier_id = '".$supplier_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                            mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_price_amount = '".$pbp_price_amount."' WHERE pbp_lower_bound = '1' AND supplier_id = '".$supplier_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                            mysqli_query($GLOBALS['conn'], "UPDATE schulranzen_price_list SET spl_status = '1' WHERE supplier_id = '".$supplier_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                        }
+
+                        $counter++;
+                    }
+                    print("Total no of record added: " . $counter1."<br>");
+                    print("Total no of record added: " . $counter);
+                }
+                break;
     }
 }

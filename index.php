@@ -182,13 +182,13 @@ $page = 1;
 								<!--<div class="gerenric_show_All"><a href="javascript:void(0)">Mehr anzeigen</a></div>-->
 							</div>
 						</div>
-						<!--<div class="gerenric_white_box">
+						<div class="gerenric_white_box">
 							<div class="gerenric_product full_column">
 								<h2>Schulranzen</h2>
 								<div class="gerenric_slider">
 									<?php
 									$special_price = "";
-									$Query = "SELECT * FROM vu_category_map AS cm WHERE FIND_IN_SET('19', cm.sub_group_ids) AND cm.cm_type = '20' ORDER BY  RAND() LIMIT 0,12";
+									$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND FIND_IN_SET('19', cm.sub_group_ids) AND cm.cm_type = '20' ORDER BY  RAND() LIMIT 0,12";
 									//print($Query2);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -227,7 +227,7 @@ $page = 1;
 								</div>
 								<div class="gerenric_show_All"><a href="product_category.php?level_one=20">Mehr anzeigen</a></div>
 							</div>
-						</div>-->
+						</div>
 						<?php
 						$Query1 = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title FROM category WHERE cat_status = '1' AND cat_showhome_feature = '1'";
 						$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
