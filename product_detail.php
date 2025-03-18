@@ -224,8 +224,8 @@ include("includes/message.php");
 														<li>
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
-																<span style="<?php print( (($pro_udx_seo_selection_feature == 'Farbe') ? 'height: 60px; width: 60px;' : 'height: 30px; width: auto;') ); ?>">
-																	<?php if($pro_udx_seo_selection_feature == 'Farbe'){?>
+																<span style="<?php print( ((in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px; width: 60px;' : 'height: 30px; width: auto;') ); ?>">
+																	<?php if(in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))){?>
 																		<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
 																	<?php } else { ?>
 																		<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>"  title="<?php print($row->pf_fvalue); ?>" ><?php print($row->pf_fvalue); ?></label>

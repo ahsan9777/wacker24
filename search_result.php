@@ -34,7 +34,7 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 
 	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . rtrim($search_keyword_where, " OR ") . ")";
 
-	$heading_title .= "Keyword : " . $_REQUEST['search_keyword'];
+	$heading_title .= "Schlagwort : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
 	$search_keyword = $_REQUEST['search_keyword'];
 }
@@ -94,7 +94,7 @@ if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 
 $order_by = "ORDER BY match_count DESC";
 $sortby = 0;
-$sortby_array = array("Sort by: N/A", "Price high to low", "Price low to high", "Sort by a to z", "Sort by z to a");
+$sortby_array = array("Sortieren nach", "Preis aufsteigend", "Preis absteigend", "Name A-Z", "Name Z-A");
 if (isset($_REQUEST['sortby'])) {
 	$sortby = $_REQUEST['sortby'];
 	switch ($sortby) {
@@ -177,6 +177,7 @@ if (isset($_REQUEST['sortby'])) {
 								<div class="list_type_row">
 									<h2> <?php print(rtrim($heading_title, ";") . " ( " . $count . " )"); ?> </h2>
 									<ul>
+										<li>Ansichten: </li>
 										<li class="click_th"><i class="fa fa-th"></i></li>
 										<li class="click_list"><i class="fa fa-list"></i></li>
 										<li>
@@ -242,8 +243,8 @@ if (isset($_REQUEST['sortby'])) {
 																				<li>
 																					<input type="radio" class="color" id="color_<?php print($counter); ?>" name="color_radio_<?php print($counter) ?>" data-id="<?php print($counter); ?>" value="<?php print($row1->supplier_id); ?>" <?php print(($row1->supplier_id == $row->supplier_id) ? 'checked' : ''); ?>>
 																					<label for="color_<?php print($counter); ?>">
-																						<span style="<?php print((($row->pro_udx_seo_selection_feature == 'Farbe') ? 'height: 60px;' : 'height: 30px;')); ?>">
-																							<?php if ($row->pro_udx_seo_selection_feature == 'Farbe') { ?>
+																						<span style="<?php print( (( in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe')) ) ? 'height: 60px;' : 'height: 30px;')); ?>">
+																							<?php if( in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe')) ){ ?>
 																								<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
 																							<?php } else { ?>
 																								<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" title="<?php print($row1->pf_fvalue); ?>"><?php print($row1->pf_fvalue); ?></label>
@@ -302,7 +303,7 @@ if (isset($_REQUEST['sortby'])) {
 																<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1">
 																<input type="hidden" id="ci_discount_type_<?php print($row->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 																<input type="hidden" id="ci_discount_value_<?php print($row->pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
-																<div class="gerenric_btn">Add to Cart</div>
+																<div class="gerenric_btn">In den Warenkorb</div>
 															</a>
 														</div>
 													</div>
