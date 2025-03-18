@@ -44,6 +44,7 @@ if (isset($_REQUEST['action'])) {
             $count = 0;
             //print_r($_REQUEST);die();
             $pro_id = $_REQUEST['pro_id'];
+            $pro_type = $_REQUEST['pro_type'];
             $supplier_id = $_REQUEST['supplier_id'];
             $ci_qty = $_REQUEST['ci_qty'];
             $get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty);
@@ -83,7 +84,11 @@ if (isset($_REQUEST['action'])) {
                         $row = mysqli_fetch_object($rs);
 
                         $cart_quantity = returnName("ci_qty", "cart_items", "ci_id", $row->ci_id);
-                        $get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty + $cart_quantity);
+                        if($pro_type > 0){
+                            $get_pro_price = get_pro_price($pro_id, $supplier_id, 1);
+                        } else{
+                            $get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty + $cart_quantity);
+                        }
                         //print_r($get_pro_price);
                         $pbp_id = $get_pro_price['pbp_id'];
                         $pbp_price_amount = $get_pro_price['ci_amount'];
@@ -100,14 +105,23 @@ if (isset($_REQUEST['action'])) {
                             $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value, $ci_gst_value, 1);
                             $ci_discounted_amount = $pbp_price_amount - $ci_amount;
 
-                            $ci_discounted_amount_gross = $ci_discounted_amount * ($ci_qty + $cart_quantity);
+                            if($pro_type > 0){
+                                $ci_qty = 0;
+                                $ci_discounted_amount_gross = $ci_discounted_amount * 1;
+                            } else{
+                                $ci_discounted_amount_gross = $ci_discounted_amount * ($ci_qty + $cart_quantity);
+                            }
                             $ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * $ci_gst_value);
                             //print($ci_amount);die();
+                        }
+                        if($pro_type > 0){
+                            $ci_qty = 0;
                         }
                         $ci_gross_total = $ci_amount * ($ci_qty + $cart_quantity);
                         $ci_gst = $ci_gross_total * $ci_gst_value;
                         $ci_total = $ci_gross_total + $ci_gst;
 
+                        //print("UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_gst_value = '".$ci_gst_value."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = '$ci_gross_total' , ci_gst = '$ci_gst',  ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'");die();
                         //$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '".$pbp_id."', ci_amount = '".$ci_amount."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = ci_gross_total + '$ci_gross_total' , ci_gst = ci_gst + '$ci_gst', ci_discount = ci_discount + '$ci_discount', ci_total = ci_total + '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
                         $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_gst_value = '".$ci_gst_value."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = '$ci_gross_total' , ci_gst = '$ci_gst',  ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
                         $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));

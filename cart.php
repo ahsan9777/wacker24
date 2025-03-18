@@ -13,7 +13,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	if ($pm_id == 1) {
 		$usa_id_billing = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
 		if (empty($usa_id_billing)) {
-			header("Location: my_address.php?op=16");
+			header("Location: adressen/16");
 			die();
 		}
 	}
@@ -67,11 +67,11 @@ if (isset($_REQUEST['btn_checkout'])) {
 		}
 		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
 		$ord_note = "";
-		if(isset($_REQUEST['ord_note']) && !empty($_REQUEST['ord_note'])){
+		if (isset($_REQUEST['ord_note']) && !empty($_REQUEST['ord_note'])) {
 			$ord_note = dbStr(trim($_REQUEST['ord_note']));
 		}
-		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '".$ord_note."', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" .$dinfo_additional_info. "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
 
@@ -81,7 +81,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','".$row2->ci_gst_value."', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
 			$order_items_table_check = 1;
 		}
 	}
@@ -93,7 +93,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		unset($_SESSION['sess_id']);
 		unset($_SESSION['ci_id']);
 		unset($_SESSION['header_quantity']);
-		if(isset($_SESSION["cart_check"])){
+		if (isset($_SESSION["cart_check"])) {
 			unset($_SESSION["cart_check"]);
 		}
 		if ($pm_id == 1) {
@@ -111,14 +111,14 @@ if (isset($_REQUEST['btn_checkout'])) {
 			$ord_payment_transaction_id = $paypalresponseData['id'];
 			$ord_payment_short_id = $paypalresponseData['descriptor'];
 			$ord_payment_info_detail = $paypalrequest;
-			
+
 			$parameters = "";
 			if ($paypalresponseData['resultDetails']['AcquirerResponse'] == 'Success') {
 				foreach ($paypalresponseData['redirect']['parameters'] as $key => $value) {
 					$parameters .=  $value['name'] . "=" . $value['value'] . "&";
 				}
 				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: ' . $paypalresponseData['redirect']['url'] . '?' . $parameters."/15");
+				header('Location: ' . $paypalresponseData['redirect']['url'] . '?' . $parameters . "/15");
 			}
 		} elseif (in_array($pm_id, array(4, 5))) {
 			$data['cardnumber'] = $_REQUEST['cardnumber'];
@@ -178,7 +178,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 				$ci_gst = $ci_gross_total * $ci_gst_value;
 				$ci_total = $ci_gross_total + $ci_gst;
 
-				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total', ci_gst_value = '".$ci_gst_value."', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total', ci_gst_value = '" . $ci_gst_value . "', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
 				$update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
 				$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
 				if ($updated_cart_item == true && $update_cart == true) {
@@ -312,7 +312,7 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -327,8 +327,9 @@ include("includes/message.php");
 											$gst_orignal = $row->pbp_price_amount * $ci_gst_value;
 											$delivery_charges = get_delivery_charges($cart_amount);
 											$pro_description_short = explode(' ', $row->pro_description_short);
+											$pro_type = $row->pro_type;
 
-											$smiller_product_url = $GLOBALS['siteURL']."search_result.php?search_keyword=".implode(' ', array_slice($pro_description_short, 0, 2));
+											$smiller_product_url = $GLOBALS['siteURL'] . "search_result.php?search_keyword=" . implode(' ', array_slice($pro_description_short, 0, 2));
 									?>
 											<div class="cart_pd_row">
 												<div class="cart_pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
@@ -350,15 +351,21 @@ include("includes/message.php");
 																$pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;
 															}
 														}
+														if ($pro_type == 0) {
 														?>
-														<div class="cart_pd_piece"> <?php print($pq_quantity); ?> pieces immediately available</div>
+															<div class="cart_pd_piece"> <?php print($pq_quantity); ?> pieces immediately available</div>
+														<?php } ?>
 														<div class="cart_pd_option">
 															<ul>
 																<li>
 																	<span>Quantity:</span>
 																	<span>
 																		<input type="hidden" name="ci_id[]" id="ci_id" value="<?php print($row->ci_id); ?>">
-																		<input type="number" class="qlt_number ci_qty" name="ci_qty[]" id="ci_qty" value="<?php print($row->ci_qty); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} else if(parseFloat(this.value) > <?php print($pq_quantity + $row->ci_qty); ?> ){ this.value =<?php print($pq_quantity + $row->ci_qty); ?>; return false; } " min="1" max="<?php print($pq_quantity); ?>">
+																		<?php if ($pro_type > 0) { ?>
+																			<input type="number" class="qlt_number ci_qty" name="ci_qty[]" id="ci_qty" value="<?php print($row->ci_qty); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} else if(parseFloat(this.value) > <?php print($pq_quantity + $row->ci_qty); ?> ){ this.value =<?php print($row->ci_qty); ?>; return false; } " min="1" max="1">
+																		<?php } else { ?>
+																			<input type="number" class="qlt_number ci_qty" name="ci_qty[]" id="ci_qty" value="<?php print($row->ci_qty); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} else if(parseFloat(this.value) > <?php print($pq_quantity + $row->ci_qty); ?> ){ this.value =<?php print($pq_quantity + $row->ci_qty); ?>; return false; } " min="1" max="<?php print($pq_quantity); ?>">
+																		<?php } ?>
 																	</span>
 																</li>
 																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Delete</a></li>
@@ -390,7 +397,7 @@ include("includes/message.php");
 									$delivery_charges_shipping = 0;
 									$delivery_charges_total = 0;
 									$delivery_charges_tex = 0;
-									
+
 									if ($count > 0) {
 										if ($delivery_charges['total'] > 0) {
 											$display = "";
@@ -444,7 +451,7 @@ include("includes/message.php");
 														<li><?php print($row->usa_zipcode); ?></li>
 														<li><?php print($row->countries_name); ?></li>
 														<li><?php print($row->usa_address); ?></li>
-														<li><a href="my_address.php" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
+														<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
 													</ul>
 												</div>
 											</div>
@@ -452,7 +459,7 @@ include("includes/message.php");
 										}
 									} else {
 										$checkout_click = "";
-										$checkout_click_href = "my_address.php";
+										$checkout_click_href = "adressen";
 									}
 
 									$Query = "SELECT usa.*, c.countries_name FROM user_shipping_address AS usa LEFT OUTER JOIN countries AS c ON c.countries_id = usa.countries_id LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE u.user_invoice_payment = '1' AND usa.usa_type = '1' AND usa.user_id = '" . $_SESSION["UID"] . "'";
@@ -475,7 +482,7 @@ include("includes/message.php");
 													<li><?php print($row->usa_zipcode); ?></li>
 													<li><?php print($row->countries_name); ?></li>
 													<li><?php print($row->usa_address); ?></li>
-													<li><a href="my_address.php" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
+													<li><a href="adressen" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>
 										</div>
@@ -520,7 +527,7 @@ include("includes/message.php");
 											<div class="cart_prise_lb">
 												<div class="packing_cost">zzgl. MwSt.</div>
 											</div>
-											<div class="cart_prise_vl"><?php print(price_format($cart_gst + $delivery_charges_tex +  ((isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4) ? 0 : 1.33) )); ?> €</div>
+											<div class="cart_prise_vl"><?php print(price_format($cart_gst + $delivery_charges_tex +  ((isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4) ? 0 : 1.33))); ?> €</div>
 										</li>
 										<li>
 											<div class="cart_prise_lb"><span>Gesamtbetrag:</span></div>

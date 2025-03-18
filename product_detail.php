@@ -2,7 +2,7 @@
 
 include("includes/php_includes_top.php");
 
-$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -11,7 +11,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_id = $row->pro_id;
 	$pro_type = $row->pro_type;
 	if ($pro_type > 0) {
-		$qryStrURL = "pro_type=" . $pro_type . "&";
+		$qryStrURL = "/".$pro_type;
 	}
 	$supplier_id = $row->supplier_id;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
@@ -40,10 +40,13 @@ if (mysqli_num_rows($rs) > 0) {
 	//print_r($sub_group_ids);
 	$cat_id_one = $sub_group_ids[1];
 	$cat_title_one = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_one);
+	$cat_one_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_one);
 	$cat_id_two = $sub_group_ids[0];
 	$cat_title_two = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_two);
+	$cat_two_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_two);
 	$cat_id_three = $row->cat_id_three;
 	$cat_title_three = $row->cat_title_three;
+	$cat_three_params = $row->cat_three_params;
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else{
 	header("Location: ".$GLOBALS['siteURL']."nicht-verfügbar");
@@ -142,12 +145,12 @@ include("includes/message.php");
 					<ul>
 						<?php
 						if ($pro_type > 0) { ?>
-							<li><a href="product_category.php?level_one=20"> Schulranzen </a></li>
+							<li><a href="unterkategorien/schulranzen"> Schulranzen </a></li>
 						<?php } else { ?>
-							<li><a href="product_category.php?level_one=<?php print($cat_id_one); ?>"> <?php print($cat_title_one); ?> </a></li>
+							<li><a href="unterkategorien/<?php print($cat_one_params); ?>"> <?php print($cat_title_one); ?> </a></li>
 						<?php } ?>
-						<li><a href="products.php?level_two=<?php print($cat_id_two . "&" . $qryStrURL); ?>"> <?php print($cat_title_two); ?> </a></li>
-						<li><a href="products.php?level_three=<?php print($cat_id_three . "&" . $qryStrURL); ?>"> <?php print($cat_title_three); ?> </a></li>
+						<li><a href="artikelarten/<?php print($cat_two_params. $qryStrURL); ?>"> <?php print($cat_title_two); ?> </a></li>
+						<li><a href="artikelarten/<?php print($cat_two_params."/".$cat_three_params . $qryStrURL); ?>"> <?php print($cat_title_three); ?> </a></li>
 					</ul>
 				</div>
 			</div>
@@ -304,6 +307,10 @@ include("includes/message.php");
 										} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
 											print('<div class="product_order_title red">Auf Anfrage</div>');
 										}
+									} else{
+										if($pro_type > 0){
+											$quantity_lenght = 1;
+										}
 									}
 									?>
 									<!--<div class="product_order_title"> 100 pieces ordered</div>-->
@@ -340,6 +347,7 @@ include("includes/message.php");
 									</div>
 									<div class="order_btn">
 										<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>">
+										<input type="hidden" id="pro_type_<?php print($pro_id); ?>" name="pro_type" value="<?php print($pro_type); ?>">
 										<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>">
 										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">

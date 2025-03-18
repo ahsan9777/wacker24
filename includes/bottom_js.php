@@ -45,20 +45,22 @@
 	$(".add_to_card").on("click", function(){
 		//console.log("add_to_card");
 		let pro_id = $("#pro_id_"+$(this).attr("data-id")).val();
+		let pro_type = $("#pro_type_"+$(this).attr("data-id")).val();
 		let supplier_id = $("#supplier_id_"+$(this).attr("data-id")).val();
 		let ci_discount_type = $("#ci_discount_type_"+$(this).attr("data-id")).val();
 		let ci_discount_value = $("#ci_discount_value_"+$(this).attr("data-id")).val();
 		let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
 
-		/*console.log("pro_id: "+pro_id);
+		/*console.log("pro_type: "+pro_type);
 		console.log("supplier_id: "+supplier_id);
 		console.log("ci_qty: "+ci_qty);*/
 
 		$.ajax({
 			url: 'ajax_calls.php?action=add_to_card',
-			method: 'POST',
+			method: 'GET',
 			data: {
 				pro_id: pro_id,
+				pro_type: pro_type,
 				supplier_id: supplier_id,
 				ci_discount_type: ci_discount_type,
 				ci_discount_value: ci_discount_value,

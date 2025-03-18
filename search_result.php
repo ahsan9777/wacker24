@@ -263,8 +263,9 @@ if (isset($_REQUEST['sortby'])) {
 														<?php
 														$quantity_lenght = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+														//print();
 														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-														if (mysqli_num_rows($rs) > 0) {
+														if (mysqli_num_rows($rs1) > 0) {
 															$row1 = mysqli_fetch_object($rs1);
 															$pq_quantity = $row1->pq_quantity;
 															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
@@ -275,6 +276,10 @@ if (isset($_REQUEST['sortby'])) {
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
 																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+															}
+														} else{
+															if($row->pro_type > 0){
+																$quantity_lenght = 1;
 															}
 														}
 														?>
@@ -299,6 +304,7 @@ if (isset($_REQUEST['sortby'])) {
 														<div class="pd_btn">
 															<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
 																<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>">
+																<input type="hidden" id="pro_type_<?php print($row->pro_id); ?>" name="pro_type" value="<?php print($row->pro_type); ?>">
 																<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>">
 																<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1">
 																<input type="hidden" id="ci_discount_type_<?php print($row->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
