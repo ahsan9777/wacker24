@@ -34,7 +34,7 @@ session_destroy();
 						<script>
 							setTimeout(
 								function() {
-									window.location.href = "index.php";
+									window.location.href = "<?php print($GLOBALS['siteURL']); ?>";
 								}, 10000);
 						</script>
 					</div>

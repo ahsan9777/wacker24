@@ -69,8 +69,7 @@ if (isset($_REQUEST['btn_registration'])) {
 			$ort = $_REQUEST['ort'];
 
 			$class = "alert alert-danger";
-			$strMSG = "Dear Cuctomer, <br>
-                    	confirmation does not match!";
+			$strMSG = "Sehr geehrter Kunde, <br> Der Bestätigungscode passt nicht!";
 		} else {
 			$user_id = getMaximum("users", "user_id");
 			$users = mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, utype_id, utype_id_as_guest, user_fname, user_lname, gen_id, user_phone, user_name " . $field . ") VALUES ('" . $user_id . "', '" . dbStr(trim($_REQUEST['utype_id'])) . "', '".$utype_id_as_guest."', '" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "' " . $value . ")") or die(mysqli_error($GLOBALS['conn']));

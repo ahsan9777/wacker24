@@ -50,8 +50,7 @@ if (isset($_REQUEST['btn_registration'])) {
 		$user_confirm_password = $_REQUEST['user_confirm_password'];
 		$countries_id = $_REQUEST['countries_id'];
 		$class = "alert alert-danger";
-		$strMSG = "Dear Cuctomer, <br>
-                    This account already exists against the user name!";
+		$strMSG = "Sehr geehrter Kunde, <br>Dieses Konto existiert bereits unter dem Benutzernamen!";
 	} else {
 		if ($_REQUEST['user_password'] != $_REQUEST['user_confirm_password']) {
 			$utype_id = $_REQUEST['utype_id'];
@@ -65,8 +64,7 @@ if (isset($_REQUEST['btn_registration'])) {
 			$countries_id = $_REQUEST['countries_id'];
 
 			$class = "alert alert-danger";
-			$strMSG = "Dear Cuctomer, <br>
-                    Passwords does not match!";
+			$strMSG = "Sehr geehrter Kunde, <br>Die Kennwörter stimmen nicht überein!";
 		} else {
 
 			if ($_REQUEST['confirm_code'] != $_REQUEST['reconfirm_code']) {
@@ -82,8 +80,7 @@ if (isset($_REQUEST['btn_registration'])) {
 				$countries_id = $_REQUEST['countries_id'];
 
 				$class = "alert alert-danger";
-				$strMSG = "Dear Cuctomer, <br>
-                    	confirmation does not match!";
+				$strMSG = "Sehr geehrter Kunde, <br> Der Bestätigungscode passt nicht!";
 			} else {
 				$user_id = getMaximum("users", "user_id");
 				$user_verification_code = md5($user_id . date("Ymdhis"));
