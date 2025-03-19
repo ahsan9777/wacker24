@@ -70,7 +70,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $manf_id = $row1->manf_id;
         } else {
             $manf_id = getMaximum("manufacture", "manf_id");
-            mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name) VALUES ('" . $manf_id . "', '" . dbStr(trim($pro_manufacture_name)) . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params) VALUES ('" . $manf_id . "', '" . dbStr(trim($pro_manufacture_name)) . "', '".dbStr(trim(url_clean($pro_manufacture_name)))."')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         $Query2 = "SELECT * FROM products WHERE  supplier_id = '" . $supplier_id . "'";

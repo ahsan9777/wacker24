@@ -451,7 +451,9 @@ include("includes/message.php");
 														<li><?php print($row->usa_zipcode); ?></li>
 														<li><?php print($row->countries_name); ?></li>
 														<li><?php print($row->usa_address); ?></li>
+														<?php if ($_SESSION["utype_id"] != 5) { ?>
 														<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
+														<?php } ?>
 													</ul>
 												</div>
 											</div>

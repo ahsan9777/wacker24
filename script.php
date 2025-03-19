@@ -30,7 +30,8 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'user_data':
-            print("user_data");die();
+            print("user_data");
+            die();
             $counter = 0;
             $Query = "SELECT * FROM wacker_users ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -62,7 +63,7 @@ if (isset($_REQUEST['action'])) {
                     $user_fname = $row->fname;
                     $user_lname = $row->lname;
                     $user_id = getMaximum("users", "user_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, id, customer_id, special_status, user_invoice_payment, user_sepa_payment, user_name, user_password, gen_id, status_id, user_datecreated, utype_id, user_company_name, user_tax_no, user_phone, user_fname, user_lname, countries_id) VALUES ('" . $user_id . "', '" . $id . "', '" . $customer_id . "', '" . $special_status . "', '" . $user_invoice_payment . "', '" . $user_sepa_payment . "', '" . $user_name . "', '" . $user_password . "', '" . $gen_id . "', '" . $status_id . "', '" . $user_datecreated . "', '" . $utype_id . "', '" . $user_company_name . "', '" . $user_tax_no . "', '" . $user_phone . "', '" . $user_fname . "', '" . $user_lname . "', '".$countries_id."')") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, id, customer_id, special_status, user_invoice_payment, user_sepa_payment, user_name, user_password, gen_id, status_id, user_datecreated, utype_id, user_company_name, user_tax_no, user_phone, user_fname, user_lname, countries_id) VALUES ('" . $user_id . "', '" . $id . "', '" . $customer_id . "', '" . $special_status . "', '" . $user_invoice_payment . "', '" . $user_sepa_payment . "', '" . $user_name . "', '" . $user_password . "', '" . $gen_id . "', '" . $status_id . "', '" . $user_datecreated . "', '" . $utype_id . "', '" . $user_company_name . "', '" . $user_tax_no . "', '" . $user_phone . "', '" . $user_fname . "', '" . $user_lname . "', '" . $countries_id . "')") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record added: " . $counter);
@@ -70,7 +71,8 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'user_shipping_address_data':
-            print("user_shipping_address_data");die();
+            print("user_shipping_address_data");
+            die();
             $counter = 0;
             $Query = "SELECT * FROM invoice_address ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -88,7 +90,7 @@ if (isset($_REQUEST['action'])) {
                     $usa_additional_info = $row->additional_info;
 
                     $usa_id = getMaximum("user_shipping_address", "usa_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_type, usa_street, usa_house_no, usa_zipcode, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '1', '" . $usa_street . "', '" . $usa_house_no . "', '".$usa_zipcode."', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_type, usa_street, usa_house_no, usa_zipcode, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '1', '" . $usa_street . "', '" . $usa_house_no . "', '" . $usa_zipcode . "', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record added: " . $counter);
@@ -96,7 +98,8 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'user_delivery_address_data':
-            print("user_delivery_address_data");die();
+            print("user_delivery_address_data");
+            die();
             $counter = 0;
             $Query = "SELECT * FROM addressbook ORDER BY id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -115,7 +118,7 @@ if (isset($_REQUEST['action'])) {
                     $usa_additional_info = $row->additional_info;
 
                     $usa_id = getMaximum("user_shipping_address", "usa_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_street, usa_house_no, usa_zipcode, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_defualt, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '" . $usa_street . "', '" . $usa_house_no . "', '".$usa_zipcode."', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_defualt . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, id, usa_street, usa_house_no, usa_zipcode, countries_id, usa_contactno, old_user_id, user_id, usa_fname, usa_defualt, usa_additional_info) VALUES ('" . $usa_id . "', '" . $id . "', '" . $usa_street . "', '" . $usa_house_no . "', '" . $usa_zipcode . "', '" . $countries_id . "', '" . $usa_contactno . "', '" . $old_user_id . "', '" . $user_id . "', '" . $usa_fname . "', '" . $usa_defualt . "', '" . $usa_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record added: " . $counter);
@@ -123,7 +126,8 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'order_data':
-            print("order_data");die();
+            print("order_data");
+            die();
             $counter = 0;
             $Query = "SELECT * FROM order_manager ORDER BY order_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -157,7 +161,8 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'order_items_data':
-            print("order_items_data");die();
+            print("order_items_data");
+            die();
             $counter = 0;
             $Query = "SELECT * FROM users_orders ORDER BY order_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -186,7 +191,8 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'delivery_info_data':
-            print("delivery_info_data");die();
+            print("delivery_info_data");
+            die();
             $counter = 0;
             $Query = "SELECT * FROM orders WHERE billing_address_id > 0 ORDER BY ord_datetime ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -198,7 +204,7 @@ if (isset($_REQUEST['action'])) {
                     if ($row->ord_amount <= config_condition_courier_amount) {
                         $ord_shipping_charges = config_courier_fix_charges;
                     }
-                    $Query1 = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.id = '".$billing_address_id."' AND usa_type = '0'";
+                    $Query1 = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.id = '" . $billing_address_id . "' AND usa_type = '0'";
                     $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
                     if (mysqli_num_rows($rs1) > 0) {
                         $rw = mysqli_fetch_object($rs1);
@@ -214,130 +220,145 @@ if (isset($_REQUEST['action'])) {
                         $dinfo_countries_id = $rw->countries_id;
                         $dinfo_usa_zipcode = $rw->usa_zipcode;
                         $dinfo_id = getMaximum("delivery_info", "dinfo_id");
-                        mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" .$dinfo_fname . "', '" .$dinfo_lname . "', '" .$dinfo_phone . "', '" .$dinfo_email . "', '" .$dinfo_street . "', '" .$dinfo_house_no . "', '" .$dinfo_address . "', '" .$dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "')") or die(mysqli_error($GLOBALS['conn']));
+                        mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "')") or die(mysqli_error($GLOBALS['conn']));
                     }
-                    mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_shipping_charges = '".$ord_shipping_charges."' WHERE ord_id= '" . $ord_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_shipping_charges = '" . $ord_shipping_charges . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record added: " . $counter);
             }
             break;
 
-            case 'shopping_list':
-                print("shopping_list");die();
-                $counter = 0;
-                $Query = "SELECT * FROM list_section ORDER BY id ASC";
-                $rs = mysqli_query($GLOBALS['conn'], $Query);
-                if (mysqli_num_rows($rs) > 0) {
-                    while ($row = mysqli_fetch_object($rs)) {
-                        $old_id = $row->id;
-                        $old_user_id = $row->user_id;
-                        $user_id = returnName("user_id", "users", "id", $old_user_id);
-                        $sl_title = $row->name;
-                        
-                        $sl_id = getMaximum("shopping_list", "sl_id");
-                        mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, old_id, old_user_id, user_id, sl_title) VALUES ('" . $sl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $sl_title . "')") or die(mysqli_error($GLOBALS['conn']));
-                        $counter++;
-                    }
-                    print("Total no of record added: " . $counter);
-                }
-                break;
+        case 'shopping_list':
+            print("shopping_list");
+            die();
+            $counter = 0;
+            $Query = "SELECT * FROM list_section ORDER BY id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $old_id = $row->id;
+                    $old_user_id = $row->user_id;
+                    $user_id = returnName("user_id", "users", "id", $old_user_id);
+                    $sl_title = $row->name;
 
-            case 'wishlist':
-                print("wishlist");die();
-                $counter = 0;
-                $Query = "SELECT * FROM mylist ORDER BY id ASC";
-                $rs = mysqli_query($GLOBALS['conn'], $Query);
-                if (mysqli_num_rows($rs) > 0) {
-                    while ($row = mysqli_fetch_object($rs)) {
-                        $old_id = $row->id;
-                        $old_user_id = $row->user_id;
-                        $old_section_id = $row->section_id;
-                        $user_id = returnName("user_id", "users", "id", $old_user_id);
-                        $sl_id = returnName("sl_id", "shopping_list", "old_id", $old_section_id);
-                        $supplier_id = $row->supplier_aid;
-                        
-                        $wl_id = getMaximum("wishlist", "wl_id");
-                        mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, old_id, old_user_id, user_id, old_section_id, sl_id, supplier_id) VALUES ('" . $wl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $old_section_id . "', '".$sl_id."', '".$supplier_id."')") or die(mysqli_error($GLOBALS['conn']));
-                        $counter++;
-                    }
-                    print("Total no of record added: " . $counter);
+                    $sl_id = getMaximum("shopping_list", "sl_id");
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, old_id, old_user_id, user_id, sl_title) VALUES ('" . $sl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $sl_title . "')") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
                 }
-                break;
+                print("Total no of record added: " . $counter);
+            }
+            break;
 
-            case 'user_special_price':
-                print("user_special_price");die();
-                $counter = 0;
-                $Query = "SELECT * FROM special_price ORDER BY id ASC";
-                $rs = mysqli_query($GLOBALS['conn'], $Query);
-                if (mysqli_num_rows($rs) > 0) {
-                    while ($row = mysqli_fetch_object($rs)) {
-                        $old_id = $row->id;
-                        $old_user_id = $row->user_id;
-                        $user_id = returnName("user_id", "users", "id", $old_user_id);
-                        $supplier_id = $row->supplier_aid;
-                        $level_one_id = $row->cat_id;
-                        $level_two_id = $row->sub_cat_id;
-                        if($row->fixed > 0){
-                            $usp_price_type = 1;
-                            $usp_discounted_value = $row->fixed;
-                        } else{
-                            $usp_price_type = 0;
-                            $usp_discounted_value = $row->percentage;
+        case 'wishlist':
+            print("wishlist");
+            die();
+            $counter = 0;
+            $Query = "SELECT * FROM mylist ORDER BY id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $old_id = $row->id;
+                    $old_user_id = $row->user_id;
+                    $old_section_id = $row->section_id;
+                    $user_id = returnName("user_id", "users", "id", $old_user_id);
+                    $sl_id = returnName("sl_id", "shopping_list", "old_id", $old_section_id);
+                    $supplier_id = $row->supplier_aid;
+
+                    $wl_id = getMaximum("wishlist", "wl_id");
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO wishlist (wl_id, old_id, old_user_id, user_id, old_section_id, sl_id, supplier_id) VALUES ('" . $wl_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $old_section_id . "', '" . $sl_id . "', '" . $supplier_id . "')") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record added: " . $counter);
+            }
+            break;
+
+        case 'user_special_price':
+            print("user_special_price");
+            die();
+            $counter = 0;
+            $Query = "SELECT * FROM special_price ORDER BY id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $old_id = $row->id;
+                    $old_user_id = $row->user_id;
+                    $user_id = returnName("user_id", "users", "id", $old_user_id);
+                    $supplier_id = $row->supplier_aid;
+                    $level_one_id = $row->cat_id;
+                    $level_two_id = $row->sub_cat_id;
+                    if ($row->fixed > 0) {
+                        $usp_price_type = 1;
+                        $usp_discounted_value = $row->fixed;
+                    } else {
+                        $usp_price_type = 0;
+                        $usp_discounted_value = $row->percentage;
+                    }
+                    $usp_addedby = 2;
+                    $usp_cdate = $row->date;
+
+                    $usp_id = getMaximum("user_special_price", "usp_id");
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, old_id, old_user_id, user_id, supplier_id, level_one_id, level_two_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $supplier_id . "', '" . $level_one_id . "', '" . $level_two_id . "', '" . $usp_price_type . "', '" . $usp_discounted_value . "', '" . $usp_addedby . "', '" . $usp_cdate . "')") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record added: " . $counter);
+            }
+            break;
+
+        case 'manufacture_paramer':
+            print("manufacture_paramer");
+            die();
+            $counter = 0;
+            $Query = "SELECT * FROM manufacture ORDER BY manf_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $manf_id = $row->manf_id;
+                    $manf_name_params = url_clean($row->manf_name);
+
+                    mysqli_query($GLOBALS['conn'], "UPDATE manufacture SET manf_name_params = '" . dbStr(trim($manf_name_params)) . "' WHERE manf_id = '" . $manf_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record added: " . $counter);
+            }
+            break;
+
+        case 'schulranzen_price_list':
+            print("schulranzen_price_list");die();
+            $counter = 0;
+            $counter1 = 0;
+            $Query = "SELECT * FROM schulranzen_price_list ORDER BY spl_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $checkrecord = 0;
+                    $supplier_id = $row->supplier_id;
+                    $pbp_price_amount = $row->pbp_price_amount_without_tax;
+                    $manf_name = $row->manf_name;
+
+                    $checkrecord = checkrecord("pro_id", "products", "supplier_id = '" . $supplier_id . "'");
+                    if ($checkrecord > 0) {
+                        $counter1++;
+                        $manf_id = 0;
+                        $Query1 = "SELECT * FROM manufacture WHERE  manf_name = '" . dbStr(trim($manf_name)) . "'";
+                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                        if (mysqli_num_rows($rs1) > 0) {
+                            $row1 = mysqli_fetch_object($rs1);
+                            $manf_id = $row1->manf_id;
+                        } else {
+                            $manf_id = getMaximum("manufacture", "manf_id");
+                            mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params) VALUES ('" . $manf_id . "', '" . dbStr(trim($manf_name)) . "', '" . dbStr(trim(url_clean($manf_name))) . "')") or die(mysqli_error($GLOBALS['conn']));
                         }
-                        $usp_addedby = 2;
-                        $usp_cdate = $row->date;
-                        
-                        $usp_id = getMaximum("user_special_price", "usp_id");
-                        mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, old_id, old_user_id, user_id, supplier_id, level_one_id, level_two_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUES ('" . $usp_id . "', '" . $old_id . "', '" . $old_user_id . "', '" . $user_id . "', '" . $supplier_id . "', '".$level_one_id."', '".$level_two_id."', '".$usp_price_type."', '".$usp_discounted_value."', '".$usp_addedby."', '".$usp_cdate."')") or die(mysqli_error($GLOBALS['conn']));
-                        $counter++;
+                        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '".$manf_id."', pro_status = '1' WHERE supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                        mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_price_amount = '" . $pbp_price_amount . "' WHERE pbp_lower_bound = '1' AND supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                        mysqli_query($GLOBALS['conn'], "UPDATE schulranzen_price_list SET spl_status = '1' WHERE supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     }
-                    print("Total no of record added: " . $counter);
-                }
-                break;
 
-            case 'manufacture_paramer':
-                print("manufacture_paramer");die();
-                $counter = 0;
-                $Query = "SELECT * FROM manufacture ORDER BY manf_id ASC";
-                $rs = mysqli_query($GLOBALS['conn'], $Query);
-                if (mysqli_num_rows($rs) > 0) {
-                    while ($row = mysqli_fetch_object($rs)) {
-                        $manf_id = $row->manf_id;
-                        $manf_name_params = url_clean($row->manf_name);
-                        
-                        mysqli_query($GLOBALS['conn'], "UPDATE manufacture SET manf_name_params = '".dbStr(trim($manf_name_params))."' WHERE manf_id = '".$manf_id."' ") or die(mysqli_error($GLOBALS['conn']));
-                        $counter++;
-                    }
-                    print("Total no of record added: " . $counter);
+                    $counter++;
                 }
-                break;
-
-            case 'schulranzen_price_list':
-                print("schulranzen_price_list");die();
-                $counter = 0;
-                $counter1 = 0;
-                $Query = "SELECT * FROM schulranzen_price_list ORDER BY spl_id ASC";
-                $rs = mysqli_query($GLOBALS['conn'], $Query);
-                if (mysqli_num_rows($rs) > 0) {
-                    while ($row = mysqli_fetch_object($rs)) {
-                        $checkrecord = 0;
-                        $supplier_id = $row->supplier_id;
-                        $pbp_price_amount = $row->pbp_price_amount;
-                        
-                        $checkrecord = checkrecord("pro_id", "products", "supplier_id = '".$supplier_id."'");
-                        if ($checkrecord > 0){
-                            $counter1++;
-                            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1' WHERE supplier_id = '".$supplier_id."' ") or die(mysqli_error($GLOBALS['conn']));
-                            mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_price_amount = '".$pbp_price_amount."' WHERE pbp_lower_bound = '1' AND supplier_id = '".$supplier_id."' ") or die(mysqli_error($GLOBALS['conn']));
-                            mysqli_query($GLOBALS['conn'], "UPDATE schulranzen_price_list SET spl_status = '1' WHERE supplier_id = '".$supplier_id."' ") or die(mysqli_error($GLOBALS['conn']));
-                        }
-
-                        $counter++;
-                    }
-                    print("Total no of record added: " . $counter1."<br>");
-                    print("Total no of record added: " . $counter);
-                }
-                break;
+                print("Total no of record added: " . $counter1 . "<br>");
+                print("Total no of record added: " . $counter);
+            }
+            break;
     }
 }

@@ -42,7 +42,7 @@ if (isset($_REQUEST['btn_login'])) {
 				$plz = explode(" ", returnName("usa_zipcode", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'"));
 				$_SESSION['plz'] = $plz[0];
 				if (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) {
-				$_SESSION["cart_check"] = true;
+					$_SESSION["cart_check"] = true;
 				}
 
 				//echo $ref_check[0];die();
@@ -92,7 +92,7 @@ if (isset($_REQUEST['btn_login'])) {
 	<title>Anmelden</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
+	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts)); ?>" />
 	<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
 	<script src="js/jquery-2.2.0.min.js"></script>
 	<?php include("includes/btn_color.php"); ?>
@@ -111,7 +111,7 @@ if (isset($_REQUEST['btn_login'])) {
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 						<?php } ?>
-						<form class="gerenric_form" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+						<form class="gerenric_form" name="frm" id="frm" method="post" action="anmelden" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
 									<input type="hidden" name="referer" value="<?php print($ref); ?>">
@@ -129,15 +129,28 @@ if (isset($_REQUEST['btn_login'])) {
 								<li>
 									<div class="form_term">Mit Ihrer Anmeldung stimmen Sie unseren <a href="term">Allgemeinen Geschäftsbedingungen</a> zu.Bitte lesen Sie unsere <a href="privacy">Datenschutzerklärung </a>, unser <a href="javascript:void(0)"> Hinweis auf Cookies und unser Hinweis auf interessenbezogener Werbung.</a></div>
 								</li>
+								<li>
+									<div class="or_div">
+										<div class="or_div_inner">Neu bei Wacker24?</div>
+									</div>
+									<div class="new_account_btn"><a href="registrierung">
+											<div class="gerenric_btn">Erstellen Sie hier Ihr Wacker24 Konto</div>
+										</a>
+									</div>
+								</li>
+								<?php if($ref == $GLOBALS['siteURL'] . "einkaufswagen") {?>
+								<li>
+									<div class="or_div">
+										<div class="or_div_inner">Als Gast bestellen?</div>
+									</div>
+									<div class="new_account_btn"><a href="gastbestellung">
+											<div class="gerenric_btn">Weiter als Gast</div>
+										</a>
+									</div>
+								</li>
+								<?php } ?>
 							</ul>
 						</form>
-					</div>
-					<div class="or_div">
-						<div class="or_div_inner">Neu bei Wacker24?</div>
-					</div>
-					<div class="new_account_btn"><a href="registrierung">
-							<div class="gerenric_btn">Erstellen Sie hier Ihr Wacker24 Konto</div>
-						</a>
 					</div>
 				</div>
 			</div>
@@ -152,7 +165,7 @@ if (isset($_REQUEST['btn_login'])) {
 					<li><a href="impressum">Impressum</a></li>
 					<li><a href="privacy">Datenschutzerklärung</a></li>
 					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
-					<li><a href="contact_us">Kontakt</a></li>
+					<li><a href="kontakt">Kontakt</a></li>
 				</ul>
 			</div>
 		</div>

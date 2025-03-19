@@ -77,9 +77,9 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
         for ($i = 0; $i < count($_REQUEST['d_status_id']); $i++) {
             if ($_REQUEST['d_status_id'][$i] > 0) {
                 mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'][$i] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
-                if($_REQUEST['d_status_id'][$i] == 1){
+                if ($_REQUEST['d_status_id'][$i] == 1) {
                     $mailer->order($_REQUEST['ord_id'][$i]);
-                } else{
+                } else {
                     $mailer->order_cancelation($_REQUEST['ord_id'][$i]);
                 }
             }
@@ -152,10 +152,15 @@ include("includes/messages.php");
                                         $row = mysqli_fetch_object($rs);
                                         $strClass = 'label  label-danger';
                                         $user_info = "";
+                                        $user_guest = "";
+                                        $utype_id_as_guest = returnName("utype_id_as_guest", "users", "user_id", $row->user_id);
+                                        if ($utype_id_as_guest > 0) {
+                                            $user_guest = "Guest";
+                                        }
                                         if ($row->utype_id == 3) {
-                                            $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                            $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($user_guest." ".$row->utype_name, "Customer") . '</span><br>';
                                         } else {
-                                            $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                            $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($user_guest." ".$row->utype_name, "Customer") . '</span><br>';
                                         }
                                         if (!empty($user_company_name)) {
                                             $user_info .= $user_company_name . "<br>";
@@ -428,10 +433,15 @@ include("includes/messages.php");
                                             $counter++;
                                             $strClass = 'label  label-danger';
                                             $user_info = "";
+                                            $user_guest = "";
+                                            $utype_id_as_guest = returnName("utype_id_as_guest", "users", "user_id", $row->user_id);
+                                            if ($utype_id_as_guest > 0) {
+                                                $user_guest = "Guest";
+                                            }
                                             if ($row->utype_id == 3) {
-                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                                $user_info .= '<span class="btn btn-primary btn-style-light w-auto mb-2">' . rtrim($user_guest . " " . $row->utype_name, "Customer") . '</span><br>';
                                             } else {
-                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($row->utype_name, "Customer") . '</span><br>';
+                                                $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($user_guest . " " . $row->utype_name, "Customer") . '</span><br>';
                                             }
                                             $user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
                                             if (!empty($user_company_name)) {

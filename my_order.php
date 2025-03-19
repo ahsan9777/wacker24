@@ -1,7 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 if ($_SESSION["utype_id"] == 5) {
-	header('Location: guest_order.php');
+	header("Location: ".$GLOBALS['siteURL']."bestätigung-der-gastbestellung");
 }
 
 if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){

@@ -127,7 +127,7 @@ include("includes/message.php");
 			<div class="page_width">
 				<div class="login_inner">
 					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
-					<form class="login_box" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+					<form class="login_box" name="frm" id="frm" method="post" action="registrierung" role="form" enctype="multipart/form-data">
 						<h2>Registrierung</h2>
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
@@ -244,7 +244,7 @@ include("includes/message.php");
 					<li><a href="impressum">Impressum</a></li>
 					<li><a href="privacy">Datenschutzerklärung</a></li>
 					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
-					<li><a href="contact_us">Kontakt</a></li>
+					<li><a href="kontakt">Kontakt</a></li>
 				</ul>
 			</div>
 		</div>
