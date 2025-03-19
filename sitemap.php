@@ -3,11 +3,12 @@ include 'lib/openCon.php';
 include 'lib/functions.php';
 header("Content-type: text/xml");
 echo '<?xml version="1.0" encoding="UTF-8" ?>';
+$date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
 ?>
 <urlset xmlns="http://www.google.com/schemas/sitemap/0.84" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84 http://www.google.com/schemas/sitemap/0.84/sitemap.xsd">
     <url>
         <loc><?php echo $GLOBALS['siteURL']; ?></loc>
-        <lastmod><?php echo date("Y-m-d"); ?></lastmod>
+        <lastmod><?php echo $date->format('c') ?></lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.00</priority>
     </url>
@@ -19,7 +20,7 @@ echo '<?xml version="1.0" encoding="UTF-8" ?>';
         while ($row = mysqli_fetch_object($rs)) {
             echo "<url>
                 <loc>" . $GLOBALS['siteURL'] . $row->cnt_slug . "</loc>
-                <lastmod>" . date("Y-m-d") . "</lastmod>
+                <lastmod>" . $date->format('c') . "</lastmod>
                 <changefreq>never</changefreq>
                 <priority>0.5</priority>
             </url>";
@@ -29,7 +30,7 @@ echo '<?xml version="1.0" encoding="UTF-8" ?>';
     ?>
     <url>
         <loc><?php echo $GLOBALS['siteURL']; ?>kontakt</loc>
-        <lastmod><?php echo date("Y-m-d"); ?></lastmod>
+        <lastmod><?php echo $date->format('c'); ?></lastmod>
         <changefreq>never</changefreq>
         <priority>0.5</priority>
     </url>
@@ -43,10 +44,12 @@ echo '<?xml version="1.0" encoding="UTF-8" ?>';
                 if(empty($rwp->pro_udate)){
                     $dt = $rwp->pro_cdate;
                 }
+                $date = new DateTime($dt, new DateTimeZone('Europe/Berlin'));
+                //$date->format('c');
                 $pgURL = $GLOBALS['siteURL']."product/".$rwp->supplier_id ."/".url_clean($rwp->pro_description_short);
                 echo "<url>
                     <loc>".$pgURL."</loc>
-                    <lastmod>".$dt."</lastmod>
+                    <lastmod>".$date->format('c')."</lastmod>
                     <changefreq>daily</changefreq>
                     <priority>0.1</priority>
                 </url>";
@@ -58,6 +61,7 @@ echo '<?xml version="1.0" encoding="UTF-8" ?>';
 // Recursive function to get all categories
 function siteMapCat($parent_id)
 {
+    $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
     $cat_WhereQuery = "";
     if (strlen($parent_id) == 3) {
         $cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE FIND_IN_SET(cat.group_id, cm.cat_id) )";
@@ -73,10 +77,10 @@ function siteMapCat($parent_id)
                 $cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $rw->parent_id);
                 $pgURL = $GLOBALS['siteURL'] . "artikelarten/" . $cat_params . "/" . $rw->cat_params;
             }
-            $dt = date("Y-m-d");
+            //$dt = date("Y-m-d");
             echo "<url>
                 <loc>" . $pgURL . "</loc>
-                <lastmod>" . $dt . "</lastmod>
+                <lastmod>" . $date->format('c') . "</lastmod>
                 <changefreq>weekly</changefreq>
                 <priority>0.1</priority>
             </url>";
