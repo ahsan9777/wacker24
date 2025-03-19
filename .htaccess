@@ -25,6 +25,7 @@ RewriteRule ^terminauswählen/([0-9]+)/([0-9]+)?$ appointment_schedule.php?as_id
 RewriteRule ^termine? appointments.php [L]
 RewriteRule ^einkaufswagen/([0-9]+)?$ cart.php?op=$1 [L]
 RewriteRule ^einkaufswagen? cart.php [L]
+RewriteRule ^sonderpreise/([0-9]+)?$ special_price.php?page=$1 [L]
 RewriteRule ^sonderpreise? special_price.php [L]
 RewriteRule ^einkaufslisten/([0-9]+)?$ shopping_list.php?op=$1 [L]
 RewriteRule ^einkaufslisten? shopping_list.php [L]

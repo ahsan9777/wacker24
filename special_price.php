@@ -124,7 +124,8 @@ $page = 1;
 										<td align="center">
 											<ul class="pagination" style="margin: 0px;">
 												<?php
-												$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
+												//$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
+												$pageList = $p->pageList($_GET['page'], "sonderpreise", $pages, '');
 												print($pageList);
 												?>
 											</ul>
