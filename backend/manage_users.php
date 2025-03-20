@@ -16,7 +16,7 @@ if (isset($utype_id) && $utype_id == 0) {
 
 if (isset($_REQUEST['btnAdd'])) {
     //print_r($_REQUEST);die();
-    $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' AND utype_id = '" . dbStr(trim($_REQUEST['utype_id'])) . "'";
+    $Query = "SELECT * FROM `users` WHERE user_name ='" . dbStr(trim($_REQUEST['user_name'])) . "' ";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
 
