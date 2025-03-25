@@ -43,7 +43,11 @@ if ((isset($level_two_request) && $level_two_request > 0) || (isset($level_three
         $left_filter_cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids) )";
     //}
 }
-$Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier_id FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND cm.cm_type = '".$pro_type."' AND FIND_IN_SET(".$leve_id.", cm.sub_group_ids)), filtered_products AS ( SELECT DISTINCT pro.manf_id FROM products AS pro WHERE EXISTS ( SELECT 1 FROM relevant_suppliers rs WHERE rs.supplier_id = pro.supplier_id ) )";
+if(isset($level_three_request) && $level_three_request > 0){
+    $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier_id FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND cm.cm_type = '".$pro_type."' AND FIND_IN_SET(".$level_three_request.", cm.cat_id)), filtered_products AS ( SELECT DISTINCT pro.manf_id FROM products AS pro WHERE EXISTS ( SELECT 1 FROM relevant_suppliers rs WHERE rs.supplier_id = pro.supplier_id ) )";
+} else{
+    $Sidefilter_brandwith = "WITH relevant_suppliers AS (SELECT DISTINCT cm.supplier_id FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND cm.cm_type = '".$pro_type."' AND FIND_IN_SET(".$leve_id.", cm.sub_group_ids)), filtered_products AS ( SELECT DISTINCT pro.manf_id FROM products AS pro WHERE EXISTS ( SELECT 1 FROM relevant_suppliers rs WHERE rs.supplier_id = pro.supplier_id ) )";
+}
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword'])? 'style="width: 420px;"' : ''); ?> >
     <div class="categroy_list sticky">

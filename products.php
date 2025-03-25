@@ -6,26 +6,39 @@ $cat_params = "";
 $group_id_check = 0;
 //print_r($_REQUEST);//die();
 if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
-	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two']);
+	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_three'], " AND parent_id = '".$AND."'");
+	
 	$group_id_check = 1;
 } else if(isset($_REQUEST['manf_name_params']) && isset($_REQUEST['cat_params_request'])){
-	$cat_params_request = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_request'], "ORDER BY cat_id DESC");
+
+	if($_REQUEST['level'] == 3){
+		$cat_params_request_array = explode("/", $_REQUEST['cat_params_request']);
+		$AND = returnName("group_id", "category", "cat_params_de", $cat_params_request_array[0], " AND parent_id > 0");
+		$cat_params_request = returnNameArray("group_id", "category", "cat_params_de", $cat_params_request_array[1], " AND parent_id = '".$AND."'");
+	} else{
+		$cat_params_request = returnNameArray("group_id", "category", "cat_params_de", $_REQUEST['cat_params_request']);
+	}
+	//print_r($cat_params_request);
 	if($_REQUEST['level'] == 2){
-		$group_id = $cat_params_request;
-		$level_two_request_manf = $cat_params_request;
+		$group_id = ( (count($cat_params_request) > 1) ? datalenghtcheck($cat_params_request, 2) : $cat_params_request[0] );
+		$level_two_request_manf = ( (count($cat_params_request) > 1) ? datalenghtcheck($cat_params_request, 2) : $cat_params_request[0] );
 		$group_id_check = 1;
 	} else if($_REQUEST['level'] == 3){
-		$group_id = $cat_params_request;
-		$level_three_request_manf = $cat_params_request;
+		$group_id = ( (count($cat_params_request) > 1) ? datalenghtcheck($cat_params_request, 3) : $cat_params_request[0] );
+		$level_three_request_manf = ( (count($cat_params_request) > 1) ? datalenghtcheck($cat_params_request, 3) : $cat_params_request[0] );
 		$group_id_check = 1;
 	} else{
-		$level_one_request = $cat_params_request;
+		if(isset($_REQUEST['cat_params_request']) && $_REQUEST['cat_params_request'] == 'schulranzen'){
+			$level_one_request = 19;
+		} else {
+			$level_one_request = $cat_params_request[0];
+		}
 	}
 	$cat_params = $_REQUEST['cat_params_request'];
 	$manf_params_id = returnName("manf_id", "manufacture", "manf_name_params", $_REQUEST['manf_name_params']);
 } else if(isset($_REQUEST['cat_params_two'])){
-	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two']);
+	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$group_id_check = 1;
 }
 //print($group_id);die();
@@ -51,7 +64,7 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 		$qryStrURL .= "2/".$_REQUEST['cat_params_request']. "/";
 	} elseif (isset($level_three_request_manf) && $level_three_request_manf > 0) {
 
-		$whereclause = "WHERE cm.cat_id = '" . $level_three_request_manf . "' ";
+		$whereclause .= " AND cm.cat_id = '" . $level_three_request_manf . "' ";
 		$qryStrURL .= "3/".$_REQUEST['cat_params_request'] . "/";
 	} elseif(isset($_REQUEST['cat_params_request']) && $_REQUEST['cat_params_request'] == 'schulranzen'){
 		$qryStrURL .= "1/schulranzen/";
@@ -63,7 +76,9 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 	$qryStrURL .= $_REQUEST['cat_params_two'] . "/";
 	$qryStrURL .= $_REQUEST['cat_params_three'] . "/";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $level_three_request);
-	$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_three_request);
+	
+	$cat_params .= returnName("cat_params_de AS cat_params", "category", "group_id", substr($level_three_request, 0, 3))."/";
+	$cat_params .= returnName("cat_params_de AS cat_params", "category", "group_id", $level_three_request);
 } else {
 	//echo "else";
 	$whereclause = "WHERE FIND_IN_SET(" . $level_two_request . ", cm.sub_group_ids)";
@@ -72,10 +87,10 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 	$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $level_two_request);
 	//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 	$cat_id_one = $cat_title_one = returnName("parent_id", "category", "group_id", $level_two_request);
-	$special_price = user_special_price("level_two", $level_two_request);
+	/*$special_price = user_special_price("level_two", $level_two_request);
 	if (!$special_price) {
 		$special_price = user_special_price("level_one", $cat_id_one);
-	}
+	}*/
 	//print_r($special_price);
 	//}
 }
@@ -136,6 +151,20 @@ if (isset($_REQUEST['pro_type']) && $_REQUEST['pro_type'] > 0) {
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 											$counter++;
+											$special_price = array();
+											$sub_group_ids = explode(",", $row->sub_group_ids);
+												$cat_id_one = $sub_group_ids[1];
+												$cat_id_two = $sub_group_ids[0];
+												//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+												$special_price = user_special_price("supplier_id", $row->supplier_id);
+
+												if (!$special_price) {
+													$special_price = user_special_price("level_two", $cat_id_two);
+												}
+
+												if (!$special_price) {
+													$special_price = user_special_price("level_one", $cat_id_one);
+												}
 									?>
 											<div class="pd_card">
 												<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>

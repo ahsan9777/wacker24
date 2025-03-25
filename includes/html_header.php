@@ -6,19 +6,19 @@
 <meta name="description" content="<?php print(config_metades); ?>">
 <title><?php print(config_sitetitle); ?></title>
 <link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
-<link href="css/styles.css" rel="stylesheet" type="text/css" />
-<link href="css/slick-theme.css" rel="stylesheet" type="text/css" />
+<link href="css/styles.css?1122" rel="stylesheet" type="text/css" />
+<link href="css/slick-theme.css?1122" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.css">
-<link rel="stylesheet" href="css/jquery-ui.css">
-<link href="css/responsive.css" rel="stylesheet" type="text/css" />
-<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/jquery-ui.css?1122">
+<link href="css/responsive.css?1122" rel="stylesheet" type="text/css" />
+<link href="css/font-awesome/css/font-awesome.css?1122" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./backend/assets/style/jquery-ui-1.10.3.custom.min.css" />
-<script src="js/jquery-2.2.0.min.js"></script>
-<script src="./backend/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery.simpleGallery.js"></script>
-<script type="text/javascript" src="js/jquery.simpleLens.js"></script>
+<script src="js/jquery-2.2.0.min.js?1122"></script>
+<script src="./backend/assets/js/jquery-ui-1.10.3.custom.min.js?1122"></script>
+<script src="js/jquery-ui.min.js?1122"></script>
+<script type="text/javascript" src="js/jquery.simpleGallery.js?1122"></script>
+<script type="text/javascript" src="js/jquery.simpleLens.js?1122"></script>
 <style>
     .ui-widget.ui-widget-content{
         z-index: 9999999;

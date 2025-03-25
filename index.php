@@ -108,7 +108,7 @@ $page = 1;
 												while ($row2 = mysqli_fetch_object($rs2)) {
 											?>
 													<div class="pd_ctg_card">
-														<a href="artikelarten/<?php print($row1->cat_params."/".$row2->cat_params); ?>">
+														<a href="artikelarten/<?php print($row2->cat_params); ?>">
 															<div class="pd_ctg_image"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source)); ?>" alt=""></div>
 															<div class="pd_ctg_title"> <?php print($row2->cat_title); ?> </div>
 														</a>

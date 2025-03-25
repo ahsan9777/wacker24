@@ -29,7 +29,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbPassword = "MU8s)gKIeQyD";
 	$GLOBALS['siteName'] = "www.wackersystems.com";
 	//$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
-	$GLOBALS['siteURL'] = "https://wackersystems.com/";
+	$GLOBALS['siteURL'] = "https://www.wackersystems.com/";
 }
 
 $GLOBALS['conn'] = new mysqli($dbServer, $dbUserName, $dbPassword, $dbDatabase);

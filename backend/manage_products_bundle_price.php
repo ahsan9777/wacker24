@@ -83,7 +83,7 @@ include("includes/messages.php");
                         <div class="row">
                             <div class="col-md-6 col-12 mt-3">
                                 <label for="">Price</label>
-                                <input type="number" class="input_style" name="pbp_price_amount" id="pbp_price_amount" value="<?php print($pbp_price_amount); ?>" placeholder="Price">
+                                <input type="number" step="any" class="input_style" name="pbp_price_amount" id="pbp_price_amount" value="<?php print($pbp_price_amount); ?>" placeholder="Price">
                             </div>
                             <div class="col-md-6 col-12 mt-3">
                                 <label for="">Lowe Bound</label>

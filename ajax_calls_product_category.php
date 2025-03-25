@@ -269,7 +269,7 @@ $most_sale_product .= '</div>
             $special_price = (!empty($_REQUEST['special_price'])) ? $_REQUEST['special_price'] : [];
             $price_without_tex_display = $_REQUEST['price_without_tex_display'];
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
-            $related_category_one_data = '<h2>Kategorie zusammenhängen</h2><div class="gerenric_slider_mostviewed_related_category_one">';
+            $related_category_one_data = '<h2>Produkte, die mit dieser Kategorie zusammenhängen</h2><div class="gerenric_slider_mostviewed_related_category_one">';
             $Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ORDER BY  RAND() LIMIT 0,12";
             //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);

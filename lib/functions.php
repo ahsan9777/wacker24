@@ -1496,6 +1496,32 @@ function returnName($Field, $Table, $IDField, $ID, $AND = ""){
 	return $retRes;	
 }
 
+function returnNameArray($Field, $Table, $IDField, $ID, $AND = ""){
+	$retRes = array();
+	$strQry="SELECT $Field FROM $Table WHERE $IDField= '".$ID."' ".$AND." ";
+	//print($strQry);die();
+	$nResult =mysqli_query($GLOBALS['conn'], $strQry) or die("Unable 2 Work");
+	if (mysqli_num_rows($nResult)>=1){		
+		while($row=mysqli_fetch_row($nResult)){
+			$retRes[] = $row[0];
+		}
+	}	
+	return $retRes;	
+}
+
+function datalenghtcheck($data, $level){
+	$filtered = 0;
+	foreach ($data as $item) {
+		if (strlen((string)$item) == 3 && $level == 2) {
+			$filtered = $item;
+		} elseif (strlen((string)$item) == 5 && $level == 3) {
+			$filtered = $item;
+		}
+	}
+
+	return $filtered;
+}
+
 function returnImage($Field, $Table, $IDField, $ID){
 	$retRes = "";
 	$strQry="SELECT $Field FROM $Table WHERE $IDField=$ID LIMIT 1";

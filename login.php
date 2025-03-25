@@ -47,11 +47,16 @@ if (isset($_REQUEST['btn_login'])) {
 
 				//echo $ref_check[0];die();
 				if ($ref == $GLOBALS['siteURL'] . "anmelden" || $ref == $GLOBALS['siteURL'] . "registrierung" || $ref_check[0] == $GLOBALS['siteURL'] . "konto-bestätigung"  || $ref_check[0] == $GLOBALS['siteURL'] . "konto-registrierung" ||  $ref_check[0] == $GLOBALS['siteURL'] . "konto-vergessen-kennwort") {
+					print("if");die();
 					header("Location:" . $GLOBALS['siteURL']);
 				} elseif (!empty($ref)) {
-					header("Location:" . $ref);
+					if($ref == $GLOBALS['siteURL']){
+						header("location:" . $GLOBALS['siteURL']);
+					} else{
+						header("Location:" . $ref);
+					}
 				} else {
-					header("location:" . $GLOBALS['siteURL']);
+					header("location:" . $GLOBALS['siteURL']."benutzerprofile");
 				}
 			} else {
 
@@ -89,6 +94,7 @@ if (isset($_REQUEST['btn_login'])) {
 	<meta charset="utf-8">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<base href="<?php print($GLOBALS['siteURL']); ?>">
 	<title>Anmelden</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
