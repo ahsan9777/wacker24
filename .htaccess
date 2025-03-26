@@ -42,6 +42,9 @@ RewriteRule ^konto-registrierung? account_registration.php [L]
 RewriteRule ^konto-bestätigung? account_verification.php [L]
 RewriteRule ^nicht-verfügbar? not_available.php [L]
 RewriteRule ^sitemap.xml? sitemap.php [L]
+RewriteRule ^verkäufe-angebote/([0-9]+)?$ site_special_price.php?page=$1 [L]
+RewriteRule ^verkäufe-angebote? site_special_price.php [L]
+RewriteRule ^abmelden? logout.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -88,7 +88,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                     <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "javascript:void(0);"); ?>"> Adressen </a></li>
                                     <li>Zahlungsarten</li>
                                     <?php if (isset($_SESSION["FullName"])) { ?>
-                                        <li><a href="logout.php">Abmelden</a></li>
+                                        <li><a href="abmelden">Abmelden</a></li>
                                     <?php } ?>
                                 </ul>
                             </div>
@@ -131,7 +131,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 }
                 ?>
                 <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
-                <li><a href="javascript:void(0);" class="nav_sale">Verkäufe & Angebote</a></li>
+                <li><a href="verkäufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
                 <div class="nav_submenu_logo"><a href="index.php"><img src="images/logo.png" alt=""></a>

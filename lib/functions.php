@@ -1270,7 +1270,7 @@ function TotalRecords1($condition){
 function checkrecord($filde, $table, $where){
 	$retRes=0;
 		$strQry="SELECT ".$filde." FROM ".$table." WHERE ".$where." ";
-		//print($strQry);die();
+		//print($strQry);//die();
 		$nResult =mysqli_query($GLOBALS['conn'], $strQry);
 		if (mysqli_num_rows($nResult)> 0){
 			$row=mysqli_fetch_row($nResult);
@@ -2497,15 +2497,17 @@ function get_delivery_charges($total){
 }
 
 function user_special_price($parameter, $value, $user_id = 0, $price_type = 0){
+	$searchWhere = "";
 	if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) && $price_type == 0) {
 		$user_id = $_SESSION["UID"];
-		$parameters = $parameter;
-		if($parameters == 'level_two'){
-			$parameters = "level_two_id";
-		} elseif($parameters == 'level_one'){
-			$parameters = "level_one_id";
+		if ($parameter ==  "supplier_id") {
+			$searchWhere = "AND supplier_id = '" . dbStr(trim($value)) . "'";
+		} elseif ($parameter ==  "level_two") {
+			$searchWhere = "AND supplier_id = '0' AND level_two_id = '" . dbStr(trim($value)) . "'";
+		} elseif ($parameter ==  "level_one") {
+			$searchWhere = "AND supplier_id = '0' AND level_two_id = '0' AND level_one_id = '" . dbStr(trim($value)) . "'";
 		}
-		$checkrecord = checkrecord("usp_id", "user_special_price", "user_id = '".$user_id."' AND ".$parameters." = '".$value."'");
+		$checkrecord = checkrecord("usp_id", "user_special_price", "user_id = '".$user_id."' ".$searchWhere." ");
 		if($checkrecord == 0){
 			$user_id = 0;
 		}
