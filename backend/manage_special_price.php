@@ -524,7 +524,7 @@ include("includes/messages.php");
         category_price_data += '</div>';
         category_price_data += '</div>';
         category_price_data += '<label for="">Value</label>';
-        category_price_data += '<input type="number" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="0" required placeholder="Value">';
+        category_price_data += '<input type="number" step="any" class="input_style usp_discounted_value" name="usp_discounted_value" id="usp_discounted_value" value="0" required placeholder="Value">';
         category_price_data += '</div>';
         category_price_data += '<div class="col-md-3 col-12 mt-3 d-flex flex-column justify-content-end">';
         category_price_data += '<label for="">Price</label>';
