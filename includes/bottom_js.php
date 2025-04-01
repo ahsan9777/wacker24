@@ -1,7 +1,7 @@
 
 <link href="css/slick-theme.min.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
-<link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">-->
 <link rel="stylesheet" href="css/jquery-ui.min.css">
 <link href="css/responsive.min.css" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
@@ -12,9 +12,7 @@
 <script>
     setTimeout(function() {
         const scripts = [
-            "js/jquery-ui.min.js",
-            "js/jquery.simpleGallery.min.js",
-            "js/jquery.simpleLens.min.js"
+            "js/jquery-ui.min.js"
         ];
 
         scripts.forEach(function(src) {
@@ -34,17 +32,6 @@
         font-size: 18px;
     }
 </style>
-<script>
-    $(document).ready(function(){
-        $('#demo-1 .simpleLens-thumbnails-container img').simpleGallery({
-            loading_image: 'demo/images/loading.gif'
-        });
-
-        $('#demo-1 .simpleLens-big-image').simpleLens({
-            loading_image: 'demo/images/loading.gif'
-        });
-    });
-</script>
 <script>
     function blinker() {
         $('.nav_sale').fadeOut(500);
@@ -101,9 +88,17 @@
 </script>
 <script>
     $(document).ready(function() {
+        function applyPadding() {
+            if (window.matchMedia("(max-width: 240px)").matches || window.matchMedia("(max-width: 1024px)").matches) {
+                $("#container").css('padding-right', '0px');
+            } else {
+                $("#container").css('padding-right', '130px');
+            }
+        }
+
         $(".side_cart_click").click(function() {
             $(".hdr_side_cart").show();
-            $("#container").css('padding-right', '130px');
+            applyPadding();
             $("#logo").css('width', '120px');
             show_side_cart_data();
         });
@@ -111,6 +106,12 @@
             $(".hdr_side_cart").hide();
             $("#container").css('padding-right', '0px');
             $("#logo").css('width', '150px');
+        });
+        // Apply padding on window resize
+        $(window).resize(function() {
+            if ($(".hdr_side_cart").is(":visible")) {
+                applyPadding();
+            }
         });
 
     });
@@ -169,6 +170,7 @@
 	}).change()
 </script>
 <script src="./backend/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" defer></script> -->
 <script>
 	$('.close').on('click', function(){
         $('.alert').hide();

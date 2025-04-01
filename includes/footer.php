@@ -64,10 +64,10 @@
             <div class="footer_btm_left">
                 <div class="social_medial">
                     <ul>
-                        <li><a href="javascript:void(0)"><img src="images/youtube_icon.png" alt=""></a></li>
-                        <li><a href="javascript:void(0)"><img src="images/facebook_icon.png" alt=""></a></li>
-                        <li><a href="javascript:void(0)"><img src="images/twitter_icon.png" alt=""></a></li>
-                        <li><a href="javascript:void(0)"><img src="images/instagram_icon.png" alt=""></a></li>
+                        <li><a href="javascript:void(0)"><img src="images/youtube_icon.webp" alt=""></a></li>
+                        <li><a href="javascript:void(0)"><img src="images/facebook_icon.webp" alt=""></a></li>
+                        <li><a href="javascript:void(0)"><img src="images/twitter_icon.webp" alt=""></a></li>
+                        <li><a href="javascript:void(0)"><img src="images/instagram_icon.webp" alt=""></a></li>
                     </ul>
                 </div>
             </div>
