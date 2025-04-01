@@ -87,7 +87,7 @@ $page = 1;
 												$special_price = user_special_price("level_one", $level_one_id, 0, 1);
 											}
 								?>
-											<div class="pd_card pd_card_five">
+											<div class="pd_card">
 												<div class="pd_image"><a href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
 													<h5><a href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>

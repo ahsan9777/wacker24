@@ -580,6 +580,21 @@ include("includes/message.php");
 	</div>
 
 </body>
+<link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">
+<script defer type="text/javascript" src="js/jquery.simpleGallery.min.js"></script>
+<script defer type="text/javascript" src="js/jquery.simpleLens.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#demo-1 .simpleLens-thumbnails-container img').simpleGallery({
+            loading_image: 'demo/images/loading.gif'
+        });
+
+        $('#demo-1 .simpleLens-big-image').simpleLens({
+            loading_image: 'demo/images/loading.gif'
+        });
+    });
+</script>
 <script src="js/slick.js"></script>
 <script type="text/javascript">
 	$(".gerenric_slider").slick({
