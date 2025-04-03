@@ -17,7 +17,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
     } else {
         //$xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
         $xml = simplexml_load_file("artical.xml") or die("Error: Cannot create object");
-        mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '" . $pro_type . "'") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE products SET  pro_status = '0' WHERE pro_type = '" . $pro_type . "'") or die(mysqli_error($GLOBALS['conn']));
     }
     //print('<pre>');
     //print_r($xml->T_NEW_CATALOG->PRODUCT);
@@ -491,7 +491,7 @@ include("includes/messages.php");
                                                                 <div class="table-form-group">
                                                                     <input type="hidden" name="pbp_id" id="pbp_id_<?php print($counter); ?>_<?php print($counter1); ?>" value="<?php print($row1->pbp_id); ?>">
                                                                     <label for="">LB <?php print($row1->pbp_lower_bound) ?> </label>
-                                                                    <input type="number" name="pbp_price_amount[]" id="pbp_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0" value="<?php print($row1->pbp_price_amount) ?>">
+                                                                    <input type="number" step="any" name="pbp_price_amount[]" id="pbp_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0" value="<?php print($row1->pbp_price_amount) ?>">
                                                                 </div>
                                                         <?php
                                                             }
@@ -543,10 +543,10 @@ include("includes/messages.php");
                             <?php } ?>
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
                                 </div>
                             </div>
                             <!--<input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">-->

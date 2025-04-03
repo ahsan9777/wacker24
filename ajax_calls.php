@@ -198,7 +198,7 @@ if (isset($_REQUEST['action'])) {
                             $pq_quantity = $row1->pq_quantity;
                             $pq_upcomming_quantity = $row1->pq_upcomming_quantity;
                             $pq_status = $row1->pq_status;
-                            if ($pq_quantity == 0 && $pq_status == 'true') {
+                            if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false' ) ) {
                                 $pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
                             } elseif ($pq_quantity > 0 && $pq_status == 'false') {
                                 $pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;

@@ -213,7 +213,7 @@ include("includes/message.php");
 									<?php }
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
-									$Query = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$pro_udx_seo_selection_feature."'";
+									$Query = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '".$pro_udx_seo_selection_feature."'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$count = mysqli_num_rows($rs);
@@ -295,7 +295,7 @@ include("includes/message.php");
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
 										$pq_status = $row->pq_status;
-										if ($pq_quantity == 0 && $pq_status == 'true') {
+										if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false' ) ) {
 											$quantity_lenght = $pq_upcomming_quantity;
 											print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
 										} elseif ($pq_quantity > 0 && $pq_status == 'false') {
