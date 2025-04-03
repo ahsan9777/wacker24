@@ -225,7 +225,7 @@ if (isset($_REQUEST['sortby'])) {
 												<div class="pd_card">
 													<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 													<div class="pd_detail">
-														<h3 class="detail_data_show"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
+														<h3 class="detail_data_show"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>" style="display:block"> <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
 														<h5><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 														<?php
 														$count = 0;
