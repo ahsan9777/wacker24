@@ -34,7 +34,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li><a href="kontakt">Kontakt</a></li>
             <li>
                 <div class="header_language">
-                    <div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></div>
+                    <div class="language_select"><a href="#"><img src="images/gm_icon.png" alt=""> Germany</a></div>
                     <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
                     <ul>
                         <li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
@@ -46,18 +46,18 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
     </div>
     <div class="header_sticky">
         <div class="header_bottom" <?php print($background_color_two); ?>>
-            <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
+            <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>" aria-label="logo"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> <span> <?php print((isset($_SESSION['ort']) && !empty($_SESSION['ort']))? $_SESSION['ort'] : 'Versand Germany'); ?> </span></div>
             <form class="header_search" name="frm_search" id="frm_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
-                    <select class="header_select_slt" name="level_one" id="level_one">
+                    <select class="header_select_slt" name="level_one" id="level_one" aria-label="Category">
                         <option value="0">Alle</option>
                         <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $cat_id, "cat_status = '1' AND parent_id = '0'"); ?>
                     </select>
                 </div>
                 <input type="hidden" name="supplier_id" id="supplier_id" value="0">
                 <input type="text" class="search_input search_keyword" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" placeholder="Suchhbegriff" autocomplete="off">
-                <button class="search_icon"></button>
+                <button class="search_icon" title="search button"></button>
             </form>
             <div class="header_account">
                 <ul>
@@ -67,7 +67,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
                         <div class="hdr_text">
-                            <a href="javascript:void(0)"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
+                            <a href="#"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
                             <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
                             <div class="account_nav">
                                 <ul>
@@ -80,12 +80,12 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         <?php } ?>
                                     </li>
                                     <li><span>Meine Listen</span></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "javascript:void(0);"); ?>"> Sonderpreise </a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "javascript:void(0);"); ?>"> Einkaufslisten </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "#"); ?>"> Sonderpreise </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "#"); ?>"> Einkaufslisten </a></li>
                                     <li><span>Mein Konto</span></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "javascript:void(0);"); ?>"> Persönliche Daten <a href=""></a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "javascript:void(0);"); ?>"> Bestellungen </a></li>
-                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "javascript:void(0);"); ?>"> Adressen </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "#"); ?>"> Persönliche Daten <a href=""></a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "#"); ?>"> Bestellungen </a></li>
+                                    <li> <a href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "#"); ?>"> Adressen </a></li>
                                     <li>Zahlungsarten</li>
                                     <?php if (isset($_SESSION["FullName"])) { ?>
                                         <li><a href="abmelden">Abmelden</a></li>
@@ -98,13 +98,13 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     <li>
                         <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
                         <!--<div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>-->
-                        <div class="hdr_text"><a href="<?php print(isset($_SESSION['header_quantity']) ? 'einkaufswagen' : 'javascript:void(0)'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
+                        <div class="hdr_text"><a href="<?php print(isset($_SESSION['header_quantity']) ? 'einkaufswagen' : '#'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
                         <div class="hdr_side_cart">
                             <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
                             <div class="side_cart_subtotal">
                                 <div class="subtotal_title">Zwischensumme</div>
                                 <div class="subtotal_prise" id="cart_amount">0,00 €</div>
-                                <div class="full_width"><a id="cart_href" href="javascript:void(0)">
+                                <div class="full_width"><a id="cart_href" href="#">
                                         <div class="gerenric_btn full_btn">Einkaufswagen</div>
                                     </a></div>
                             </div>
@@ -118,7 +118,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
         </div>
         <nav id="navigation_section" <?php print($background_color_one); ?>>
             <ul>
-                <li class="all_menu"><a href="javascript:void(0)"><i class="fa fa-bars"></i> Alle</a></li>
+                <li class="all_menu"><a href="#"><i class="fa fa-bars"></i> Alle</a></li>
                 <?php
                 $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE cat_status = '1' AND parent_id = '0'";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -165,7 +165,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         <?php
                         while ($row1 = mysqli_fetch_object($rs1)) {
                         ?>
-                            <li><a href="javascript:void(0)"><span><?php print($row1->scat_title); ?></span></a>
+                            <li><a href="#"><span><?php print($row1->scat_title); ?></span></a>
                                 <div class="sub_menu">
                                     <?php
                                     $Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.group_id IN (" . $row1->group_id . ") ORDER BY cat.cat_id ASC";
@@ -222,9 +222,9 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         while ($row4 = mysqli_fetch_object($rs4)) {
                                         ?>
                                             <div class="sub_menu_col">
-                                                <a class="sub_menu_div" href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : 'javascript:void(0);'); ?>">
+                                                <a class="sub_menu_div" href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : '#'); ?>">
                                                     <div class="sub_menu_image"><img src="<?php print($GLOBALS['siteURL'] . "files/gallery_images/special_category/" . $row4->scat_id . "/" . $row4->gimg_file); ?>" alt=""></div>
-                                                    <div class="sub_menu_title"><a href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : 'javascript:void(0);'); ?>"><?php print($row4->gimg_title); ?></a></div>
+                                                    <div class="sub_menu_title"><a href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : '#'); ?>"><?php print($row4->gimg_title); ?></a></div>
                                                 </a>
                                             </div>
                                     <?php

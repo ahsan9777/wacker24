@@ -16,7 +16,7 @@
                                 <p style="color: <?php print($row->ban_detail_color); ?>"> <?php print($row->ban_details); ?> </p>
                                 <?php if($row->ban_button_show > 0) { ?>
                                 <div class="full_width">
-                                    <a href="<?php print( !empty($row->ban_link) ? $GLOBALS['siteURL'].$row->ban_link : 'javascript:void(0)' ); ?> ">
+                                    <a href="<?php print( !empty($row->ban_link) ? $GLOBALS['siteURL'].$row->ban_link : '#' ); ?> ">
                                         <div class="gerenric_btn" style="background: <?php print($row->ban_background_color); ?>; color: <?php print($row->ban_text_color); ?>; ">Buy Now</div>
                                     </a>
                                 </div>

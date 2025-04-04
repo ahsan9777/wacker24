@@ -64,10 +64,10 @@
             <div class="footer_btm_left">
                 <div class="social_medial">
                     <ul>
-                        <li><a href="javascript:void(0)"><img src="images/youtube_icon.webp" alt=""></a></li>
-                        <li><a href="javascript:void(0)"><img src="images/facebook_icon.webp" alt=""></a></li>
-                        <li><a href="javascript:void(0)"><img src="images/twitter_icon.webp" alt=""></a></li>
-                        <li><a href="javascript:void(0)"><img src="images/instagram_icon.webp" alt=""></a></li>
+                        <li><a href="#" aria-label="Youtube"><img src="images/youtube_icon.webp" alt=""></a></li>
+                        <li><a href="#" aria-label="Facebook"><img src="images/facebook_icon.webp" alt=""></a></li>
+                        <li><a href="#" aria-label="Twitter" ><img src="images/twitter_icon.webp" alt=""></a></li>
+                        <li><a href="#" aria-label="Instagram" ><img src="images/instagram_icon.webp" alt=""></a></li>
                     </ul>
                 </div>
             </div>
@@ -76,6 +76,6 @@
             </div>
 
         </div>
-        <div class="footer_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
+        <div class="footer_logo"><a href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
     </div>
 </footer>

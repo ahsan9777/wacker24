@@ -71,7 +71,7 @@ $page = 1;
 													}
 											?>
 													<div class="pd_ctg_card">
-														<a href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>">
+														<a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>">
 															<div class="pd_ctg_image">
 																<img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="">
 																<span class="pd_tag"><?php print((($special_price['usp_price_type'] > 0) ? price_format($special_price['usp_discounted_value']).'€' : $special_price['usp_discounted_value'].'%')); ?> <b>-</b></span>
@@ -133,7 +133,7 @@ $page = 1;
 									<?php
 									$special_price = "";
 									$Query = "SELECT DISTINCT oi.supplier_id, oi.ord_id, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url FROM order_items AS oi LEFT JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = oi.supplier_id AND pbp.pbp_lower_bound = '1' LEFT JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' JOIN (SELECT supplier_id FROM order_items GROUP BY supplier_id HAVING COUNT(*) >= 1 ORDER BY RAND() LIMIT 12) AS random_suppliers ON random_suppliers.supplier_id = oi.supplier_id WHERE pg.pg_mime_source_url IS NOT NULL AND pg.pg_mime_source_url <> '' GROUP BY oi.supplier_id";
-									print($Query);//die();
+									//print($Query);//die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($rw = mysqli_fetch_object($rs)) {
@@ -142,7 +142,7 @@ $page = 1;
 											<div>
 												<div class="pd_card">
 													<div class="pd_image">
-														<a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>">
+														<a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>">
 															<img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt="">
 															<?php
 															if($TotalRecords > 80){
@@ -152,7 +152,7 @@ $page = 1;
 														</a>
 													</div>
 													<div class="pd_detail">
-														<h5><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+														<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -196,9 +196,9 @@ $page = 1;
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 													<div class="pd_detail">
-														<h5><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+														<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -225,7 +225,7 @@ $page = 1;
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a href="product_category.php?level_one=20">Mehr anzeigen</a></div>
+								<div class="gerenric_show_All"><a aria-hidden="true" tabindex="-1" href="unterkategorien/schulranzen">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<?php
@@ -252,9 +252,9 @@ $page = 1;
 											?>
 													<div>
 														<div class="pd_card">
-															<div class="pd_image"><a href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
+															<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
 															<div class="pd_detail">
-																<h5><a href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
+																<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
 																<div class="pd_rating">
 																	<ul>
 																		<li>
@@ -282,7 +282,7 @@ $page = 1;
 											?>
 										</div>
 									</div>
-									<div class="gerenric_show_All"><a href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>">Mehr anzeigen</a></div>
+									<div class="gerenric_show_All"><a aria-hidden="true" tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>">Mehr anzeigen</a></div>
 								</div>
 						<?php
 							}
@@ -307,9 +307,9 @@ $page = 1;
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -353,9 +353,9 @@ $page = 1;
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -386,10 +386,10 @@ $page = 1;
 					</div>
 					<div class="gerenric_white_box">
 						<div class="hm_register">
-							<div class="full_width txt_align_center"><a href="anmelden">
+							<div class="full_width txt_align_center"><a aria-hidden="true" tabindex="-1" href="anmelden">
 									<div class="gerenric_btn">Anmelden</div>
 								</a></div>
-							<p>Neues Konto? <a href="registrierung">Erstellen Sie hier.</a></p>
+							<p>Neues Konto? <a aria-hidden="true" tabindex="-1"  href="registrierung">Erstellen Sie hier.</a></p>
 						</div>
 					</div>
 				</div>
@@ -410,7 +410,7 @@ $page = 1;
 										}
 									?>
 										<div>
-											<div class="brand_col"><a href="javascript:void(0)">
+											<div class="brand_col"><a aria-hidden="true" tabindex="-1"  href="#">
 													<div class="brand_item"><img loading="lazy" src="<?php print($brand_image_href) ?>" alt="<?php print($row->brand_name) ?>" title="<?php print($row->brand_name) ?>">
 													</div>
 												</a></div>
@@ -418,7 +418,7 @@ $page = 1;
 									<?php } ?>
 								</div>
 							</div>
-							<div class="brand_btn"><a href="javascript:void(0)">
+							<div class="brand_btn"><a aria-hidden="true" tabindex="-1" href="#">
 									<div class="gerenric_btn">Alle anzeigen</div>
 								</a></div>
 						</div>
