@@ -34,7 +34,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li><a href="kontakt">Kontakt</a></li>
             <li>
                 <div class="header_language">
-                    <div class="language_select"><a href="#"><img src="images/gm_icon.png" alt=""> Germany</a></div>
+                    <div class="language_select"><a href="#" role="button" onclick="return false;"><img src="images/gm_icon.png" alt=""> Germany</a></div>
                     <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
                     <ul>
                         <li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
@@ -67,7 +67,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
                         <div class="hdr_text">
-                            <a href="#"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
+                            <a href="#" role="button" onclick="return false;"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
                             <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
                             <div class="account_nav">
                                 <ul>
@@ -118,7 +118,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
         </div>
         <nav id="navigation_section" <?php print($background_color_one); ?>>
             <ul>
-                <li class="all_menu"><a href="#"><i class="fa fa-bars"></i> Alle</a></li>
+                <li class="all_menu"><a href="#" role="button" onclick="return false;"><i class="fa fa-bars"></i> Alle</a></li>
                 <?php
                 $Query = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE cat_status = '1' AND parent_id = '0'";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -165,7 +165,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         <?php
                         while ($row1 = mysqli_fetch_object($rs1)) {
                         ?>
-                            <li><a href="#"><span><?php print($row1->scat_title); ?></span></a>
+                            <li><a href="#" role="button" onclick="return false;"><span><?php print($row1->scat_title); ?></span></a>
                                 <div class="sub_menu">
                                     <?php
                                     $Query2 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params FROM category AS cat WHERE cat.cat_status = '1' AND cat.group_id IN (" . $row1->group_id . ") ORDER BY cat.cat_id ASC";

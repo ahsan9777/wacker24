@@ -2,7 +2,7 @@
 
 include("includes/php_includes_top.php");
 
-$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -36,6 +36,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$ci_amount = $pbp_price_without_tax;
 
 	$pg_mime_source_url = $row->pg_mime_source_url;
+	$pg_mime_description = $row->pg_mime_description;
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
 	$cat_id_one = $sub_group_ids[1];
@@ -171,18 +172,19 @@ include("includes/message.php");
 									<div class="simpleLens-gallery-container" id="demo-1" align="center">
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a class="simpleLens-lens-image" data-lens-image="<?php print($pg_mime_source_url); ?>"> <img src="<?php print($pg_mime_source_url); ?>" class="simpleLens-big-image"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print($pg_mime_source_url); ?>"> <img src="<?php print($pg_mime_source_url); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
 											</div>
 										</div>
 										<div class="thum_images">
 											<div class="simpleLens-thumbnails-container">
 												<?php
-												$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' AND pg_mime_purpose != 'others' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+												//$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' AND pg_mime_purpose != 'others' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+												$Query = "SELECT pg_mime_source_url, pg_mime_description FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_type = 'image/jpeg' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
 												$rs = mysqli_query($GLOBALS['conn'], $Query);
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
 												?>
-														<a href="javascript:voild(0)" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>"> <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>"> </a>
+														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>"> <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
 												<?php
 													}
 												}
@@ -332,12 +334,12 @@ include("includes/message.php");
 												<div class="drop-down_2">
 													<div class="selected">
 														<div class="qtu_slt">Menge:</div>
-														<a href="javascript:void(0)"><span>1</span></a>
+														<a href="#" role="button" onclick="return false;"><span>1</span></a>
 													</div>
 													<div class="options">
 														<ul>
 															<?php for ($i = 1; $i <= $quantity_lenght; $i++) { ?>
-																<li><a href="javascript:void(0)" class="quantity" id="quantity_<?php print($i); ?>" data-id="<?php print($i); ?>"><?php print($i); ?></a></li>
+																<li><a href="#" role="button" onclick="return false;" class="quantity" id="quantity_<?php print($i); ?>" data-id="<?php print($i); ?>"><?php print($i); ?></a></li>
 															<?php } ?>
 														</ul>
 													</div>
@@ -352,14 +354,14 @@ include("includes/message.php");
 										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
 										<input type="hidden" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty" value="1">
-										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($pro_id); ?>">
+										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="#" role="button" onclick="return false;" data-id="<?php print($pro_id); ?>">
 											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>
 									</div>
 									<div class="product_shippment">
 										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
 										<div class="shippment_text">
-											<a href="javascript:void(0)"><i class="fa fa-map-marker" aria-hidden="true"></i>
+											<a href="#" role="button" onclick="return false;"><i class="fa fa-map-marker" aria-hidden="true"></i>
 												<div class="location_text location_trigger"> Lieferung an Standort aktualisieren</div>
 											</a>
 											<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) { ?>
@@ -369,7 +371,7 @@ include("includes/message.php");
 										</div>
 									</div>
 									<div class="product_create_liste">
-										<div id="alert_wishlist" style="display: none;"><span id="alert_wishlist_txt"></span><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+										<div id="alert_wishlist" style="display: none;"><span id="alert_wishlist_txt"></span><a href="#" role="button" onclick="return false;" class="close" data-dismiss="alert">×</a></div>
 										<div class="drop-down">
 											<div class="selected <?php print(isset($_SESSION["UID"]) ? 'show' : ''); ?>">
 												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Auf die Liste</span></a>
@@ -385,7 +387,7 @@ include("includes/message.php");
 															while ($row = mysqli_fetch_object($rs)) {
 																$count++;
 														?>
-																<li><a href="javascript:void(0)" class="addwhishlist" data-id="<?php print($row->sl_id); ?>"><?php print($row->sl_title); ?></a></li>
+																<li><a href="#" role="button" onclick="return false;" class="addwhishlist" data-id="<?php print($row->sl_id); ?>"><?php print($row->sl_title); ?></a></li>
 														<?php
 															}
 														}
