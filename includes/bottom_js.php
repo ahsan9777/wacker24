@@ -25,6 +25,82 @@
     }, 10000);
 </script>
 
+
+<script>
+    $(function() {
+        //console.log("switch_click");
+        //$(".switch_click").trigger("click");
+        $(".switch_click").click(function() {
+            //console.log("class switch_click");
+            let utype_id = 3;
+            let ci_total = 0;
+            if ($(this).is(":checked")) {
+                //console.log("if switch_click");
+                utype_id = 4;
+                $("#header_section .header_top").css('background-color', '<?php print(config_company_color_a); ?>');
+                $("#header_section .header_bottom").css('background-color', '<?php print(config_company_color_b); ?>');
+                $("#navigation_section").css('background-color', '<?php print(config_company_color_a); ?>');
+                $("#footer_section").css('background-color', '<?php print(config_company_color_a); ?>');
+                $(".pbp_price_with_tex").hide();
+                $(".price_without_tex").show();
+                ci_total = $("#ci_total").val();
+            } else {
+                //console.log("else switch_click");
+                $("#header_section .header_top").css('background-color', '<?php print(config_private_color_a); ?>');
+                $("#header_section .header_bottom").css('background-color', '<?php print(config_private_color_b); ?>');
+                $("#navigation_section").css('background-color', '<?php print(config_private_color_a); ?>');
+                $("#footer_section").css('background-color', '<?php print(config_private_color_a); ?>');
+                $(".pbp_price_with_tex").show();
+                $(".price_without_tex").hide();
+                ci_total = $("#ci_total").val();
+            }
+
+            $.ajax({
+                url: 'ajax_calls.php?action=switch_click',
+                method: 'POST',
+                data: {
+                    utype_id: utype_id,
+                    ci_total: ci_total
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    //console.log(obj.delivery_charges.total);
+                    if (obj.status == 1) {
+                        if (obj.delivery_charges.tex > 0) {
+                            $("#cart_subtotal").show();
+                            $("#cart_vat").show();
+                        } else {
+                            if (obj.delivery_charges.total == 0 && obj.utype_id == 4) {
+                                $("#cart_subtotal").show();
+                                $("#cart_vat").show();
+                            } else {
+                                $("#cart_subtotal").hide();
+                                $("#cart_vat").hide();
+                            }
+                        }
+                        let packing = (obj.delivery_charges.packing).toFixed(2)
+                        let shipping = (obj.delivery_charges.shipping).toFixed(2)
+                        let total = (obj.delivery_charges.total).toFixed(2)
+                        $("#packing").text("Verpackungspauschale  (" + packing.replace(".", ",") + " €)");
+                        $("#shipping").text("Versandkosten (" + shipping.replace(".", ",") + " €)");
+                        $("#total").text(total.replace(".", ",") + " €");
+                    } else {
+                        if (obj.utype_id == 4) {
+                            $("#cart_subtotal").show();
+                            $("#cart_vat").show();
+                        } else {
+                            $("#cart_subtotal").hide();
+                            $("#cart_vat").hide();
+                        }
+                    }
+
+                }
+            });
+        });
+    });
+</script>
+
 <style>
     .ui-widget.ui-widget-content{
         z-index: 9999999;
