@@ -27,7 +27,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	/*$dbDatabase = "esoltech_wacker24";
 	$dbUserName = "esoltech_wacker24";*/
 	$dbPassword = "MU8s)gKIeQyD";
-	$GLOBALS['siteName'] = "www.wackersystems.com";
+	$GLOBALS['siteName'] = "Wacker24";
 	//$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
 	$GLOBALS['siteURL'] = "https://www.wackersystems.com/";
 }

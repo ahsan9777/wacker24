@@ -374,6 +374,7 @@ include("includes/messages.php");
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Artical</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=4"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Schulranzen</span></a>
+                                <a href="<?php print("google_merchant_xml.php"); ?>" class="add-new"><span class="material-icons icon">download</span> <span class="text">Export Google Merchent Data</span></a>
                             </div>
 
                         </div>
