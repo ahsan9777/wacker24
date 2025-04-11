@@ -82,6 +82,7 @@ if (isset($_REQUEST['btn_registration'])) {
 				$class = "alert alert-danger";
 				$strMSG = "Sehr geehrter Kunde, <br> Der Bestätigungscode passt nicht!";
 			} else {
+				$check_email = "";
 				$user_id = getMaximum("users", "user_id");
 				$user_verification_code = md5($user_id . date("Ymdhis"));
 				mysqli_query($GLOBALS['conn'], "INSERT INTO users (user_id, utype_id, user_fname, user_lname, gen_id, user_phone, user_name, user_password, countries_id, user_confirmation " . $field . ") VALUES ('" . $user_id . "', '" . dbStr(trim($_REQUEST['utype_id'])) . "', '" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "','" . $_REQUEST['gen_id'] . "','" . dbStr(trim($_REQUEST['user_phone'])) . "','" . dbStr(trim($_REQUEST['user_name'])) . "','" . dbStr(password_hash(trim($_REQUEST['user_password']), PASSWORD_BCRYPT)) . "','" . dbStr(trim($_REQUEST['countries_id'])) . "', '" . $user_verification_code . "' " . $value . ")") or die(mysqli_error($GLOBALS['conn']));
@@ -91,7 +92,10 @@ if (isset($_REQUEST['btn_registration'])) {
 				$field = "";
 				$value = "";
 				$input_display = 'style="display: none;"';
-				$mailer->registration_account_verification(dbStr(trim($_REQUEST['user_fname']))." ".dbStr(trim($_REQUEST['user_lname'])), "verification@wackersystems.com", "7v6LjC{rEIct", $_REQUEST['user_name'], "Account Verification", $user_verification_code);
+				$check_email = $mailer->registration_account_verification(dbStr(trim($_REQUEST['user_fname']))." ".dbStr(trim($_REQUEST['user_lname'])), "verification@wackersystems.com", "7v6LjC{rEIct", $_REQUEST['user_name'], "Account Verification", $user_verification_code);
+				if($check_email == "Message has been sent successfully"){
+					mysqli_query($GLOBALS['conn'], "UPDATE users SET user_email_confirmation = '1' WHERE user_id = '".$user_id."'") or die(mysqli_error($GLOBALS['conn']));
+				}
 				header('Location: konto-registrierung');
 			}
 		}

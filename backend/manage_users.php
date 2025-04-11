@@ -337,6 +337,7 @@ include("includes/messages.php");
                                         <?php if ($utype_id > 0) { ?>
                                             <th class="text-end" width="190">Payment Methods</th>
                                         <?php } ?>
+                                        <th width="70">Email Send</th>
                                         <th width="50">Status</th>
                                         <th width="140">Action</th>
                                     </tr>
@@ -359,7 +360,6 @@ include("includes/messages.php");
                                             if(!empty($row->user_company_name) && $row->utype_id == 4){
                                                 $user_company_name = '<span class="btn btn-warning btn-style-light w-auto mb-2 d-flex align-items-center gap-1" style="font-size: 12px;"><span class="material-icons icon material-xs">apartment</span> <span>'.$row->user_company_name.' </span></span>';
                                             }
-
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->user_id); ?>"></td>
@@ -394,6 +394,15 @@ include("includes/messages.php");
                                                         </div>
                                                     </td>
                                                 <?php } ?>
+                                                <td>
+                                                    <?php
+                                                    if ($row->user_email_confirmation == 0) {
+                                                        echo '<span class="btn btn-danger btn-style-light w-auto">No</span>';
+                                                    } else {
+                                                        echo '<span class="btn btn-success btn-style-light w-auto">Yes</span>';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if ($row->status_id == 0) {
