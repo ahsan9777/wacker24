@@ -45,7 +45,7 @@ class Mailer
         $eml_contents = $get_email_template[0]->eml_contents;
         $eml_contents = str_replace("{customer_name}", $customer_name, $eml_contents);
         $eml_contents = str_replace("{sitelogo}", $GLOBALS['siteURL'] . "images/register_logo.png", $eml_contents);
-        $eml_contents = str_replace("{btnlink}", $GLOBALS['siteURL'] . "konto-bestätigung?verification_code=" . $user_verification_code, $eml_contents);
+        $eml_contents = str_replace("{btnlink}", $GLOBALS['siteURL'] . "konto-bestaetigung?verification_code=" . $user_verification_code, $eml_contents);
         $eml_contents = str_replace("{href_site}", $GLOBALS['siteURL'], $eml_contents);
         $eml_contents = str_replace("{siteName}", $GLOBALS['siteName'], $eml_contents);
         $message = $eml_contents;

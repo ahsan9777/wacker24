@@ -46,8 +46,8 @@ if (isset($_REQUEST['btn_login'])) {
 				}
 
 				//echo $ref_check[0];die();
-				if ($ref == $GLOBALS['siteURL'] . "anmelden" || $ref == $GLOBALS['siteURL'] . "registrierung" || $ref_check[0] == $GLOBALS['siteURL'] . "konto-bestätigung"  || $ref_check[0] == $GLOBALS['siteURL'] . "konto-registrierung" ||  $ref_check[0] == $GLOBALS['siteURL'] . "konto-vergessen-kennwort") {
-					print("if");die();
+				if ($ref == $GLOBALS['siteURL'] . "anmelden" || $ref == $GLOBALS['siteURL'] . "registrierung" || $ref_check[0] == $GLOBALS['siteURL'] . "konto-bestaetigung"  || $ref_check[0] == $GLOBALS['siteURL'] . "konto-registrierung" ||  $ref_check[0] == $GLOBALS['siteURL'] . "konto-vergessen-kennwort") {
+					//print("if");die();
 					header("Location:" . $GLOBALS['siteURL']);
 				} elseif (!empty($ref)) {
 					if($ref == $GLOBALS['siteURL']){
