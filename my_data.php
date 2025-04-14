@@ -1,5 +1,5 @@
 <?php
-include("includes/php_includes_top.php");
+include("includes/php_includes_top_user_dashboard.php");
 $page = 1;
 
 $Query = "SELECT u.user_id, u.user_name, u.user_fname, u.user_lname, u.user_phone, ut.utype_name FROM users AS u LEFT OUTER JOIN user_type AS ut ON ut.utype_id = u.utype_id WHERE u.user_id = '".$_SESSION["UID"]."'";

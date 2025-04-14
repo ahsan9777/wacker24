@@ -1,5 +1,5 @@
 <?php
-include("includes/php_includes_top.php");
+include("includes/php_includes_top_user_dashboard.php");
 if ($_SESSION["utype_id"] == 5) {
 	header("Location: ".$GLOBALS['siteURL']."bestätigung-der-gastbestellung");
 }

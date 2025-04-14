@@ -1,6 +1,7 @@
 <?php
-include("includes/php_includes_top.php");
+include("includes/php_includes_top_user_dashboard.php");
 $page = 1;
+
 ?>
 <!doctype html>
 <html>
