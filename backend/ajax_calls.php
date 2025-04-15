@@ -138,6 +138,24 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($json);
             print($jsonResults);
             break;
+        
+        case 'manf_name':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                $where .= " WHERE manf_name LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+            }
+            $Query = "SELECT manf_id, manf_name FROM manufacture " . $where . " ORDER BY manf_id  LIMIT 0,20";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                    'manf_id' => strip_tags(html_entity_decode($row->manf_id, ENT_QUOTES, 'UTF-8')),
+                    'value' => strip_tags(html_entity_decode($row->manf_name, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
+            print($jsonResults);
+            break;
 
         case 'ord_id':
             $json = array();
