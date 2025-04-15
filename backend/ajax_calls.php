@@ -12,12 +12,13 @@ if (isset($_REQUEST['action'])) {
                 if (isset($_REQUEST['parent_id']) && $_REQUEST['parent_id'] > 0) {
                     $sub_cat_title = 1;
                     $where .= " WHERE cat.parent_id > '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
-                    $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title FROM `category` AS cat LEFT OUTER JOIN category AS sub_cat ON sub_cat.parent_id = cat.parent_id  " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
+                    $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title FROM `category` AS cat LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = cat.parent_id  " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 } else {
                     $where .= " WHERE cat.parent_id = '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
                     $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title FROM `category` AS cat " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 }
             }
+            //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(

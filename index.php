@@ -74,7 +74,7 @@ $page = 1;
 														<a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>">
 															<div class="pd_ctg_image">
 																<img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="">
-																<span class="pd_tag"><?php print((($special_price['usp_price_type'] > 0) ? price_format($special_price['usp_discounted_value']).'€' : $special_price['usp_discounted_value'].'%')); ?> <b>-</b></span>
+																<span class="pd_tag"><b>-</b> <?php print((($special_price['usp_price_type'] > 0) ? price_format($special_price['usp_discounted_value']).'€' : $special_price['usp_discounted_value'].'%')); ?></span>
 															</div>
 															<div class="pd_ctg_title price_without_tex" <?php print($price_without_tex_display); ?>>
 																<del><?php print(price_format($row2->pbp_price_without_tax)); ?>€</del> | <span class="pd_ctg_discount_price"><?php print(price_format(discounted_price($special_price['usp_price_type'], $row2->pbp_price_without_tax, $special_price['usp_discounted_value']))); ?>€ </span>
