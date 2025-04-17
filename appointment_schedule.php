@@ -14,6 +14,17 @@ if (mysqli_num_rows($rs) > 0) {
 	$as_title = $row->as_title;
 	$as_image = $GLOBALS['siteURL'] . "files/appointment_schedule/" . $row->as_image;
 }
+$holiday_dates = returnNameArray("ah_date" ,"appointment_holidays", "ah_status", "1");
+//print(implode(",", $holiday_dates));die();
+// Convert to array
+$dates = implode(",", $holiday_dates);
+$dateArray = explode(',', $dates);
+
+$quotedDates = array_map(function($date) {
+    return '"' . $date . '"';
+}, $dateArray);
+
+$holiday_dates_output = implode(", ", $quotedDates);
 
 if (isset($_REQUEST['btn_appointmentBook'])) {
 	if ($_REQUEST['confirm_code'] != $_REQUEST['reconfirm_code']) {
@@ -197,6 +208,8 @@ include("includes/message.php");
 </body>
 <?php include("includes/bottom_js.php"); ?>
 <script>
+	const disabledDates = [<?php print($holiday_dates_output); ?>];
+	console.log(disabledDates);
 	$('#calendar').datepicker({
 		inline: true,
 		firstDay: 1,
@@ -213,7 +226,8 @@ include("includes/message.php");
 		minDate: 0, // Prevent previous dates
 		beforeShowDay: function(date) {
 			const day = date.getDay();
-			if (day === 0) {
+			const dateStr = $.datepicker.formatDate('yy-mm-dd', date);
+			if (day === 0 || disabledDates.includes(dateStr)) {
 				return [false, '', 'Disabled']; // Disable Sundays
 			}
 			return [true, '', '']; // All other days enabled

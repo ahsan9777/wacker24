@@ -3,10 +3,15 @@ include("../lib/session_head.php");
 
 if (isset($_REQUEST['btnAdd'])) {
     //print_r($_REQUEST);die();
-
-    $ah_id = getMaximum("appointment_holidays", "ah_id");
+    $Query = "SELECT * FROM appointment_holidays WHERE ah_date = '".$_REQUEST['ah_date']."'";
+    $rs = mysqli_query($GLOBALS['conn'], $Query);
+    if(mysqli_num_rows($rs) > 0){
+        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=4");
+    } else{
+        $ah_id = getMaximum("appointment_holidays", "ah_id");
     mysqli_query($GLOBALS['conn'], "INSERT INTO appointment_holidays (ah_id, ah_date) VALUES ('" . $ah_id . "', '" . dbStr(trim($_REQUEST['ah_date'])) . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+    }
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
     mysqli_query($GLOBALS['conn'], "UPDATE appointment_holidays SET ah_date = '" . dbStr(trim($_REQUEST['ah_date'])) . "' WHERE ah_id=" . $_REQUEST['ah_id']) or die(mysqli_error($GLOBALS['conn']));
