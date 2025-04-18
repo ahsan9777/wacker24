@@ -8,6 +8,8 @@ $group_id_check = 0;
 if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
 	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_three'], " AND parent_id = '".$AND."'");
+	$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_three'], " AND parent_id = '".$AND."'");
+	$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_three'], " AND parent_id = '".$AND."'");
 	
 	$group_id_check = 1;
 } else if(isset($_REQUEST['manf_name_params']) && isset($_REQUEST['cat_params_request'])){
@@ -16,8 +18,12 @@ if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
 		$cat_params_request_array = explode("/", $_REQUEST['cat_params_request']);
 		$AND = returnName("group_id", "category", "cat_params_de", $cat_params_request_array[0], " AND parent_id > 0");
 		$cat_params_request = returnNameArray("group_id", "category", "cat_params_de", $cat_params_request_array[1], " AND parent_id = '".$AND."'");
+		$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $cat_params_request_array[1], " AND parent_id = '".$AND."'");
+		$meta_description = returnName("cat_description", "category", "cat_params_de", $cat_params_request_array[1], " AND parent_id = '".$AND."'");
 	} else{
 		$cat_params_request = returnNameArray("group_id", "category", "cat_params_de", $_REQUEST['cat_params_request']);
+		$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_request']);
+		$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_request']);
 	}
 	//print_r($cat_params_request);
 	if($_REQUEST['level'] == 2){
@@ -39,6 +45,8 @@ if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
 	$manf_params_id = returnName("manf_id", "manufacture", "manf_name_params", $_REQUEST['manf_name_params']);
 } else if(isset($_REQUEST['cat_params_two'])){
 	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
+	$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
+	$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$group_id_check = 1;
 }
 //print($group_id);die();

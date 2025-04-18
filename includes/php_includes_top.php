@@ -21,6 +21,8 @@ $qryStrURL = "";
 $search_keyword = "";
 $cat_id = "";
 $special_price = array();
+$meta_keywords = "";
+$meta_description = "";
 
 //if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4)))) {
 if ((isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["cart_check"]) && $_SESSION["cart_check"] == true)) {

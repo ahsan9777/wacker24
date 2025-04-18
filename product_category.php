@@ -19,6 +19,8 @@ if ($level_one_request == 20) {
 $special_price = user_special_price("level_one", $level_one);
 //print_r($special_price);die();
 //}
+$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_one']);
 ?>
 <!doctype html>
 <html lang="de">

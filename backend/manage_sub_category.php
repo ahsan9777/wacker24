@@ -159,13 +159,13 @@ include("includes/messages.php");
 
                         $cat_id = 0;
                         $cat_title = "";
-                        $searchQuery = "";
+                        $searchQuery = "sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id > '0' ORDER BY main_cat.group_id ASC)";
 
                         if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
                             if (!empty($_REQUEST['cat_title'])) {
                                 $cat_id = $_REQUEST['cat_id'];
                                 $cat_title = $_REQUEST['cat_title'];
-                                $searchQuery = " AND sub_cat.cat_id = '" . $_REQUEST['cat_id'] . "'";
+                                $searchQuery = " sub_cat.cat_id = '" . $_REQUEST['cat_id'] . "'";
                             }
                         }
                         ?>
@@ -190,7 +190,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id > '0' ORDER BY main_cat.group_id ASC) ".$searchQuery." ";
+                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  ".$searchQuery." ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
