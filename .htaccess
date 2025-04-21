@@ -58,6 +58,7 @@ RewriteRule ^abmelden? logout.php [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\s\/]+)/?$ page.php?cnt_slug=$1 [L,QSA]
+RewriteRule ^unterkategorien/([0-9]+)/(.*)?$ product_category.php?page=$1&cat_params_one=$2 [L]
 RewriteRule ^unterkategorien/(.*)?$ product_category.php?cat_params_one=$1 [L]
 RewriteRule ^artikelarten/marke/([0-9]+)/([0-9]+)/(.*)/(.*)/([0-9]+)?$ products.php?page=$1&level=$2&cat_params_request=$3&manf_name_params=$4&pro_type=$5 [L]
 RewriteRule ^artikelarten/marke/([0-9]+)/([0-9]+)/(.*)/(.*)?$ products.php?page=$1&level=$2&cat_params_request=$3&manf_name_params=$4 [L]

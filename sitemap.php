@@ -34,27 +34,33 @@ $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
         <changefreq>never</changefreq>
         <priority>0.5</priority>
     </url>
+    <url>
+        <loc><?php echo $GLOBALS['siteURL']; ?>verkäufe-angebote</loc>
+        <lastmod><?php echo $date->format('c'); ?></lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.1</priority>
+    </url>
     <?php
     siteMapCat(0);
     // Display list of all product URLs
     $rsp = mysqli_query($GLOBALS['conn'], "SELECT * FROM products WHERE pro_status='1'");
-        if(mysqli_num_rows($rsp)>0){
-            while($rwp=mysqli_fetch_object($rsp)){
-                $dt = $rwp->pro_udate;
-                if(empty($rwp->pro_udate)){
-                    $dt = $rwp->pro_cdate;
-                }
-                $date = new DateTime($dt, new DateTimeZone('Europe/Berlin'));
-                //$date->format('c');
-                $pgURL = $GLOBALS['siteURL']."product/".$rwp->supplier_id ."/".url_clean($rwp->pro_description_short);
-                echo "<url>
-                    <loc>".$pgURL."</loc>
-                    <lastmod>".$date->format('c')."</lastmod>
+    if (mysqli_num_rows($rsp) > 0) {
+        while ($rwp = mysqli_fetch_object($rsp)) {
+            $dt = $rwp->pro_udate;
+            if (empty($rwp->pro_udate)) {
+                $dt = $rwp->pro_cdate;
+            }
+            $date = new DateTime($dt, new DateTimeZone('Europe/Berlin'));
+            //$date->format('c');
+            $pgURL = $GLOBALS['siteURL'] . "product/" . $rwp->supplier_id . "/" . url_clean($rwp->pro_description_short);
+            echo "<url>
+                    <loc>" . $pgURL . "</loc>
+                    <lastmod>" . $date->format('c') . "</lastmod>
                     <changefreq>daily</changefreq>
                     <priority>0.1</priority>
                 </url>";
-            }
         }
+    }
     ?>
 </urlset>
 <?php
