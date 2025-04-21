@@ -2729,6 +2729,159 @@ function quantityUpdate($field, $supplier_id, $quantity){
 	mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." - '".$quantity."' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 }
 
+/*function autocorrectQueryUsingProductTerms($query, $pdo) {
+    // Get all unique words from product descriptions
+    $stmt = $pdo->query("SELECT DISTINCT pro_description_short FROM products");
+    $allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
+    // Extract all unique words from descriptions
+    $dictionaryWords = [];
+    foreach ($allDescriptions as $desc) {
+        $words = preg_split('/[\s\-_,\.\'\"]+/', $desc);
+        foreach ($words as $word) {
+            $word = trim(strtolower($word));
+            if (strlen($word) > 1) { // Skip single characters
+                $dictionaryWords[$word] = true;
+            }
+        }
+    }
+    $dictionaryWords = array_keys($dictionaryWords);
+    
+    // Break query into words
+    $queryWords = preg_split('/\s+/', $query);
+    $correctedWords = [];
+    
+    // Try to correct each word
+    foreach ($queryWords as $queryWord) {
+        $originalWord = $queryWord;
+        $queryWord = strtolower($queryWord);
+        
+        // If word is already in our dictionary, keep it
+        if (in_array($queryWord, $dictionaryWords)) {
+            $correctedWords[] = $originalWord;
+            continue;
+        }
+        
+        // Find closest word in dictionary
+        $bestMatch = null;
+        $bestScore = 0;
+        
+        foreach ($dictionaryWords as $dictWord) {
+            // Skip words with big length difference (optimization)
+            if (abs(strlen($queryWord) - strlen($dictWord)) > 3) {
+                continue;
+            }
+            
+            similar_text($queryWord, $dictWord, $score);
+            
+            // If this is a better match
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $bestMatch = $dictWord;
+            }
+        }
+        
+        // If we found a good match (over 70% similar)
+        if ($bestScore > 70 && $bestMatch !== null) {
+            // Preserve original capitalization if possible
+            if (ctype_upper($originalWord)) {
+                $correctedWords[] = strtoupper($bestMatch);
+            } elseif (ucfirst($originalWord) === $originalWord) {
+                $correctedWords[] = ucfirst($bestMatch);
+            } else {
+                $correctedWords[] = $bestMatch;
+            }
+        } else {
+            // If no good match, keep original
+            $correctedWords[] = $originalWord;
+        }
+    }
+    
+    return [
+        'original' => $query,
+        'corrected' => implode(' ', $correctedWords)
+    ];
+}*/
+
+function autocorrectQueryUsingProductTerms($query, $pdo) {
+    // Get all unique words from product descriptions
+    $stmt = $pdo->query("SELECT DISTINCT pro_description_short FROM products");
+    $allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Normalize words (remove umlauts, lowercase, trim special chars)
+    function normalizeWord($word) {
+        $map = ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss'];
+        $word = mb_strtolower(trim($word), 'UTF-8');
+        $word = strtr($word, $map);
+        return preg_replace('/[^a-z0-9]/', '', $word); // remove non-alphanumerics
+    }
+
+    // Extract all unique words from descriptions
+    $dictionaryWords = [];
+    foreach ($allDescriptions as $desc) {
+        $words = preg_split('/[\s\-_,\.\'\"]+/', $desc);
+        foreach ($words as $word) {
+            $word = normalizeWord($word);
+            if (strlen($word) > 1) {
+                $dictionaryWords[$word] = true;
+            }
+        }
+    }
+    $dictionaryWords = array_keys($dictionaryWords);
+
+    // Break query into words
+    $queryWords = preg_split('/\s+/', $query);
+    $correctedWords = [];
+
+    foreach ($queryWords as $queryWord) {
+        $originalWord = $queryWord;
+        $normalizedQueryWord = normalizeWord($queryWord);
+
+        if (in_array($normalizedQueryWord, $dictionaryWords)) {
+            $correctedWords[] = $originalWord;
+            continue;
+        }
+
+        $bestMatch = null;
+        $bestScore = 0;
+        $bestDistance = PHP_INT_MAX;
+
+        foreach ($dictionaryWords as $dictWord) {
+            if (abs(strlen($normalizedQueryWord) - strlen($dictWord)) > 4) {
+                continue;
+            }
+
+            similar_text($normalizedQueryWord, $dictWord, $similarity);
+            $lev = levenshtein($normalizedQueryWord, $dictWord);
+
+            // Combine score: prefer better similarity and shorter distance
+            if (($similarity > 70 && $lev < $bestDistance) || $similarity > $bestScore) {
+                $bestMatch = $dictWord;
+                $bestScore = $similarity;
+                $bestDistance = $lev;
+            }
+        }
+
+        if ($bestMatch !== null && $bestScore > 65) {
+            // Try to restore proper case
+            if (ctype_upper($originalWord)) {
+                $correctedWords[] = strtoupper($bestMatch);
+            } elseif (ucfirst($originalWord) === $originalWord) {
+                $correctedWords[] = ucfirst($bestMatch);
+            } else {
+                $correctedWords[] = $bestMatch;
+            }
+        } else {
+            $correctedWords[] = $originalWord;
+        }
+    }
+
+    return [
+        'original' => $query,
+        'corrected' => implode(' ', $correctedWords)
+    ];
+}
+
 
 
 

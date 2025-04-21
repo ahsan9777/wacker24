@@ -15,22 +15,34 @@ if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
 }
 $search_keyword_where = "";
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
-	header("Location: " . $GLOBALS['siteURL'] . "product_detail.php?supplier_id=" . $_REQUEST['supplier_id']);
-
+	$pro_description_short = returnName("pro_description_short", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
+	header("Location: " . $GLOBALS['siteURL'] . "product/" . $_REQUEST['supplier_id']."/".url_clean($pro_description_short));
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
-	$search_keyword_array = explode(" ", trim(str_replace("-", " ", $_REQUEST['search_keyword'])));
+
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$result = autocorrectQueryUsingProductTerms($_REQUEST['search_keyword'], $pdo);
+	//$search_keyword_array = explode(" ", trim(str_replace("-", " ", $_REQUEST['search_keyword'])));
+	$search_keyword_array = explode(" ", trim(str_replace("-", " ", $result['corrected'])));
 	//print_r($pro_description_short_keyword);
-	$search_keyword_case = "";
 	$search_keyword_where = "";
-	for ($i = 0; $i < count($search_keyword_array); $i++) {
-		$search_keyword_array_data = "";
-		if (!empty($search_keyword_array[$i])) {
-			$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
-			$search_keyword_case .= "(CASE WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
-			$search_keyword_where .= $search_keyword_array_data;
+	if(count($search_keyword_array) > 1){
+		$search_keyword_case = "(CASE WHEN  pro.pro_description_short LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 1 ELSE 0 END) + ";
+		for ($i = 0; $i < count($search_keyword_array); $i++) {
+			$search_keyword_array_data = "";
+			if (!empty($search_keyword_array[$i])) {
+				$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
+				$search_keyword_case .= "(CASE WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
+				$search_keyword_where .= $search_keyword_array_data;
+			}
 		}
+	} else {
+		$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR ";
+		$search_keyword_case = "CASE WHEN  pro.pro_description_short LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 10 ";
+		$search_keyword_case .= " WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END";
+		$search_keyword_where .= $search_keyword_array_data;
 	}
+	
 
 	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . rtrim($search_keyword_where, " OR ") . ")";
 
