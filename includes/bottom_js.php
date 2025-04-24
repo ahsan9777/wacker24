@@ -41,6 +41,7 @@
                 $("#header_section .header_bottom").css('background-color', '<?php print(config_company_color_b); ?>');
                 $("#navigation_section").css('background-color', '<?php print(config_company_color_a); ?>');
                 $("#footer_section").css('background-color', '<?php print(config_company_color_a); ?>');
+                $("#switch_click_text").text("Angebote gelten nur für Industrie, Handel, Handwerk und Gewerbe. Preise zzgl. gesetzl. MwSt.");
                 $(".pbp_price_with_tex").hide();
                 $(".price_without_tex").show();
                 ci_total = $("#ci_total").val();
@@ -50,6 +51,7 @@
                 $("#header_section .header_bottom").css('background-color', '<?php print(config_private_color_b); ?>');
                 $("#navigation_section").css('background-color', '<?php print(config_private_color_a); ?>');
                 $("#footer_section").css('background-color', '<?php print(config_private_color_a); ?>');
+                $("#switch_click_text").text("Angebote gelten für Privatkunden. Preise inkl. gesetzl. MwSt.");
                 $(".pbp_price_with_tex").show();
                 $(".price_without_tex").hide();
                 ci_total = $("#ci_total").val();

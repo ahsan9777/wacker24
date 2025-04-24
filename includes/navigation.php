@@ -4,6 +4,7 @@ $background_color_two = "";
 $pbp_price_with_tex_display = "";
 $price_without_tex_display = "";
 $switch_click_check = "";
+$switch_click_text = "Angebote gelten für Privatkunden. Preise inkl. gesetzl. MwSt.";
 $display_check = 'style="display: none;"';
 if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
     $background_color_one = 'style="background-color: ' . config_company_color_a . ';"';
@@ -12,6 +13,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
     $price_without_tex_display = 'style="display: block;"';
     $pbp_price_with_tex_display = 'style="display: none;"';
     $display_check = '';
+    $switch_click_text = "Angebote gelten nur für Industrie, Handel, Handwerk und Gewerbe. Preise zzgl. gesetzl. MwSt.";
 }
 //print($_SESSION["FullName"]);
 ?>
@@ -28,9 +30,12 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 </div>
             </li>
             <li>Geschäftskunde</li>
+            <li>&nbsp;</li>
+            <li>&nbsp;</li>
+            <li id="switch_click_text"><?php print($switch_click_text); ?></li>
         </ul>
         <ul>
-            <li><a href="about_us">Über Wacker 24</a></li>
+            <li><a href="über-uns">Über Wacker 24</a></li>
             <li><a href="kontakt">Kontakt</a></li>
             <li>
                 <div class="header_language">
