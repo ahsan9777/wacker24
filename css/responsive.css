@@ -32,6 +32,7 @@
     
     #header_section .header_top{padding: 0px 15px;}
     #header_section .header_top ul:nth-child(2) li:first-child{display: none;}
+    #header_section .header_top ul:nth-child(2) li:nth-child(2){margin-left: 30px;}
     #header_section .header_top ul li{font-size: 11px;}
     #header_section .header_bottom {position: relative; padding:10px 15px 50px 15px;}
     #header_section .header_bottom .header_account ul li:first-child{display: none;}
@@ -107,6 +108,7 @@
     .login_page .login_box{width: auto;}
     .pd_tag{font-size: 14px;}
     .not_ailable{width: 300px;}
+    .category_type_product .ctg_type_col{ width: 50%;}
 }
 @media screen and (max-width: 800px) and (min-width: 240px){}
 

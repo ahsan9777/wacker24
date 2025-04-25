@@ -70,6 +70,19 @@ if (isset($_REQUEST['btnInactive'])) {
         $strMSG = "Please Select Alteast One Checkbox";
     }
 }
+//--------------Button Orderby--------------------
+if (isset($_REQUEST['btnOrderby'])) {
+    if (isset($_REQUEST['cat_id'])) {
+        for ($i = 0; $i < count($_REQUEST['cat_id']); $i++) {
+            mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_orderby = '" . $_REQUEST['cat_orderby'][$i] . "' WHERE cat_id = " . $_REQUEST['cat_id'][$i]);
+        }
+        $class = "alert alert-success";
+        $strMSG = "Record(s) updated successfully";
+    } else {
+        $class = "alert alert-info";
+        $strMSG = "Please Select Alteast One Checkbox";
+    }
+}
 
 include("includes/messages.php");
 
@@ -184,13 +197,14 @@ include("includes/messages.php");
                                         <th width="100">Banner</th>
                                         <th>Main Title</th>
                                         <th>Title </th>
+                                        <th width="100">Order By</th>
                                         <th width="50">Status</th>
                                         <th width="50">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  ".$searchQuery." ";
+                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  ".$searchQuery." ORDER BY sub_cat.parent_id, sub_cat.cat_orderby ASC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -218,6 +232,10 @@ include("includes/messages.php");
                                                 </td>
                                                 <td><?php print($row->cat_title); ?></td>
                                                 <td><?php print($row->sub_cat_title); ?></td>
+                                                <td>
+                                                    <input type="hidden" name="cat_id[]" id="cat_id" value="<?php print($row->cat_id); ?>">
+                                                    <input type="number" class="input_style" name="cat_orderby[]" id="cat_orderby" value="<?php print($row->cat_orderby); ?>">
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if ($row->cat_status == 0) {
@@ -257,10 +275,13 @@ include("includes/messages.php");
 
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
+                                </div>
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
                                 </div>
                             </div>
                         </form>

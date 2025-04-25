@@ -52,61 +52,45 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 							<div class="product_category_heading">
 								<h1> <?php print(returnName("cat_title_de AS cat_title", "category", "group_id", $level_one)) ?> </h1>
 							</div>
-							<div class="gerenric_product">
-								<div class="gerenric_product_inner">
+							<div class="category_type_product">
+								<div class="category_type_inner">
 									<?php
 
 
-									$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ";
+									//$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ";
+									//$Query = "SELECT three_cat.*, (SELECT GROUP_CONCAT(pg.pg_mime_source_url) FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal' AND pg.supplier_id = (SELECT cm.supplier_id FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(three_cat.group_id, cm.cat_id) LIMIT 0,1)) AS pg_mime_source_url FROM category AS three_cat WHERE three_cat.parent_id IN (SELECT two_cat.group_id FROM category AS two_cat WHERE two_cat.parent_id = '".$level_one."') AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(three_cat.group_id, cm.cat_id) )";
+									$Query = "SELECT c.*, GROUP_CONCAT(pg.pg_mime_source_url) AS pg_mime_source_url,  MIN(CASE WHEN pbp.pbp_price_amount > 0 THEN pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)ELSE NULL END) AS pbp_price_amount, MIN(CASE WHEN pbp.pbp_price_amount > 0 THEN pbp.pbp_price_amount ELSE NULL END) AS pbp_price_without_tax  FROM category c JOIN category second_level ON c.parent_id = second_level.group_id AND second_level.parent_id = '" . $level_one . "' JOIN category_map cm ON cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(c.group_id, cm.cat_id) LEFT JOIN products_gallery pg ON pg.pg_mime_purpose = 'normal' AND pg.supplier_id = cm.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' GROUP BY c.group_id ORDER BY c.cat_orderby DESC";
 									//print($Query);//die();
 									$counter = 0;
-									$limit = 24;
-									$start = $p->findStart($limit);
-									$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
-									$pages = $p->findPages($count, $limit);
-									$rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
-									//$rs = mysqli_query($GLOBALS['conn'], $Query);
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 											$counter++;
-											$special_price = array();
-											$sub_group_ids = explode(",", $row->sub_group_ids);
-												$cat_id_one = $sub_group_ids[1];
-												$cat_id_two = $sub_group_ids[0];
-												//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-												$special_price = user_special_price("supplier_id", $row->supplier_id);
-
-												if (!$special_price) {
-													$special_price = user_special_price("level_two", $cat_id_two);
-												}
-
-												if (!$special_price) {
-													$special_price = user_special_price("level_one", $cat_id_one);
-												}
+											$pg_mime_source_url_href = "files/no_img_1.jpg";
+											if (!empty($row->pg_mime_source_url)) {
+												$pg_mime_source_url = explode(',', $row->pg_mime_source_url);
+												//$pg_mime_source_href = "getftpimage.php?img=" . $pg_mime_source[0];
+												$pg_mime_source_url_href = $pg_mime_source_url[0];
+											}
+											if($_REQUEST['cat_params_one'] == 'schulranzen'){
+												$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
+												$cat_link = "artikelarten/".$cat_two_params_de."/".$row->cat_params_de."/20";
+											} else {
+												$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
+												$cat_link = "artikelarten/".$cat_two_params_de."/".$row->cat_params_de;
+											}
 									?>
-											<div class="pd_card">
-												<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
-												<div class="pd_detail">
-													<h5><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
-													<div class="pd_rating">
-														<ul>
-															<li>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-															</li>
-														</ul>
+											<div class="ctg_type_col">
+												<a href="<?php print($cat_link); ?>">
+													<div class="ctg_type_card">
+														<div class="ctg_type_image"><img src="<?php print(get_image_link(160, $pg_mime_source_url_href)); ?>" alt=""></div>
+														<div class="ctg_type_detail">
+															<div class="ctg_type_title"><?php print($row->cat_title_de); ?></div>
+															<div class="ctg_type_price price_without_tex" <?php print($price_without_tex_display); ?> > ab <?php print(price_format( ($row->pbp_price_without_tax > 0) ? $row->pbp_price_without_tax : 0.00 )); ?> €</div>
+															<div class="ctg_type_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> >ab <?php print(price_format( ($row->pbp_price_amount) ? $row->pbp_price_amount : 0.00 )); ?> €</div>
+														</div>
 													</div>
-													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format($row->pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $row->pbp_price_without_tax, $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format($row->pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format($row->pbp_price_without_tax)); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format($row->pbp_price_amount)); ?>€</div>
-													<?php } ?>
-												</div>
+												</a>
 											</div>
 									<?php
 										}
@@ -115,32 +99,12 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 									}
 									?>
 								</div>
-								<?php if ($counter > 0) { ?>
-									<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0px;">
-										<tr>
-											<td align="center">
-												<ul class="pagination" style="margin: 0px;">
-													<?php
-													//$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
-													$pageList = $p->pageList($_GET['page'], "unterkategorien", $pages, '/'.$cat_params);
-													print($pageList);
-													?>
-												</ul>
-											</td>
-										</tr>
-									</table>
+								<?php if($counter > 10) { ?>
+								<div class="txt_align_center">
+									<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></div>
+									<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
+								</div>
 								<?php } ?>
-								<style>
-
-								</style>
-								<!--<div class="need_help">
-									<h2>Do you need help?</h2>
-									<div class="need_help_ref">
-										<a href="javascript:void(0);">Visit the help section</a>
-										<p>Or</p>
-										<a href="javascript:void(0);">contact us</a>
-									</div>
-								</div>-->
 							</div>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column mostviewed" id="related_category_one">
@@ -200,7 +164,6 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 </body>
 <script src="js/slick.js"></script>
 <script>
-	
 	function related_category_one() {
 		$(".gerenric_slider_mostviewed_related_category_one").slick({
 			slidesToShow: 8,
@@ -233,6 +196,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 			]
 		});
 	}
+
 	function related_category_two() {
 		$(".gerenric_slider_mostviewed_related_category_two").slick({
 			slidesToShow: 8,
@@ -278,8 +242,37 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>
-<script defer>
+<script>
+	$(function() {
+		$(".category_type_product .ctg_type_col").slice(0, 10).show();
+		$("body").on('click touchstart', '.load-more-button', function(e) {
+			e.preventDefault();
+			$(".category_type_product .ctg_type_col:hidden").slice(0, 10).slideDown();
+			if ($(".category_type_product .ctg_type_col:hidden").length == 0) {
+				$(".load-more-button").hide();
+				$(".load-less-button").show();
+			}
+		});
 
+		// Load less button
+		$("body").on('click touchstart', '.load-less-button', function(e) {
+        e.preventDefault();
+
+        // Hide all and show only the first 10
+        $(".category_type_product .ctg_type_col").hide().slice(0, 10).show();
+
+        // Scroll to the container
+        $('html, body').animate({
+            scrollTop: $("#container").offset().top
+        }, 500); // 500ms for smooth scroll
+
+        // Toggle button visibility
+        $(".load-more-button").show();
+        $(".load-less-button").hide();
+    });
+	});
+</script>
+<script defer>
 	$(window).on('load', function() {
 		let pro_type = <?php print($pro_type) ?>;
 		let level_one = <?php print($level_one) ?>;
