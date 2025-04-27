@@ -374,6 +374,13 @@ class Mailer
             //$mail->Port       = 587;
             $mail->Port       = 465;
             $mail->SMTPSecure = 'ssl';
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true,
+                ],
+            ];
             //$mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             //$mail->Host       = "mail.gmx.com";
