@@ -7,13 +7,29 @@ $Query = "SELECT * FROM vu_products AS pro ORDER BY pro.pro_id ASC";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
     while ($row = mysqli_fetch_object($rs)) {
+
         $product_type = "";
+        $special_price = array();
         $sub_group_ids = explode(",", $row->sub_group_ids);
+
+        $special_price = user_special_price("supplier_id", $row->supplier_id);
+
+        if (!$special_price) {
+            $special_price = user_special_price("level_two", $sub_group_ids[0]);
+        }
+
+        if (!$special_price) {
+            $special_price = user_special_price("level_one", $sub_group_ids[1]);
+        }
+
+        /*if (!empty($special_price)) {
+            $price =  number_format( (discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], $row->pbp_tax)), "2", ".", "" );
+        }*/ 
         $product_type = returnName("cat_title_de AS cat_title", "category", "group_id", $sub_group_ids[1]); //cat_title_one
         $product_type .= " > ". returnName("cat_title_de AS cat_title", "category", "group_id", $sub_group_ids[0]); //cat_title_two
         $product_type .= " > ". returnName("cat_title_de AS cat_title", "category", "group_id", $row->cat_id); //cat_title_three
         $brand = returnName("manf_name", "manufacture", "manf_id", $row->manf_id); //cat_title_three
-        $products[] = array(
+        $product = array(
                 'id' => $row->supplier_id,
                 'title' => $row->pro_description_short,
                 'description' => $row->pro_description_long,
@@ -29,9 +45,14 @@ if (mysqli_num_rows($rs) > 0) {
                 'shipping' => [
                     'country' => 'DE',
                     'service' => 'Standard',
-                    'price' => '8.32 EUR',
+                    'price' => '3.56 EUR',
                 ]
                 );
+
+                if (!empty($special_price)) {
+                    $product['sale_price'] =  number_format( (discounted_price($special_price['usp_price_type'], $row->pbp_price_amount, $special_price['usp_discounted_value'], $row->pbp_tax)), "2", ".", "" ). ' EUR';
+                }
+                $products[] = $product;
     }
 }
 $doc = new DOMDocument('1.0', 'UTF-8');
@@ -58,7 +79,10 @@ foreach ($products as $product) {
     $item->appendChild($doc->createElement('g:id', $product['id']));
     
     // Use createTextNode for content that might contain special characters
-    foreach (['title', 'description', 'link', 'image_link', 'price', 'brand', 'condition', 'gtin', 'mpn', 'product_type', 'availability'] as $tag) {
+    foreach (['title', 'description', 'link', 'image_link', 'price', 'sale_price', 'brand', 'condition', 'gtin', 'mpn', 'product_type', 'availability'] as $tag) {
+        if ($tag === 'sale_price' && (empty($product[$tag]) || trim($product[$tag]) === '')) {
+            continue;
+        }
         $value = isset($product[$tag]) ? (string) $product[$tag] : '';
         $element = $doc->createElement("g:$tag");
         $textNode = $doc->createTextNode($value);
