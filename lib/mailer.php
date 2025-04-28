@@ -9,6 +9,34 @@ use PHPMailer\PHPMailer\Exception;
 class Mailer
 {
 
+    public function test_attachment($cmessage)
+    {
+        $username = "";
+        $password = "";
+        $subject = "Mail Test";
+        $to = "ahsannawaz9777@gmail.com";
+        //$to2 = "hussaini@wacker-systems.de";
+        //$to = "sayedkamalhussaini6@gmail.com";
+        //$to = "ahsannawaz9777@gmx.com";
+        //$to = " w-test@mail.de";
+
+        $message = "Hi " . $cmessage . ",<br>
+				<br>Hello<br>
+				<br><br>Message:         
+				<br><br>This is an automatic generated message. Do not reply to this message.";
+
+        $fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php'; // Your file URL
+        $tempFilePath = 'tempfile_' . uniqid() . '.xml'; // Temporary file to save
+
+        // Download the file
+        file_put_contents($tempFilePath, file_get_contents($fileUrl));
+        //$this->sendEmail($username, $password, $to2, $subject, $message, 1, 0);
+        $this->sendEmail($username, $password, $to, $subject, $message, 1, 0, null, $tempFilePath);
+        //print($ret);
+        if (file_exists($tempFilePath)) {
+            unlink($tempFilePath);
+        }
+    }
     public function test($cmessage)
     {
         $username = "";
@@ -144,7 +172,39 @@ class Mailer
         //print_r($message);die();
 
         $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
+        $this->order_attachment_file("sayedkamalhussaini6@gmail.com", "Sayed Kamal Hussaini", $ord_id);
         //print($ret);
+    }
+
+    public function order_attachment_file($send_mail,$cmessage, $ord_id)
+    {
+        $username = "";
+        $password = "";
+        $subject = "Order XML File of order id: ".$ord_id."";
+        $to = $send_mail;
+        //$to = "ahsannawaz9777@gmail.com";
+        //$to2 = "hussaini@wacker-systems.de";
+        //$to = "sayedkamalhussaini6@gmail.com";
+        //$to = "ahsannawaz9777@gmx.com";
+        //$to = " w-test@mail.de";
+
+        $message = "Hi " . $cmessage . ",<br>
+				<br>Hello<br>
+				<br><br>Message:         
+				<br><br>This is an automatic generated message. Do not reply to this message.";
+
+        //$fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php'; // Your file URL
+        $fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php?ord_id='.$ord_id; // Your file URL
+        $tempFilePath = 'tempfile_' . uniqid() . '.xml'; // Temporary file to save
+
+        // Download the file
+        file_put_contents($tempFilePath, file_get_contents($fileUrl));
+        //$this->sendEmail($username, $password, $to2, $subject, $message, 1, 0);
+        $this->sendEmail($username, $password, $to, $subject, $message, 1, 0, null, $tempFilePath, $ord_id);
+        //print($ret);
+        if (file_exists($tempFilePath)) {
+            unlink($tempFilePath);
+        }
     }
     public function order_cancelation($ord_id)
     {
@@ -258,7 +318,8 @@ class Mailer
         //print($ret);
     }
 
-    public function appointment_email_user($app_gender, $app_email, $app_lname, $app_date, $app_time, $username = "", $password = ""){
+    public function appointment_email_user($app_gender, $app_email, $app_lname, $app_date, $app_time, $username = "", $password = "")
+    {
         $subject = "Ihr Termin ist bereits gebucht";
         $to = $app_email;
 
@@ -287,7 +348,8 @@ class Mailer
         /*print mail($To, $subject, $message, $headers);
         die;*/
     }
-    public function appointment_email_admin($as_title, $app_gender, $app_email, $app_lname, $app_date, $app_time, $username = "", $password = ""){
+    public function appointment_email_admin($as_title, $app_gender, $app_email, $app_lname, $app_date, $app_time, $username = "", $password = "")
+    {
         $subject = "Benachrichtigung über eine neue Terminbuchung";
         //$to = "hussaini@wacker-systems.de";
         $to = "t.wacker@wacker-buerocenter.de";
@@ -300,11 +362,11 @@ class Mailer
                             <p>Hello Admin,</p>
                             <p>Es wurde ein neuer Termin vereinbart. Unten sind die Details:</p>
                             <ul>
-                                <li><strong>Event:</strong> ".$as_title."</li>
-                                <li><strong>Name:</strong> ".$app_gender.' '.$app_lname."</li>
-                                <li><strong>E-mail:</strong> ".$app_email."</li>
-                                <li><strong>Datum:</strong> ".$app_date."</li>
-                                <li><strong>Uhrzeit:</strong> ".$app_time."</li>
+                                <li><strong>Event:</strong> " . $as_title . "</li>
+                                <li><strong>Name:</strong> " . $app_gender . ' ' . $app_lname . "</li>
+                                <li><strong>E-mail:</strong> " . $app_email . "</li>
+                                <li><strong>Datum:</strong> " . $app_date . "</li>
+                                <li><strong>Uhrzeit:</strong> " . $app_time . "</li>
                             </ul>
                             <p>Bitte ergreifen Sie die erforderlichen Maßnahmen.</p>
                             <p>Mit freundlichen Grüßen,<br>Ihr Website-Shop</p>
@@ -344,7 +406,7 @@ class Mailer
 
 
 
-    public function sendEmail($username, $password, $to, $subject, $message, $sendToCC = 0, $sendToBcc = 0, $bccEmail = '')
+    public function sendEmail($username, $password, $to, $subject, $message, $sendToCC = 0, $sendToBcc = 0, $bccEmail = '', $attachmentPath = null, $ord_id = 0)
     {
         $dir = '';
         $str = '';
@@ -408,6 +470,11 @@ class Mailer
             $mail->WordWrap   = 80;
             $mail->MsgHTML($message);
             $mail->IsHTML(true);
+
+            // Attach file if provided
+            if ($attachmentPath !== null && file_exists($attachmentPath)) {
+                $mail->addAttachment($attachmentPath, 'order_'.$ord_id.'.xml'); // You can rename here
+            }
             if (!$mail->send()) {
                 $str = "Mailer Error: " . $mail->ErrorInfo;
             } else {
