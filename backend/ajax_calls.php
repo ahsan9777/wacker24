@@ -9,9 +9,13 @@ if (isset($_REQUEST['action'])) {
             $where = "";
             $sub_cat_title = 0;
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                if (isset($_REQUEST['parent_id']) && $_REQUEST['parent_id'] > 0) {
+                if (isset($_REQUEST['parent_id']) ) {
                     $sub_cat_title = 1;
-                    $where .= " WHERE cat.parent_id > '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    if($_REQUEST['parent_id'] == 0){
+                        $where .= " WHERE cat.parent_id > '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    } else{
+                        $where .= " WHERE cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['parent_id']."' ORDER BY main_cat.group_id ASC) AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    }
                     $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title FROM `category` AS cat LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = cat.parent_id  " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 } else {
                     $where .= " WHERE cat.parent_id = '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";

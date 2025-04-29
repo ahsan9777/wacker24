@@ -1,6 +1,10 @@
 <?php
 include("../lib/session_head.php");
 
+if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
+
+    $qryStrURL .= "group_id=".$_REQUEST['group_id']."&";
+}
 if (isset($_REQUEST['btnUpdate'])) {
 
     if (!file_exists("../files/category/" . $_REQUEST['parent_id'])) {
@@ -171,9 +175,14 @@ include("includes/messages.php");
                         <?php
 
                         $cat_id = 0;
+                        $group_id = 0;
                         $cat_title = "";
                         $searchQuery = "sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id > '0' ORDER BY main_cat.group_id ASC)";
 
+                        if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
+                            $group_id = $_REQUEST['group_id'];
+                            $searchQuery = " sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['group_id']."' ORDER BY main_cat.group_id ASC)";
+                        }
                         if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
                             if (!empty($_REQUEST['cat_title'])) {
                                 $cat_id = $_REQUEST['cat_id'];
@@ -182,9 +191,16 @@ include("includes/messages.php");
                             }
                         }
                         ?>
-                        <form class="row" name="frm_search" id="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row flex-row" name="frm_search" id="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-2 col-12 mt-2">
-                                <label for="" class="text-white">Title</label>
+                                <label for="" class="text-white">Main Category</label>
+                                <select class="input_style" name="group_id" id="group_id" onchange="javascript: frm_search.submit();">
+                                    <option value="0">N/A</option>
+                                    <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $group_id, "parent_id = '0'"); ?>
+                                </select>
+                            </div>
+                            <div class=" col-md-3 col-12 mt-2">
+                                <label for="" class="text-white">Third Level Category Title</label>
                                 <input type="hidden" name="cat_id" id="cat_id" value="<?php print($cat_id); ?>">
                                 <input type="text" class="input_style cat_title" name="cat_title" id="cat_title" value="<?php print($cat_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
                             </div>
@@ -204,10 +220,10 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  ".$searchQuery." ORDER BY sub_cat.parent_id, sub_cat.cat_orderby ASC";
+                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  " . $searchQuery . " ORDER BY sub_cat.cat_orderby ASC";
                                     //print($Query);
                                     $counter = 0;
-                                    $limit = 25;
+                                    $limit = 50;
                                     $start = $p->findStart($limit);
                                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
                                     $pages = $p->findPages($count, $limit);
@@ -226,7 +242,7 @@ include("includes/messages.php");
                                                 <td>
                                                     <div class="popup_container" style="width: <?php print(!empty($row->cat_image) ? '300px' : '100px'); ?>">
                                                         <div class="container__img-holder">
-                                                            <img src="<?php print($image_path); ?>" >
+                                                            <img src="<?php print($image_path); ?>">
                                                         </div>
                                                     </div>
                                                 </td>
@@ -297,7 +313,7 @@ include("includes/messages.php");
     $('input.cat_title').autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: 'ajax_calls.php?action=cat_title&parent_id=1',
+                url: 'ajax_calls.php?action=cat_title&parent_id=<?php print($group_id); ?>',
                 dataType: "json",
                 data: {
                     term: request.term

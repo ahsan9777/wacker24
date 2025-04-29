@@ -1,6 +1,6 @@
 <?php
 include("includes/php_includes_top.php");
-$page = 1;
+//$page = 1;
 ?>
 <!doctype html>
 <html lang="de">
