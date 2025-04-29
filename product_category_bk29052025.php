@@ -53,41 +53,62 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 								<h1> <?php print(returnName("cat_title_de AS cat_title", "category", "group_id", $level_one)) ?> </h1>
 							</div>
 							<div class="category_type_product">
-								<div class="category_type_inner" id="category_type_inner">
-								<div class="spinner" id="spinner_category_type_inner">
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-									</div>
+								<div class="category_type_inner">
+									<?php
+
+
+									//$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $level_one . ", cm.sub_group_ids) ";
+									//$Query = "SELECT three_cat.*, (SELECT GROUP_CONCAT(pg.pg_mime_source_url) FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal' AND pg.supplier_id = (SELECT cm.supplier_id FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(three_cat.group_id, cm.cat_id) LIMIT 0,1)) AS pg_mime_source_url FROM category AS three_cat WHERE three_cat.parent_id IN (SELECT two_cat.group_id FROM category AS two_cat WHERE two_cat.parent_id = '".$level_one."') AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(three_cat.group_id, cm.cat_id) )";
+									//$Query = "SELECT c.*, GROUP_CONCAT(pg.pg_mime_source_url) AS pg_mime_source_url,  MIN(CASE WHEN pbp.pbp_price_amount > 0 THEN pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)ELSE NULL END) AS pbp_price_amount, MIN(CASE WHEN pbp.pbp_price_amount > 0 THEN pbp.pbp_price_amount ELSE NULL END) AS pbp_price_without_tax  FROM category c JOIN category second_level ON c.parent_id = second_level.group_id AND second_level.parent_id = '" . $level_one . "' JOIN category_map cm ON cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(c.group_id, cm.cat_id) LEFT JOIN products_gallery pg ON pg.pg_mime_purpose = 'normal' AND pg.supplier_id = cm.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' GROUP BY c.group_id ORDER BY c.cat_orderby ASC";
+									$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$level_one."' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '".$pro_type."' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby DESC";
+									//print($Query);//die();
+									$counter = 0;
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										while ($row = mysqli_fetch_object($rs)) {
+											$counter++;
+											$pg_mime_source_url_href = "files/no_img_1.jpg";
+											$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3 , "AND cm_type = '".$pro_type."' GROUP BY cat_id");
+											//print_r($category_data);die();
+											if(empty($category_data)){
+												continue;
+											}
+											$pg_mime_source_url_href = $category_data['data_1'];
+											$pbp_price_without_tax = $category_data['data_2'];
+											$pbp_price_amount = $category_data['data_3'];
+											if($_REQUEST['cat_params_one'] == 'schulranzen'){
+												//$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
+												$cat_link = "artikelarten/".$row->cat_params."/".$row->sub_cat_params."/20";
+											} else {
+												//$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
+												$cat_link = "artikelarten/".$row->cat_params."/".$row->sub_cat_params;
+											}
+									?>
+											<div class="ctg_type_col">
+												<a href="<?php print($cat_link); ?>">
+													<div class="ctg_type_card">
+														<div class="ctg_type_image"><img loading="lazy" src="<?php print(get_image_link(160, $pg_mime_source_url_href)); ?>" alt=""></div>
+														<div class="ctg_type_detail">
+															<div class="ctg_type_title"><?php print($row->sub_cat_title); ?></div>
+															<div class="ctg_type_price price_without_tex" <?php print($price_without_tex_display); ?> > ab <?php print(price_format( ($pbp_price_without_tax > 0) ? $pbp_price_without_tax : 0.00 )); ?> €</div>
+															<div class="ctg_type_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> >ab <?php print(price_format( ($pbp_price_amount) ? $pbp_price_amount : 0.00 )); ?> €</div>
+														</div>
+													</div>
+												</a>
+											</div>
+									<?php
+										}
+									} else {
+										print("Leerer Eintrag!");
+									}
+									?>
 								</div>
-								<div class="txt_align_center" id="btn_load" style="display: none;">
-									<input type="hidden" name="category_type_inner_page" id="category_type_inner_page" value="0">
+								<?php if($counter > 10) { ?>
+								<div class="txt_align_center">
 									<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></div>
 									<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
 								</div>
-								<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-								</div>
+								<?php } ?>
 							</div>
 							<div class="gerenric_white_box">
 								<div class="gerenric_product full_column mostviewed" id="related_category_one">
@@ -226,61 +247,33 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 </script>
 <?php include("includes/bottom_js.php"); ?>
 <script>
-	$(window).on('load', function() {
-		$("#category_type_inner").trigger("click");
-	});
-	$("#category_type_inner").on("click", function(){
-		$("#btn_load").hide();
-		$("#btn_load_spinner").show();
-		let start = $("#category_type_inner_page").val();
-		let pro_type = <?php print($pro_type) ?>;
-		let level_one = <?php print($level_one) ?>;
-		let cat_params_one = '<?php print($_REQUEST['cat_params_one']) ?>';
-		let price_without_tex_display = '<?php print($price_without_tex_display) ?>';
-		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display) ?>';
-		//console.log("pro_type: "+pro_type+" level_one: "+level_one+" price_without_tex_display: "+price_without_tex_display+" pbp_price_with_tex_display: "+pbp_price_with_tex_display);
-		$.ajax({
-			url: 'ajax_calls.php?action=category_type_inner',
-			method: 'GET',
-			data: {
-				start: start,
-				pro_type: pro_type,
-				level_one: level_one,
-				cat_params_one: cat_params_one,
-				price_without_tex_display: price_without_tex_display,
-				pbp_price_with_tex_display: pbp_price_with_tex_display
-			},
-			success: function(response) {
-				//console.log("response = "+response);
-				const obj = JSON.parse(response);
-				//console.log(obj);
-				if (obj.status == 1) {
-					$("#spinner_category_type_inner").hide();
-					$("#btn_load_spinner").hide();
-					if(obj.counter > 10){
-						$("#btn_load").show();
-					}
-					if(obj.counter == obj.last_record){
-						$(".load-more-button").hide();
-						$(".load-less-button").show();
-					} else{
-						$(".load-more-button").show();
-						$(".load-less-button").hide();
-					}
-					$("#category_type_inner_page").val(obj.category_type_inner_page);
-					$("#category_type_inner").append(obj.category_type_inner);
-				}
+	$(function() {
+		$(".category_type_product .ctg_type_col").slice(0, 10).show();
+		$("body").on('click touchstart', '.load-more-button', function(e) {
+			e.preventDefault();
+			$(".category_type_product .ctg_type_col:hidden").slice(0, 10).slideDown();
+			if ($(".category_type_product .ctg_type_col:hidden").length == 0) {
+				$(".load-more-button").hide();
+				$(".load-less-button").show();
 			}
 		});
-	});
 
-	$(".load-more-button").on("click", function(){
-		$("#category_type_inner").trigger("click");
-	});
-	$(".load-less-button").on("click", function(){
-		$("#category_type_inner").html("");
-		$("#category_type_inner_page").val(0);
-		$("#category_type_inner").trigger("click");
+		// Load less button
+		$("body").on('click touchstart', '.load-less-button', function(e) {
+        e.preventDefault();
+
+        // Hide all and show only the first 10
+        $(".category_type_product .ctg_type_col").hide().slice(0, 10).show();
+
+        // Scroll to the container
+        $('html, body').animate({
+            scrollTop: $("#container").offset().top
+        }, 500); // 500ms for smooth scroll
+
+        // Toggle button visibility
+        $(".load-more-button").show();
+        $(".load-less-button").hide();
+    });
 	});
 </script>
 <script defer>

@@ -84,9 +84,9 @@ if (isset($_REQUEST['action'])) {
                         $row = mysqli_fetch_object($rs);
 
                         $cart_quantity = returnName("ci_qty", "cart_items", "ci_id", $row->ci_id);
-                        if($pro_type > 0){
+                        if ($pro_type > 0) {
                             $get_pro_price = get_pro_price($pro_id, $supplier_id, 1);
-                        } else{
+                        } else {
                             $get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty + $cart_quantity);
                         }
                         //print_r($get_pro_price);
@@ -101,20 +101,20 @@ if (isset($_REQUEST['action'])) {
                         //print($ci_discount_value);die();
                         if ($ci_discount_value > 0) {
                             $ci_discounted_amount_gross = 0;
-                            
+
                             $ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value, $ci_gst_value, 1);
                             $ci_discounted_amount = $pbp_price_amount - $ci_amount;
 
-                            if($pro_type > 0){
+                            if ($pro_type > 0) {
                                 $ci_qty = 0;
                                 $ci_discounted_amount_gross = $ci_discounted_amount * 1;
-                            } else{
+                            } else {
                                 $ci_discounted_amount_gross = $ci_discounted_amount * ($ci_qty + $cart_quantity);
                             }
                             $ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * $ci_gst_value);
                             //print($ci_amount);die();
                         }
-                        if($pro_type > 0){
+                        if ($pro_type > 0) {
                             $ci_qty = 0;
                         }
                         $ci_gross_total = $ci_amount * ($ci_qty + $cart_quantity);
@@ -123,7 +123,7 @@ if (isset($_REQUEST['action'])) {
 
                         //print("UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_gst_value = '".$ci_gst_value."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = '$ci_gross_total' , ci_gst = '$ci_gst',  ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'");die();
                         //$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '".$pbp_id."', ci_amount = '".$ci_amount."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = ci_gross_total + '$ci_gross_total' , ci_gst = ci_gst + '$ci_gst', ci_discount = ci_discount + '$ci_discount', ci_total = ci_total + '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
-                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_gst_value = '".$ci_gst_value."', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = '$ci_gross_total' , ci_gst = '$ci_gst',  ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_gst_value = '" . $ci_gst_value . "', ci_qty = ci_qty + '$ci_qty',  ci_gross_total = '$ci_gross_total' , ci_gst = '$ci_gst',  ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
                         $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                         $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                         if ($updated_cart_item == true && $update_cart == true) {
@@ -137,10 +137,10 @@ if (isset($_REQUEST['action'])) {
                         //print($ci_amount);die();
                         //print("INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "')");die();
                         $ci_discounted_price_see = 0;
-                        if(isset($_SESSION["UID"]) && $_SESSION["UID"] > 0){
+                        if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
                             $ci_discounted_price_see = 1;
                         }
-                        $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total, ci_discounted_price_see) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '".dbStr(trim($ci_gst_value))."', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "', '".$ci_discounted_price_see."')") or die(mysqli_error($GLOBALS['conn']));
+                        $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total, ci_discounted_price_see) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst_value)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "', '" . $ci_discounted_price_see . "')") or die(mysqli_error($GLOBALS['conn']));
                         $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                         $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                         if ($insert_cart_item == true && $update_cart == true) {
@@ -163,7 +163,7 @@ if (isset($_REQUEST['action'])) {
                 $ci_id = getMaximum("cart_items", "ci_id");
                 $_SESSION['ci_id'] = $ci_id;
 
-                $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '".dbStr(trim($ci_gst_value))."', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "')") or die(mysqli_error($GLOBALS['conn']));
+                $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst_value)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "')") or die(mysqli_error($GLOBALS['conn']));
                 $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                 $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                 if ($insert_cart == true && $insert_cart_item == true && $update_cart == true) {
@@ -198,7 +198,7 @@ if (isset($_REQUEST['action'])) {
                             $pq_quantity = $row1->pq_quantity;
                             $pq_upcomming_quantity = $row1->pq_upcomming_quantity;
                             $pq_status = $row1->pq_status;
-                            if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false' ) ) {
+                            if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
                                 $pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
                             } elseif ($pq_quantity > 0 && $pq_status == 'false') {
                                 $pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;
@@ -224,7 +224,7 @@ if (isset($_REQUEST['action'])) {
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="product/' . $row->supplier_id . '/'.url_clean($row->pro_description_short).'"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
+                                    <div class="side_cart_pd_image"><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
@@ -329,7 +329,7 @@ if (isset($_REQUEST['action'])) {
                         $ci_gst = $ci_gross_total * $ci_gst_value;
                         $ci_total = $ci_gross_total + $ci_gst;
 
-                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'] . "',  ci_gross_total =  '$ci_gross_total' , ci_gst_value = '".$ci_gst_value."', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                        $updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'] . "',  ci_gross_total =  '$ci_gross_total' , ci_gst_value = '" . $ci_gst_value . "', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
                         $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                         $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                         if ($updated_cart_item == true && $update_cart == true) {
@@ -515,18 +515,18 @@ if (isset($_REQUEST['action'])) {
             $row = mysqli_fetch_object($rs);
             $TotalRecCount = !empty($row->TotalRecCount) ? $row->TotalRecCount : "";
             //$search_group_id = explode(",", $row->sub_group_ids);
-            $category_show .= '<ul class="category_show '.(($TotalRecCount > 5) ? 'category_show_height' : '').'" id="list_checkbox_hide_1">';
-                if (mysqli_num_rows($rs) > 0) {
-                    do {
-                        $category_show .= '<li>
+            $category_show .= '<ul class="category_show ' . (($TotalRecCount > 5) ? 'category_show_height' : '') . '" id="list_checkbox_hide_1">';
+            if (mysqli_num_rows($rs) > 0) {
+                do {
+                    $category_show .= '<li>
                             <label class="gerenric_checkbox">
-                                '.$row->cat_title . " (" . $row->total_count . ")".'
-                                <input type="checkbox" name="search_group_id[]" class="search_group_id" id="search_group_id" value="'.$row->group_id.'" '.((in_array($row->group_id, $search_group_id_check)) ? 'checked' : '').'>
+                                ' . $row->cat_title . " (" . $row->total_count . ")" . '
+                                <input type="checkbox" name="search_group_id[]" class="search_group_id" id="search_group_id" value="' . $row->group_id . '" ' . ((in_array($row->group_id, $search_group_id_check)) ? 'checked' : '') . '>
                                 <span class="checkmark"></span>
                             </label>
                         </li>';
                 } while ($row = mysqli_fetch_object($rs));
-                }
+            }
             $category_show .= '</ul>';
             if ($TotalRecCount > 5) {
                 $category_show .= '<div class="show-more" data-id="1">(Mehr anzeigen)</div>';
@@ -614,12 +614,13 @@ if (isset($_REQUEST['action'])) {
                     $TotalRecCount = $row2->TotalRecCount;
                     $feature_show .= '<ul class="category_show ' . (($TotalRecCount > 5) ? 'category_show_height' : '') . '" id="category_show_' . $count . '">';
                     if (mysqli_num_rows($rs2) > 0) {
-                        do { $index = uniqid();
+                        do {
+                            $index = uniqid();
                             $feature_show .= '<li>
                                         <label class="gerenric_checkbox">
                                             ' . $row2->pf_fvalue . " (" . $row2->total_count . ")" . '
                                             <input type="hidden" name="search_pf_fname[' . $index . ']" value="' . $row2->pf_fname . '">
-                                            <input type="checkbox" name="search_pf_fvalue[' . $index . ']" id="search_pf_fvalue" class="search_pf_fvalue" value="' . $row2->pf_fvalue . '" ' . ((in_array($row2->pf_fvalue, $search_pf_fvalue_check) && in_array($row1->pf_fname, $search_pf_fname_check) ) ? 'checked' : '') . '>
+                                            <input type="checkbox" name="search_pf_fvalue[' . $index . ']" id="search_pf_fvalue" class="search_pf_fvalue" value="' . $row2->pf_fvalue . '" ' . ((in_array($row2->pf_fvalue, $search_pf_fvalue_check) && in_array($row1->pf_fname, $search_pf_fname_check)) ? 'checked' : '') . '>
                                             <span class="checkmark"></span>
                                         </label>
                                     </li>';
@@ -653,6 +654,61 @@ if (isset($_REQUEST['action'])) {
             }
             //print($feature_show);die();
             $retValue = array("status" => "1", "message" => "Record found", "feature_show" => $feature_show);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'category_type_inner':
+            $retValue = array();
+
+            $limit = 10;
+            $start = $_REQUEST['start'] * $limit;
+            $last_record = $start;
+            $pro_type = $_REQUEST['pro_type'];
+            $level_one = $_REQUEST['level_one'];
+            $price_without_tex_display = $_REQUEST['price_without_tex_display'];
+            $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
+
+            $category_type_inner = "";
+            $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $level_one . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+            //print($Query);//die();
+            $counter = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
+            $rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $last_record++;
+                    $pg_mime_source_url_href = "files/no_img_1.jpg";
+                    $category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
+                    //print_r($category_data);die();
+                    if (empty($category_data)) {
+                        continue;
+                    }
+                    $pg_mime_source_url_href = $category_data['data_1'];
+                    $pbp_price_without_tax = $category_data['data_2'];
+                    $pbp_price_amount = $category_data['data_3'];
+                    if ($_REQUEST['cat_params_one'] == 'schulranzen') {
+                        //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
+                        $cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params . "/20";
+                    } else {
+                        //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
+                        $cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+                    }
+                    $category_type_inner .= '<div class="ctg_type_col">
+												<a href="' . $cat_link . '">
+													<div class="ctg_type_card">
+														<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(160, $pg_mime_source_url_href) . '" alt=""></div>
+														<div class="ctg_type_detail">
+															<div class="ctg_type_title">' . $row->sub_cat_title . '</div>
+															<div class="ctg_type_price price_without_tex" ' . $price_without_tex_display . ' > ab ' . price_format(($pbp_price_without_tax > 0) ? $pbp_price_without_tax : 0.00) . ' €</div>
+															<div class="ctg_type_price pbp_price_with_tex" ' . $pbp_price_with_tex_display . ' >ab ' . price_format(($pbp_price_amount) ? $pbp_price_amount : 0.00) . ' €</div>
+														</div>
+													</div>
+												</a>
+											</div>';
+                }
+            }
+
+            $retValue = array("status" => "1", "message" => "Record found", "counter" => $counter, "last_record" => $last_record, "category_type_inner_page" => ($_REQUEST['start'] + 1), "Query" => $Query,  "category_type_inner" => $category_type_inner);
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;

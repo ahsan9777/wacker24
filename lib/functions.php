@@ -1484,6 +1484,19 @@ function returnMulCat($ID){
 	return $retRes;
 }
 
+function returnMultiName($Field, $Table, $IDField, $ID, $fieldcount, $AND = ""){
+	$retRes = array();
+	$strQry="SELECT $Field FROM $Table WHERE $IDField= '".$ID."' ".$AND."";
+	//print($strQry);die();
+	$nResult =mysqli_query($GLOBALS['conn'], $strQry) or die("Unable 2 Work");
+	if (mysqli_num_rows($nResult)>=1){		
+		$row=mysqli_fetch_row($nResult);
+		for($i = 0; $i < $fieldcount; $i++){
+			$retRes['data_'.($i + 1)] = $row[$i];
+		}
+	}	
+	return $retRes;	
+}
 function returnName($Field, $Table, $IDField, $ID, $AND = ""){
 	$retRes = "";
 	$strQry="SELECT $Field FROM $Table WHERE $IDField= '".$ID."' ".$AND." LIMIT 1";
