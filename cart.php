@@ -10,6 +10,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$user_id = $_SESSION['UID'];
 	$usa_id = $_REQUEST['usa_id'];
 	$pm_id = $_REQUEST['pm_id'];
+	$_SESSION['ord_note'] = $_REQUEST['ord_note'];
 	if ($pm_id == 1) {
 		$usa_id_billing = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
 		if (empty($usa_id_billing)) {
@@ -17,7 +18,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 			die();
 		}
 	}
-	print($pm_id);
+	//print($pm_id);
 	//print_r($usa_id);die();
 	/*$order_net_amount = number_format(1.5, "2", ".", "");
 	$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
@@ -36,113 +37,69 @@ if (isset($_REQUEST['btn_checkout'])) {
 			print("<pre>");
 				print_r($paypalresponseData);
 				print("</pre>");die();*/
-	$Query = "SELECT usa.*, u.user_name  FROM user_shipping_address AS usa LEFT OUTER JOIN users AS u ON u.user_id = usa.user_id WHERE usa.user_id = '" . $user_id . "' AND usa.usa_id ='" . $usa_id . "'";
-	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if (mysqli_num_rows($rs) > 0) {
-		$rw = mysqli_fetch_object($rs);
-		$usa_id = $rw->usa_id;
-		$dinfo_fname = $rw->usa_fname;
-		$dinfo_lname = $rw->usa_lname;
-		$dinfo_email = $rw->user_name;
-		$dinfo_phone = $rw->usa_contactno;
-		$dinfo_street = $rw->usa_street;
-		$dinfo_house_no = $rw->usa_house_no;
-		$dinfo_address = $rw->usa_address;
-		$dinfo_countries_id = $rw->countries_id;
-		$dinfo_usa_zipcode = $rw->usa_zipcode;
-		$dinfo_additional_info = !empty($rw->usa_additional_info) ? $rw->usa_additional_info : ' ';
-	}
-
-	$orders_table_check = 0;
-	$order_items_table_check = 0;
 	$Query1 = "SELECT * FROM `cart` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "'";
 	$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 	if (mysqli_num_rows($rs1) > 0) {
 		$row1 = mysqli_fetch_object($rs1);
 		$ord_id = getMaximum("orders", "ord_id");
-		$dinfo_id = getMaximum("delivery_info", "dinfo_id");
 		$ord_shipping_charges = 0;
 		if ($row1->cart_gross_total <= config_condition_courier_amount) {
 			$ord_shipping_charges = config_courier_fix_charges;
 		}
 		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
-		$ord_note = "";
-		if (isset($_REQUEST['ord_note']) && !empty($_REQUEST['ord_note'])) {
-			$ord_note = dbStr(trim($_REQUEST['ord_note']));
-		}
-		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
-		$orders_table_check = 1;
 	}
 
-	$Query2 = "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "' ORDER BY `ci_id` ASC";
-	$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
-	if (mysqli_num_rows($rs2) > 0) {
-		while ($row2 = mysqli_fetch_object($rs2)) {
-			$ci_id = $row2->ci_id;
-			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
-			$order_items_table_check = 1;
-		}
-	}
-
-	if ($orders_table_check == 1 && $order_items_table_check == 1) {
-		mysqli_query($GLOBALS['conn'], "DELETE FROM cart WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
-		unset($_SESSION['cart_id']);
-		unset($_SESSION['sess_id']);
-		unset($_SESSION['ci_id']);
-		unset($_SESSION['header_quantity']);
-		if (isset($_SESSION["cart_check"])) {
-			unset($_SESSION["cart_check"]);
-		}
-		if ($pm_id == 1) {
-			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-			header('Location: bestellungen/15');
-		} elseif ($pm_id == 2) {
-			//$paypalresponseData = "";
-			$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
-			//$order_net_amount = number_format(0.5, "2", ".", "");
-			$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount);
-			$paypalresponseData = json_decode($paypalrequest, true);
-			/*print("<pre>");
+	if ($pm_id == 1) {
+		cart_to_order($user_id, $usa_id, $pm_id, $_REQUEST['ord_note']);
+		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+		header('Location: bestellungen/15');
+	} elseif ($pm_id == 2) {
+		//$paypalresponseData = "";
+		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+		//$order_net_amount = number_format(0.5, "2", ".", "");
+		$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $_REQUEST['ord_note']);
+		$paypalresponseData = json_decode($paypalrequest, true);
+		/*print("<pre>");
 				print_r($paypalresponseData);
 				print("</pre>");die();*/
-			$ord_payment_transaction_id = $paypalresponseData['id'];
-			$ord_payment_short_id = $paypalresponseData['descriptor'];
-			$ord_payment_info_detail = $paypalrequest;
+		$ord_payment_transaction_id = $paypalresponseData['id'];
+		$ord_payment_short_id = $paypalresponseData['descriptor'];
+		$ord_payment_info_detail = $paypalrequest;
 
-			$parameters = "";
-			if ($paypalresponseData['resultDetails']['AcquirerResponse'] == 'Success') {
-				foreach ($paypalresponseData['redirect']['parameters'] as $key => $value) {
-					$parameters .=  $value['name'] . "=" . $value['value'] . "&";
-				}
-				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: ' . $paypalresponseData['redirect']['url'] . '?' . $parameters . "/15");
+		$parameters = "";
+		if ($paypalresponseData['resultDetails']['AcquirerResponse'] == 'Success') {
+			foreach ($paypalresponseData['redirect']['parameters'] as $key => $value) {
+				$parameters .=  $value['name'] . "=" . $value['value'] . "&";
 			}
-		} elseif (in_array($pm_id, array(4, 5))) {
-			$data['cardnumber'] = $_REQUEST['cardnumber'];
-			$data['cardholder'] = $_REQUEST['cardholder'];
-			$data['cardmonth'] = $_REQUEST['cardmonth'];
-			$data['cardyear'] = $_REQUEST['cardyear'];
-			$data['cvv'] = $_REQUEST['cvv'];
-			$Query3 = "SELECT pm_id, pm_currency, pm_brand_name, pm_entity_id FROM `payment_method` WHERE pm_id = '" . $pm_id . "' ";
-			$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
-			if (mysqli_num_rows($rs3) > 0) {
-				$row3 = mysqli_fetch_object($rs3);
-				$data['brand'] = $row3->pm_brand_name;
-				$data['currency'] = $row3->pm_currency;
-				$data['entityId'] = $row3->pm_entity_id;
-			}
-			$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
-			$cardresponsedata = json_decode($cardrequest, true);
-			/*print("<pre>");
+			//$payment_status_request = check_payment_status($paypalresponseData['id'], $entityId);
+			//$payment_status_responseData = json_decode($payment_status_request, true);
+			//cart_to_order($user_id, $usa_id, $pm_id);
+			//mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+			header('Location: ' . $paypalresponseData['redirect']['url'] . '?' . $parameters);
+		}
+	} elseif (in_array($pm_id, array(4, 5))) {
+		$data['cardnumber'] = $_REQUEST['cardnumber'];
+		$data['cardholder'] = $_REQUEST['cardholder'];
+		$data['cardmonth'] = $_REQUEST['cardmonth'];
+		$data['cardyear'] = $_REQUEST['cardyear'];
+		$data['cvv'] = $_REQUEST['cvv'];
+		$Query3 = "SELECT pm_id, pm_currency, pm_brand_name, pm_entity_id FROM `payment_method` WHERE pm_id = '" . $pm_id . "' ";
+		$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+		if (mysqli_num_rows($rs3) > 0) {
+			$row3 = mysqli_fetch_object($rs3);
+			$data['brand'] = $row3->pm_brand_name;
+			$data['currency'] = $row3->pm_currency;
+			$data['entityId'] = $row3->pm_entity_id;
+		}
+		$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
+		$cardresponsedata = json_decode($cardrequest, true);
+		/*print("<pre>");
 				print_r($cardresponsedata);
 				print("</pre>");die();*/
-			if ($cardresponsedata['result']['code'] == "000.100.110") {
-				mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata['id'])) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata['descriptor'])) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-				header('Location: bestellungen/12');
-			}
+		if ($cardresponsedata['result']['code'] == "000.100.110") {
+			cart_to_order($user_id, $usa_id, $pm_id, $_REQUEST['ord_note']);
+			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata['id'])) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata['descriptor'])) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+			header('Location: bestellungen/15');
 		}
 	}
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
@@ -347,7 +304,7 @@ include("includes/message.php");
 															$pq_status = $row1->pq_status;
 															$quantity_txt = "pieces immediately available";
 															$quantity_txt_color = "";
-															if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false' )) {
+															if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
 																$quantity_txt = "Stück bestellt";
 																$quantity_txt_color = "style = 'color: orange;'";
@@ -357,7 +314,7 @@ include("includes/message.php");
 														}
 														if ($pro_type == 0) {
 														?>
-															<div class="cart_pd_piece" <?php print($quantity_txt_color);?> > <?php print($pq_quantity." ".$quantity_txt); ?> </div>
+															<div class="cart_pd_piece" <?php print($quantity_txt_color); ?>> <?php print($pq_quantity . " " . $quantity_txt); ?> </div>
 														<?php } ?>
 														<div class="cart_pd_option">
 															<ul>
@@ -456,7 +413,7 @@ include("includes/message.php");
 														<li><?php print($row->countries_name); ?></li>
 														<li><?php print($row->usa_address); ?></li>
 														<?php if ($_SESSION["utype_id"] != 5) { ?>
-														<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
+															<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
 														<?php } ?>
 													</ul>
 												</div>
