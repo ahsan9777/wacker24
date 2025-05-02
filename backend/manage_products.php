@@ -197,7 +197,79 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $strMSG = "Please Select the file";
     } else {
         $class = "alert alert-danger";
-        $strMSG = "Plz select the correct file ";
+        $strMSG = "Plz select the correct file and convert the file with the help of that link: <a target='_blank' href = 'https://convertio.co/'>Convertio</a> ";
+    }
+    //header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
+} elseif (isset($_REQUEST['btnImportSpecialprice'])) {
+    //print_r($_REQUEST);die();
+    $file = $_FILES['doc_ImportSpecialprice']['tmp_name'];
+    $ext = pathinfo($_FILES['doc_ImportSpecialprice']['name'], PATHINFO_EXTENSION);
+    if (in_array($ext, array("csv")) && !empty($file)) {
+        $csvFilePath = $file;
+        $file = fopen($csvFilePath, "r");
+        $i = 0;
+        while (($row = fgetcsv($file)) !== FALSE) {
+            if ($i > 0) {
+                $row_data = explode(";", $row[0]);
+                //print_r($row);die();
+                $supplier_id = dbStr(trim($row[0]));
+                $lower_bound_one_price =  dbStr(trim($row[1]));
+                $lower_bound_two_quantity = dbStr(trim($row[2]));
+                $lower_bound_three_quantity = dbStr(trim($row[3]));
+                $lower_bound_four_quantity = dbStr(trim($row[4]));
+                $lower_bound_two_price = dbStr(trim($row[5]));
+                $lower_bound_three_price = dbStr(trim($row[6]));
+                $lower_bound_four_price = dbStr(trim($row[7]));
+
+                $Query1 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '1' ";
+                $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                if (mysqli_num_rows($rs1) > 0) {
+                    $row1 = mysqli_fetch_object($rs1);
+                    $pbp_id1 = $row1->pbp_id;
+                    mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_one_price) . "' WHERE pbp_id = '" . $pbp_id1 . "'") or die(mysqli_error($GLOBALS['conn']));
+                }
+
+                if($lower_bound_two_quantity > 0){
+                    $Query2 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '".$lower_bound_two_quantity."' ";
+                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                    if (mysqli_num_rows($rs2) > 0) {
+                        $row2 = mysqli_fetch_object($rs2);
+                        $pbp_id2 = $row2->pbp_id;
+                        mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_two_price) . "' WHERE pbp_id = '" . $pbp_id2 . "'") or die(mysqli_error($GLOBALS['conn']));
+                    }
+                }
+                
+                if($lower_bound_three_quantity > 0){
+                    $Query3 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '".$lower_bound_three_quantity."' ";
+                    $rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+                    if (mysqli_num_rows($rs3) > 0) {
+                        $row3 = mysqli_fetch_object($rs3);
+                        $pbp_id3 = $row3->pbp_id;
+                        mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_three_price) . "' WHERE pbp_id = '" . $pbp_id3 . "'") or die(mysqli_error($GLOBALS['conn']));
+                    }
+                }
+                
+                if($lower_bound_four_quantity > 0){
+                    $Query4 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '".$lower_bound_four_quantity."' ";
+                    $rs4 = mysqli_query($GLOBALS['conn'], $Query4);
+                    if (mysqli_num_rows($rs4) > 0) {
+                        $row4 = mysqli_fetch_object($rs4);
+                        $pbp_id4 = $row4->pbp_id;
+                        mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_four_price) . "' WHERE pbp_id = '" . $pbp_id4 . "'") or die(mysqli_error($GLOBALS['conn']));
+                    }
+                }
+            }
+            $i++;
+        }
+        header("Location: " . $_SERVER['PHP_SELF'] . "?file&" . $qryStrURL . "op=1");
+        //print("<br>Completed");
+        //die();
+    } elseif (empty($file)) {
+        $class = "alert alert-info";
+        $strMSG = "Please Select the file";
+    } else {
+        $class = "alert alert-danger";
+        $strMSG = "Plz select the correct file and convert the file with the help of that link: <a target='_blank' href = 'https://convertio.co/'>Convertio</a> ";
     }
     //header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -229,6 +301,8 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $formHead = "Add Quantity of ";
     } elseif ($_REQUEST['action'] == 4) {
         $formHead = "Add New Schulranzen of ";
+    } elseif ($_REQUEST['action'] == 5) {
+        $formHead = "Add New Special Price of ";
     } else {
         $formHead = "Add New";
     }
@@ -345,7 +419,19 @@ include("includes/messages.php");
                                             <input id="file-upload" type="file" class="file-input" name="doc_ImportQuantity">
                                         </div>
                                     </div>
+                                <?php } elseif ($_REQUEST['action'] == 5) { ?>
+                                    <div class="col-md-12 col-12 mt-3">
+                                        <label for="">File</label>
+                                        <div class="">
+                                            <label for="file-upload" class="upload-btn">
+                                                <span class="material-icons">cloud_upload</span>
+                                                <span>Upload Files</span>
+                                            </label>
+                                            <input id="file-upload" type="file" class="file-input" name="doc_ImportSpecialprice">
+                                        </div>
+                                    </div>
                                 <?php } ?>
+
                                 <?php if ($_REQUEST['action'] == 2) { ?>
                                     <div class="padding_top_bottom mt-3">
                                         <button class="btn btn-primary" type="submit" name="btnUpdate" id="btnImport">Update</button>
@@ -353,11 +439,13 @@ include("includes/messages.php");
                                     $btn_name = "btnImport";
                                     if ($_REQUEST['action'] == 3) {
                                         $btn_name = "btnImportQuantity";
+                                    } elseif ($_REQUEST['action'] == 5) {
+                                        $btn_name = "btnImportSpecialprice";
                                     } elseif ($_REQUEST['action'] == 4) {
                                         $btn_name = "btnImportSchulranzen";
                                     }
                                     ?>
-                                        <div class=" <?php print(($_REQUEST['action'] == 1 || $_REQUEST['action'] == 4) ? 'text_align_center' : ''); ?> mt-3">
+                                        <div class=" <?php print(($_REQUEST['action'] == 1 || $_REQUEST['action'] == 4 ) ? 'text_align_center' : ''); ?> mt-3">
                                             <button class="btn btn-primary" type="submit" name="<?php print($btn_name); ?>" id="btnImport">Upload</button>
                                         <?php } ?>
                                         <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
@@ -372,6 +460,7 @@ include("includes/messages.php");
                             <h1 class="text-white">Artical Management</h1>
                             <div class="d-flex gap-1">
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
+                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=5"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Special Price</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Artical</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=4"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Schulranzen</span></a>
                                 <a href="<?php print("google_merchant_xml.php"); ?>" class="add-new"><span class="material-icons icon">download</span> <span class="text">Export Google Merchent Data</span></a>
@@ -426,14 +515,15 @@ include("includes/messages.php");
                                         <th width="100">Artical Id</th>
                                         <th>Title </th>
                                         <th style="text-align: right; width: 256px">Stock</th>
-                                        <th style="text-align: right; width: 185px">Price</th>
+                                        <th style="text-align: right; width: 185px">Normal Price</th>
+                                        <th style="text-align: right; width: 185px">Special Price</th>
                                         <th width="50">Status</th>
                                         <th width="110">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT pro.*, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
+                                    $Query = "SELECT pro.*, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //$Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //print($Query);
                                     $counter = 0;
@@ -503,6 +593,32 @@ include("includes/messages.php");
                                                             <input type="hidden" name="pro_update_price_lenght" id="pro_update_price_lenght_<?php print($counter); ?>" value="<?php print($counter1); ?>">
                                                             <input type="button" name="btnUpdatePrice" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_price" value="Update">
                                                         </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="table-box-body">
+                                                        <?php
+                                                        $counter1 = 0;
+                                                        $Query1 = "SELECT * FROM `products_bundle_price` WHERE pro_id = '" . $row->pro_id . "' AND supplier_id = '" . $row->supplier_id . "' ORDER BY pbp_lower_bound ASC";
+                                                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                                                        if (mysqli_num_rows($rs1) > 0) {
+                                                            while ($row1 = mysqli_fetch_object($rs1)) {
+                                                                $counter1++;
+                                                        ?>
+                                                                <div class="table-form-group">
+                                                                    <input type="hidden" name="pbp_special_price_id" id="pbp_special_price_id_<?php print($counter); ?>_<?php print($counter1); ?>" value="<?php print($row1->pbp_id); ?>">
+                                                                    <label for="">LB <?php print($row1->pbp_lower_bound) ?> </label>
+                                                                    <input type="number" readonly step="any" name="pbp_special_price_amount[]" id="pbp_special_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0" value="<?php print($row1->pbp_special_price_amount) ?>">
+                                                                </div>
+                                                        <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <!--<div class="table-form-group">
+                                                            <label for="">&nbsp;</label>
+                                                            <input type="hidden" name="pro_update_special_price_lenght" id="pro_update_special_price_lenght_<?php print($counter); ?>" value="<?php print($counter1); ?>">
+                                                            <input type="button" name="btnUpdateSpecialPrice" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_special_price" value="Update">
+                                                        </div>-->
                                                     </div>
                                                 </td>
                                                 <td>
@@ -661,6 +777,7 @@ include("includes/messages.php");
                 }
             });
         });
+        
     </script>
 </body>
 

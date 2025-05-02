@@ -36,6 +36,7 @@ if (isset($_REQUEST['btnUpdate'])) {
     config_company_color_b = '" . dbStr(trim($_REQUEST['config_company_color_b'])) . "', 
     config_btn_color = '" . dbStr(trim($_REQUEST['config_btn_color'])) . "', 
     config_fonts = '" . dbStr(trim($_REQUEST['config_fonts'])) . "', 
+    config_site_special_price = '" . dbStr(trim($_REQUEST['config_site_special_price'])) . "', 
     config_site_logo = '" . $mfileName . "'")
         or die(mysqli_error($GLOBALS['conn']));
 
@@ -77,6 +78,7 @@ if (mysqli_num_rows($rsM) > 0) {
     $config_company_color_b = $rsMem->config_company_color_b;
     $config_btn_color = $rsMem->config_btn_color;
     $config_fonts = $rsMem->config_fonts;
+    $config_site_special_price = $rsMem->config_site_special_price;
     $mfileName = $rsMem->config_site_logo;
     $mfile_path = !empty($rsMem->config_site_logo) ? $GLOBALS['siteURL'] . "files/" . $rsMem->config_site_logo : "";
     $formHead = "Update Info";
@@ -310,9 +312,14 @@ include("includes/messages.php");
 
                                 </select>
                             </div>
-
-
-                            <div class="col-md-12 col-12 mt-3">
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_ftp_img">Special Price Show</label>
+                                <select class="input_style" name="config_site_special_price" id="config_site_special_price">
+                                    <option value="0" <?php print( (($config_site_special_price == 0) ? 'selected' : '') ); ?> >NO</option>
+                                    <option value="1" <?php print( (($config_site_special_price == 1) ? 'selected' : '') ); ?> >Yes</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 col-12 mt-3"><!--  -->
                                 <label for="">Logo</label>
                                 <div class="">
                                     <label for="file-upload" class="upload-btn">
