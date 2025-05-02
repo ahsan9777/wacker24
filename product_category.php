@@ -89,7 +89,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 										<div></div>
 								</div>
 							</div>
-							<div class="gerenric_white_box">
+							<!--<div class="gerenric_white_box">
 								<div class="gerenric_product full_column mostviewed" id="related_category_one">
 									<div class="spinner" id="spinner_related_category_one">
 										<div></div>
@@ -128,7 +128,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 									<?php //include("includes/product_category/related_category_two.php"); 
 									?>
 								</div>
-							</div>
+							</div>-->
 						</div>
 					</div>
 
@@ -284,7 +284,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 	});
 </script>
 <script defer>
-	$(window).on('load', function() {
+	/*$(window).on('load', function() {
 		let pro_type = <?php print($pro_type) ?>;
 		let level_one = <?php print($level_one) ?>;
 		let special_price = <?php echo json_encode($special_price); ?>;
@@ -342,7 +342,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 				}
 			}
 		});
-	});
+	});*/
 </script>
 
 </html>

@@ -661,7 +661,7 @@ if (isset($_REQUEST['action'])) {
         case 'category_type_inner':
             $retValue = array();
 
-            $limit = 10;
+            $limit = 30;
             $start = $_REQUEST['start'] * $limit;
             $last_record = $start;
             $pro_type = $_REQUEST['pro_type'];

@@ -7,6 +7,7 @@ $Query = "SELECT ord.*, u.user_id, u.customer_id, di.dinfo_email, CONCAT(di.dinf
 $rs = $pdo->query($Query);
 if ($rs->rowCount() > 0) {
     $row = $rs->fetch(PDO::FETCH_OBJ);
+    $party_id = $row->customer_id;
     $ord_id = $row->ord_id;
     $ord_datetime = date("Y-m-d", strtotime($row->ord_datetime));
     $ord_note = $row->ord_note;
@@ -53,7 +54,7 @@ print('<ORDER_PARTIES>');
 
 print('<BUYER_PARTY>');
 print('<PARTY>');
-print('<PARTY_ID type="buyer_specific">699726</PARTY_ID>');
+print('<PARTY_ID type="buyer_specific">'.$party_id.'</PARTY_ID>');
 print($address_tag_data);
 print('</PARTY>');
 print('</BUYER_PARTY>');
