@@ -7,7 +7,7 @@ $Query = "SELECT ord.*, u.user_id, u.customer_id, di.dinfo_email, CONCAT(di.dinf
 $rs = $pdo->query($Query);
 if ($rs->rowCount() > 0) {
     $row = $rs->fetch(PDO::FETCH_OBJ);
-    $party_id = $row->customer_id;
+    $party_id = ( (empty($row->customer_id)) ? '600000' : $row->customer_id );
     $ord_id = $row->ord_id;
     $ord_datetime = date("Y-m-d", strtotime($row->ord_datetime));
     $ord_note = $row->ord_note;
