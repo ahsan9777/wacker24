@@ -313,10 +313,10 @@ include("includes/messages.php");
                                 </select>
                             </div>
                             <div class="col-md-3 col-12 mt-3">
-                                <label for="config_ftp_img">Special Price Show</label>
+                                <label for="config_ftp_img">Price Sources</label>
                                 <select class="input_style" name="config_site_special_price" id="config_site_special_price">
-                                    <option value="0" <?php print( (($config_site_special_price == 0) ? 'selected' : '') ); ?> >NO</option>
-                                    <option value="1" <?php print( (($config_site_special_price == 1) ? 'selected' : '') ); ?> >Yes</option>
+                                    <option value="0" <?php print( (($config_site_special_price == 0) ? 'selected' : '') ); ?> >Source One</option>
+                                    <option value="1" <?php print( (($config_site_special_price == 1) ? 'selected' : '') ); ?> >Source Two</option>
                                 </select>
                             </div>
                             <div class="col-md-12 col-12 mt-3"><!--  -->
