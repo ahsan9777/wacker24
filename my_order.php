@@ -12,7 +12,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
 	/*print("<pre>");
 	print_r($payment_status_responseData);
 	print("</pre>");die();*/
-	if($payment_status_responseData['result']['code'] == '000.100.110'){
+	if($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded'){
 		cart_to_order($_SESSION['UID'], $_REQUEST['usa_id'], $_REQUEST['pm_id'], $_REQUEST['id']);
 		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_payment_transaction_id = '" .$_REQUEST['id']. "' ") or die(mysqli_error($GLOBALS['conn']));
 		header("Location: ".$GLOBALS['siteURL']."bestellungen/15");
