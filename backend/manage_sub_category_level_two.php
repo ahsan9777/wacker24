@@ -1,44 +1,21 @@
 <?php
 include("../lib/session_head.php");
 
-if (isset($_REQUEST['btnImport'])) {
-    //print_r($_REQUEST);die();
-    $xml = simplexml_load_file("lagersortiment_standard.xml") or die("Error: Cannot create object");
-    /*print('<pre>');
-    print_r($xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM);
-    print('</pre>');
-      $i = 0;
-    foreach ($xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM as $rl) {
-            echo $i++." ".$rl->CATALOG_STRUCTURE->GROUP_NAME.PHP_EOL;
-    }
-    echo count($xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM->CATALOG_STRUCTURE);*/
+if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
 
-    for ($i = 1; $i < count($xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM->CATALOG_STRUCTURE); $i++) {
-        $cat_id = getMaximum("category", "cat_id");
-        $group_id = $xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM->CATALOG_STRUCTURE[$i]->GROUP_ID;
-        $group_name = $xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM->CATALOG_STRUCTURE[$i]->GROUP_NAME;
-        $parent_id = $xml->T_NEW_CATALOG->CATALOG_GROUP_SYSTEM->CATALOG_STRUCTURE[$i]->PARENT_ID;
-        if ($parent_id == 1) {
-            $parent_id = 0;
-        }
-        //print("group_id = ".$group_id."<br>group_name = ".$group_name."<br> parent_id = ".$parent_id."<br><br>");
-        $Query = "SELECT * FROM category WHERE  cat_title_de = '" . dbStr(trim($group_name)) . "' AND group_id = '" . dbStr(trim($group_id)) . "' AND parent_id = '" . dbStr(trim($parent_id)) . "'";
-        $rs = mysqli_query($GLOBALS['conn'], $Query);
-        if (mysqli_num_rows($rs) > 0) {
-            $row = mysqli_fetch_object($rs);
-            $cat_id = $row->cat_id;
-            mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($group_name)) . "', cat_params_de = '" . url_clean($group_name) . "' WHERE cat_id = '" . $cat_id . "'") or die(mysqli_error($GLOBALS['conn']));
-        } else {
-            mysqli_query($GLOBALS['conn'], "INSERT INTO category (cat_id, group_id, parent_id, cat_title_de, cat_params_de) VALUES ('" . $cat_id . "', '" . $group_id . "', '" . $parent_id . "', '" . dbStr(trim($group_name)) . "', '" . url_clean($group_name) . "')") or die(mysqli_error($GLOBALS['conn']));
-        }
+    $qryStrURL .= "group_id=".$_REQUEST['group_id']."&";
+}
+if (isset($_REQUEST['btnUpdate'])) {
+
+    if (!file_exists("../files/category/" . $_REQUEST['parent_id'])) {
+        mkdir("../files/category/" . $_REQUEST['parent_id'], 0777, true);
+        mkdir("../files/category/" . $_REQUEST['parent_id'] . "/th/", 0777, true);
     }
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
-} elseif (isset($_REQUEST['btnUpdate'])) {
-    $dirName = "../files/category/";
+    $dirName = "../files/category/" . $_REQUEST['parent_id'] . "/";
     $mfileName = $_REQUEST['mfileName'];
     if (!empty($_FILES["mFile"]["name"])) {
-        @unlink("../files/category/" . $_REQUEST['mfileName']);
-        @unlink("../files/category/th/" . $_REQUEST['mfileName']);
+        @unlink("../files/category/" . $_REQUEST['parent_id'] . "/" . $_REQUEST['mfileName']);
+        @unlink("../files/category/" . $_REQUEST['parent_id'] . "/" . "/th/" . $_REQUEST['mfileName']);
         $mfileName = $_REQUEST['cat_id'] . "_" . $_FILES["mFile"]["name"];
         $mfileName = str_replace(" ", "_", strtolower($mfileName));
         if (move_uploaded_file($_FILES['mFile']['tmp_name'], $dirName . $mfileName)) {
@@ -52,10 +29,11 @@ if (isset($_REQUEST['btnImport'])) {
         $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM category WHERE cat_id = " . $_REQUEST['cat_id']);
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
+            $parent_id = $rsMem->parent_id;
             $cat_title_en = $rsMem->cat_title_en;
             $cat_title_de = $rsMem->cat_title_de;
             $mfileName = $rsMem->cat_image;
-            $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/" . $rsMem->cat_image : "";
+            $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/" . $parent_id . "/" . $rsMem->cat_image : "";
             $cat_keyword = $rsMem->cat_keyword;
             $cat_description = $rsMem->cat_description;
             $formHead = "Update Info";
@@ -96,6 +74,19 @@ if (isset($_REQUEST['btnInactive'])) {
         $strMSG = "Please Select Alteast One Checkbox";
     }
 }
+//--------------Button Orderby--------------------
+if (isset($_REQUEST['btnOrderby'])) {
+    if (isset($_REQUEST['cat_id'])) {
+        for ($i = 0; $i < count($_REQUEST['cat_id']); $i++) {
+            mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_orderby = '" . $_REQUEST['cat_orderby'][$i] . "' WHERE cat_id = " . $_REQUEST['cat_id'][$i]);
+        }
+        $class = "alert alert-success";
+        $strMSG = "Record(s) updated successfully";
+    } else {
+        $class = "alert alert-info";
+        $strMSG = "Please Select Alteast One Checkbox";
+    }
+}
 
 include("includes/messages.php");
 
@@ -125,7 +116,7 @@ include("includes/messages.php");
                 <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
                         <h2 class="text-white">
-                            <?php print($formHead); ?> Category
+                            <?php print($formHead); ?> Sub Category level two
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
@@ -151,7 +142,7 @@ include("includes/messages.php");
                                         <input type="text" class="input_style" name="cat_description" id="cat_description" value="<?php print($cat_description); ?>" placeholder="Meta Description">
                                     </div>
                                     <div class="col-md-6 col-12 mt-3">
-                                        <label for="">Image ( <span class="label_span">Banner Size must be 1200px x 300x</span> )</label>
+                                        <label for="">Image ( <span class="text-danger fw-bold">Banner Size must be 1200px x 300x</span> )</label>
                                         <div class="">
                                             <label for="file-upload" class="upload-btn">
                                                 <span class="material-icons">cloud_upload</span>
@@ -178,28 +169,38 @@ include("includes/messages.php");
                     </div>
                 <?php } else { ?>
                     <div class="table-controls">
-                        <h1 class="text-white">Category Management</h1>
-                        <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
-
+                        <h1 class="text-white">Sub Category level two Management</h1>
                     </div>
                     <div class="main_table_container">
                         <?php
 
                         $cat_id = 0;
+                        $group_id = 0;
                         $cat_title = "";
-                        $searchQuery = "";
+                        $searchQuery = "sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '0' ORDER BY main_cat.group_id ASC)";
 
+                        if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
+                            $group_id = $_REQUEST['group_id'];
+                            $searchQuery = " sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['group_id']."' ORDER BY main_cat.group_id ASC)";
+                        }
                         if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
                             if (!empty($_REQUEST['cat_title'])) {
                                 $cat_id = $_REQUEST['cat_id'];
                                 $cat_title = $_REQUEST['cat_title'];
-                                $searchQuery = " AND cat.cat_id = '" . $_REQUEST['cat_id']."'";
+                                $searchQuery = " sub_cat.cat_id = '" . $_REQUEST['cat_id'] . "'";
                             }
                         }
                         ?>
-                        <form class="row" name="frm_search" id="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                        <form class="row flex-row" name="frm_search" id="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                             <div class=" col-md-2 col-12 mt-2">
-                                <label for="" class="text-white">Title</label>
+                                <label for="" class="text-white">Main Category</label>
+                                <select class="input_style" name="group_id" id="group_id" onchange="javascript: frm_search.submit();">
+                                    <option value="0">N/A</option>
+                                    <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $group_id, "parent_id = '0'"); ?>
+                                </select>
+                            </div>
+                            <div class=" col-md-3 col-12 mt-2">
+                                <label for="" class="text-white">Two Level Category Title</label>
                                 <input type="hidden" name="cat_id" id="cat_id" value="<?php print($cat_id); ?>">
                                 <input type="text" class="input_style cat_title" name="cat_title" id="cat_title" value="<?php print($cat_title); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
                             </div>
@@ -210,20 +211,19 @@ include("includes/messages.php");
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th width="100">Banner</th>
+                                        <th>Main Title</th>
                                         <th>Title </th>
-                                        <th width="150">Show Banner</th>
-                                        <th width="150">Show On Home</th>
-                                        <th width="150">Home Featured</th>
+                                        <th width="100">Order By</th>
                                         <th width="50">Status</th>
                                         <th width="90">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT cat.cat_id, cat.group_id, cat.cat_image, cat.cat_title_de AS cat_title, cat.cat_image_show, cat.cat_showhome, cat.cat_showhome_feature, cat.cat_status FROM category AS cat WHERE cat.parent_id = '0' ".$searchQuery." ";
+                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.group_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  " . $searchQuery . " ORDER BY sub_cat.cat_orderby ASC";
                                     //print($Query);
                                     $counter = 0;
-                                    $limit = 25;
+                                    $limit = 50;
                                     $start = $p->findStart($limit);
                                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
                                     $pages = $p->findPages($count, $limit);
@@ -234,7 +234,7 @@ include("includes/messages.php");
                                             $strClass = 'label  label-danger';
                                             $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
                                             if (!empty($row->cat_image)) {
-                                                $image_path = $GLOBALS['siteURL'] . "files/category/" . $row->cat_image;
+                                                $image_path = $GLOBALS['siteURL'] . "files/category/" . $row->parent_id . "/" . $row->cat_image;
                                             }
                                     ?>
                                             <tr>
@@ -242,14 +242,16 @@ include("includes/messages.php");
                                                 <td>
                                                     <div class="popup_container" style="width: <?php print(!empty($row->cat_image) ? '300px' : '100px'); ?>">
                                                         <div class="container__img-holder">
-                                                            <img src="<?php print($image_path); ?>" >
+                                                            <img src="<?php print($image_path); ?>">
                                                         </div>
-                                                    </div>    
+                                                    </div>
                                                 </td>
                                                 <td><?php print($row->cat_title); ?></td>
-                                                <td> <input type="checkbox" class="cat_image_show" id="cat_image_show" data-id="<?php print($row->cat_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->cat_image_show == 1) ? 'checked' : ''); ?>> </td>
-                                                <td> <input type="checkbox" class="cat_showhome" id="cat_showhome" data-id="<?php print($row->cat_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->cat_showhome == 1) ? 'checked' : ''); ?>> </td>
-                                                <td> <input type="checkbox" class="cat_showhome_feature" id="cat_showhome_feature" data-id="<?php print($row->cat_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->cat_showhome_feature == 1) ? 'checked' : ''); ?>> </td>
+                                                <td><?php print($row->sub_cat_title); ?></td>
+                                                <td>
+                                                    <input type="hidden" name="cat_id[]" id="cat_id" value="<?php print($row->cat_id); ?>">
+                                                    <input type="number" class="input_style" name="cat_orderby[]" id="cat_orderby" value="<?php print($row->cat_orderby); ?>">
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if ($row->cat_status == 0) {
@@ -261,7 +263,7 @@ include("includes/messages.php");
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="Side Filter" onClick="javascript: window.location = '<?php print("manage_category_sidefilters.php?group_id=" . $row->group_id); ?>';"><span class="material-icons icon material-xs">filter_list</span></button>
-                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "cat_id=" . $row->cat_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "parent_id=" . $row->parent_id . "&cat_id=" . $row->cat_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                 </td>
                                             </tr>
                                     <?php
@@ -287,15 +289,18 @@ include("includes/messages.php");
                                     </tr>
                                 </table>
                             <?php } ?>
+
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
+                                </div>
+                                <div class=" col-md-1 col-12 mt-2">
+                                    <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
                                 </div>
                             </div>
-                            <!--<input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">-->
                         </form>
 
                     </div>
@@ -309,7 +314,7 @@ include("includes/messages.php");
     $('input.cat_title').autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: 'ajax_calls.php?action=cat_title&parent_id=0',
+                url: 'ajax_calls.php?action=cat_title&parent_id=<?php print($group_id); ?>',
                 dataType: "json",
                 data: {
                     term: request.term
@@ -329,129 +334,6 @@ include("includes/messages.php");
             frm_search.submit();
             //return false;
         }
-    });
-    $(document).ready(function() {
-        // Listen for toggle changes
-        $('.cat_image_show').change(function() {
-            let id = $(this).attr('data-id');
-            let set_field_data = 0;
-            //console.log("cat_id: "+cat_id)
-            if ($(this).prop('checked')) {
-                set_field_data = 1;
-            }
-            //console.log("set_field_data: "+set_field_data);
-            $.ajax({
-                url: 'ajax_calls.php?action=btn_toggle',
-                method: 'POST',
-                data: {
-                    table: "category",
-                    set_field: "cat_image_show",
-                    set_field_data: set_field_data,
-                    where_field: "cat_id",
-                    id: id
-                },
-                success: function(response) {
-                    //console.log("response = "+response);
-                    const obj = JSON.parse(response);
-                    console.log(obj);
-                    if (obj.status == 1 && set_field_data == 1) {
-                        $.toast({
-                            heading: 'Success',
-                            text: 'Toggle is ON',
-                            icon: 'success',
-                            position: 'top-right'
-                        });
-                    } else if (obj.status == 1 && set_field_data == 0) {
-                        $.toast({
-                            heading: 'Warning',
-                            text: 'Toggle is OFF',
-                            icon: 'warning',
-                            position: 'top-right'
-                        });
-                    }
-                }
-            });
-        });
-        $('.cat_showhome').change(function() {
-            let id = $(this).attr('data-id');
-            let set_field_data = 0;
-            //console.log("cat_id: "+id)
-            if ($(this).prop('checked')) {
-                set_field_data = 1;
-            }
-            //console.log("set_field_data: "+set_field_data);
-            $.ajax({
-                url: 'ajax_calls.php?action=btn_toggle',
-                method: 'POST',
-                data: {
-                    table: "category",
-                    set_field: "cat_showhome",
-                    set_field_data: set_field_data,
-                    where_field: "cat_id",
-                    id: id
-                },
-                success: function(response) {
-                    //console.log("response = "+response);
-                    const obj = JSON.parse(response);
-                    console.log(obj);
-                    if (obj.status == 1 && set_field_data == 1) {
-                        $.toast({
-                            heading: 'Success',
-                            text: 'Toggle is ON',
-                            icon: 'success',
-                            position: 'top-right'
-                        });
-                    } else if (obj.status == 1 && set_field_data == 0) {
-                        $.toast({
-                            heading: 'Warning',
-                            text: 'Toggle is OFF',
-                            icon: 'warning',
-                            position: 'top-right'
-                        });
-                    }
-                }
-            });
-        });
-        $('.cat_showhome_feature').change(function() {
-            let id = $(this).attr('data-id');
-            let set_field_data = 0;
-            //console.log("cat_id: "+id)
-            if ($(this).prop('checked')) {
-                set_field_data = 1;
-            }
-            //console.log("set_field_data: "+set_field_data);
-            $.ajax({
-                url: 'ajax_calls.php?action=btn_toggle',
-                method: 'POST',
-                data: {
-                    table: "category",
-                    set_field: "cat_showhome_feature",
-                    set_field_data: set_field_data,
-                    where_field: "cat_id",
-                    id: id
-                },
-                success: function(response) {
-                    //console.log("response = "+response);
-                    const obj = JSON.parse(response);
-                    console.log(obj);
-                    if (obj.status == 1 && set_field_data == 1) {
-                        $.toast({
-                            heading: 'Success',
-                            text: 'Toggle is ON',
-                            icon: 'success',
-                            position: 'top-right'
-                        });
-                    } else if (obj.status == 1 && set_field_data == 0) {
-                        $.toast({
-                            heading: 'Warning',
-                            text: 'Toggle is OFF',
-                            icon: 'warning',
-                            position: 'top-right'
-                        });
-                    }
-                }
-            });
-        });
     });
 </script>
 

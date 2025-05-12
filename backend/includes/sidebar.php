@@ -19,9 +19,10 @@ $cu = 'active';
             </li>
 
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_category' || $pg == 'manage_sub_category') ? $cu : ''; ?>"><span class="material-icons icon">category</span> <span class="text">Kategorien</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_category' || $pg == 'manage_sub_category') ? $c : ''; ?>>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_category' || $pg == 'manage_sub_category_level_two' || $pg == 'manage_sub_category' || $pg == 'manage_category_sidefilters') ? $cu : ''; ?>"><span class="material-icons icon">category</span> <span class="text">Kategorien</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_category' || $pg == 'manage_sub_category_level_two' || $pg == 'manage_sub_category' || $pg == 'manage_category_sidefilters') ? $c : ''; ?>>
                     <li><a href="manage_category.php" title="Hauptkategorien Management" ><span class="text">Hauptkategorien</span></a></li>
+                    <li><a href="manage_sub_category_level_two.php" title="Unterkategorie Ebene zwei Management" ><span class="text">Unterkategorie Ebene zwei</span></a></li>
                     <li><a href="manage_sub_category.php" title="Unterkategorien Management" ><span class="text">Unterkategorien</span></a></li>
                 </ul>
             </li>
