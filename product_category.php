@@ -214,7 +214,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 	}
 </script>
 <script>
-	$(".show-more").click(function() {
+	/*$(".show-more").click(function() {
 		if ($(".category_show, .list_checkbox_hide").hasClass("category_show_height")) {
 			$(this).text("(Weniger anzeigen)");
 		} else {
@@ -222,6 +222,17 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 		}
 
 		$(".category_show, .list_checkbox_hide").toggleClass("category_show_height");
+	});*/
+</script>
+<script>
+	$(".show-more").click(function() {
+		if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
+			$(this).text("(Weniger anzeigen)");
+		} else {
+			$(this).text("(Mehr anzeigen)");
+		}
+
+		$("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");
 	});
 </script>
 <?php include("includes/bottom_js.php"); ?>

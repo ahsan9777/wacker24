@@ -3,10 +3,15 @@ include("../lib/session_head.php");
 
 $group_id = 0;
 $cat_title = "";
+$side_filer_dropdown_query = "";
 if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
     $group_id = $_REQUEST['group_id'];
     $cat_title = ": ".returnName("cat_title_de AS cat_title", "category", "group_id", $group_id);
     $qryStrURL = "group_id=" . $group_id . "&";
+    $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('".$group_id."', cm.sub_group_ids) ) )";
+    if(strlen($group_id) > 3){
+        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('".$group_id."', cm.cat_id) ) )";
+    }
 }
 if (isset($_REQUEST['btnAdd'])) {
     //print_r($_REQUEST);die();
@@ -43,7 +48,7 @@ if (isset($_REQUEST['btnAdd'])) {
             $multiple = "";
         }
     } else {
-        $group_id = 0;
+        //$group_id = 0;
         $lov_sf_id = "";
         $formHead = "Add New";
         $multiple = "multiple";
@@ -142,7 +147,7 @@ include("includes/messages.php");
                                     <label for="">Side Filter Title</label>
                                     <select name="lov_sf_id[]" id="lov_sf_id" <?php print($multiple); ?> class="input_style multiple_select">
                                         <?php
-                                        FillSelected2("lov_side_filter", "lov_sf_id", "lov_sf_title", $lov_sf_id, "lov_sf_status > 0");
+                                        FillSelected2("lov_side_filter", "lov_sf_id", "lov_sf_title", $lov_sf_id, "lov_sf_status > 0 ".$side_filer_dropdown_query."");
                                         ?>
                                     </select>
                                 </div>

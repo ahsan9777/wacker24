@@ -4,7 +4,7 @@ $AND = "";
 $marke = "";
 $cat_params = "";
 $group_id_check = 0;
-//print_r($_REQUEST);//die();
+//print_r($_REQUEST);die();
 if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
 	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$group_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_three'], " AND parent_id = '".$AND."'");
@@ -48,6 +48,24 @@ if(isset($_REQUEST['cat_params_two']) && isset($_REQUEST['cat_params_three'])){
 	$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_two'], " AND parent_id > 0");
 	$group_id_check = 1;
+} elseif(isset($_REQUEST['pf_fname']) && isset($_REQUEST['pf_fvalue'])){
+
+	if (strpos($_REQUEST['pf_level_params'], '/') !== false) {
+		$pf_level_params_array = explode("/", $_REQUEST['pf_level_params']);
+		//print_r($pf_level_params_array);die();
+		$pf_level_params_request = returnName("group_id", "category", "cat_params_de", $pf_level_params_array[1]);
+		//print($level_one_request);die();
+	} else{
+		$pf_level_params_request = returnName("group_id", "category", "cat_params_de", $_REQUEST['pf_level_params']);
+	}
+	$parent_id = returnName("parent_id", "category", "cat_params_de", $_REQUEST['pf_level_params']);
+	if($parent_id == 0){
+		$level_one_request = $pf_level_params_request;
+	} elseif($parent_id > 0){
+		$level_two_request = $pf_level_params_request;
+	} elseif(strlen($pf_level_params_request) > 3){
+		$level_three_request = $pf_level_params_request;
+	}
 }
 //print($group_id);die();
 if($group_id_check > 0){
@@ -79,6 +97,18 @@ if (isset($manf_params_id) && $manf_params_id > 0) {
 	}
 	$qryStrURL .= $_REQUEST['manf_name_params'] . "/";
 	$heading_title = returnName("manf_name", "manufacture", "manf_id", $manf_params_id);
+} else if (isset($_REQUEST['pf_fname']) && isset($_REQUEST['pf_fvalue'])) {
+
+	$whereclause = "WHERE FIND_IN_SET(" . $pf_level_params_request . ", ".(( (isset($level_three_request) && $level_three_request > 0 ) ? 'cm.cat_id' : 'cm.sub_group_ids')).") AND cm.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_fname_params_de = '".$_REQUEST['pf_fname']."' AND pf.pf_fvalue_params_de = '".$_REQUEST['pf_fvalue']."')";
+	$qryStrURL .= $_REQUEST['pf_level_params'] . "/";
+	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $pf_level_params_request);
+	$cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $pf_level_params_request);
+	$pf_fname = returnName("lov_sf_title", "lov_side_filter", "lov_sf_params_de", $_REQUEST['pf_fname']);
+	$pf_fvalue = returnName("pf_fvalue", "products_feature", "pf_fvalue_params_de", $_REQUEST['pf_fvalue']);
+	$heading_title = $heading_title." ( ".$pf_fname." : ".$pf_fvalue." )";
+	//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+	$cat_id_one = $cat_title_one = returnName("parent_id", "category", "group_id", $pf_level_params_request);
+
 } else if (isset($level_three_request) && $level_three_request > 0) {
 	$whereclause = "WHERE cm.cat_id = '" . $level_three_request . "' ";
 	$qryStrURL .= $_REQUEST['cat_params_two'] . "/";

@@ -360,5 +360,40 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record added: " . $counter);
             }
             break;
+
+        case 'lov_side_filter_paramer':
+            print("lov_side_filter_paramer");die();
+            $counter = 0;
+            $Query = "SELECT * FROM lov_side_filter ORDER BY lov_sf_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $lov_sf_id = $row->lov_sf_id;
+                    $lov_sf_params_de = url_clean($row->lov_sf_title);
+
+                    mysqli_query($GLOBALS['conn'], "UPDATE lov_side_filter SET lov_sf_params_de = '" . dbStr(trim($lov_sf_params_de)) . "' WHERE lov_sf_id = '" . $lov_sf_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record updated: " . $counter);
+            }
+            break;
+
+        case 'products_feature_paramer':
+            print("products_feature_paramer");die();
+            $counter = 0;
+            $Query = "SELECT * FROM products_feature ORDER BY pf_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $pf_id = $row->pf_id;
+                    $pf_fname_params_de = url_clean($row->pf_fname);
+                    $pf_fvalue_params_de = url_clean($row->pf_fvalue);
+                    
+                    mysqli_query($GLOBALS['conn'], "UPDATE products_feature SET pf_fname_params_de = '" . dbStr(trim($pf_fname_params_de)) . "', pf_fvalue_params_de = '".dbStr(trim($pf_fvalue_params_de))."' WHERE pf_id = '" . $pf_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record updated: " . $counter);
+            }
+            break;
     }
 }
