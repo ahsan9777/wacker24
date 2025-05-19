@@ -282,7 +282,7 @@
                 //return false;
             }
         });
-
+// Also update the code in product.php file
 	$(".add_to_card").on("click", function(){
 		//console.log("add_to_card");
 		let pro_id = $("#pro_id_"+$(this).attr("data-id")).val();

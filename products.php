@@ -5,13 +5,36 @@ include("includes/php_includes_top.php");
 $lf_action_type = 1;
 $pro_type = (isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0);
 $whereclause = "WHERE 1 = 1";
-if(isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])){
-	if(strlen($_REQUEST['lf_group_id'][0]) > 3){
-		$whereclause .= " AND cm.pro_type = '".$pro_type."' AND FIND_IN_SET(".$_REQUEST['lf_group_id'][0].", cm.cat_id)";
-	} else{
-		$whereclause .= " AND cm.pro_type = '".$pro_type."' AND FIND_IN_SET(".$_REQUEST['lf_group_id'][0].", cm.sub_group_ids)";
+
+$level_three = 0;
+$level_two = 0;
+$lf_parent_id = 0;
+if(isset($_REQUEST['level_three'])){
+	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['level_two'], " AND parent_id > 0");
+	$level_three = returnName("group_id", "category", "cat_params_de", $_REQUEST['level_three'], " AND parent_id = '".$AND."'");
+	$lf_parent_id = returnName("parent_id", "category", "cat_params_de", $_REQUEST['level_three'], " AND parent_id = '".$AND."'");
+	if($pro_type == 20){
+		$lf_parent_id = 19;
 	}
-	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_group_id'][0]);
+} elseif(isset($_REQUEST['level_two'])){
+	$level_two = returnName("group_id", "category", "cat_params_de", $_REQUEST['level_two']);
+	$lf_parent_id = returnName("parent_id", "category", "cat_params_de", $_REQUEST['level_two']);
+}//die();
+if( ( isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id']) ) || $level_three > 0 || $level_two > 0){
+	if($level_three > 0){
+		$lf_group_id = $lf_parent_id;
+	} elseif($level_two > 0){
+		$lf_group_id = $level_two;
+	} else{
+		$lf_group_id = $_REQUEST['lf_group_id'][0];
+		$lf_parent_id = $_REQUEST['lf_parent_id'];
+	}
+	if(strlen($lf_group_id) > 3){
+		$whereclause .= " AND cm.pro_type = '".$pro_type."' AND (".$lf_group_id.", cm.cat_id)";
+	} else{
+		$whereclause .= " AND cm.pro_type = '".$pro_type."' AND FIND_IN_SET(".$lf_group_id.", cm.sub_group_ids)";
+	}
+	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $lf_group_id);
 
 } elseif(isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])){
 	$whereclause .= " AND cm.pro_type = '".$pro_type."' AND FIND_IN_SET(".$_REQUEST['lf_parent_id'].", cm.sub_group_ids) AND cm.manf_id = '".$_REQUEST['lf_manf_id'][0]."'";
@@ -64,7 +87,7 @@ if(isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])){
 								</div>
 							</div>
 							<!--<div class="list_porduct list_class">-->
-							<div class="list_porduct">
+							<div class="list_porduct" id="list_porduct">
 								<div class="gerenric_product">
 									<div class="gerenric_product_inner" id="gerenric_product_inner">
 										<div class="txt_align_center spinner" id="gerenric_product_inner_spinner">
@@ -121,16 +144,17 @@ if(isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])){
 
 </body>
 <script>
-
+	<?php if(!isset($_REQUEST['level_three'])){ ?>
 	$(window).load(function(){
 		gerenric_product_inner();
 	});
+	<?php } ?>
 
 	function gerenric_product_inner(lf_group_id_data = "", lf_manf_id_data = "", lf_pf_fvalue_data = "", add_more = 0){
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			let start = $("#gerenric_product_inner_page").val();
-			let lf_parent_id = "<?php print($_REQUEST['lf_parent_id']); ?>";
+			let lf_parent_id = "<?php print($lf_parent_id); ?>";
 			let pro_type = "<?php print($pro_type); ?>";
             let whereclause = "<?php print($whereclause); ?>";
 			let price_without_tex_display = "<?php print($price_without_tex_display); ?>";
@@ -185,7 +209,7 @@ if(isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])){
                     //console.log(obj);
 					$("#spinner_category_type_inner").hide();
 					$("#btn_load_spinner").hide();
-					if(obj.counter == obj.last_record){
+					if(obj.total_count == obj.last_record){
 						$(".load-more-button").hide();
 						$(".load-less-button").show();
 					} else{
@@ -194,9 +218,16 @@ if(isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])){
 					}
                     if (obj.status == 1) {
                         $("#gerenric_product_inner_spinner").hide();
-						$("#btn_load").show();
+						if(obj.total_count > 8){
+							$("#btn_load").show();
+						}
 						$("#gerenric_product_inner_page").val(obj.gerenric_product_inner_page);
                         $("#gerenric_product_inner").append(obj.gerenric_product_inner);
+						var className = $('#list_porduct').attr('class');
+						if(className == 'list_porduct list_class'){
+							$(".click_list").trigger("click");
+						}
+						genaric_script();
                     }
 					
                 }
@@ -217,20 +248,59 @@ if(isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])){
 		});
 		
 		var lf_pf_fvalue_data = [];
-		$(".lf_manf_id:checked").each(function() {
+		$(".lf_pf_fvalue:checked").each(function() {
 			lf_pf_fvalue_data.push($(this).val());
 		});
 		//console.log("Selected values: " + lf_group_id_data.join(", "));
 		//console.log("Selected values: " + lf_manf_id_data.join(", "));
+		//console.log("Selected values: " + lf_pf_fvalue_data.join(", "));
 		gerenric_product_inner(lf_group_id_data.join(", "), lf_manf_id_data.join(", "), lf_pf_fvalue_data.join(", "), 1);
-		
-		
 	});
 	$(".load-less-button").on("click", function(){
 		$("#gerenric_product_inner").html("");
 		$("#gerenric_product_inner_page").val(0);
-		gerenric_product_inner();
+		var lf_group_id_data = [];
+		$(".lf_group_id:checked").each(function() {
+			lf_group_id_data.push($(this).val());
+		});
+
+		var lf_manf_id_data = [];
+		$(".lf_manf_id:checked").each(function() {
+			lf_manf_id_data.push($(this).val());
+		});
+		
+		var lf_pf_fvalue_data = [];
+		$(".lf_pf_fvalue:checked").each(function() {
+			lf_pf_fvalue_data.push($(this).val());
+		});
+		//console.log("Selected values: " + lf_group_id_data.join(", "));
+		//console.log("Selected values: " + lf_manf_id_data.join(", "));
+		//console.log("Selected values: " + lf_pf_fvalue_data.join(", "));
+		gerenric_product_inner(lf_group_id_data.join(", "), lf_manf_id_data.join(", "), lf_pf_fvalue_data.join(", "), 1);
 	});
+
+	function genaric_script(){
+		$(".color_tab").on("mouseover", function() {
+			let color_title = $(this).attr('title');
+			let data_id = $(this).attr('data-id');
+			//let supplier_id = $(this).attr('data-supplier-id');
+			//console.log("color_tab: "+data_id+" supplier_id: "+supplier_id);
+			$("#color_title_" + data_id).text(color_title);
+		});
+		$(".color_tab").on("mouseout", function() {
+			let data_id = $(this).attr('data-id');
+			let color_radio = $('input[name="color_radio_' + data_id + '"]:checked').val();
+			let color_title = $("#color_tab_" + color_radio).attr('title');
+			//console.log("mouseout: "+color_radio);
+			$("#color_title_" + data_id).text(color_title);
+		});
+		$(".color_tab").on("click", function() {
+			let supplier_id = $(this).attr("data-supplier-id");
+			let pro_description = $(this).attr("data-pro-description");
+			//console.log("color_tab: "+supplier_id);
+			window.location.href = "product/" + supplier_id + "/" + pro_description;
+		});
+	}
 </script>
 
 
