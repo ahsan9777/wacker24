@@ -6,6 +6,7 @@ $pro_typeURL = "";
 $cat_params = "";
 //print_r($_REQUEST);
 //$level_one = $_REQUEST['level_one'];
+$lf_action_type = 0;
 $level_one =  ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 19;
 $level_one_request = ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 20;
 $cat_params = $_REQUEST['cat_params_one'];

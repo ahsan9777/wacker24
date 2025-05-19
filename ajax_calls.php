@@ -712,5 +712,361 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;
+
+        case 'lf_group_id_inner':
+            $retValue = array();
+            $lf_group_id_inner = "";
+            $lf_action_type = $_REQUEST['lf_action_type'];
+            $leve_id = $_REQUEST['leve_id'];
+
+            $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
+            $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '" . $leve_id . "' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.group_id ASC ";
+            //print($Query);
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $lf_group_id_inner .= '<li>
+                        <label class="gerenric_checkbox">
+                           ' . $row->cat_title . '
+                            <input type="checkbox" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '">
+                            <span class="checkmark"></span>
+                        </label>
+                    </li>';
+                }
+            }
+            if ($lf_action_type == 1 && strlen($leve_id) > 2) {
+                $lf_group_id_inner .= '
+                <script>
+                    $(".lf_group_id").on("click", function() {
+                        $("#gerenric_product_inner_page").val(0);
+                        $("#gerenric_product_inner").html("");
+                        $(".lf_manf_id").attr("checked", false);
+                        $(".lf_pf_fvalue").attr("checked", false);
+                        var lf_group_id = [];
+                        $(".lf_group_id:checked").each(function() {
+                            lf_group_id.push($(this).val());
+                        });
+                        //console.log("Selected values: " + lf_group_id.join(", "));
+                        lf_manf_id_inner(lf_group_id.join(", "));
+                        lf_pf_fvalue_inner(lf_group_id.join(", "));
+                        gerenric_product_inner(lf_group_id.join(", "));
+                    });
+                </script>
+                ';
+            } else {
+                $lf_group_id_inner .= '
+                <script>
+                    $(".lf_group_id").on("click", function() {
+                        $(".lf_manf_id").attr("checked", false);
+                        $(".lf_pf_fvalue").attr("checked", false);
+                        $("#frm_left_search_cat").submit();
+                    });
+                </script>
+                ';
+            }
+            $retValue = array("status" => "1", "message" => "Record found", "lf_group_id_inner" => $lf_group_id_inner);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+        case 'lf_manf_id_inner':
+            $retValue = array();
+            $manf_check = array();
+            $lf_manf_id_inner = "";
+            $lf_action_type = $_REQUEST['lf_action_type'];
+            $leve_id = $_REQUEST['leve_id'];
+            $Sidefilter_brandwith = $_REQUEST['Sidefilter_brandwith'];
+            $manf_check = (!empty($_REQUEST['manf_check'])) ? $_REQUEST['manf_check'] : [];
+            if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
+                //$whereclause = "WHERE cm.pro_type = '".$pro_type."'";
+                $Sidefilter_brandwith .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
+                $lf_group_id = explode(",", $_REQUEST['lf_group_id']);
+
+                //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_group_id'][0]);
+
+            }
+            $Query = "SELECT * FROM manufacture AS manf WHERE manf.manf_id IN (SELECT cm.manf_id FROM vu_category_map AS cm WHERE " . $Sidefilter_brandwith . ") AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
+            //print($Query);
+            $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                $lf_manf_id_inner .= '<h3>Marke</h3>
+                        <ul class="list_checkbox_hide category_show_height " id="list_checkbox_hide_0">';
+                while ($row = mysqli_fetch_object($rs)) {
+
+                    $lf_manf_id_inner .= '<li>
+                            <label class="gerenric_checkbox">
+                                ' . $row->manf_name . '
+                                <input type="checkbox" name="lf_manf_id[]" class="lf_manf_id" id="lf_manf_id" value="' . $row->manf_id . '" ' . (in_array($row->manf_id, $manf_check) ? 'checked' : '') . '>
+                                <span class="checkmark"></span>
+                            </label>
+                        </li>';
+                }
+                if ($count > 5) {
+                    $lf_manf_id_inner .= '</ul><div class="show-more" data-id="0">(Mehr anzeigen)</div>';
+                }
+                if ($lf_action_type == 1) {
+                    $lf_manf_id_inner .= '
+                    <script>
+                        $(".lf_manf_id").on("click", function() {
+                            $("#gerenric_product_inner_page").val(0);
+                            $("#gerenric_product_inner").html("");
+                            $(".lf_pf_fvalue").attr("checked", false);
+                            var lf_group_id = [];
+                            $(".lf_group_id:checked").each(function() {
+                                lf_group_id.push($(this).val());
+                            });
+                            var lf_manf_id = [];
+                            $(".lf_manf_id:checked").each(function() {
+                                lf_manf_id.push($(this).val());
+                            });
+                            //console.log("Selected values: " + lf_group_id.join(", "));
+                            //console.log("Selected values: " + lf_manf_id.join(", "));
+                            
+                            lf_pf_fvalue_inner(lf_group_id.join(", "), lf_manf_id.join(", "));
+                            gerenric_product_inner(lf_group_id.join(", "), lf_manf_id.join(", ")); 
+                           
+                        });
+                    </script>
+                    ';
+                } else {
+                    $lf_manf_id_inner .= '
+                    <script>
+                        $(".lf_manf_id").on("click", function() {
+                            $(".lf_pf_fvalue").attr("checked", false);
+                            $("#frm_left_search_cat").submit();
+                        });
+                    </script>
+                    ';
+                }
+            }
+
+
+            $retValue = array("status" => "1", "message" => "Record found", "lf_manf_id_inner" => $lf_manf_id_inner);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'lf_pf_fvalue_inner':
+            $retValue = array();
+            $pf_fvalue_check = array();
+            $lf_pf_fvalue_inner = "";
+            $lf_action_type = $_REQUEST['lf_action_type'];
+            $leve_id = $_REQUEST['leve_id'];
+            $pf_fvalue_check = (!empty($_REQUEST['pf_fvalue_check'])) ? $_REQUEST['pf_fvalue_check'] : [];
+            if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
+                $leve_id = $_REQUEST['lf_group_id'];
+            }
+
+            $counter = 0;
+            $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (" . $leve_id . ") ORDER BY csf.csf_orderby ASC";
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($rw1 = mysqli_fetch_object($rs1)) {
+                    $counter++;
+
+                    $lf_pf_fvalue_inner .= '<div class="categroy_block">
+                    <h3>' . $rw1->lov_sf_title . '</h3>
+                    <ul class="list_checkbox_hide category_show_height" id="list_checkbox_hide_' . $counter . '">';
+                    //$Query2 = "";
+                    if ( (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id']))) {
+                        $products_featureWhere = "";
+                        $products_featureWhere .= " WHERE cm.cat_id IN (" . $leve_id . ")";
+                        
+                        if(isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])){
+                            $products_featureWhere .= " AND cm.manf_id IN (".$_REQUEST['lf_manf_id'].")";
+                        }
+                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm ".$products_featureWhere.") GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    } else {
+                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    }
+                    //print($Query2);die();
+                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                    if (mysqli_num_rows($rs) > 0) {
+                        while ($rw2 = mysqli_fetch_object($rs2)) {
+
+                            $lf_pf_fvalue_inner .= '<li>
+                                    <label class="gerenric_checkbox">
+                                        ' . $rw2->pf_fvalue . '
+                                        <input type="checkbox" name="lf_pf_fvalue[]" id="lf_pf_fvalue" class="lf_pf_fvalue" value="' . $rw2->pf_fvalue_params_de . '" ' . (in_array($rw2->pf_fvalue_params_de, $pf_fvalue_check) ? 'checked' : '') . '>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </li>';
+                        }
+                    }
+
+                    $lf_pf_fvalue_inner .= '</ul>
+                    <div class="show-more" data-id="' . $counter . '">(Mehr anzeigen)</div>
+                </div>
+                ';
+                }
+                if ($lf_action_type == 1) {
+                    $lf_pf_fvalue_inner .= '
+                    <script>
+                        $(".lf_pf_fvalue").on("click", function() {
+                            $("#gerenric_product_inner_page").val(0);
+                            $("#gerenric_product_inner").html("");
+                            var lf_group_id = [];
+                            $(".lf_group_id:checked").each(function() {
+                                lf_group_id.push($(this).val());
+                            });
+                            var lf_manf_id = [];
+                            $(".lf_manf_id:checked").each(function() {
+                                lf_manf_id.push($(this).val());
+                            });
+                            var lf_pf_fvalue = [];
+                            $(".lf_pf_fvalue:checked").each(function() {
+                                lf_pf_fvalue.push($(this).val());
+                            });
+                            console.log("Selected values of lf_group_id: " + lf_group_id.join(", "));
+                            console.log("Selected values of lf_manf_id: " + lf_manf_id.join(", "));
+                            console.log("Selected values of lf_pf_fvalue: " + lf_pf_fvalue.join(", "));
+                            //lf_pf_fvalue_inner(lf_group_id.join(", "));
+                            
+                            gerenric_product_inner(lf_group_id.join(", "), lf_manf_id.join(", "), lf_pf_fvalue.join(", ")); 
+                        });
+                    </script>
+                    ';
+                } else {
+                    $lf_pf_fvalue_inner .= '
+                    <script>
+                        $(".lf_pf_fvalue").on("click", function() {
+                            $("#frm_left_search_cat").submit();
+                        });
+                    </script>
+                    ';
+                }
+            }
+
+            $retValue = array("status" => "1", "message" => "Record found", "lf_pf_fvalue_inner" => $lf_pf_fvalue_inner);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'gerenric_product_inner':
+            //print_r($_REQUEST);die();
+            $retValue = array();
+            $gerenric_product_inner  = "";
+            $pro_type = $_REQUEST['pro_type'];
+            $whereclause = $_REQUEST['whereclause'];
+            $price_without_tex_display = $_REQUEST['price_without_tex_display'];
+            $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
+            $limit = 8;
+            $start = $_REQUEST['start'] * $limit;
+            $last_record = $start;
+            if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
+                //$whereclause = "WHERE cm.pro_type = '".$pro_type."'";
+                $whereclause .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
+                //$lf_group_id = explode(",", $_REQUEST['lf_group_id']);
+
+                //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_group_id'][0]);
+
+            }
+            if (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])) {
+
+                $whereclause .= " AND cm.manf_id IN (" . $_REQUEST['lf_manf_id'] . ")";
+            }
+            if (isset($_REQUEST['lf_pf_fvalue']) && !empty($_REQUEST['lf_pf_fvalue'])) {
+                $input = $_REQUEST['lf_pf_fvalue'];
+                $items = explode(',', $input);
+                $items = array_map('trim', $items);
+                $items = array_map(function($item) {
+                    return "'$item'";
+                }, $items);
+                $lf_pf_fvalue = implode(', ', $items);
+                $whereclause .= " AND cm.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE  pf.pf_fvalue_params_de IN (" . $lf_pf_fvalue . ") )";
+                //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_parent_id']);
+            }
+
+            $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' ";
+            //print($Query);die();
+            $counter = 0;
+
+            $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
+            $rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
+            //$rs = mysqli_query($GLOBALS['conn'], $Query);
+            //print(mysqli_num_rows($rs));die();
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $counter++;
+                    $last_record++;
+                    $special_price = array();
+                    $sub_group_ids = explode(",", $row->sub_group_ids);
+                    $cat_id_one = $sub_group_ids[1];
+                    $cat_id_two = $sub_group_ids[0];
+                    //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+                    $special_price = user_special_price("supplier_id", $row->supplier_id);
+
+                    if (!$special_price) {
+                        $special_price = user_special_price("level_two", $cat_id_two);
+                    }
+
+                    if (!$special_price) {
+                        $special_price = user_special_price("level_one", $cat_id_one);
+                    }
+                    //print_r($special_price);die();
+                    $gerenric_product_inner .= '<div class="pd_card">
+                        <div class="pd_image"><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
+                        <div class="pd_detail">
+                            <h5><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"> ' . $row->pro_description_short . ' </a></h5>
+                            <div class="pd_rating">
+                                <ul>
+                                    <li>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                    </li>
+                                </ul>
+                            </div>';
+                    if (!empty($special_price)) {
+                        $gerenric_product_inner .= '<div class="pd_prise price_without_tex" ' . $price_without_tex_display . '> ' . "<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>" . ' </div>
+                                <div class="pd_prise pbp_price_with_tex" ' . $pbp_price_with_tex_display . '> ' . "<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>" . ' </div>';
+                    } else {
+                        $gerenric_product_inner .= '<div class="pd_prise price_without_tex" ' . $price_without_tex_display . '>' . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . '€</div>
+                                <div class="pd_prise pbp_price_with_tex" ' . $pbp_price_with_tex_display . '>' . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . '€</div>';
+                    }
+                    $gerenric_product_inner .= '<div class="pd_btn">
+                                <a class="add_to_card" href="javascript:void(0)" data-id="' . $row->pro_id . '">
+                                    <input type="hidden" id="pro_id_' . $row->pro_id . '" name="pro_id" value="' . $row->pro_id . '">
+                                    <input type="hidden" id="pro_type_' . $row->pro_id . '" name="pro_type" value="' . $row->pro_type . '">
+                                    <input type="hidden" id="supplier_id_' . $row->pro_id . '" name="supplier_id" value="' . $row->supplier_id . '">
+                                    <input type="hidden" id="ci_qty_' . $row->pro_id . '" name="ci_qty" value="1">
+                                    <input type="hidden" id="ci_discount_type_' . $row->pro_id . '" name="ci_discount_type" value="' . ((!empty($special_price)) ? $special_price['usp_price_type'] : '0') . '">
+                                    <input type="hidden" id="ci_discount_value_' . $row->pro_id . '" name="ci_discount_value" value="' . ((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0') . '">
+                                    <div class="gerenric_btn">In den Einkaufswagen</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>';
+                }
+                /*$gerenric_product_inner .= '<div class="txt_align_center" id="btn_load" style="display: none;">
+										<input type="hidden" name="gerenric_product_inner_page" id="gerenric_product_inner_page" value="'.($_REQUEST['start'] + 1).'">
+										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></div>
+										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
+									</div>';*/
+                $gerenric_product_inner .= '
+                <script>
+                    $(document).ready(function() {
+                        $(".click_list").click(function() {
+                            $(".list_porduct").addClass("list_class");
+                            $(".detail_data_show").show();
+                            $(".pd_image").css("height", "100%");
+                        });
+                        $(".click_th").click(function() {
+                            $(".list_porduct").removeClass("list_class");
+                            $(".detail_data_show").hide();
+                            $(".pd_image").css("height", "");
+                        });
+                    });
+                </script>';
+            }
+            //print($gerenric_product_inner);
+
+            $retValue = array("status" => "1", "message" => "Record found", "Query" => $Query, "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            //$retValue = array("status" => "1", "message" => "Record found", "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
     }
 }
