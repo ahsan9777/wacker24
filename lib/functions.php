@@ -1528,7 +1528,11 @@ function returnMulCat($ID)
 function returnMultiName($Field, $Table, $IDField, $ID, $fieldcount, $AND = "")
 {
 	$retRes = array();
-	$strQry = "SELECT $Field FROM $Table WHERE $IDField= '" . $ID . "' " . $AND . "";
+	if(strlen($ID) < 4){
+		$strQry = "SELECT $Field FROM $Table WHERE FIND_IN_SET ('" . $ID . "', ".$IDField.") " . $AND . "";
+	} else {
+		$strQry = "SELECT $Field FROM $Table WHERE $IDField= '" . $ID . "' " . $AND . "";
+	}
 	//print($strQry);die();
 	$nResult = mysqli_query($GLOBALS['conn'], $strQry) or die("Unable 2 Work");
 	if (mysqli_num_rows($nResult) >= 1) {

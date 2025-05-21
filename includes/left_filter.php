@@ -1,4 +1,21 @@
 <?php
+
+/*if($_SERVER['REQUEST_METHOD'] === 'POST'){
+$key = "1234567890abcdef1234567890abcdef"; // 32 chars for AES-256
+$iv = openssl_random_pseudo_bytes(16);
+
+// Convert form data to query string
+$query = http_build_query($_POST);
+
+// Encrypt the data
+$encrypted = openssl_encrypt($query, 'AES-256-CBC', $key, 0, $iv);
+
+// Combine IV and encrypted string
+$combined = base64_encode($iv . $encrypted);
+
+// Redirect with encrypted query
+header("Location: products.php?data=" . urlencode($combined));
+}*/
 $leve_id = 11;
 $manf_check = array();
 $pf_fvalue_check = array();
@@ -40,6 +57,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (is
 //print_r($manf_check);
 ?>
 <div class="pd_left" <?php print(isset($_REQUEST['search_keyword']) ? 'style="width: 420px;"' : ''); ?>>
+    <!--<form class="categroy_list sticky" name="frm_left_search_cat" id="frm_left_search_cat" method="POST" action="<?php print($_SERVER['PHP_SELF']); ?>" role="form" enctype="multipart/form-data">-->
     <form class="categroy_list sticky" name="frm_left_search_cat" id="frm_left_search_cat" method="GET" action="products.php" role="form" enctype="multipart/form-data">
         <input type="hidden" name="lf_parent_id" value="<?php print($leve_id); ?>">
         <input type="hidden" name="pro_type" value="<?php print($pro_type); ?>">

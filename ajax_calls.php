@@ -953,7 +953,7 @@ if (isset($_REQUEST['action'])) {
             $whereclause = $_REQUEST['whereclause'];
             $price_without_tex_display = $_REQUEST['price_without_tex_display'];
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
-            $limit = 8;
+            $limit = 24;
             $start = $_REQUEST['start'] * $limit;
             $last_record = $start;
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
@@ -979,8 +979,29 @@ if (isset($_REQUEST['action'])) {
                 $whereclause .= " AND cm.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE  pf.pf_fvalue_params_de IN (" . $lf_pf_fvalue . ") )";
                 //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_parent_id']);
             }
+
+            $order_by = "";
+            if (isset($_REQUEST['sortby'])) {
+                $sortby = $_REQUEST['sortby'];
+                switch ($sortby) {
+                    case 1:
+                        $order_by = "ORDER BY cm.pbp_price_amount DESC";
+                        break;
+                    case 2:
+                        $order_by = "ORDER BY cm.pbp_price_amount ASC";
+                        break;
+                    case 3:
+                        $order_by = "ORDER BY cm.pro_description_short ASC";
+                        break;
+                    case 4:
+                        $order_by = "ORDER BY cm.pro_description_short DESC";
+                        break;
+                    default:
+                        $order_by = "";
+                }
+            }
             $total_count = 0;
-            $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' ";
+            $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' ".$order_by."";
             //print($Query);die();
             $counter = $start;
 
