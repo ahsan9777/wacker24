@@ -16,7 +16,7 @@ if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
 $search_keyword_where = "";
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
 	$pro_description_short = returnName("pro_description_short", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
-	header("Location: " . $GLOBALS['siteURL'] . "product/" . $_REQUEST['supplier_id']."/".url_clean($pro_description_short));
+	header("Location: " . $GLOBALS['siteURL'] . "product/" . $_REQUEST['supplier_id'] . "/" . url_clean($pro_description_short));
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
 
@@ -26,7 +26,7 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	$search_keyword_array = explode(" ", trim(str_replace("-", " ", $result['corrected'])));
 	//print_r($pro_description_short_keyword);
 	$search_keyword_where = "";
-	if(count($search_keyword_array) > 1){
+	if (count($search_keyword_array) > 1) {
 		$search_keyword_case = "(CASE WHEN  pro.pro_description_short LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 1 ELSE 0 END) + ";
 		for ($i = 0; $i < count($search_keyword_array); $i++) {
 			$search_keyword_array_data = "";
@@ -42,7 +42,7 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 		$search_keyword_case .= " WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END";
 		$search_keyword_where .= $search_keyword_array_data;
 	}
-	
+
 
 	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . rtrim($search_keyword_where, " OR ") . ")";
 
@@ -135,10 +135,6 @@ if (isset($_REQUEST['sortby'])) {
 <head>
 	<?php include("includes/html_header.php"); ?>
 	<script>
-		$(window).load(function() {
-			$(".click_list").trigger('click');
-		});
-
 		$(document).ready(function() {
 			$(".click_list").click(function() {
 				$(".list_porduct").addClass('list_class');
@@ -146,10 +142,16 @@ if (isset($_REQUEST['sortby'])) {
 				$(".pd_image").css("height", "100%");
 			});
 			$(".click_th").click(function() {
+				console.log("click_th")
 				$(".list_porduct").removeClass('list_class');
 				$(".detail_data_show").hide();
 				$(".pd_image").css("height", "");
 			});
+		});
+		$(document).ready(function() {
+			if (window.innerWidth >= 1024) {
+				$(".click_list").trigger('click');
+			}
 		});
 	</script>
 </head>
@@ -211,7 +213,7 @@ if (isset($_REQUEST['sortby'])) {
 									</ul>
 								</div>
 							</div>
-							<div class="list_porduct list_class">
+							<div class="list_porduct">
 								<div class="gerenric_product">
 									<div class="gerenric_product_inner">
 										<?php
@@ -255,8 +257,8 @@ if (isset($_REQUEST['sortby'])) {
 																				<li>
 																					<input type="radio" class="color" id="color_<?php print($counter); ?>" name="color_radio_<?php print($counter) ?>" data-id="<?php print($counter); ?>" value="<?php print($row1->supplier_id); ?>" <?php print(($row1->supplier_id == $row->supplier_id) ? 'checked' : ''); ?>>
 																					<label for="color_<?php print($counter); ?>">
-																						<span style="<?php print( (( in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe')) ) ? 'height: 60px;' : 'height: 30px;')); ?>">
-																							<?php if( in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe')) ){ ?>
+																						<span style="<?php print(((in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px;' : 'height: 30px;')); ?>">
+																							<?php if (in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) { ?>
 																								<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
 																							<?php } else { ?>
 																								<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" title="<?php print($row1->pf_fvalue); ?>"><?php print($row1->pf_fvalue); ?></label>
@@ -289,8 +291,8 @@ if (isset($_REQUEST['sortby'])) {
 																$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
 																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
 															}
-														} else{
-															if($row->pro_type > 0){
+														} else {
+															if ($row->pro_type > 0) {
 																$quantity_lenght = 1;
 															}
 														}
@@ -307,11 +309,11 @@ if (isset($_REQUEST['sortby'])) {
 															</ul>
 														</div>
 														<?php if (!empty($special_price)) { ?>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 														<?php } else { ?>
-															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax) )); ?>€</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount) )); ?>€</div>
+															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
 														<?php } ?>
 														<div class="pd_btn">
 															<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
