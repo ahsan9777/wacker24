@@ -2574,7 +2574,7 @@ function get_pro_price($pro_id, $supplier_id, $ci_qty)
 		while ($rw = mysqli_fetch_object($rs)) {
 			$retValue = array(
 				"pbp_id" => strval($rw->pbp_id),
-				"ci_amount" => strval( (( config_site_special_price > 0 && $rw->pbp_special_price_without_tax) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) ),
+				"ci_amount" => strval( (( config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) ),
 				"ci_gst_value" => strval($rw->pbp_tax)
 			);
 		}

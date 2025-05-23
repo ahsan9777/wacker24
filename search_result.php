@@ -191,7 +191,7 @@ if (isset($_REQUEST['sortby'])) {
 								<div class="list_type_row">
 									<h2> <?php print(rtrim($heading_title, ";") . " ( " . $count . " )"); ?> </h2>
 									<ul>
-										<li>Ansichten: </li>
+										<li>Ansicht </li>
 										<li class="click_th"><i class="fa fa-th"></i></li>
 										<li class="click_list"><i class="fa fa-list"></i></li>
 										<li>

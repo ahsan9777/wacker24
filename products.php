@@ -155,7 +155,7 @@ $sortby_array = array("Sortieren nach", "Preis aufsteigend", "Preis absteigend",
 								<div class="list_type_row">
 									<h2> <?php print($heading_title) ?> </h2>
 									<ul>
-										<li>Ansichten: </li>
+										<li>Ansicht </li>
 										<li class="click_th"><i class="fa fa-th"></i></li>
 										<li class="click_list"><i class="fa fa-list"></i></li>
 										<li style="margin-right: 0px">

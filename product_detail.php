@@ -102,7 +102,7 @@ include("includes/message.php");
 		<?php include("includes/popup.php"); ?>
 		<!--LOCATION_POPUP_END-->
 		<!--CREATE_LIST_POPUP_START-->
-		<div class="create_list_popup">
+		<div class="create_list_popup list_popup">
 			<div class="inner_popup">
 				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 					<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
@@ -112,10 +112,32 @@ include("includes/message.php");
 						<input type="text" class="input_list" required name="sl_title" id="sl_title">
 						<div class="create_button">
 							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">hinzufügen</button>
-							<div class="gerenric_btn create_list_close">Abbrechen</div>
+							<div class="gerenric_btn popup_close">Abbrechen</div>
 						</div>
 					</div>
 				</form>
+			</div>
+		</div>
+		<!--CREATE_LIST_POPUP_END-->
+		<!--CREATE_LIST_POPUP_START-->
+		<div class="popup versand_popup">
+			<div class="popup_inner wd_45">
+				<div class="popup_content">
+					<div class="popup_heading">Versand & Verpackung <div class="popup_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="popup_content_inner">
+						<div class="popup_inner_container">
+							<h2 class="green">Versandkostenfrei <span>ab 178,50 € Warenwert*</span></h2>
+							<p>ab 35,69 € Warenwert: 3,56 € Versandkosten (je Auftrag) <br> unter 35,69 € Warenwert: 3,56 € Versandkosten + 4,76 € Verpackungspauschale (je Auftrag)</p>
+							<div class="underline"></div>
+							<p>Folgende Kosten können optional je nach Auftrag anfallen:</p>
+							<p>Für die Lieferung auf Inseln fallen 7,13 € Pro Paket (max. 25 kg) an.</p>
+							<p>Dies gilt für folgende PLZ: 18565, 25849, 25859, 25863, 25869, 25938, 25939, 25946, 25980, 25981, 25982, 25983, 25984, 25985, 25986, 25987, 25988, 25989, 25990, 25992, 25991, 25993, 25994, 25995, 25996, 25997, 25998, 25999, 26465, 26474, 26486, 26548, 26571, 26579, 26757, 27498, 27499</p>
+							<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Ausgenommen Sperrgutzuschlag, Inselzuschlag und DHL-Zuschlag. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
+							<p>Alle Preise inkl. MwSt.</p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!--CREATE_LIST_POPUP_END-->
@@ -215,7 +237,7 @@ include("includes/message.php");
 															<li>
 																<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 																<label for="color_<?php print($row->supplier_id); ?>">
-																	<span style="<?php print(((in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px; width: 60px;' : 'height: 30px; width: auto;')); ?>">
+																	<span style="<?php print(((in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px; width: 60px;' : 'height: 40px;width: auto;border-radius: 5px;')); ?>">
 																		<?php if (in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) { ?>
 																			<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
 																		<?php } else { ?>
@@ -252,7 +274,7 @@ include("includes/message.php");
 										<p> <?php print($pro_description_long); ?> </p>
 									</div>
 								</span>
-								<div class="product-type-show-more" data-id="0">(Mehr anzeigen)</div>
+								<div class="product-type-show-more" data-id="0">Mehr Produktdetails</div>
 							</div>
 							<div class="product_col2">
 								<div class="sticky">
@@ -271,7 +293,9 @@ include("includes/message.php");
 											<div class="main_staffel_price price_without_tex" <?php print($price_without_tex_display); ?>><span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?> €</span></div>
 											<div class="main_staffel_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?> €</span></div>
 										<?php } ?>
-										<div class="main_staffel_price_quantity">Staffelpreis (ab <?php print($row->pbp_lower_bound); ?> Pack)</div>
+										<div class="main_staffel_price_quantity"><?php print(($row->pbp_lower_bound > 1) ? 'Staffelpreis (ab ' . $row->pbp_lower_bound . ' Stück)' : "Sonderpreis"); ?> </div>
+										<div class="product_vat txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>exkl. MwSt + <span class="versand_trigger">Versand</span></div>
+										<div class="product_vat txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>inkl. MwSt + <span class="versand_trigger">Versand</span></div>
 										<?php
 									}
 									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM `products_bundle_price` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound ASC";
@@ -280,19 +304,15 @@ include("includes/message.php");
 										while ($row = mysqli_fetch_object($rs)) {
 											if (!empty($special_price)) {
 										?>
-												<div class="piece_prise txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <?php print("<del class='orignal_price'>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€  </span>"); ?> </div>
-												<div class="piece_prise txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <?php print("<del class='orignal_price'>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ </span> "); ?> </div>
+												<div class="piece_prise txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Stück <?php print("<del class='orignal_price'>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€  </span>"); ?> </div>
+												<div class="piece_prise txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Stück <?php print("<del class='orignal_price'>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ </span> "); ?> </div>
 											<?php } else { ?>
-												<div class="piece_prise txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</span></div>
-												<div class="piece_prise txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?>: <span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</span></div>
+												<div class="piece_prise txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Stück <span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</span></div>
+												<div class="piece_prise txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Stück <span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</span></div>
 									<?php
 											}
 										}
 									}
-									?>
-									<div class="product_vat txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>exkl. MwSt</div>
-									<div class="product_vat txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>inkl. MwSt</div>
-									<?php
 									$quantity_lenght = 0;
 									$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 									//print($Query);
@@ -448,10 +468,10 @@ include("includes/message.php");
 														</div>
 														<?php if (!empty($special_price)) { ?>
 															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 														<?php } else { ?>
 															<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</div>
-															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
+															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
 														<?php } ?>
 													</div>
 												</div>
@@ -503,11 +523,11 @@ include("includes/message.php");
 														</ul>
 													</div>
 													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
 													<?php } ?>
 												</div>
 											</div>
@@ -558,11 +578,11 @@ include("includes/message.php");
 														</ul>
 													</div>
 													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . ((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
 													<?php } ?>
 												</div>
 											</div>
@@ -600,6 +620,13 @@ include("includes/message.php");
 		$('#demo-1 .simpleLens-big-image').simpleLens({
 			loading_image: 'demo/images/loading.gif'
 		});
+	});
+	$(window).on('resize', function() {
+		if (window.innerWidth <= 1024 && window.innerWidth >= 240) {
+			// Code for responsive action
+			$(".popup_inner").css('width', '90%');
+			console.log("Resized: within 240px to 1024px");
+		}
 	});
 </script>
 <script src="js/slick.js"></script>
@@ -673,9 +700,9 @@ include("includes/message.php");
 <script>
 	$(".product-type-show-more").click(function() {
 		if ($("#product_type_hide_" + $(this).attr("data-id") + " ").hasClass("product_type_height")) {
-			$(this).text("(Weniger anzeigen)");
+			$(this).text("Weniger Produktdetails");
 		} else {
-			$(this).text("(Mehr anzeigen)");
+			$(this).text("Mehr Produktdetails");
 		}
 
 		$("#product_type_hide_" + $(this).attr("data-id") + "").toggleClass("product_type_height");
@@ -685,16 +712,30 @@ include("includes/message.php");
 	$(window).load(function() {
 		/*2 popup 1 hide 1 show*/
 		$(".create_list_trigger").click(function() {
-			$('.create_list_popup').show();
-			$('.create_list_popup').resize();
+			$('.list_popup').show();
+			$('.list_popup').resize();
 			$('body').css({
 				'overflow': 'hidden'
 			});
 		});
 		$('.create_list_close').click(function() {
-			$('.create_list_popup').hide();
+			$('.list_popup').hide();
 			$('body').css({
 				'overflow': 'inherit'
+			});
+		});
+		$('.popup_close').click(function() {
+			$('.popup').hide();
+			$('body').css({
+				'overflow': 'inherit'
+			});
+		});
+
+		$(".versand_trigger").click(function() {
+			$('.versand_popup').show();
+			$('.versand_popup').resize();
+			$('body').css({
+				'overflow': 'hidden'
 			});
 		});
 
