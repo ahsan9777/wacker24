@@ -174,14 +174,14 @@ include("includes/message.php");
 					<?php } ?>
 					<div class="product_detail_section1">
 						<div class="product_left">
+							<style>
+
+
+
+							</style>
 							<div class="product_main_image">
 								<article>
-									<div class="simpleLens-gallery-container" id="demo-1" align="center">
-										<div class="large_image">
-											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print($pg_mime_source_url); ?>"> <img src="<?php print($pg_mime_source_url); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
-											</div>
-										</div>
+									<div class="simpleLens-gallery-container active" id="demo-1" align="center">
 										<div class="thum_images">
 											<div class="simpleLens-thumbnails-container">
 												<?php
@@ -198,7 +198,11 @@ include("includes/message.php");
 												?>
 											</div>
 										</div>
-
+										<div class="large_image">
+											<div class="simpleLens-container">
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print($pg_mime_source_url); ?>"> <img src="<?php print($pg_mime_source_url); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
+											</div>
+										</div>
 										<div class="clearfix"></div>
 									</div>
 								</article>
@@ -206,74 +210,73 @@ include("includes/message.php");
 						</div>
 						<div class="product_right">
 							<div class="product_col1">
-								<span class="product_type_height" id="product_type_hide_0">
-									<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
-									<h4> <?php print($pro_description_short); ?> </h4>
-									<ul>
-										<li>Bestellnummer: <?php print($supplier_id); ?> </li>
-										<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
-										<li>GTIN: <?php print($pro_ean); ?> </li>
-									</ul>
-									<?php if (!empty($special_price)) { ?>
-										<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> Pro St. 1 exkl. MwSt. </span>"); ?> </div>
-										<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value'], $pbp_tax)) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Pro St. 1 inkl. MwSt.</span> </span>"); ?> </div>
-									<?php } else { ?>
-										<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format($pbp_price_without_tax)); ?>€ <span>Pro St. 1 exkl. MwSt</span></div>
-										<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format($pbp_price_amount)); ?>€ <span>Pro St. 1 inkl. MwSt.</span></div>
-										<?php }
-									$count = 0;
-									if ($pro_udx_seo_epag_id > 0) {
-										$Query = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
-										//print($Query);
-										$rs = mysqli_query($GLOBALS['conn'], $Query);
-										$count = mysqli_num_rows($rs);
-										if ($count > 1) {
-											if (mysqli_num_rows($rs) > 0) {
-										?>
-												<div class="pd_detail_shirt">
-													<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = '" . $pro_udx_seo_selection_feature . "'")); ?></span> </h2>
-													<ul>
-														<?php while ($row = mysqli_fetch_object($rs)) { ?>
-															<li>
-																<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
-																<label for="color_<?php print($row->supplier_id); ?>">
-																	<span style="<?php print(((in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px; width: 60px;' : 'height: 40px;width: auto;border-radius: 5px;')); ?>">
-																		<?php if (in_array($pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) { ?>
-																			<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
-																		<?php } else { ?>
-																			<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" title="<?php print($row->pf_fvalue); ?>"><?php print($row->pf_fvalue); ?></label>
-																		<?php } ?>
-																	</span>
-																</label>
-															</li>
-														<?php } ?>
-													</ul>
-												</div>
+								<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
+								<h4> <?php print($pro_description_short); ?> </h4>
+								<ul>
+									<li>Bestellnummer: <?php print($supplier_id); ?> </li>
+									<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
+									<li>GTIN: <?php print($pro_ean); ?> </li>
+								</ul>
+								<?php if (!empty($special_price)) { ?>
+									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> Pro St. 1 exkl. MwSt. </span>"); ?> </div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value'], $pbp_tax)) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Pro St. 1 inkl. MwSt.</span> </span>"); ?> </div>
+								<?php } else { ?>
+									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format($pbp_price_without_tax)); ?>€ <span>Pro St. 1 exkl. MwSt</span></div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format($pbp_price_amount)); ?>€ <span>Pro St. 1 inkl. MwSt.</span></div>
+									<?php }
+								$count = 0;
+								if ($pro_udx_seo_epag_id > 0) {
+									$Query = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
+									//print($Query);
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									$count = mysqli_num_rows($rs);
+									if ($count > 1) {
+										if (mysqli_num_rows($rs) > 0) {
+											$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe');
+									?>
+											<div class="pd_detail_shirt">
+												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = '" . $pro_udx_seo_selection_feature . "'")); ?></span> </h2>
+												<ul>
+													<?php while ($row = mysqli_fetch_object($rs)) { ?>
+														<li>
+															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
+															<label for="color_<?php print($row->supplier_id); ?>">
+																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px; width: 60px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>">
+																	<?php if (in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { ?>
+																		<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
+																	<?php } else { ?>
+																		<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" title="<?php print($row->pf_fvalue); ?>"><?php print($row->pf_fvalue); ?></label>
+																	<?php } ?>
+																</span>
+															</label>
+														</li>
+													<?php } ?>
+												</ul>
+											</div>
+								<?php
+										}
+									}
+								}
+								?>
+								<ul class="product_type" style="display: none;">
 									<?php
-											}
+									$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pf_forder ASC";
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										while ($row = mysqli_fetch_object($rs)) {
+									?>
+											<li>
+												<div class="product_label"><?php print($row->pf_fname); ?>:</div>
+												<div class="product_value"><?php print($row->pf_fvalue); ?></div>
+											</li>
+									<?php
 										}
 									}
 									?>
-									<ul class="product_type">
-										<?php
-										$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pf_forder ASC";
-										$rs = mysqli_query($GLOBALS['conn'], $Query);
-										if (mysqli_num_rows($rs) > 0) {
-											while ($row = mysqli_fetch_object($rs)) {
-										?>
-												<li>
-													<div class="product_label"><?php print($row->pf_fname); ?>:</div>
-													<div class="product_value"><?php print($row->pf_fvalue); ?></div>
-												</li>
-										<?php
-											}
-										}
-										?>
-									</ul>
-									<div class="product_info">
-										<p> <?php print($pro_description_long); ?> </p>
-									</div>
-								</span>
+								</ul>
+								<div class="product_info" style="display: none;">
+									<p> <?php print($pro_description_long); ?> </p>
+								</div>
 								<div class="product-type-show-more" data-id="0">Mehr Produktdetails</div>
 							</div>
 							<div class="product_col2">
@@ -625,7 +628,6 @@ include("includes/message.php");
 		if (window.innerWidth <= 1024 && window.innerWidth >= 240) {
 			// Code for responsive action
 			$(".popup_inner").css('width', '90%');
-			console.log("Resized: within 240px to 1024px");
 		}
 	});
 </script>
@@ -699,13 +701,13 @@ include("includes/message.php");
 <?php include("includes/bottom_js.php"); ?>
 <script>
 	$(".product-type-show-more").click(function() {
-		if ($("#product_type_hide_" + $(this).attr("data-id") + " ").hasClass("product_type_height")) {
+		$(".product_info, .product_type").slideToggle(1500);
+
+		if ($(this).text() === "Mehr Produktdetails") {
 			$(this).text("Weniger Produktdetails");
 		} else {
 			$(this).text("Mehr Produktdetails");
 		}
-
-		$("#product_type_hide_" + $(this).attr("data-id") + "").toggleClass("product_type_height");
 	});
 </script>
 <script>
