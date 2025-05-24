@@ -106,7 +106,7 @@ if (isset($_REQUEST['search_pf_fvalue']) && $_REQUEST['search_pf_fvalue'] > 0) {
 
 $order_by = "ORDER BY match_count DESC";
 $sortby = 0;
-$sortby_array = array("Sortieren nach", "Preis aufsteigend", "Preis absteigend", "Name A-Z", "Name Z-A");
+$sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend", "Name A-Z", "Name Z-A");
 if (isset($_REQUEST['sortby'])) {
 	$sortby = $_REQUEST['sortby'];
 	switch ($sortby) {

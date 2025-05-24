@@ -66,7 +66,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 }
 
 $sortby = 0;
-$sortby_array = array("Sortieren nach", "Preis aufsteigend", "Preis absteigend", "Name A-Z", "Name Z-A");
+$sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend", "Name A-Z", "Name Z-A");
 
 //print($whereclause);
 

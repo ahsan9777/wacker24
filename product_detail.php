@@ -210,20 +210,7 @@ include("includes/message.php");
 						</div>
 						<div class="product_right">
 							<div class="product_col1">
-								<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
-								<h4> <?php print($pro_description_short); ?> </h4>
-								<ul>
-									<li>Bestellnummer: <?php print($supplier_id); ?> </li>
-									<li>Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
-									<li>GTIN: <?php print($pro_ean); ?> </li>
-								</ul>
-								<?php if (!empty($special_price)) { ?>
-									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> Pro St. 1 exkl. MwSt. </span>"); ?> </div>
-									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value'], $pbp_tax)) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Pro St. 1 inkl. MwSt.</span> </span>"); ?> </div>
-								<?php } else { ?>
-									<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format($pbp_price_without_tax)); ?>€ <span>Pro St. 1 exkl. MwSt</span></div>
-									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format($pbp_price_amount)); ?>€ <span>Pro St. 1 inkl. MwSt.</span></div>
-									<?php }
+								<?php
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
 									$Query = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
@@ -233,7 +220,7 @@ include("includes/message.php");
 									if ($count > 1) {
 										if (mysqli_num_rows($rs) > 0) {
 											$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe');
-									?>
+								?>
 											<div class="pd_detail_shirt">
 												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = '" . $pro_udx_seo_selection_feature . "'")); ?></span> </h2>
 												<ul>
@@ -253,12 +240,27 @@ include("includes/message.php");
 													<?php } ?>
 												</ul>
 											</div>
+											<div class="btn_show feature-show-more">Mehr Produktdetails</div>
+											<div class="btn_show feature-show-less" style="display: none;">Weniger Produktdetails</div>
 								<?php
 										}
 									}
-								}
-								?>
-								<ul class="product_type" style="display: none;">
+								} ?>
+								<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
+								<h4> <?php print($pro_description_short); ?> </h4>
+								<ul>
+									<li style="display: none;">Bestellnummer: <?php print($supplier_id); ?> </li>
+									<li style="display: none;" >Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
+									<li style="display: none;">GTIN: <?php print($pro_ean); ?> </li>
+								</ul>
+								<?php if (!empty($special_price)) { ?>
+									<!-- <div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_without_tax) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_without_tax, $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> Pro St. 1 exkl. MwSt. </span>"); ?> </div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format($pbp_price_amount) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], $pbp_price_amount, $special_price['usp_discounted_value'], $pbp_tax)) . "€ <span class='pd_prise_discount_value'><b>-</b> " . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> <span>Pro St. 1 inkl. MwSt.</span> </span>"); ?> </div>-->
+								<?php } else { ?>
+									<!--<div class="product_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format($pbp_price_without_tax)); ?>€ <span>Pro St. 1 exkl. MwSt</span></div>
+									<div class="product_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format($pbp_price_amount)); ?>€ <span>Pro St. 1 inkl. MwSt.</span></div>-->
+								<?php } ?>
+								<ul class="product_type">
 									<?php
 									$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pf_forder ASC";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -273,11 +275,12 @@ include("includes/message.php");
 										}
 									}
 									?>
+									<li>
+										<p> <?php print($pro_description_long); ?> </p> <!-- product_info -->
+									</li>
 								</ul>
-								<div class="product_info" style="display: none;">
-									<p> <?php print($pro_description_long); ?> </p>
-								</div>
-								<div class="product-type-show-more" data-id="0">Mehr Produktdetails</div>
+								<div class="btn_show product-type-show-more">Mehr Produktdetails</div>
+								<div class="btn_show product-type-show-less" style="display: none;">Weniger Produktdetails</div>
 							</div>
 							<div class="product_col2">
 								<div class="sticky">
@@ -343,19 +346,6 @@ include("includes/message.php");
 										}
 									}
 									?>
-									<!--<div class="product_order_title"> 100 pieces ordered</div>-->
-									<!--<div class="product_order_row">
-										<div class="product_order_row_inner">
-											<div class="order_text">Quantity:</div>
-											<div class="order_select">
-												<select class="order_select_input" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty">
-													<?php for ($i = 1; $i <= $quantity_lenght; $i++) { ?>
-														<option value="<?php print($i); ?>"> <?php print($i); ?> </option>
-													<?php } ?>
-												</select>
-											</div>
-										</div>
-									</div>-->
 									<div class="product_order_row">
 										<div class="product_order_row_inner">
 											<div class="order_select">
@@ -386,6 +376,7 @@ include("includes/message.php");
 											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>
 									</div>
+									<div class="best_nr">Best.-Nr.: <?php print($pro_manufacture_aid); ?></div>
 									<div class="product_shippment">
 										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
 										<div class="shippment_text">
@@ -700,7 +691,7 @@ include("includes/message.php");
 </script>
 <?php include("includes/bottom_js.php"); ?>
 <script>
-	$(".product-type-show-more").click(function() {
+	/*$(".product-type-show-more").click(function() {
 		$(".product_info, .product_type").slideToggle(1500);
 
 		if ($(this).text() === "Mehr Produktdetails") {
@@ -708,6 +699,69 @@ include("includes/message.php");
 		} else {
 			$(this).text("Mehr Produktdetails");
 		}
+	});*/
+	$(function() {
+		let show_record = 14;
+		$(".product_col1 .pd_detail_shirt ul li").slice(0, show_record).show();
+		let product_col1 = $(".product_col1 .pd_detail_shirt ul li:hidden").length;
+		if (product_col1 == 0) {
+			$(".feature-show-more").hide();
+		}
+		$(".product_col1 .pd_detail_shirt ul li").slice(show_record).hide();
+		$("body").on('click touchstart', '.feature-show-more', function(e) {
+			e.preventDefault();
+
+			//$(".product_col1 .pd_detail_shirt ul li:hidden").slice(0, show_record).slideDown("slow");
+			$(".product_col1 .pd_detail_shirt ul li:hidden").slideDown("slow");
+			if ($(".product_col1 .pd_detail_shirt ul li:hidden").length == 0) {
+				$(".feature-show-more").hide();
+				$(".feature-show-less").show();
+			}
+		});
+		$("body").on('click touchstart', '.feature-show-less', function(e) {
+			e.preventDefault();
+			$(".product_col1 .pd_detail_shirt ul li").slice(show_record).slideUp("slow", function() {
+				$(".feature-show-more").show();
+				$(".feature-show-less").hide();
+			});
+		});
+
+	});
+
+	$(function() {
+		let show_record = 3;
+
+		$(".product_col1 .product_type li").hide().slice(0, show_record).show();
+
+		if ($(".product_col1 .product_type li:hidden").length === 0) {
+			$(".product-type-show-more").hide();
+		}
+
+		$("body").on('click touchstart', '.product-type-show-more', function(e) {
+			e.preventDefault();
+
+			//$(".product_col1 .product_type li:hidden").slice(0, show_record).slideDown("slow");
+			$(".product_col1 .product_type li:hidden").slideDown("slow");
+
+			if ($(".product_col1 .product_type li:hidden").length === 0) {
+				$(".product-type-show-more").hide();
+				$(".product-type-show-less").show();
+			}
+		});
+
+		$("body").on('click touchstart', '.product-type-show-less', function(e) {
+			e.preventDefault();
+
+			$(".product_col1 .product_type li").slice(show_record).slideUp("slow", function() {
+				// Scroll back to the top of the product list
+				$('html, body').animate({
+					scrollTop: $(".product_col1").offset().top - 100 // Adjust offset as needed
+				}, 600);
+			});
+
+			$(".product-type-show-more").show();
+			$(".product-type-show-less").hide();
+		});
 	});
 </script>
 <script>

@@ -9,7 +9,8 @@
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-	position:relative; padding:0px 0px; height:500px; 
+	position:relative; padding:0px 0px; 
+    height:445px; 
     width: 100%; text-align:center; 
 }
 
