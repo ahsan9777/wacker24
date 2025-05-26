@@ -121,20 +121,25 @@ include("includes/message.php");
 		<!--CREATE_LIST_POPUP_END-->
 		<!--CREATE_LIST_POPUP_START-->
 		<div class="popup versand_popup">
-			<div class="popup_inner wd_45">
+			<div class="popup_inner wd_60">
 				<div class="popup_content">
 					<div class="popup_heading">Versand & Verpackung <div class="popup_close"><i class="fa fa-times"></i></div>
 					</div>
 					<div class="popup_content_inner">
 						<div class="popup_inner_container">
-							<h2 class="green">Versandkostenfrei <span>ab 178,50 € Warenwert*</span></h2>
-							<p>ab 35,69 € Warenwert: 3,56 € Versandkosten (je Auftrag) <br> unter 35,69 € Warenwert: 3,56 € Versandkosten + 4,76 € Verpackungspauschale (je Auftrag)</p>
+							<p>Lieferland: <strong>Deutschland</strong></p>
+							<h2 class="green">Versandkostenfrei <span>ab 66,39 € zzgl. MwSt. (79,00 € inkl. MwSt.) Warenwert*</span></h2>
+							<p>unter 66,39 € (79,00 € inkl. MwSt.) Warenwert: 4,76 € Verpackungspauschale + 3,56 € Versandkosten (je Auftrag)</p>
 							<div class="underline"></div>
 							<p>Folgende Kosten können optional je nach Auftrag anfallen:</p>
-							<p>Für die Lieferung auf Inseln fallen 7,13 € Pro Paket (max. 25 kg) an.</p>
+							<p>Maximalgewicht:</p>
+							<p>Bis zu 31 kg: Sendungen, die das maximale Gewicht oder die maximale Größe unserer Versanddienstleister überschreiten, müssen gegebenenfalls per Spedition oder als Sperrgut verschickt werden. Die Lieferzeit kann sich bei schweren oder sperrigen Sendungen verlängern.</p>
+							<p>Inselzuschlag:</p>
+							<p>Für die Lieferung auf deutsche Inseln fallen 15,70 € pro Paket (max. 31 kg) an.</p>
 							<p>Dies gilt für folgende PLZ: 18565, 25849, 25859, 25863, 25869, 25938, 25939, 25946, 25980, 25981, 25982, 25983, 25984, 25985, 25986, 25987, 25988, 25989, 25990, 25992, 25991, 25993, 25994, 25995, 25996, 25997, 25998, 25999, 26465, 26474, 26486, 26548, 26571, 26579, 26757, 27498, 27499</p>
-							<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Ausgenommen Sperrgutzuschlag, Inselzuschlag und DHL-Zuschlag. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
-							<p>Alle Preise inkl. MwSt.</p>
+							<p>Versanddienstleister:</p>
+							<p>Ihre Bestellung wird im Standardversand mit DHL versendet. </p>
+							<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
 						</div>
 					</div>
 				</div>
