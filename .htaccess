@@ -54,6 +54,8 @@ RewriteRule ^nicht-verfügbar? not_available.php [L]
 RewriteRule ^sitemap.xml? sitemap.php [L]
 RewriteRule ^verkäufe-angebote/([0-9]+)?$ site_special_price.php?page=$1 [L]
 RewriteRule ^verkäufe-angebote? site_special_price.php [L]
+RewriteRule ^addupdateaddress/([0-9]+)?$ add_update_address.php?usa_id=$1 [L]
+RewriteRule ^addupdateaddress? add_update_address.php [L]
 RewriteRule ^abmelden? logout.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f

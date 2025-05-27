@@ -729,7 +729,7 @@ if (isset($_REQUEST['action'])) {
                     $lf_group_id_inner .= '<li>
                         <label class="gerenric_checkbox">
                            ' . $row->cat_title . '
-                            <input type="checkbox" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '" '.(($level_check == $row->group_id) ? "checked" : "").'>
+                            <input type="checkbox" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '" ' . (($level_check == $row->group_id) ? "checked" : "") . '>
                             <span class="checkmark"></span>
                         </label>
                     </li>';
@@ -792,7 +792,7 @@ if (isset($_REQUEST['action'])) {
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
                 $lf_manf_id_inner .= '<h3>Marke</h3>
-                        <ul class="list_checkbox_hide '.( ($count > 4) ? 'category_show_height' : '' ).' " id="list_checkbox_hide_0">';
+                        <ul class="list_checkbox_hide ' . (($count > 4) ? 'category_show_height' : '') . ' " id="list_checkbox_hide_0">';
                 while ($row = mysqli_fetch_object($rs)) {
 
                     $lf_manf_id_inner .= '<li>
@@ -854,7 +854,7 @@ if (isset($_REQUEST['action'])) {
             $pf_fvalue_check = array();
             $lf_pf_fvalue_inner = "";
             $lf_action_type = $_REQUEST['lf_action_type'];
-            $leve_id =  (( isset($_REQUEST['level_check']) && $_REQUEST['level_check'] > 0 ) ? $_REQUEST['level_check'] : $_REQUEST['leve_id']) ;
+            $leve_id =  ((isset($_REQUEST['level_check']) && $_REQUEST['level_check'] > 0) ? $_REQUEST['level_check'] : $_REQUEST['leve_id']);
             $pf_fvalue_check = (!empty($_REQUEST['pf_fvalue_check'])) ? $_REQUEST['pf_fvalue_check'] : [];
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
                 $leve_id = $_REQUEST['lf_group_id'];
@@ -868,14 +868,14 @@ if (isset($_REQUEST['action'])) {
                 while ($rw1 = mysqli_fetch_object($rs1)) {
                     $counter++;
                     //$Query2 = "";
-                    if ( (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id']))) {
+                    if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id']))) {
                         $products_featureWhere = "";
                         $products_featureWhere .= " WHERE cm.cat_id IN (" . $leve_id . ")";
-                        
-                        if(isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])){
-                            $products_featureWhere .= " AND cm.manf_id IN (".$_REQUEST['lf_manf_id'].")";
+
+                        if (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])) {
+                            $products_featureWhere .= " AND cm.manf_id IN (" . $_REQUEST['lf_manf_id'] . ")";
                         }
-                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm ".$products_featureWhere.") GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm " . $products_featureWhere . ") GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     } else {
                         $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     }
@@ -886,8 +886,8 @@ if (isset($_REQUEST['action'])) {
                     if (mysqli_num_rows($rs2) > 0) {
                         $lf_pf_fvalue_inner .= '<div class="categroy_block">
                             <h3>' . $rw1->lov_sf_title . '</h3>
-                            <ul class="list_checkbox_hide '. ( ($count > 4) ? 'category_show_height' : '' ) .' " id="list_checkbox_hide_' . $counter . '">';
-                       do {
+                            <ul class="list_checkbox_hide ' . (($count > 4) ? 'category_show_height' : '') . ' " id="list_checkbox_hide_' . $counter . '">';
+                        do {
 
                             $lf_pf_fvalue_inner .= '<li>
                                     <label class="gerenric_checkbox">
@@ -896,12 +896,12 @@ if (isset($_REQUEST['action'])) {
                                         <span class="checkmark"></span>
                                     </label>
                                 </li>';
-                        }  while ($rw2 = mysqli_fetch_object($rs2));
+                        } while ($rw2 = mysqli_fetch_object($rs2));
                         $lf_pf_fvalue_inner .= '</ul>';
-                        if($count > 4){
-                         $lf_pf_fvalue_inner .= '<div class="show-more" data-id="' . $counter . '">(Mehr anzeigen)</div>';   
+                        if ($count > 4) {
+                            $lf_pf_fvalue_inner .= '<div class="show-more" data-id="' . $counter . '">(Mehr anzeigen)</div>';
                         }
-                $lf_pf_fvalue_inner .= '</div>';
+                        $lf_pf_fvalue_inner .= '</div>';
                     }
                 }
                 if ($lf_action_type == 1) {
@@ -972,7 +972,7 @@ if (isset($_REQUEST['action'])) {
                 $input = $_REQUEST['lf_pf_fvalue'];
                 $items = explode(',', $input);
                 $items = array_map('trim', $items);
-                $items = array_map(function($item) {
+                $items = array_map(function ($item) {
                     return "'$item'";
                 }, $items);
                 $lf_pf_fvalue = implode(', ', $items);
@@ -1001,7 +1001,7 @@ if (isset($_REQUEST['action'])) {
                 }
             }
             $total_count = 0;
-            $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' ".$order_by."";
+            $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' " . $order_by . "";
             //print($Query);die();
             $counter = $start;
 
@@ -1032,36 +1032,36 @@ if (isset($_REQUEST['action'])) {
                         <div class="pd_image"><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
                         <div class="pd_detail">
                             <h5><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"> ' . $row->pro_description_short . ' </a></h5>';
-                            $count = 0;
-                            if ($row->pro_udx_seo_epag_id > 0) {
-                                $Query1 = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
-                                $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-                                $count = mysqli_num_rows($rs1);
-                                if ($count > 1) {
-                                    if (mysqli_num_rows($rs1) > 0) {
-                $gerenric_product_inner .= '<div class="pd_detail_shirt detail_data_show">
-                                            <h2>'.$row->pro_udx_seo_selection_feature.': <span id="color_title_'.$counter.'"> '.returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = '" . $row->pro_udx_seo_selection_feature . "'").' </span> </h2>
+                    $count = 0;
+                    if ($row->pro_udx_seo_epag_id > 0) {
+                        $Query1 = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
+                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                        $count = mysqli_num_rows($rs1);
+                        if ($count > 1) {
+                            if (mysqli_num_rows($rs1) > 0) {
+                                $gerenric_product_inner .= '<div class="pd_detail_shirt detail_data_show">
+                                            <h2>' . $row->pro_udx_seo_selection_feature . ': <span id="color_title_' . $counter . '"> ' . returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = '" . $row->pro_udx_seo_selection_feature . "'") . ' </span> </h2>
                                             <ul>';
-                                                while ($row1 = mysqli_fetch_object($rs1)) {
-                            $gerenric_product_inner .= '<li>
-                                                        <input type="radio" class="color" id="color_'.$counter.'" name="color_radio_'.$counter.'" data-id="'.$counter.'" value="'.$row1->supplier_id.'" '.(($row1->supplier_id == $row->supplier_id) ? "checked" : "").'>
-                                                        <label for="color_'.$counter.'">
-                                                            <span style="'. (( in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe')) ) ? 'height: 60px;' : 'height: 30px;').'">';
-                                                                    if( in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe')) ){
-                                        $gerenric_product_inner .= '<img class="color_tab" id="color_tab_'.$row1->supplier_id.'" data-id="'.$counter.'" data-supplier-id="'.$row1->supplier_id.'" data-pro-description="'.url_clean($row1->pro_description_short).'" src="'.get_image_link(160, $row1->pg_mime_source_url).'" title="'.$row1->pf_fvalue.'" alt="'.$row1->pf_fvalue.'">';
-                                                                    } else {
-                                        $gerenric_product_inner .= '<label for="" class="color_tab" id="color_tab_'.$row1->supplier_id.'" data-id="'.$counter.'" data-supplier-id="'.$row1->supplier_id.'" data-pro-description="'.url_clean($row1->pro_description_short).'" title="'.$row1->pf_fvalue.'">'.$row1->pf_fvalue.'</label>';
-                                                                        }
-                                        $gerenric_product_inner .= '</span>
+                                while ($row1 = mysqli_fetch_object($rs1)) {
+                                    $gerenric_product_inner .= '<li>
+                                                        <input type="radio" class="color" id="color_' . $counter . '" name="color_radio_' . $counter . '" data-id="' . $counter . '" value="' . $row1->supplier_id . '" ' . (($row1->supplier_id == $row->supplier_id) ? "checked" : "") . '>
+                                                        <label for="color_' . $counter . '">
+                                                            <span style="' . ((in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px;' : 'height: 30px;') . '">';
+                                    if (in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) {
+                                        $gerenric_product_inner .= '<img class="color_tab" id="color_tab_' . $row1->supplier_id . '" data-id="' . $counter . '" data-supplier-id="' . $row1->supplier_id . '" data-pro-description="' . url_clean($row1->pro_description_short) . '" src="' . get_image_link(160, $row1->pg_mime_source_url) . '" title="' . $row1->pf_fvalue . '" alt="' . $row1->pf_fvalue . '">';
+                                    } else {
+                                        $gerenric_product_inner .= '<label for="" class="color_tab" id="color_tab_' . $row1->supplier_id . '" data-id="' . $counter . '" data-supplier-id="' . $row1->supplier_id . '" data-pro-description="' . url_clean($row1->pro_description_short) . '" title="' . $row1->pf_fvalue . '">' . $row1->pf_fvalue . '</label>';
+                                    }
+                                    $gerenric_product_inner .= '</span>
                                                         </label>
                                                     </li>';
-                                                    }
-                $gerenric_product_inner .= '</ul>
-                                        </div>';
-                                    }
                                 }
+                                $gerenric_product_inner .= '</ul>
+                                        </div>';
                             }
-$gerenric_product_inner .= '<div class="pd_rating">
+                        }
+                    }
+                    $gerenric_product_inner .= '<div class="pd_rating">
                                 <ul>
                                     <li>
                                         <div class="fa fa-star"></div>
@@ -1153,6 +1153,216 @@ $gerenric_product_inner .= '<div class="pd_rating">
             //print($gerenric_product_inner);
 
             $retValue = array("status" => "1", "message" => "Record found", "Query" => $Query, "total_count" => $total_count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            //$retValue = array("status" => "1", "message" => "Record found", "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+        case 'delivery_instructions':
+            $retValue = array();
+
+            $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM user_shipping_address WHERE usa_id = " . $_REQUEST['usa_id']);
+
+            if (mysqli_num_rows($rsM) > 0) {
+                $rsMem = mysqli_fetch_object($rsM);
+
+                $user_id = $rsMem->user_id;
+                $old_user_id = $rsMem->old_user_id;
+                $usa_type = $rsMem->usa_type;
+                $usa_fname = $rsMem->usa_fname;
+                $usa_lname = $rsMem->usa_lname;
+                $usa_address = $rsMem->usa_address;
+                $usa_additional_info = $rsMem->usa_additional_info;
+                $usa_street = $rsMem->usa_street;
+                $usa_house_no = $rsMem->usa_house_no;
+                $usa_zipcode = $rsMem->usa_zipcode;
+                $usa_contactno = $rsMem->usa_contactno;
+                $countries_id = $rsMem->countries_id;
+                $usa_house_check = $rsMem->usa_house_check;
+                $usa_apartment_security_code = $rsMem->usa_apartment_security_code;
+                $usa_appartment_call_box = $rsMem->usa_appartment_call_box;
+                $usa_appartment_check = $rsMem->usa_appartment_check;
+                $usa_business_mf_status = $rsMem->usa_business_mf_status;
+                $usa_business_mf_uw_status = $rsMem->usa_business_mf_uw_status;
+                $usa_business_mf_24h_check = $rsMem->usa_business_mf_24h_check;
+                $usa_business_ss_status = $rsMem->usa_business_ss_status;
+                $usa_business_ss_uw_status = $rsMem->usa_business_ss_uw_status;
+                $usa_business_24h_check = $rsMem->usa_business_24h_check;
+                $usa_business_close_check = $rsMem->usa_business_close_check;
+                $usa_other_check = $rsMem->usa_other_check;
+                $usa_default = $rsMem->usa_defualt; // Assuming it's a typo
+
+                $formHead = "Update delivery instruction Info";
+            } else {
+                $user_id = "";
+                $old_user_id = "";
+                $usa_type = "";
+                $usa_fname = "";
+                $usa_lname = "";
+                $usa_address = "";
+                $usa_additional_info = "";
+                $usa_street = "";
+                $usa_house_no = "";
+                $usa_zipcode = "";
+                $usa_contactno = "";
+                $countries_id = 81;
+                $usa_house_check = "";
+                $usa_apartment_security_code = "";
+                $usa_appartment_call_box = "";
+                $usa_appartment_check = "";
+                $usa_business_mf_status = "";
+                $usa_business_mf_uw_status = "";
+                $usa_business_mf_24h_check = "";
+                $usa_business_ss_status = "";
+                $usa_business_ss_uw_status = "";
+                $usa_business_24h_check = "";
+                $usa_business_close_check = "";
+                $usa_other_check = "";
+                $usa_default = "";
+
+                $formHead = "Add New delivery instruction";
+            }
+
+            $delivery_instructions = "";
+            $delivery_instructions = '
+            <input type = "hidden" name = "usa_id" id = "usa_id" value = "' . $_REQUEST['usa_id'] . '">
+                                <div class="grnc_tabnav">
+										<ul class="grnc_tabnav_tabs">
+											<li class="active"><a href="#tab1" class="delivery_instructions_tab" data-id="1">House</a></li>
+											<li><a href="#tab2" class="delivery_instructions_tab" data-id="2">Apartment</a></li>
+											<li><a href="#tab3" class="delivery_instructions_tab" data-id="3">Business</a></li>
+											<li><a href="#tab4" class="delivery_instructions_tab" data-id="4">Other</a></li>
+										</ul>
+										<p id="delivery_instructions_text">Single Family home or terraced house</p>
+									</div>
+                                    <div class="grnc_tabnav_content active" id="tab1">
+										<h4>Where should we leave packages when they donot fit in your letter box? </h4>
+										<ul>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="1" ' . (($usa_house_check == 1) ? 'checked' : '') . '></span> <span>Tarrace</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="2" ' . (($usa_house_check == 2) ? 'checked' : '') . '></span> <span>Garage</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="3" ' . (($usa_house_check == 3) ? 'checked' : '') . '></span> <span>Front Door</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="4" ' . (($usa_house_check == 4) ? 'checked' : '') . '></span> <span>Garden</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="5" ' . (($usa_house_check == 5) ? 'checked' : '') . '></span> <span>Shed</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="6" ' . (($usa_house_check == 6) ? 'checked' : '') . '></span> <span>With a neighbour</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="7" ' . (($usa_house_check == 7) ? 'checked' : '') . '></span> <span>None of the above</span></div>
+											</li>
+										</ul>
+									</div>
+									<div class="grnc_tabnav_content hide" id="tab2">
+										<h4>Do we need a security code, call box number, or key to access this building?</h4>
+										<ul>
+											<li>
+												<div class="form_label">Security code</div>
+												<div class="form_field"><input type="text" class="gerenric_input" name="usa_apartment_security_code" id="usa_apartment_security_code" value="' . $usa_apartment_security_code . '" placeholder="Security code for the door"></div>
+											</li>
+											<li>
+												<div class="form_label">Call Box</div>
+												<div class="form_field"><input type="text" class="gerenric_input" name="usa_appartment_call_box" id="usa_appartment_call_box" value="' . $usa_appartment_call_box . '" placeholder="Call box number or name"></div>
+											</li>
+											<li>
+												<div class="form_field"><input type="checkbox" name="usa_appartment_check" id="usa_appartment_check" ' . (($usa_appartment_check > 0) ? 'checked' : '') . '> key or fob required for delivery</div>
+											</li>
+										</ul>
+									</div>
+									<div class="grnc_tabnav_content hide" id="tab3">
+										<h4>When is this address open for deliveies? </h4>
+										<ul>
+											<li>
+												<div class="form_row">
+													<div class="form_left">
+														<div class="form_label">Monday - Firdya</div>
+														<div class="form_field">
+															<select class="gerenric_input" name="usa_business_mf_status" id="usa_business_mf_status">
+																<option value="0" ' . (($usa_business_mf_status == 0) ? 'selected' : '') . '>Closed</option>
+																<option value="1" ' . (($usa_business_mf_status == 1) ? 'selected' : '') . '>Open</option>
+															</select>
+														</div>
+													</div>
+													<div class="form_right">
+														<div class="form_label">Ungroup weekends</div>
+														<div class="form_field">
+															<select class="gerenric_input" name="usa_business_mf_uw_status" id="usa_business_mf_uw_status">
+																<option value="0" ' . (($usa_business_mf_uw_status == 0) ? 'selected' : '') . '>Closed</option>
+																<option value="1" ' . (($usa_business_mf_uw_status == 1) ? 'selected' : '') . '>Open</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="form_field"><input type="checkbox" name="usa_business_mf_24h_check" id="usa_business_mf_24h_check" ' . (($usa_business_mf_24h_check > 0) ? 'checked' : '') . '> Open 24 Hours</div>
+											</li>
+											<li>
+												<div class="form_row">
+													<div class="form_left">
+														<div class="form_label">Saturday - Sunday</div>
+														<div class="form_field">
+															<select class="gerenric_input" name="usa_business_ss_status" id="usa_business_ss_status">
+																<option value="0" ' . (($usa_business_ss_status == 0) ? 'selected' : '') . '>Closed</option>
+																<option value="1" ' . (($usa_business_ss_status == 1) ? 'selected' : '') . '>Open</option>
+															</select>
+														</div>
+													</div>
+													<div class="form_right">
+														<div class="form_label">Ungroup weekends</div>
+														<div class="form_field">
+															<select class="gerenric_input" name="usa_business_ss_uw_status" id="usa_business_ss_uw_status">
+																<option value="0" ' . (($usa_business_ss_uw_status == 0) ? 'selected' : '') . '>Closed</option>
+																<option value="1" ' . (($usa_business_ss_uw_status == 1) ? 'selected' : '') . '>Open</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</li>
+											<li>
+												<div class="form_field"><input type="checkbox" name="usa_business_24h_check" id="usa_business_24h_check" ' . (($usa_business_24h_check > 0) ? 'checked' : '') . '> Open 24 Hours</div>
+											</li>
+											<li>
+												<div class="form_field"><input type="checkbox" name="usa_business_close_check" id="usa_business_close_check" ' . (($usa_business_close_check > 0) ? 'checked' : '') . '> Closed for deliveries
+												</div>
+											</li>
+										</ul>
+									</div>
+									<div class="grnc_tabnav_content hide" id="tab4">
+										<h4>Where should we leave packages when they donot fit in your letter box? </h4>
+										<ul>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="1" ' . (($usa_other_check == 1) ? 'checked' : '') . '></span> <span>Tarrace</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="2" ' . (($usa_other_check == 2) ? 'checked' : '') . '></span> <span>Garage</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="3" ' . (($usa_other_check == 3) ? 'checked' : '') . '></span> <span>Front Door</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="4" ' . (($usa_other_check == 4) ? 'checked' : '') . '></span> <span>Garden</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="5" ' . (($usa_other_check == 5) ? 'checked' : '') . '></span> <span>Shed</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="6" ' . (($usa_other_check == 6) ? 'checked' : '') . '></span> <span>With a neighbour</span></div>
+											</li>
+											<li>
+												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="7" ' . (($usa_other_check == 7) ? 'checked' : '') . '></span> <span>None of the above</span></div>
+											</li>
+										</ul>
+									</div>
+            ';
+            $retValue = array("status" => "1", "message" => "Record found", "form_popup_heading_txt" => $formHead, "delivery_instructions" => $delivery_instructions);
             //$retValue = array("status" => "1", "message" => "Record found", "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
             $jsonResults = json_encode($retValue);
             print($jsonResults);
