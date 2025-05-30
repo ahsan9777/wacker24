@@ -395,5 +395,21 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record updated: " . $counter);
             }
             break;
+
+        case 'category_map_subgroups':
+            print("category_map_subgroups");die();
+            $counter = 0;
+            $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM category_map");
+            if (mysqli_num_rows($rs) > 0) {
+                while($row = mysqli_fetch_object($rs)) {
+                 $subgroups = explode(',', $row->sub_group_ids);
+                    foreach ($subgroups as $sub_id) {
+                        mysqli_Query($GLOBALS['conn'], "INSERT IGNORE INTO category_map_subgroups (supplier_id, subgroup_id) VALUES ('".$row->supplier_id."', '".$sub_id."')")  or die(mysqli_error($GLOBALS['conn']));
+                         $counter++;
+                    }
+                }
+            }
+            print("Total no of record added: " . $counter);
+            break;
     }
 }

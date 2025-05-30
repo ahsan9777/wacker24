@@ -55,7 +55,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 							</div>
 							<div class="category_type_product">
 								<div class="category_type_inner" id="category_type_inner">
-								<div class="spinner" id="spinner_category_type_inner">
+									<div class="spinner" id="spinner_category_type_inner">
 										<div></div>
 										<div></div>
 										<div></div>
@@ -76,18 +76,18 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 									<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
 								</div>
 								<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
-										<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
 								</div>
 							</div>
 							<!--<div class="gerenric_white_box">
@@ -238,10 +238,24 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 </script>
 <?php include("includes/bottom_js.php"); ?>
 <script>
+	let ajaxRequests = [];
 	$(window).on('load', function() {
 		$("#category_type_inner").trigger("click");
 	});
-	$("#category_type_inner").on("click", function(){
+	$(document).on('click', 'a', function(e) {
+		cancelAllAjaxCalls();
+		// Optionally let the navigation happen, or preventDefault() if needed
+	});
+	$(window).on('beforeunload', function() {
+		//cancelAllAjaxCalls();
+		ajaxRequests.forEach(req => req.abort());
+	});
+
+	function cancelAllAjaxCalls() {
+		ajaxRequests.forEach(req => req.abort());
+		ajaxRequests = [];
+	}
+	$("#category_type_inner").on("click", function() {
 		$("#btn_load").hide();
 		$("#btn_load_spinner").show();
 		let start = $("#category_type_inner_page").val();
@@ -251,9 +265,9 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 		let price_without_tex_display = '<?php print($price_without_tex_display) ?>';
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display) ?>';
 		//console.log("pro_type: "+pro_type+" level_one: "+level_one+" price_without_tex_display: "+price_without_tex_display+" pbp_price_with_tex_display: "+pbp_price_with_tex_display);
-		$.ajax({
+		const ajaxCall = $.ajax({
 			url: 'ajax_calls.php?action=category_type_inner',
-			method: 'GET',
+			method: 'POST',
 			data: {
 				start: start,
 				pro_type: pro_type,
@@ -262,6 +276,9 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 				price_without_tex_display: price_without_tex_display,
 				pbp_price_with_tex_display: pbp_price_with_tex_display
 			},
+			beforeSend: function(jqXHR) {
+				ajaxRequests.push(jqXHR);
+			},
 			success: function(response) {
 				//console.log("response = "+response);
 				const obj = JSON.parse(response);
@@ -269,163 +286,207 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 				if (obj.status == 1) {
 					$("#spinner_category_type_inner").hide();
 					$("#btn_load_spinner").hide();
-					if(obj.counter > 10){
+					if (obj.counter > 10) {
 						$("#btn_load").show();
 					}
-					if(obj.counter == obj.last_record){
+					if (obj.counter == obj.last_record) {
 						$(".load-more-button").hide();
 						$(".load-less-button").show();
-					} else{
+					} else {
 						$(".load-more-button").show();
 						$(".load-less-button").hide();
 					}
 					$("#category_type_inner_page").val(obj.category_type_inner_page);
 					$("#category_type_inner").append(obj.category_type_inner);
 				}
+			},
+			error: function(xhr, status, error) {
+				if (status !== 'abort') {
+					console.error("AJAX error:", error);
+				}
+			},
+			complete: function(jqXHR) {
+				ajaxRequests = ajaxRequests.filter(req => req !== jqXHR);
 			}
 		});
 	});
 
-	$(".load-more-button").on("click", function(){
+	$(".load-more-button").on("click", function() {
 		$("#category_type_inner").trigger("click");
 	});
-	$(".load-less-button").on("click", function(){
+	$(".load-less-button").on("click", function() {
 		$("#category_type_inner").html("");
 		$("#category_type_inner_page").val(0);
 		$("#category_type_inner").trigger("click");
 	});
 </script>
 <script>
-    $(window).load(function() {
-        lf_group_id_inner();
-        lf_manf_id_inner();
-        lf_pf_fvalue_inner();
-    });
-    let hasTriggeredClick = false;
+	$(window).load(function() {
+		lf_group_id_inner();
+		lf_manf_id_inner();
+		lf_pf_fvalue_inner();
+	});
+	let hasTriggeredClick = false;
 
-    function lf_group_id_inner() {
-        //setTimeout(function() {
-        let lf_action_type = "<?php print($lf_action_type); ?>";
-        let leve_id = "<?php print($leve_id); ?>";
-        let left_filter_cat_WhereQuery = "<?php print($left_filter_cat_WhereQuery); ?>";
-        let level_check = "<?php print($level_three); ?>";
+	function lf_group_id_inner() {
+		//setTimeout(function() {
+		let lf_action_type = "<?php print($lf_action_type); ?>";
+		let leve_id = "<?php print($leve_id); ?>";
+		let left_filter_cat_WhereQuery = "<?php print($left_filter_cat_WhereQuery); ?>";
+		let level_check = "<?php print($level_three); ?>";
 
-        $.ajax({
-            url: 'ajax_calls.php?action=lf_group_id_inner',
-            method: 'POST',
-            data: {
-                lf_action_type: lf_action_type,
-                leve_id: leve_id,
-                left_filter_cat_WhereQuery: left_filter_cat_WhereQuery,
-                level_check: level_check
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#lf_group_id_loading").hide();
-                    $("#lf_group_id_inner").html(obj.lf_group_id_inner);
+		const ajaxCall = $.ajax({
+			url: 'ajax_calls.php?action=lf_group_id_inner',
+			method: 'POST',
+			data: {
+				lf_action_type: lf_action_type,
+				leve_id: leve_id,
+				left_filter_cat_WhereQuery: left_filter_cat_WhereQuery,
+				level_check: level_check
+			},
+			beforeSend: function(jqXHR) {
+				ajaxRequests.push(jqXHR);
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				//console.log(obj);
+				if (obj.status == 1) {
+					$("#lf_group_id_loading").hide();
+					$("#lf_group_id_inner").html(obj.lf_group_id_inner);
+				}
+			},
+			error: function(xhr, status, error) {
+				if (status !== 'abort') {
+					console.error("AJAX error:", error);
+				}
+			},
+			complete: function(jqXHR) {
+				ajaxRequests = ajaxRequests.filter(req => req !== jqXHR);
+			}
+			//}, 5000);
+		});
+	}
 
-                    if (level_check > 0 && !hasTriggeredClick) {
-                        setTimeout(function() {
-                            var lf_group_id = [];
-                            $(".lf_group_id:checked").each(function() {
-                                lf_group_id.push($(this).val());
-                            });
-                            lf_manf_id_inner(lf_group_id.join(", "));
-                            lf_pf_fvalue_inner(lf_group_id.join(", "));
-                            gerenric_product_inner(lf_group_id.join(", "));
-                            hasTriggeredClick = true; // Mark as triggered
-                        }, 100); // Slight delay to ensure DOM is updated
-                    }
-                }
+	function lf_manf_id_inner(lf_group_id_data) {
+		//setTimeout(function() {
+		let lf_action_type = "<?php print($lf_action_type); ?>";
+		let leve_id = "<?php print($leve_id); ?>";
+		let Sidefilter_brandwith = "<?php print($Sidefilter_brandwith); ?>";
+		let manf_check = <?php echo json_encode($manf_check); ?>;
+		let lf_group_id = "";
+		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
+			lf_group_id = lf_group_id_data;
+		}
+		const ajaxCall = $.ajax({
+			url: 'ajax_calls.php?action=lf_manf_id_inner',
+			method: 'POST',
+			data: {
+				lf_action_type: lf_action_type,
+				lf_group_id: lf_group_id,
+				leve_id: leve_id,
+				Sidefilter_brandwith: Sidefilter_brandwith,
+				manf_check: manf_check
+			},
+			beforeSend: function(jqXHR) {
+				ajaxRequests.push(jqXHR);
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				//console.log(obj);
+				if (obj.status == 1) {
+					$("#lf_manf_id_inner_loading").hide();
+					$("#lf_manf_id_inner").html(obj.lf_manf_id_inner);
+				}
+				lf_manf_id_inner_script();
+			},
+			error: function(xhr, status, error) {
+				if (status !== 'abort') {
+					console.error("AJAX error:", error);
+				}
+			},
+			complete: function(jqXHR) {
+				ajaxRequests = ajaxRequests.filter(req => req !== jqXHR);
+			}
+			// }, 5000);
+		});
+	}
+
+	function lf_pf_fvalue_inner(lf_group_id_data = "", lf_manf_id_data = "") {
+		//setTimeout(function() {
+		let lf_action_type = "<?php print($lf_action_type); ?>";
+		let leve_id = "<?php print($leve_id); ?>";
+		let pf_fvalue_check = <?php echo json_encode($pf_fvalue_check); ?>;
+		let lf_group_id = "";
+		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
+			$("#lf_pf_fvalue_inner_loading").show();
+			lf_group_id = lf_group_id_data;
+		}
+		let lf_manf_id = "";
+		if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
+			$("#lf_pf_fvalue_inner_loading").show();
+			lf_manf_id = lf_manf_id_data;
+		}
+		const ajaxCall = $.ajax({
+			url: 'ajax_calls.php?action=lf_pf_fvalue_inner',
+			method: 'POST',
+			data: {
+				lf_group_id: lf_group_id,
+				lf_manf_id: lf_manf_id,
+				lf_action_type: lf_action_type,
+				leve_id: leve_id,
+				pf_fvalue_check: pf_fvalue_check
+			},
+			beforeSend: function(jqXHR) {
+				ajaxRequests.push(jqXHR);
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				//console.log(obj);
+				if (obj.status == 1) {
+					$("#lf_pf_fvalue_inner_loading").hide();
+					$("#lf_pf_fvalue_inner").html(obj.lf_pf_fvalue_inner);
+				}
+				genaric_javascript_file();
+
+			},
+			error: function(xhr, status, error) {
+				if (status !== 'abort') {
+					console.error("AJAX error:", error);
+				}
+			},
+			complete: function(jqXHR) {
+				ajaxRequests = ajaxRequests.filter(req => req !== jqXHR);
+			}
+			//}, 5000);
+		});
+	}
+
+	 function lf_manf_id_inner_script(){
+		 $(".show-more").click(function() {
+            if ($("#category_show_0, #list_checkbox_hide_0").hasClass("category_show_height")) {
+                $(this).text("(Weniger anzeigen)");
+            } else {
+                $(this).text("(Mehr anzeigen)");
             }
-            //}, 5000);
-        });
-    }
 
-    function lf_manf_id_inner(lf_group_id_data) {
-        //setTimeout(function() {
-        let lf_action_type = "<?php print($lf_action_type); ?>";
-        let leve_id = "<?php print($leve_id); ?>";
-        let Sidefilter_brandwith = "<?php print($Sidefilter_brandwith); ?>";
-        let manf_check = <?php echo json_encode($manf_check); ?>;
-        let lf_group_id = "";
-        if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
-            lf_group_id = lf_group_id_data;
-        }
-        $.ajax({
-            url: 'ajax_calls.php?action=lf_manf_id_inner',
-            method: 'POST',
-            data: {
-                lf_action_type: lf_action_type,
-                lf_group_id: lf_group_id,
-                leve_id: leve_id,
-                Sidefilter_brandwith: Sidefilter_brandwith,
-                manf_check: manf_check
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#lf_manf_id_inner_loading").hide();
-                    $("#lf_manf_id_inner").html(obj.lf_manf_id_inner);
-                }
-            }
-            // }, 5000);
+            $("#category_show_0, #list_checkbox_hide_0").toggleClass("category_show_height");
         });
-    }
-
-    function lf_pf_fvalue_inner(lf_group_id_data = "", lf_manf_id_data = "") {
-        //setTimeout(function() {
-        let lf_action_type = "<?php print($lf_action_type); ?>";
-        let leve_id = "<?php print($leve_id); ?>";
-        let pf_fvalue_check = <?php echo json_encode($pf_fvalue_check); ?>;
-        let lf_group_id = "";
-        if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
-            $("#lf_pf_fvalue_inner_loading").show();
-            lf_group_id = lf_group_id_data;
-        }
-        let lf_manf_id = "";
-        if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
-            $("#lf_pf_fvalue_inner_loading").show();
-            lf_manf_id = lf_manf_id_data;
-        }
-        $.ajax({
-            url: 'ajax_calls.php?action=lf_pf_fvalue_inner',
-            method: 'POST',
-            data: {
-                lf_group_id: lf_group_id,
-                lf_manf_id: lf_manf_id,
-                lf_action_type: lf_action_type,
-                leve_id: leve_id,
-                pf_fvalue_check: pf_fvalue_check
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#lf_pf_fvalue_inner_loading").hide();
-                    $("#lf_pf_fvalue_inner").html(obj.lf_pf_fvalue_inner);
-                }
-                genaric_javascript_file();
-                
-            }
-            //}, 5000);
-        });
-    }
+	}
     function genaric_javascript_file() {
+       
         $(".show-more").click(function() {
-            if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
+			if($(this).attr("data-id") > 0){
+				if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
                 $(this).text("(Weniger anzeigen)");
             } else {
                 $(this).text("(Mehr anzeigen)");
             }
 
             $("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");
+			}
         });
     }
 </script>

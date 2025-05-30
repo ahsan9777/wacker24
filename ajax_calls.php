@@ -722,7 +722,7 @@ if (isset($_REQUEST['action'])) {
 
             $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
             $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '" . $leve_id . "' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.group_id ASC ";
-            //print($Query);
+            //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
                 while ($row = mysqli_fetch_object($rs)) {
@@ -787,7 +787,7 @@ if (isset($_REQUEST['action'])) {
 
             }
             $Query = "SELECT * FROM manufacture AS manf WHERE manf.manf_id IN (SELECT cm.manf_id FROM vu_category_map AS cm WHERE " . $Sidefilter_brandwith . ") AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
-            //print($Query);
+            //print($Query);die();
             $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
@@ -877,9 +877,10 @@ if (isset($_REQUEST['action'])) {
                         }
                         $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm " . $products_featureWhere . ") GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     } else {
-                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                        //$Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM category_map_subgroups AS cm WHERE cm.subgroup_id='".$leve_id."') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     }
-                    //print($Query2);//die();
+                    //print($Query2);die();
                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query2));
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     $rw2 = mysqli_fetch_object($rs2);

@@ -270,8 +270,8 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		let lf_parent_id = "<?php print($lf_parent_id); ?>";
 		let pro_type = "<?php print($pro_type); ?>";
 		let whereclause = "<?php print($whereclause); ?>";
-		let price_without_tex_display = "<?php print($price_without_tex_display); ?>";
-		let pbp_price_with_tex_display = "<?php print($pbp_price_with_tex_display); ?>";
+		let price_without_tex_display = '<?php print($price_without_tex_display); ?>';
+		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display); ?>';
 		let lf_group_id = "";
 		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
 			if (add_more == 0) {
@@ -476,7 +476,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
                     $("#lf_group_id_inner").html(obj.lf_group_id_inner);
 
                     if (level_check > 0 && !hasTriggeredClick) {
-                        setTimeout(function() {
+                        //setTimeout(function() {
                             var lf_group_id = [];
                             $(".lf_group_id:checked").each(function() {
                                 lf_group_id.push($(this).val());
@@ -485,7 +485,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
                             lf_pf_fvalue_inner(lf_group_id.join(", "));
                             gerenric_product_inner(lf_group_id.join(", "));
                             hasTriggeredClick = true; // Mark as triggered
-                        }, 100); // Slight delay to ensure DOM is updated
+                        //}, 100); // Slight delay to ensure DOM is updated
                     }
                 }
             }
@@ -521,6 +521,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
                     $("#lf_manf_id_inner_loading").hide();
                     $("#lf_manf_id_inner").html(obj.lf_manf_id_inner);
                 }
+				lf_manf_id_inner_script();
             }
             // }, 5000);
         });
@@ -565,15 +566,29 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
             //}, 5000);
         });
     }
+    function lf_manf_id_inner_script(){
+		 $(".show-more").click(function() {
+            if ($("#category_show_0, #list_checkbox_hide_0").hasClass("category_show_height")) {
+                $(this).text("(Weniger anzeigen)");
+            } else {
+                $(this).text("(Mehr anzeigen)");
+            }
+
+            $("#category_show_0, #list_checkbox_hide_0").toggleClass("category_show_height");
+        });
+	}
     function genaric_javascript_file() {
+       
         $(".show-more").click(function() {
-            if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
+			if($(this).attr("data-id") > 0){
+				if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
                 $(this).text("(Weniger anzeigen)");
             } else {
                 $(this).text("(Mehr anzeigen)");
             }
 
             $("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");
+			}
         });
     }
 </script>
