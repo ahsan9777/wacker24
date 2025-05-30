@@ -411,5 +411,19 @@ if (isset($_REQUEST['action'])) {
             }
             print("Total no of record added: " . $counter);
             break;
+
+        case 'category_map_level_update':
+            print("category_map_level_update");die();
+            $counter = 0;
+            $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM category_map ORDER BY supplier_id ASC");
+            if (mysqli_num_rows($rs) > 0) {
+                while($row = mysqli_fetch_object($rs)) {
+                 $subgroups = explode(',', $row->sub_group_ids);
+                    mysqli_Query($GLOBALS['conn'], "UPDATE category_map SET cat_id_level_two = '".$subgroups[0]."', cat_id_level_one = '".$subgroups[1]."' WHERE supplier_id = '".$row->supplier_id."' AND cat_id = '".$row->cat_id."' ")  or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+            }
+            print("Total no of record added: " . $counter);
+            break;
     }
 }

@@ -103,12 +103,14 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             for ($i = 0; $i < count($pro_feature); $i++) {
                 if ($i > 0) {
                     $pf_fname = $pro_feature[$i]->FNAME;
+                    $pf_fname_params_de = dbStr(trim(url_clean($pro_feature[$i]->FNAME)));
                     $pf_fvalue = $pro_feature[$i]->FVALUE;
+                    $pf_fvalue_params_de = dbStr(trim(url_clean($pro_feature[$i]->FVALUE)));
                     $pf_forder = $pro_feature[$i]->FORDER;
                     $pf_fvalue_details = isset($pro_feature[$i]->FVALUE_DETAILS) ? $pro_feature[$i]->FVALUE_DETAILS : '';
                     //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
                     $pf_id = getMaximum("products_feature", "pf_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "') ") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details, pf_fname_params_de, pf_fvalue_params_de) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "', '".$pf_fname_params_de."', '".$pf_fvalue_params_de."') ") or die(mysqli_error($GLOBALS['conn']));
                 }
             }
         }
@@ -120,10 +122,12 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $art_id = $supplier_id;
             $catalog_group_id = $referance_feature_group_id;
             $sub_group_ids = substr($catalog_group_id, 0, 3) . ",";
+            $cat_id_level_two = substr($catalog_group_id, 0, 3);
             $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
+            $cat_id_level_one = returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
             //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type, cat_id_level_two, cat_id_level_one) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "', '".$cat_id_level_two."', '".$cat_id_level_one."')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         if (!empty($pro_artical_price)) {
