@@ -319,7 +319,7 @@ include("includes/message.php");
 														<div class="cart_pd_option">
 															<ul>
 																<li>
-																	<span>Quantity:</span>
+																	<span>Menge:</span>
 																	<span>
 																		<input type="hidden" name="ci_id[]" id="ci_id" value="<?php print($row->ci_id); ?>">
 																		<?php if ($pro_type > 0) { ?>
@@ -329,9 +329,9 @@ include("includes/message.php");
 																		<?php } ?>
 																	</span>
 																</li>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Delete</a></li>
-																<li><a href="javascript:void(0)">Share</a></li>
-																<li><a href="<?php print($smiller_product_url); ?>">Similar Product</a></li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Löschen</a></li>
+																<li><a href="javascript:void(0)">Aktie</a></li>
+																<li><a href="<?php print($smiller_product_url); ?>">Ähnliches Produkt</a></li>
 															</ul>
 														</div>
 													</div>

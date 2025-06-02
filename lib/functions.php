@@ -3039,7 +3039,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $ord_payment_transaction_id = 
 		$ord_id = getMaximum("orders", "ord_id");
 		$dinfo_id = getMaximum("delivery_info", "dinfo_id");
 		$ord_shipping_charges = 0;
-		if ($row1->cart_gross_total <= config_condition_courier_amount) {
+		if ($row1->cart_amount <= config_condition_courier_amount) {
 			$ord_shipping_charges = config_courier_fix_charges;
 		}
 		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
