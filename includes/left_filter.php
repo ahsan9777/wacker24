@@ -61,7 +61,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (is
     }*/
     $left_filter_cat_WhereQuery = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids)";
     if ($pro_type == 20) {
-        $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = '" . $leve_id . "'";
+        $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_one = '" . $leve_id . "'";
     } else {
         $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $leve_id . ", cm.sub_group_ids)";
     }

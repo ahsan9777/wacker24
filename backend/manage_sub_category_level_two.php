@@ -181,7 +181,11 @@ include("includes/messages.php");
 
                         if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
                             $group_id = $_REQUEST['group_id'];
-                            $searchQuery = " sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['group_id']."' ORDER BY main_cat.group_id ASC)";
+                            if($group_id == 20){
+                                $searchQuery = " sub_cat.parent_id = '".$_REQUEST['group_id']."' ";
+                            } else {
+                                $searchQuery = " sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['group_id']."' ORDER BY main_cat.group_id ASC)";
+                            }
                         }
                         if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
                             if (!empty($_REQUEST['cat_title'])) {

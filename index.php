@@ -188,7 +188,7 @@ include("includes/php_includes_top.php");
 								<div class="gerenric_slider">
 									<?php
 									$special_price = "";
-									$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND FIND_IN_SET(19, cm.sub_group_ids) AND cm.cm_type = '20' ORDER BY  RAND() LIMIT 0,12";
+									$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.pro_status = '1' AND cm.cat_id_level_one = '20' AND cm.cm_type = '20' ORDER BY  RAND() LIMIT 0,12";
 									//print($Query2);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {

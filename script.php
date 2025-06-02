@@ -327,6 +327,7 @@ if (isset($_REQUEST['action'])) {
             print("schulranzen_price_list");die();
             $counter = 0;
             $counter1 = 0;
+            mysqli_query($GLOBALS['conn'], "UPDATE products SET  pro_status = '0' WHERE pro_type = '20' ") or die(mysqli_error($GLOBALS['conn']));
             $Query = "SELECT * FROM schulranzen_price_list ORDER BY spl_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
@@ -334,13 +335,13 @@ if (isset($_REQUEST['action'])) {
                     $checkrecord = 0;
                     $supplier_id = $row->supplier_id;
                     $pbp_price_amount = $row->pbp_price_amount_without_tax;
-                    $manf_name = $row->manf_name;
+                    //$manf_name = $row->manf_name;
 
                     $checkrecord = checkrecord("pro_id", "products", "supplier_id = '" . $supplier_id . "'");
                     if ($checkrecord > 0) {
                         $counter1++;
                         $manf_id = 0;
-                        $Query1 = "SELECT * FROM manufacture WHERE  manf_name = '" . dbStr(trim($manf_name)) . "'";
+                        /*$Query1 = "SELECT * FROM manufacture WHERE  manf_name = '" . dbStr(trim($manf_name)) . "'";
                         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
                         if (mysqli_num_rows($rs1) > 0) {
                             $row1 = mysqli_fetch_object($rs1);
@@ -349,7 +350,8 @@ if (isset($_REQUEST['action'])) {
                             $manf_id = getMaximum("manufacture", "manf_id");
                             mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params) VALUES ('" . $manf_id . "', '" . dbStr(trim($manf_name)) . "', '" . dbStr(trim(url_clean($manf_name))) . "')") or die(mysqli_error($GLOBALS['conn']));
                         }
-                        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '".$manf_id."', pro_status = '1' WHERE supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '".$manf_id."', pro_status = '1' WHERE supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));*/
+                        mysqli_query($GLOBALS['conn'], "UPDATE products SET  pro_status = '1' WHERE supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                         mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_price_amount = '" . $pbp_price_amount . "' WHERE pbp_lower_bound = '1' AND supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                         mysqli_query($GLOBALS['conn'], "UPDATE schulranzen_price_list SET spl_status = '1' WHERE supplier_id = '" . $supplier_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     }

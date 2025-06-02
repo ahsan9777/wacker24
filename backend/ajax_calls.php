@@ -22,7 +22,7 @@ if (isset($_REQUEST['action'])) {
                     $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title FROM `category` AS cat " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 }
             }
-            //print($Query);
+            //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(

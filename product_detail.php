@@ -157,8 +157,11 @@ include("includes/message.php");
 				<div class="breadcrumb_inner">
 					<ul>
 						<?php
-						if ($pro_type > 0) { ?>
-							<li><a href="unterkategorien/schulranzen"> Schulranzen </a></li>
+						if ($pro_type > 0) { 
+							$cat_title_heading = returnName("cat_title_de AS cat_title", "category", "group_id", 20);
+							$cat_params_heading = returnName("cat_params_de AS cat_params", "category", "group_id", 20);
+							?>
+							<li><a href="unterkategorien/<?php print($cat_params_heading); ?>"> <?php print($cat_title_heading); ?> </a></li>
 						<?php } else { ?>
 							<li><a href="unterkategorien/<?php print($cat_one_params); ?>"> <?php print($cat_title_one); ?> </a></li>
 						<?php } ?>

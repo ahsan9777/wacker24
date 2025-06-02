@@ -70,7 +70,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 }
 
 if ($pro_type == 20) {
-	$whereclause_top_category = " WHERE sub_cat.parent_id = '20' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = cat.group_id )";
+	$whereclause_top_category = " WHERE sub_cat.parent_id = '20' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = sub_cat.group_id )";
 }
 
 $sortby = 0;
@@ -486,7 +486,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			success: function(response) {
 				//console.log("response = "+response);
 				const obj = JSON.parse(response);
-				console.log(obj);
+				//console.log(obj);
 				if (obj.status == 1) {
 					$("#lf_group_id_loading").hide();
 					$("#lf_group_id_inner").html(obj.lf_group_id_inner);

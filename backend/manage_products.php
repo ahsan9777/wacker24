@@ -39,7 +39,11 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $pro_ean = isset($rl->PRODUCT_DETAILS->INTERNATIONAL_PID) ? $rl->PRODUCT_DETAILS->INTERNATIONAL_PID : '';
         $pro_buyer_id = isset($rl->PRODUCT_DETAILS->BUYER_PID) ? $rl->PRODUCT_DETAILS->BUYER_PID : '';
         $pro_manufacture_aid = isset($rl->PRODUCT_DETAILS->MANUFACTURER_PID) ? $rl->PRODUCT_DETAILS->MANUFACTURER_PID : '';
-        $pro_manufacture_name = isset($rl->PRODUCT_DETAILS->MANUFACTURER_NAME) ? $rl->PRODUCT_DETAILS->MANUFACTURER_NAME : '';
+        if($pro_type == 20){
+            $pro_manufacture_name = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.MARKE'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.MARKE'} : '';
+        } else {
+            $pro_manufacture_name = isset($rl->PRODUCT_DETAILS->MANUFACTURER_NAME) ? $rl->PRODUCT_DETAILS->MANUFACTURER_NAME : '';
+        }
         $pro_keyword = isset($rl->PRODUCT_DETAILS->KEYWORD) ? $rl->PRODUCT_DETAILS->KEYWORD : ''; //product_keyword
         $pro_referance_feature_group_id = isset($rl->PRODUCT_FEATURES[0]->REFERENCE_FEATURE_GROUP_ID) ? $rl->PRODUCT_FEATURES[0]->REFERENCE_FEATURE_GROUP_ID : '';
         $pro_feature = isset($rl->PRODUCT_FEATURES[1]->FEATURE) ? $rl->PRODUCT_FEATURES[1]->FEATURE : ''; // product_feature

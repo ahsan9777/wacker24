@@ -694,7 +694,7 @@ if (isset($_REQUEST['action'])) {
                     $pg_mime_source_url_href = $category_data['data_1'];
                     $pbp_price_without_tax = $category_data['data_2'];
                     $pbp_price_amount = $category_data['data_3'];
-                    if ($_REQUEST['cat_params_one'] == 'schulranzen') {
+                    if ($level_one == 20) {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
                         $cat_link = "artikelarten/".$row->sub_cat_params . "/20";
                     } else {
@@ -1179,8 +1179,8 @@ if (isset($_REQUEST['action'])) {
             }
             //print($gerenric_product_inner);
 
-            $retValue = array("status" => "1", "message" => "Record found", "Query" => $Query, "total_count" => $total_count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
-            //$retValue = array("status" => "1", "message" => "Record found", "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            //$retValue = array("status" => "1", "message" => "Record found", "Query" => $Query, "total_count" => $total_count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            $retValue = array("status" => "1", "message" => "Record found", "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;

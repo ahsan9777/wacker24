@@ -196,7 +196,7 @@ include("includes/messages.php");
                                 <label for="" class="text-white">Main Category</label>
                                 <select class="input_style" name="group_id" id="group_id" onchange="javascript: frm_search.submit();">
                                     <option value="0">N/A</option>
-                                    <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $group_id, "parent_id = '0'"); ?>
+                                    <?php FillSelected2("category", "group_id", "cat_title_de AS cat_title", $group_id, "parent_id = '0' AND group_id != '20'"); ?>
                                 </select>
                             </div>
                             <div class=" col-md-3 col-12 mt-2">
