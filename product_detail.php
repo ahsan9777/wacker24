@@ -205,7 +205,7 @@ include("includes/message.php");
 										</div>
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print($pg_mime_source_url); ?>"> <img src="<?php print($pg_mime_source_url); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(427, $pg_mime_source_url)); ?>"> <img src="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
 											</div>
 										</div>
 										<div class="clearfix"></div>

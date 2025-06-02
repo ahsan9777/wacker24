@@ -670,15 +670,23 @@ if (isset($_REQUEST['action'])) {
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
 
             $category_type_inner = "";
-            $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $level_one . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-            //print($Query);//die();
+            if($level_one == 20){
+                $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id = '" . $level_one . "' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = sub_cat.group_id ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+            } else {
+                $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $level_one . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+            }
+            //print($Query);die();
             $counter = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
             $rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
             if (mysqli_num_rows($rs) > 0) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $last_record++;
                     $pg_mime_source_url_href = "files/no_img_1.jpg";
-                    $category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
+                    if($level_one == 20){
+                        $category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
+                    } else{
+                        $category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
+                    }
                     //print_r($category_data);die();
                     if (empty($category_data)) {
                         continue;
@@ -688,7 +696,7 @@ if (isset($_REQUEST['action'])) {
                     $pbp_price_amount = $category_data['data_3'];
                     if ($_REQUEST['cat_params_one'] == 'schulranzen') {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
-                        $cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params . "/20";
+                        $cat_link = "artikelarten/".$row->sub_cat_params . "/20";
                     } else {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
                         $cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
@@ -717,11 +725,17 @@ if (isset($_REQUEST['action'])) {
             $retValue = array();
             $lf_group_id_inner = "";
             $lf_action_type = $_REQUEST['lf_action_type'];
+            $pro_type = isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0;
             $leve_id = $_REQUEST['leve_id'];
             $level_check = $_REQUEST['level_check'];
 
             $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
-            $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '" . $leve_id . "' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.group_id ASC ";
+            if($pro_type == 20){
+                $level_check = $leve_id;
+                $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '20' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.group_id ASC ";
+            } else{
+                $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '" . $leve_id . "' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.group_id ASC ";
+            }
             //print($Query);die();
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
@@ -775,12 +789,17 @@ if (isset($_REQUEST['action'])) {
             $manf_check = array();
             $lf_manf_id_inner = "";
             $lf_action_type = $_REQUEST['lf_action_type'];
+            $pro_type = isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0;
             $leve_id = $_REQUEST['leve_id'];
             $Sidefilter_brandwith = $_REQUEST['Sidefilter_brandwith'];
             $manf_check = (!empty($_REQUEST['manf_check'])) ? $_REQUEST['manf_check'] : [];
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
                 //$whereclause = "WHERE cm.pro_type = '".$pro_type."'";
-                $Sidefilter_brandwith .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
+                if($pro_type == 20){
+                    $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two IN (" . $_REQUEST['lf_group_id'] . ")";
+                } else{
+                    $Sidefilter_brandwith .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
+                }
                 $lf_group_id = explode(",", $_REQUEST['lf_group_id']);
 
                 //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_group_id'][0]);
@@ -951,6 +970,7 @@ if (isset($_REQUEST['action'])) {
             $retValue = array();
             $gerenric_product_inner  = "";
             $pro_type = $_REQUEST['pro_type'];
+            $level_two = isset($_REQUEST['level_two']) ? $_REQUEST['level_two'] : 0;
             $whereclause = $_REQUEST['whereclause'];
             $price_without_tex_display = $_REQUEST['price_without_tex_display'];
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
@@ -959,11 +979,17 @@ if (isset($_REQUEST['action'])) {
             $last_record = $start;
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
                 //$whereclause = "WHERE cm.pro_type = '".$pro_type."'";
-                $whereclause .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
+                if($pro_type == 20){
+                    $whereclause .= " AND cm.cat_id_level_two IN  (" . $_REQUEST['lf_group_id'] . ")";
+                } else{
+                    $whereclause .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
+                }
                 //$lf_group_id = explode(",", $_REQUEST['lf_group_id']);
 
                 //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_group_id'][0]);
 
+            } elseif($level_two > 0 && $pro_type == 20){
+                $whereclause .= " AND cm.cat_id_level_two IN  (" . $level_two . ")";
             }
             if (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])) {
 

@@ -7,12 +7,16 @@ $cat_params = "";
 //print_r($_REQUEST);
 //$level_one = $_REQUEST['level_one'];
 $lf_action_type = 0;
-$level_one =  ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 19;
-$level_one_request = ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 20;
+/*$level_one =  ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 19;
+$level_one_request = ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 20;*/
+$level_one =  returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+$level_one_request = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
 $cat_params = $_REQUEST['cat_params_one'];
+
+//print("level_one: ".$level_one." level_one_request: ".$level_one_request." cat_params: ".$cat_params);
 if ($level_one_request == 20) {
 	$pro_type = $level_one_request;
-	$level_one = 19;
+	//$level_one = 19;
 	//$pro_typeURL = "pro_type=" . $level_one_request . "&";
 	$pro_typeURL = "/" . $level_one_request;
 	$qryStrURL = "pro_type=" . $level_one_request . "&";
@@ -264,7 +268,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 		let cat_params_one = '<?php print($_REQUEST['cat_params_one']) ?>';
 		let price_without_tex_display = '<?php print($price_without_tex_display) ?>';
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display) ?>';
-		//console.log("pro_type: "+pro_type+" level_one: "+level_one+" price_without_tex_display: "+price_without_tex_display+" pbp_price_with_tex_display: "+pbp_price_with_tex_display);
+		console.log("pro_type: "+pro_type+" level_one: "+level_one+" price_without_tex_display: "+price_without_tex_display+" pbp_price_with_tex_display: "+pbp_price_with_tex_display);
 		const ajaxCall = $.ajax({
 			url: 'ajax_calls.php?action=category_type_inner',
 			method: 'POST',
@@ -286,7 +290,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 				if (obj.status == 1) {
 					$("#spinner_category_type_inner").hide();
 					$("#btn_load_spinner").hide();
-					if (obj.counter > 10) {
+					if (obj.counter > 30) {
 						$("#btn_load").show();
 					}
 					if (obj.counter == obj.last_record) {

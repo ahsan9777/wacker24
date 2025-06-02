@@ -32,9 +32,17 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (is
         $leve_id = substr($leve_id, 0, 3);
         $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $leve_id . ", cm.sub_group_ids)";
     } else {
-        $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $leve_id . ", cm.sub_group_ids)";
+        if ($pro_type == 20) {
+            $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = '" . $leve_id . "'";
+        } else {
+             $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $leve_id . ", cm.sub_group_ids)";
+        }
     }
-    $left_filter_cat_WhereQuery = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.cat_id)";
+    if ($pro_type == 20) {
+        $left_filter_cat_WhereQuery = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = cat.group_id";
+    } else {
+        $left_filter_cat_WhereQuery = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.cat_id)";
+    }
 } else {
 
     if (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])) {
@@ -48,11 +56,15 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (is
         $level_three = 0;
         $leve_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
     }
-    if ($pro_type == 20) {
+    /*if ($pro_type == 20) {
         $leve_id = 19;
-    }
+    }*/
     $left_filter_cat_WhereQuery = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(cat.group_id, cm.sub_group_ids)";
-    $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $leve_id . ", cm.sub_group_ids)";
+    if ($pro_type == 20) {
+        $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = '" . $leve_id . "'";
+    } else {
+        $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(" . $leve_id . ", cm.sub_group_ids)";
+    }
 }
 //print_r($manf_check);
 ?>

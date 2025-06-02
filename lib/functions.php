@@ -1529,7 +1529,8 @@ function returnMultiName($Field, $Table, $IDField, $ID, $fieldcount, $AND = "")
 {
 	$retRes = array();
 	if(strlen($ID) < 4){
-		$strQry = "SELECT $Field FROM $Table WHERE FIND_IN_SET ('" . $ID . "', ".$IDField.") " . $AND . "";
+		//$strQry = "SELECT $Field FROM $Table WHERE FIND_IN_SET ('" . $ID . "', ".$IDField.") " . $AND . "";
+		$strQry = "SELECT $Field FROM $Table WHERE ".$IDField." = '" . $ID . "' ". $AND . "";
 	} else {
 		$strQry = "SELECT $Field FROM $Table WHERE $IDField= '" . $ID . "' " . $AND . "";
 	}

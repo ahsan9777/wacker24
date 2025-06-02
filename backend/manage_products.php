@@ -2,9 +2,9 @@
 include("../lib/session_head.php");
 
 
-if(isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0){
+if (isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0) {
     $pro_status = $_REQUEST['pro_status'];
-    $qryStrURL .= "pro_status=".$pro_status."&";
+    $qryStrURL .= "pro_status=" . $pro_status . "&";
 }
 if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
     //print_r($_REQUEST);die();
@@ -12,15 +12,15 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
     $pro_type = 0;
     if (isset($_REQUEST['btnImportSchulranzen'])) {
         $pro_type = 20;
-        $xml = simplexml_load_file("BMEcat2005_schulranzen.xml") or die("Error: Cannot create object");
+        $xml = simplexml_load_file("schulranzen.xml") or die("Error: Cannot create object");
         mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '0' WHERE pro_type = '" . $pro_type . "'") or die(mysqli_error($GLOBALS['conn']));
     } else {
         //$xml = simplexml_load_file("BMEcat2005_119053.xml") or die("Error: Cannot create object");
         $xml = simplexml_load_file("artical.xml") or die("Error: Cannot create object");
         mysqli_query($GLOBALS['conn'], "UPDATE products SET  pro_status = '0' WHERE pro_type = '" . $pro_type . "'") or die(mysqli_error($GLOBALS['conn']));
     }
-    //print('<pre>');
-    //print_r($xml->T_NEW_CATALOG->PRODUCT);
+    /*print('<pre>');
+    print_r($xml->T_NEW_CATALOG->PRODUCT);
     //print_r($xml->T_NEW_CATALOG->PRODUCT->USER_DEFINED_EXTENSIONS->{'UDX.SOE.EPAG_ID'});
     //print_r($xml->T_NEW_CATALOG->PRODUCT->USER_DEFINED_EXTENSIONS->{'UDX.SOE.SELECTIONFEATURE'});
     //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_DETAILS->KEYWORD);
@@ -28,7 +28,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
     //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_ORDER_DETAILS);
     //print_r($xml->T_NEW_CATALOG->ARTICLE->PRODUCT_PRICE_DETAILS->PRODUCT_PRICE[1]);
     //print_r($xml->T_NEW_CATALOG->ARTICLE->MIME_INFO->MIME[0]);
-    //print('</pre>');die();
+    print('</pre>');die();*/
     foreach ($xml->T_NEW_CATALOG->PRODUCT as $rl) {
         //echo $i++." ".$rl->ART_ID.PHP_EOL;
         $pro_uid = 0;
@@ -56,9 +56,10 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $pro_udx_seo_internetbezeichung = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.INTERNETBEZEICHNUNG'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.INTERNETBEZEICHNUNG'} : '';
         $pro_udx_seo_epag_id = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.EPAG_ID'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.EPAG_ID'} : '';
         $pro_udx_seo_selection_feature = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.SELECTIONFEATURE'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.SELECTIONFEATURE'} : '';
+        $pro_udx_seo_pk = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.PK'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.PK'} : '';
         $pro_delivery_time = isset($rl->PRODUCT_LOGISTIC_DETAILS->DELIVERY_TIMES->TIME_SPAN->TIME_VALUE_DURATION) ? $rl->PRODUCT_LOGISTIC_DETAILS->DELIVERY_TIMES->TIME_SPAN->TIME_VALUE_DURATION : 0;
         //print($pg_mime_source = basename($pro_gallery[0]->MIME_SOURCE));die();
-        //print($pro_udx_seo_internetbezeichung);die();
+        //print($pro_udx_seo_pk);die();
         /*print('<pre>');
             print_r($pro_artical_price); 
             print('</pre>');die();*/
@@ -70,7 +71,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $manf_id = $row1->manf_id;
         } else {
             $manf_id = getMaximum("manufacture", "manf_id");
-            mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params) VALUES ('" . $manf_id . "', '" . dbStr(trim($pro_manufacture_name)) . "', '".dbStr(trim(url_clean($pro_manufacture_name)))."')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params) VALUES ('" . $manf_id . "', '" . dbStr(trim($pro_manufacture_name)) . "', '" . dbStr(trim(url_clean($pro_manufacture_name))) . "')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         $Query2 = "SELECT * FROM products WHERE  supplier_id = '" . $supplier_id . "'";
@@ -79,10 +80,23 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $row2 = mysqli_fetch_object($rs2);
             $pro_uid = $row2->pro_id;
             $pro_id = $row2->pro_id;
-            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_udx_seo_epag_id = '" . dbStr(trim($pro_udx_seo_epag_id)) . "', pro_udx_seo_selection_feature = '".dbStr(trim($pro_udx_seo_selection_feature))."', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_udx_seo_epag_id = '" . dbStr(trim($pro_udx_seo_epag_id)) . "', pro_udx_seo_selection_feature = '" . dbStr(trim($pro_udx_seo_selection_feature)) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
         } else {
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_type, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_udx_seo_epag_id, pro_udx_seo_selection_feature, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '" . $pro_type . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '".dbStr(trim($pro_udx_seo_selection_feature))."', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_type, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_udx_seo_epag_id, pro_udx_seo_selection_feature, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '" . $pro_type . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . dbStr(trim($pro_udx_seo_selection_feature)) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+        }
+
+        if ($pro_type == 20) {
+            $Query3 = "SELECT * FROM category WHERE  cat_title_de = '" . $pro_udx_seo_pk . "'";
+            $rs3 = mysqli_query($GLOBALS['conn'], $Query3);
+            if (mysqli_num_rows($rs3) > 0) {
+                $row3 = mysqli_fetch_object($rs3);
+                $group_id = $row3->group_id;
+            } else {
+                $group_id = getMaximumWhere("category", "group_id", "WHERE parent_id = '20'");
+                $cat_id = getMaximum("category", "cat_id");
+                mysqli_query($GLOBALS['conn'], "INSERT INTO category (cat_id, group_id, parent_id, cat_title_de, cat_params_de) VALUES ('" . $cat_id . "', '" . $group_id . "', '20', '" . dbStr(trim($pro_udx_seo_pk)) . "', '" . dbStr(url_clean(trim($pro_udx_seo_pk))) . "')") or die(mysqli_error($GLOBALS['conn']));
+            }
         }
 
         if (!empty($pro_keyword)) {
@@ -110,24 +124,42 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                     $pf_fvalue_details = isset($pro_feature[$i]->FVALUE_DETAILS) ? $pro_feature[$i]->FVALUE_DETAILS : '';
                     //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
                     $pf_id = getMaximum("products_feature", "pf_id");
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details, pf_fname_params_de, pf_fvalue_params_de) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "', '".$pf_fname_params_de."', '".$pf_fvalue_params_de."') ") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details, pf_fname_params_de, pf_fvalue_params_de) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "', '" . $pf_fname_params_de . "', '" . $pf_fvalue_params_de . "') ") or die(mysqli_error($GLOBALS['conn']));
                 }
             }
         }
 
-        if (!empty($referance_feature_group_id)) {
-            if ($pro_uid > 0) {
-                mysqli_query($GLOBALS['conn'], "DELETE FROM `category_map` WHERE cat_id = '" . $referance_feature_group_id . "' AND supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
-            }
-            $art_id = $supplier_id;
-            $catalog_group_id = $referance_feature_group_id;
-            $sub_group_ids = substr($catalog_group_id, 0, 3) . ",";
-            $cat_id_level_two = substr($catalog_group_id, 0, 3);
-            $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
-            $cat_id_level_one = returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
-            //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
+        if ($pro_type == 20) {
+            if (!empty($supplier_id)) {
+                if ($pro_uid > 0) {
+                    mysqli_query($GLOBALS['conn'], "DELETE FROM `category_map` WHERE supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                }
+                $art_id = $supplier_id;
+                $catalog_group_id = 0;
+                $sub_group_ids = $group_id. ",";
+                $cat_id_level_two = $group_id;
+                $sub_group_ids .= 20;
+                $cat_id_level_one = 20;
+                //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type, cat_id_level_two, cat_id_level_one) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "', '".$cat_id_level_two."', '".$cat_id_level_one."')") or die(mysqli_error($GLOBALS['conn']));
+                mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type, cat_id_level_two, cat_id_level_one) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "', '" . $cat_id_level_two . "', '" . $cat_id_level_one . "')") or die(mysqli_error($GLOBALS['conn']));
+            }
+        } else {
+            if (!empty($referance_feature_group_id)) {
+                if ($pro_uid > 0) {
+                    mysqli_query($GLOBALS['conn'], "DELETE FROM `category_map` WHERE cat_id = '" . $referance_feature_group_id . "' AND supplier_id = '" . $supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
+                }
+                
+                $art_id = $supplier_id;
+                $catalog_group_id = 0;
+                $sub_group_ids = substr($catalog_group_id, 0, 3) . ",";
+                $cat_id_level_two = substr($catalog_group_id, 0, 3);
+                $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
+                $cat_id_level_one = returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
+                //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
+
+                mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type, cat_id_level_two, cat_id_level_one) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "', '" . $cat_id_level_two . "', '" . $cat_id_level_one . "')") or die(mysqli_error($GLOBALS['conn']));
+            }
         }
 
         if (!empty($pro_artical_price)) {
@@ -233,8 +265,8 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                     mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_one_price) . "' WHERE pbp_id = '" . $pbp_id1 . "'") or die(mysqli_error($GLOBALS['conn']));
                 }
 
-                if($lower_bound_two_quantity > 0){
-                    $Query2 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '".$lower_bound_two_quantity."' ";
+                if ($lower_bound_two_quantity > 0) {
+                    $Query2 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '" . $lower_bound_two_quantity . "' ";
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     if (mysqli_num_rows($rs2) > 0) {
                         $row2 = mysqli_fetch_object($rs2);
@@ -242,9 +274,9 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                         mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_two_price) . "' WHERE pbp_id = '" . $pbp_id2 . "'") or die(mysqli_error($GLOBALS['conn']));
                     }
                 }
-                
-                if($lower_bound_three_quantity > 0){
-                    $Query3 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '".$lower_bound_three_quantity."' ";
+
+                if ($lower_bound_three_quantity > 0) {
+                    $Query3 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '" . $lower_bound_three_quantity . "' ";
                     $rs3 = mysqli_query($GLOBALS['conn'], $Query3);
                     if (mysqli_num_rows($rs3) > 0) {
                         $row3 = mysqli_fetch_object($rs3);
@@ -252,9 +284,9 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                         mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_special_price_amount = '" . str_replace(",", ".", $lower_bound_three_price) . "' WHERE pbp_id = '" . $pbp_id3 . "'") or die(mysqli_error($GLOBALS['conn']));
                     }
                 }
-                
-                if($lower_bound_four_quantity > 0){
-                    $Query4 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '".$lower_bound_four_quantity."' ";
+
+                if ($lower_bound_four_quantity > 0) {
+                    $Query4 = "SELECT * FROM products_bundle_price WHERE  supplier_id = '" . dbStr(trim($supplier_id)) . "' AND pbp_lower_bound = '" . $lower_bound_four_quantity . "' ";
                     $rs4 = mysqli_query($GLOBALS['conn'], $Query4);
                     if (mysqli_num_rows($rs4) > 0) {
                         $row4 = mysqli_fetch_object($rs4);
@@ -449,7 +481,7 @@ include("includes/messages.php");
                                         $btn_name = "btnImportSchulranzen";
                                     }
                                     ?>
-                                        <div class=" <?php print(($_REQUEST['action'] == 1 || $_REQUEST['action'] == 4 ) ? 'text_align_center' : ''); ?> mt-3">
+                                        <div class=" <?php print(($_REQUEST['action'] == 1 || $_REQUEST['action'] == 4) ? 'text_align_center' : ''); ?> mt-3">
                                             <button class="btn btn-primary" type="submit" name="<?php print($btn_name); ?>" id="btnImport">Upload</button>
                                         <?php } ?>
                                         <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
@@ -486,9 +518,9 @@ include("includes/messages.php");
                                 $searchQuery .= " AND pro.pro_id = '" . $_REQUEST['pro_id'] . "'";
                             }
                         }
-                        if(isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0){
+                        if (isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0) {
                             $pro_status = $_REQUEST['pro_status'];
-                            if($pro_status == 1){
+                            if ($pro_status == 1) {
                                 $searchQuery .= " AND pro.pro_status = '1'";
                             } else {
                                 $searchQuery .= " AND pro.pro_status = '0'";
@@ -504,9 +536,9 @@ include("includes/messages.php");
                             <div class=" col-md-2 col-12 mt-2">
                                 <label for="" class="text-white">Status</label>
                                 <select name="pro_status" id="pro_status" class="input_style" onchange="javascript: frm_search.submit();">
-                                    <option value="0" <?php print( ($pro_status == 0) ? 'selected' : '' ); ?> >N/A</option>
-                                    <option value="1" <?php print( ($pro_status == 1) ? 'selected' : '' ); ?> >Live</option>
-                                    <option value="2" <?php print( ($pro_status == 2) ? 'selected' : '' ); ?> >Offline</option>
+                                    <option value="0" <?php print(($pro_status == 0) ? 'selected' : ''); ?>>N/A</option>
+                                    <option value="1" <?php print(($pro_status == 1) ? 'selected' : ''); ?>>Live</option>
+                                    <option value="2" <?php print(($pro_status == 2) ? 'selected' : ''); ?>>Offline</option>
                                 </select>
                             </div>
                         </form>
@@ -781,7 +813,6 @@ include("includes/messages.php");
                 }
             });
         });
-        
     </script>
 </body>
 

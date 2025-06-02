@@ -50,7 +50,11 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 	if (strlen($lf_group_id) > 3) {
 		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND (" . $lf_group_id . ", cm.cat_id)";
 	} else {
-		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND FIND_IN_SET(" . $lf_group_id . ", cm.sub_group_ids)";
+		if($pro_type == 20){
+			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' ";
+		} else {
+			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND FIND_IN_SET(" . $lf_group_id . ", cm.sub_group_ids)";
+		}
 	}
 	$whereclause_top_category = " WHERE sub_cat.parent_id  = '" . $lf_group_id . "' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) )";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $lf_group_id);
@@ -63,6 +67,10 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 	$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND FIND_IN_SET(" . $_REQUEST['lf_parent_id'] . ", cm.sub_group_ids) AND cm.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE  pf.pf_fvalue_params_de = '" . $_REQUEST['lf_pf_fvalue'][0] . "')";
 	$whereclause_top_category = " WHERE sub_cat.parent_id = '" . $_REQUEST['lf_parent_id'] . "' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.sub_group_ids) )";
 	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_parent_id']);
+}
+
+if ($pro_type == 20) {
+	$whereclause_top_category = " WHERE sub_cat.parent_id = '20' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = cat.group_id )";
 }
 
 $sortby = 0;
@@ -104,15 +112,19 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 									<div class="category-slider">
 										<?php
 										//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-										$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  ".$whereclause_top_category."  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+										$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  " . $whereclause_top_category . "  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
 										//print($Query);die();
 										$rs = mysqli_query($GLOBALS['conn'], $Query);
 										if (mysqli_num_rows($rs) > 0) {
 											while ($row = mysqli_fetch_object($rs)) {
 												$pg_mime_source_url_href = "files/no_img_1.jpg";
-												if(strlen($row->group_id) < 4){
-													$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "sub_group_ids",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY sub_group_ids");
-												} else{
+												if (strlen($row->group_id) < 4) {
+													if ($pro_type == 20) {
+														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
+													} else {
+														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY sub_group_ids");
+													}
+												} else {
 													$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
 												}
 												//print_r($category_data);die();
@@ -122,16 +134,16 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 												$pg_mime_source_url_href = $category_data['data_1'];
 												$pbp_price_without_tax = $category_data['data_2'];
 												$pbp_price_amount = $category_data['data_3'];
-												if ( $level_two_link > 0) {
-													$cat_link = "products.php?lf_parent_id=" . $row->parent_id . "&pro_type=".$pro_type."&lf_group_id[]=" . $row->group_id;
+												if ($level_two_link > 0) {
+													$cat_link = "products.php?lf_parent_id=" . $row->parent_id . "&pro_type=" . $pro_type . "&lf_group_id[]=" . $row->group_id;
 												} else {
 													$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
-													if($pro_type == 20){
-														$cat_link .= "/" . $pro_type;
+													if ($pro_type == 20) {
+														$cat_link = "artikelarten/" . $row->sub_cat_params."/" . $pro_type;
 													}
 												}
-										
-											print('<div>
+
+												print('<div>
 													<div class="ctg_type_col">
 													<a href="' . $cat_link . '">
 														<div class="ctg_type_card">
@@ -145,7 +157,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 													</a>
 												</div>
 											</div>');
-										}
+											}
 										}
 										?>
 									</div>
@@ -168,7 +180,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 													<ul>
 														<?php for ($i = 0; $i < count($sortby_array); $i++) {
 															if ($i != $sortby) { ?>
-																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id = "<?php print($i); ?>"><?php print($sortby_array[$i]); ?></a></li>
+																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>"><?php print($sortby_array[$i]); ?></a></li>
 														<?php }
 														} ?>
 													</ul>
@@ -255,7 +267,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		if (!$clicked.parents().hasClass("drop-down_2"))
 			$(".drop-down_2 .options ul").hide();
 	});
-	
+
 	<?php if (!isset($_REQUEST['level_three'])) { ?>
 		$(window).load(function() {
 			gerenric_product_inner();
@@ -269,6 +281,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		let sortby = $("#sort_by_selected").val();
 		let lf_parent_id = "<?php print($lf_parent_id); ?>";
 		let pro_type = "<?php print($pro_type); ?>";
+		let level_two = "<?php print($level_two); ?>";
 		let whereclause = "<?php print($whereclause); ?>";
 		let price_without_tex_display = '<?php print($price_without_tex_display); ?>';
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display); ?>';
@@ -310,6 +323,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 				sortby: sortby,
 				lf_parent_id: lf_parent_id,
 				pro_type: pro_type,
+				level_two: level_two,
 				whereclause: whereclause,
 				price_without_tex_display: price_without_tex_display,
 				pbp_price_with_tex_display: pbp_price_with_tex_display,
@@ -393,7 +407,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		gerenric_product_inner(lf_group_id_data.join(", "), lf_manf_id_data.join(", "), lf_pf_fvalue_data.join(", "), 1);
 	});
 
-	$(".sort_by").on("click", function(){
+	$(".sort_by").on("click", function() {
 		let sort_by = $(this).attr("data-id");
 		$("#sort_by_selected").val(sort_by);
 
@@ -444,153 +458,159 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 	}
 </script>
 <script>
-    $(window).load(function() {
-        lf_group_id_inner();
-        lf_manf_id_inner();
-        lf_pf_fvalue_inner();
-    });
-    let hasTriggeredClick = false;
+	$(window).load(function() {
+		lf_group_id_inner();
+		lf_manf_id_inner();
+		lf_pf_fvalue_inner();
+	});
+	let hasTriggeredClick = false;
 
-    function lf_group_id_inner() {
-        //setTimeout(function() {
-        let lf_action_type = "<?php print($lf_action_type); ?>";
-        let leve_id = "<?php print($leve_id); ?>";
-        let left_filter_cat_WhereQuery = "<?php print($left_filter_cat_WhereQuery); ?>";
-        let level_check = "<?php print($level_three); ?>";
+	function lf_group_id_inner() {
+		//setTimeout(function() {
+		let lf_action_type = "<?php print($lf_action_type); ?>";
+		let pro_type = "<?php print($pro_type); ?>";
+		let leve_id = "<?php print($leve_id); ?>";
+		let left_filter_cat_WhereQuery = "<?php print($left_filter_cat_WhereQuery); ?>";
+		let level_check = "<?php print($level_three); ?>";
 
-        $.ajax({
-            url: 'ajax_calls.php?action=lf_group_id_inner',
-            method: 'POST',
-            data: {
-                lf_action_type: lf_action_type,
-                leve_id: leve_id,
-                left_filter_cat_WhereQuery: left_filter_cat_WhereQuery,
-                level_check: level_check
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#lf_group_id_loading").hide();
-                    $("#lf_group_id_inner").html(obj.lf_group_id_inner);
+		$.ajax({
+			url: 'ajax_calls.php?action=lf_group_id_inner',
+			method: 'POST',
+			data: {
+				lf_action_type: lf_action_type,
+				pro_type: pro_type,
+				leve_id: leve_id,
+				left_filter_cat_WhereQuery: left_filter_cat_WhereQuery,
+				level_check: level_check
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				console.log(obj);
+				if (obj.status == 1) {
+					$("#lf_group_id_loading").hide();
+					$("#lf_group_id_inner").html(obj.lf_group_id_inner);
 
-                    if (level_check > 0 && !hasTriggeredClick) {
-                        //setTimeout(function() {
-                            var lf_group_id = [];
-                            $(".lf_group_id:checked").each(function() {
-                                lf_group_id.push($(this).val());
-                            });
-                            lf_manf_id_inner(lf_group_id.join(", "));
-                            lf_pf_fvalue_inner(lf_group_id.join(", "));
-                            gerenric_product_inner(lf_group_id.join(", "));
-                            hasTriggeredClick = true; // Mark as triggered
-                        //}, 100); // Slight delay to ensure DOM is updated
-                    }
-                }
-            }
-            //}, 5000);
-        });
-    }
-
-    function lf_manf_id_inner(lf_group_id_data) {
-        //setTimeout(function() {
-        let lf_action_type = "<?php print($lf_action_type); ?>";
-        let leve_id = "<?php print($leve_id); ?>";
-        let Sidefilter_brandwith = "<?php print($Sidefilter_brandwith); ?>";
-        let manf_check = <?php echo json_encode($manf_check); ?>;
-        let lf_group_id = "";
-        if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
-            lf_group_id = lf_group_id_data;
-        }
-        $.ajax({
-            url: 'ajax_calls.php?action=lf_manf_id_inner',
-            method: 'POST',
-            data: {
-                lf_action_type: lf_action_type,
-                lf_group_id: lf_group_id,
-                leve_id: leve_id,
-                Sidefilter_brandwith: Sidefilter_brandwith,
-                manf_check: manf_check
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#lf_manf_id_inner_loading").hide();
-                    $("#lf_manf_id_inner").html(obj.lf_manf_id_inner);
-                }
-				lf_manf_id_inner_script();
-            }
-            // }, 5000);
-        });
-    }
-
-    function lf_pf_fvalue_inner(lf_group_id_data = "", lf_manf_id_data = "") {
-        //setTimeout(function() {
-        let lf_action_type = "<?php print($lf_action_type); ?>";
-        let leve_id = "<?php print($leve_id); ?>";
-        let pf_fvalue_check = <?php echo json_encode($pf_fvalue_check); ?>;
-        let lf_group_id = "";
-        if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
-            $("#lf_pf_fvalue_inner_loading").show();
-            lf_group_id = lf_group_id_data;
-        }
-        let lf_manf_id = "";
-        if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
-            $("#lf_pf_fvalue_inner_loading").show();
-            lf_manf_id = lf_manf_id_data;
-        }
-        $.ajax({
-            url: 'ajax_calls.php?action=lf_pf_fvalue_inner',
-            method: 'POST',
-            data: {
-                lf_group_id: lf_group_id,
-                lf_manf_id: lf_manf_id,
-                lf_action_type: lf_action_type,
-                leve_id: leve_id,
-                pf_fvalue_check: pf_fvalue_check
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#lf_pf_fvalue_inner_loading").hide();
-                    $("#lf_pf_fvalue_inner").html(obj.lf_pf_fvalue_inner);
-                }
-                genaric_javascript_file();
-                
-            }
-            //}, 5000);
-        });
-    }
-    function lf_manf_id_inner_script(){
-		 $(".show-more").click(function() {
-            if ($("#category_show_0, #list_checkbox_hide_0").hasClass("category_show_height")) {
-                $(this).text("(Weniger anzeigen)");
-            } else {
-                $(this).text("(Mehr anzeigen)");
-            }
-
-            $("#category_show_0, #list_checkbox_hide_0").toggleClass("category_show_height");
-        });
-	}
-    function genaric_javascript_file() {
-       
-        $(".show-more").click(function() {
-			if($(this).attr("data-id") > 0){
-				if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
-                $(this).text("(Weniger anzeigen)");
-            } else {
-                $(this).text("(Mehr anzeigen)");
-            }
-
-            $("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");
+					if (level_check > 0 && !hasTriggeredClick) {
+						//setTimeout(function() {
+						var lf_group_id = [];
+						$(".lf_group_id:checked").each(function() {
+							lf_group_id.push($(this).val());
+						});
+						lf_manf_id_inner(lf_group_id.join(", "));
+						lf_pf_fvalue_inner(lf_group_id.join(", "));
+						gerenric_product_inner(lf_group_id.join(", "));
+						hasTriggeredClick = true; // Mark as triggered
+						//}, 100); // Slight delay to ensure DOM is updated
+					}
+				}
 			}
-        });
-    }
+			//}, 5000);
+		});
+	}
+
+	function lf_manf_id_inner(lf_group_id_data) {
+		//setTimeout(function() {
+		let lf_action_type = "<?php print($lf_action_type); ?>";
+		let pro_type = "<?php print($pro_type); ?>";
+		let leve_id = "<?php print($leve_id); ?>";
+		let Sidefilter_brandwith = "<?php print($Sidefilter_brandwith); ?>";
+		let manf_check = <?php echo json_encode($manf_check); ?>;
+		let lf_group_id = "";
+		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
+			lf_group_id = lf_group_id_data;
+		}
+		$.ajax({
+			url: 'ajax_calls.php?action=lf_manf_id_inner',
+			method: 'POST',
+			data: {
+				lf_action_type: lf_action_type,
+				lf_group_id: lf_group_id,
+				pro_type: pro_type,
+				leve_id: leve_id,
+				Sidefilter_brandwith: Sidefilter_brandwith,
+				manf_check: manf_check
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				//console.log(obj);
+				if (obj.status == 1) {
+					$("#lf_manf_id_inner_loading").hide();
+					$("#lf_manf_id_inner").html(obj.lf_manf_id_inner);
+				}
+				lf_manf_id_inner_script();
+			}
+			// }, 5000);
+		});
+	}
+
+	function lf_pf_fvalue_inner(lf_group_id_data = "", lf_manf_id_data = "") {
+		//setTimeout(function() {
+		let lf_action_type = "<?php print($lf_action_type); ?>";
+		let leve_id = "<?php print($leve_id); ?>";
+		let pf_fvalue_check = <?php echo json_encode($pf_fvalue_check); ?>;
+		let lf_group_id = "";
+		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
+			$("#lf_pf_fvalue_inner_loading").show();
+			lf_group_id = lf_group_id_data;
+		}
+		let lf_manf_id = "";
+		if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
+			$("#lf_pf_fvalue_inner_loading").show();
+			lf_manf_id = lf_manf_id_data;
+		}
+		$.ajax({
+			url: 'ajax_calls.php?action=lf_pf_fvalue_inner',
+			method: 'POST',
+			data: {
+				lf_group_id: lf_group_id,
+				lf_manf_id: lf_manf_id,
+				lf_action_type: lf_action_type,
+				leve_id: leve_id,
+				pf_fvalue_check: pf_fvalue_check
+			},
+			success: function(response) {
+				//console.log("response = "+response);
+				const obj = JSON.parse(response);
+				//console.log(obj);
+				if (obj.status == 1) {
+					$("#lf_pf_fvalue_inner_loading").hide();
+					$("#lf_pf_fvalue_inner").html(obj.lf_pf_fvalue_inner);
+				}
+				genaric_javascript_file();
+
+			}
+			//}, 5000);
+		});
+	}
+
+	function lf_manf_id_inner_script() {
+		$(".show-more").click(function() {
+			if ($("#category_show_0, #list_checkbox_hide_0").hasClass("category_show_height")) {
+				$(this).text("(Weniger anzeigen)");
+			} else {
+				$(this).text("(Mehr anzeigen)");
+			}
+
+			$("#category_show_0, #list_checkbox_hide_0").toggleClass("category_show_height");
+		});
+	}
+
+	function genaric_javascript_file() {
+
+		$(".show-more").click(function() {
+			if ($(this).attr("data-id") > 0) {
+				if ($("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + " ").hasClass("category_show_height")) {
+					$(this).text("(Weniger anzeigen)");
+				} else {
+					$(this).text("(Mehr anzeigen)");
+				}
+
+				$("#category_show_" + $(this).attr("data-id") + ", #list_checkbox_hide_" + $(this).attr("data-id") + "").toggleClass("category_show_height");
+			}
+		});
+	}
 </script>
 
 <?php include("includes/bottom_js.php"); ?>

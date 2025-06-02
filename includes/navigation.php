@@ -135,7 +135,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     }
                 }
                 ?>
-                <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
+                <!--<li><a href="unterkategorien/schulranzen">Schulranzen</a></li>-->
                 <li><a href="verkäufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
@@ -154,7 +154,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         }
                     }
                     ?>
-                    <li><a href="unterkategorien/schulranzen">Schulranzen</a></li>
+                    <!--<li><a href="unterkategorien/schulranzen">Schulranzen</a></li>-->
                 </ul>
                 <div class="nav_overlay"></div>
             </div>
