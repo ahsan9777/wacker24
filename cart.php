@@ -224,6 +224,35 @@ include("includes/message.php");
 		<!--LOCATION_POPUP_START-->
 		<?php include("includes/popup.php"); ?>
 		<!--LOCATION_POPUP_END-->
+		<!--CREATE_LIST_POPUP_START-->
+		<div class="popup versand_popup">
+			<div class="popup_inner wd_30">
+				<div class="popup_content">
+					<div class="popup_heading">&nbsp;<div class="popup_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="popup_content_inner">
+						<div class="popup_inner_container">
+							<p><strong>Dieses Produkt mit Freunden teilen</strong></p>
+							<div class="share_icon">
+								<a class="icon" href="mailto:mail@wacker24.de">
+									<i class="fa fa-envelope" aria-hidden="true"></i>
+									<p>Email</p>
+								</a>
+							</div>
+							<div class="link_copy">
+								<div class="link_section">
+
+								</div>
+								<div class="btn_link_copy">
+									Link kopieren
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--CREATE_LIST_POPUP_END-->
 
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
@@ -289,7 +318,7 @@ include("includes/message.php");
 											$smiller_product_url = $GLOBALS['siteURL'] . "search_result.php?search_keyword=" . implode(' ', array_slice($pro_description_short, 0, 2));
 									?>
 											<div class="cart_pd_row">
-												<div class="cart_pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($GLOBALS['siteURL']); ?>product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
 														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><?php print($row->pro_description_short); ?></a></div>
@@ -329,8 +358,8 @@ include("includes/message.php");
 																		<?php } ?>
 																	</span>
 																</li>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Löschen</a></li>
-																<li><a href="javascript:void(0)">Aktie</a></li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" >Löschen</a></li>
+																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>">Aktie</a></li>
 																<li><a href="<?php print($smiller_product_url); ?>">Ähnliches Produkt</a></li>
 															</ul>
 														</div>
@@ -675,6 +704,37 @@ include("includes/message.php");
 		}
 		return visaOrMasterCardCVVRegEx.test(cvv);
 	}
+
+	$('.popup_close').click(function() {
+		$('.popup').hide();
+		$('body').css({
+			'overflow': 'inherit'
+		});
+	});
+
+	$(".versand_trigger").click(function() {
+		$(".btn_link_copy").text("Link kopieren");
+		let product_link = $("#product_link_" + $(this).attr("data-id")).attr("href");
+		//console.log("product_link: "+product_link);
+		$(".link_section").text(product_link);
+		$('.versand_popup').show();
+		$('.versand_popup').resize();
+		$('body').css({
+			'overflow': 'hidden'
+		});
+	});
+
+	$(".btn_link_copy").on("click", function() {
+		$(".btn_link_copy").text("Link Kopiert!");
+		let link = $(".link_section").text();
+		navigator.clipboard.writeText(link);
+		setTimeout(function() {
+			$('.popup').hide();
+			$('body').css({
+				'overflow': 'inherit'
+			});
+		}, 2000);
+	});
 </script>
 
 </html>
