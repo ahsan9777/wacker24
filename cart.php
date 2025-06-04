@@ -91,7 +91,8 @@ if (isset($_REQUEST['btn_checkout'])) {
 			$data['currency'] = $row3->pm_currency;
 			$data['entityId'] = $row3->pm_entity_id;
 		}
-		$cardrequest = cardrequest($ord_id, $order_net_amount, $data);
+		//$order_net_amount = number_format(1, "2", ".", "");
+		$cardrequest = cardrequest($ord_id, $order_net_amount, $data, $usa_id, $pm_id);
 		$cardresponsedata = json_decode($cardrequest, true);
 		/*print("<pre>");
 				print_r($cardresponsedata);
@@ -234,7 +235,7 @@ include("includes/message.php");
 						<div class="popup_inner_container">
 							<p><strong>Dieses Produkt mit Freunden teilen</strong></p>
 							<div class="share_icon">
-								<a class="icon" href="mailto:mail@wacker24.de">
+								<a class="icon" id="email_href" href="">
 									<i class="fa fa-envelope" aria-hidden="true"></i>
 									<p>Email</p>
 								</a>
@@ -321,7 +322,7 @@ include("includes/message.php");
 												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($GLOBALS['siteURL']); ?>product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
-														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><?php print($row->pro_description_short); ?></a></div>
+														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>" id="product_title_<?php print($row->ci_id); ?>" ><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
@@ -715,7 +716,11 @@ include("includes/message.php");
 	$(".versand_trigger").click(function() {
 		$(".btn_link_copy").text("Link kopieren");
 		let product_link = $("#product_link_" + $(this).attr("data-id")).attr("href");
+		let email_href = "mailto:?subject=Check this out at wacker24&body="+$("#product_title_" + $(this).attr("data-id")).text();
+		//let email_href = encodeURIComponent("mailto:?subject=Check this out at wacker24&body="+$("#product_title_" + $(this).attr("data-id")).text());
+
 		//console.log("product_link: "+product_link);
+		$("#email_href").attr("href", email_href);
 		$(".link_section").text(product_link);
 		$('.versand_popup').show();
 		$('.versand_popup').resize();

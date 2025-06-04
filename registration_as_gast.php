@@ -46,11 +46,29 @@ if (isset($_REQUEST['btn_registration'])) {
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
-		$user_id = $row->user_id;
+		if ($_REQUEST['confirm_code'] != $_REQUEST['reconfirm_code']) {
+
+			$utype_id = $_REQUEST['utype_id'];
+			$utype_id_as_guest = 5;
+			$user_fname = $_REQUEST['user_fname'];
+			$user_lname = $_REQUEST['user_lname'];
+			$gen_id = $_REQUEST['gen_id'];
+			$user_phone = $_REQUEST['user_phone'];
+			$user_name = $_REQUEST['user_name'];
+			$usa_street = $_REQUEST['usa_street'];
+			$usa_house_no = $_REQUEST['usa_house_no'];
+			$plz = $_REQUEST['plz'];
+			$ort = $_REQUEST['ort'];
+
+			$class = "alert alert-danger";
+			$strMSG = "Sehr geehrter Kunde, <br> Der Bestätigungscode passt nicht!";
+		} else {
+			$user_id = $row->user_id;
 		mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_type = '0', usa_defualt = '0' WHERE user_id = '" . $user_id . "'") or die(mysqli_error($GLOBALS['conn']));
 		$users = true;
 		$usa_id = getMaximum("user_shipping_address", "usa_id");
 		$user_shipping_address = mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_fname, usa_lname, usa_street, usa_house_no, usa_zipcode, usa_type, usa_defualt) VALUES ('" . $usa_id . "', '" . $user_id . "', '" . dbStr(trim($_REQUEST['user_fname'])) . "','" . dbStr(trim($_REQUEST['user_lname'])) . "', '" . dbStr(trim($_REQUEST['usa_street'])) . "', '" . dbStr(trim($_REQUEST['usa_house_no'])) . "', '" . dbStr(trim($_REQUEST['plz'])) . " " . dbStr(trim($_REQUEST['ort'])) . "', '1', '1')") or die(mysqli_error($GLOBALS['conn']));
+		}
 	} else {
 
 

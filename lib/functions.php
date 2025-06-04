@@ -2498,24 +2498,24 @@ function check_payment_status($id, $entityId)
 	return $responseData;
 }
 
-function cardrequest($ord_id, $order_net_amount, $request)
+function cardrequest($ord_id, $order_net_amount, $request, $usa_id, $pm_id)
 {
-
+header('Content-Type: text/plain; charset=utf-8');
 	//$url = "https://vr-pay-ecommerce.de/v1/payments";
 	$url = "" . config_payment_url . "";
 	$data = "entityId=" . $request['entityId'] .
-		"&merchantTransactionId=" . $ord_id .
+		//"&merchantTransactionId=" . $ord_id .
 		"&amount=" . $order_net_amount .
 		"&currency=" . $request['currency'] .
 		"&paymentBrand=" . $request['brand'] .
-		"&paymentType=DB" .
+		"&paymentType=PA" .
 		"&card.number=" . $request['cardnumber'] .
 		"&card.holder=" . $request['cardholder'] .
 		"&card.expiryMonth=" . $request['cardmonth'] .
 		"&card.expiryYear=" . $request['cardyear'] .
 		"&card.cvv=" . $request['cvv'] .
-		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "my_order.php?op=2";
-
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/".$request['entityId']."/".$usa_id."/".$pm_id;
+		//print($data);die();
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(

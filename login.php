@@ -144,8 +144,8 @@ if (isset($_REQUEST['btn_login'])) {
 										</a>
 									</div>
 								</li>
-								<?php if($ref == $GLOBALS['siteURL'] . "einkaufswagen") {?>
-								<!--<li>
+								<?php if($ref == $GLOBALS['siteURL'] . "einkaufswagen" || $ref == $GLOBALS['siteURL'] . "einkaufswagen/2") {?>
+								<li>
 									<div class="or_div">
 										<div class="or_div_inner">Als Gast bestellen?</div>
 									</div>
@@ -153,7 +153,7 @@ if (isset($_REQUEST['btn_login'])) {
 											<div class="gerenric_btn">Weiter als Gast</div>
 										</a>
 									</div>
-								</li>-->
+								</li>
 								<?php } ?>
 							</ul>
 						</form>
