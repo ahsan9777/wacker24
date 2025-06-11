@@ -2504,7 +2504,7 @@ header('Content-Type: text/plain; charset=utf-8');
 	//$url = "https://vr-pay-ecommerce.de/v1/payments";
 	$url = "" . config_payment_url . "";
 	$data = "entityId=" . $request['entityId'] .
-		//"&merchantTransactionId=" . $ord_id .
+		"&merchantTransactionId=" . $ord_id .
 		"&amount=" . $order_net_amount .
 		"&currency=" . $request['currency'] .
 		"&paymentBrand=" . $request['brand'] .
@@ -2564,6 +2564,7 @@ function SepaRequest($request)
 	curl_close($ch);
 	return $responseData;
 }
+
 
 function get_pro_price($pro_id, $supplier_id, $ci_qty)
 {

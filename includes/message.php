@@ -77,6 +77,34 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Bitte geben Sie Ihre Rechnungsanschrift ein";
 			break;
+		case 17:
+			$class = "alert alert-danger";
+			$strMSG = "Ungültige Kreditkartennummer, Bankkontonummer oder Bankname";
+			break;
+		case 18:
+			$class = "alert alert-danger";
+			$strMSG = "Karte abgelaufen";
+			break;
+		case 19:
+			$class = "alert alert-danger";
+			$strMSG = "Transaktion abgelehnt – verdächtige Aktivität erkannt";
+			break;
+		case 20:
+			$class = "alert alert-danger";
+			$strMSG = "Ungültiger CVV-Code";
+			break;
+		case 21:
+			$class = "alert alert-danger";
+			$strMSG = "Technischer Fehler – bitte versuchen Sie es später erneut";
+			break;
+		case 22:
+			$class = "alert alert-danger";
+			$strMSG = "Unbekannter Fehler – bitte kontaktieren Sie den Support";
+			break;
+		case 23:
+			$class = "alert alert-danger";
+			$strMSG = "Ungültige Authentifizierungsinformationen";
+			break;
 	}
 }
 ?>

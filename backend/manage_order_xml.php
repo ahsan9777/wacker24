@@ -3,11 +3,12 @@ include '../lib/openCon.php';
 include '../lib/functions.php';
 $address_tag_data = "";
 $ord_id = $_REQUEST['ord_id'];
-$Query = "SELECT ord.*, u.user_id, u.customer_id, di.dinfo_email, CONCAT(di.dinfo_street, ' ', di.dinfo_house_no) AS user_street_house, di.dinfo_usa_zipcode, c.countries_iso_code_2 FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id WHERE ord.ord_id = '".$ord_id."'";
+$Query = "SELECT ord.*, u.user_id, u.customer_id, u.user_company_name, CONCAT(u.user_fname, ' ', u.user_fname) AS user_full_name, di.dinfo_email, CONCAT(di.dinfo_street, ' ', di.dinfo_house_no) AS user_street_house, di.dinfo_usa_zipcode, c.countries_iso_code_2 FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id WHERE ord.ord_id = '".$ord_id."'";
 $rs = $pdo->query($Query);
 if ($rs->rowCount() > 0) {
     $row = $rs->fetch(PDO::FETCH_OBJ);
     $party_id = ( (empty($row->customer_id)) ? '600000' : $row->customer_id );
+    $name = ( (empty($row->user_company_name)) ? $row->user_full_name : $row->user_company_name );
     $ord_id = $row->ord_id;
     $ord_datetime = date("Y-m-d", strtotime($row->ord_datetime));
     $ord_note = $row->ord_note;
@@ -27,7 +28,7 @@ if ($rs->rowCount() > 0) {
     $countries_iso_code_2 = $row->countries_iso_code_2;
     $address_tag_data = '
                 <ADDRESS>
-                     <NAME>Sanitätshaus Strack GmbH  Frau Mandy Walk</NAME>
+                     <NAME>'.$name.'</NAME>
                      <DEPARTMENT/>
                      <CONTACT>
                         <CONTACT_NAME>'.$dinfo_email.'</CONTACT_NAME>

@@ -91,16 +91,49 @@ if (isset($_REQUEST['btn_checkout'])) {
 			$data['currency'] = $row3->pm_currency;
 			$data['entityId'] = $row3->pm_entity_id;
 		}
+		$parameters = "";
 		//$order_net_amount = number_format(1, "2", ".", "");
 		$cardrequest = cardrequest($ord_id, $order_net_amount, $data, $usa_id, $pm_id);
 		$cardresponsedata = json_decode($cardrequest, true);
-		/*print("<pre>");
-				print_r($cardresponsedata);
-				print("</pre>");die();*/
+		//print_r($cardresponsedata); print($cardresponsedata['result']['code']); die();
 		if ($cardresponsedata['result']['code'] == "000.100.110") {
 			cart_to_order($user_id, $usa_id, $pm_id, $_REQUEST['ord_note']);
 			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata['id'])) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata['descriptor'])) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 			header('Location: bestellungen/15');
+		} elseif ($cardresponsedata['result']['code'] == "000.200.000") {
+			/*foreach ($cardresponsedata['redirect']['preconditions'][0]['parameters'] as $key => $value) {
+				$parameters .=  $value['name'] . "=" . $value['value'] . "&";
+			}
+			//print($parameters);die();
+			header('Location: ' . $cardresponsedata['redirect']['url'] . '?' . $parameters);*/
+			header('Location: ' . $cardresponsedata['redirect']['url']);
+		} else {
+			$result_code = $cardresponsedata['result']['code'];
+
+			switch ($result_code) {
+				case '100.100.101':
+					header('Location: einkaufswagen/17');
+					break;
+				case '100.100.303':
+					header('Location: einkaufswagen/18');
+					break;
+				case '100.380.401':
+					header('Location: einkaufswagen/19');
+					break;
+				case '100.396.101':
+					header('Location: einkaufswagen/20');
+					break;
+				case '800.100.151':
+					header('Location: einkaufswagen/21');
+					break;
+				case '800.900.300':
+					header('Location: einkaufswagen/23');
+					break;
+				default:
+					header('Location: einkaufswagen/22');
+					break;
+			}
+			exit;
 		}
 	}
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
@@ -322,7 +355,7 @@ include("includes/message.php");
 												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($GLOBALS['siteURL']); ?>product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
-														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>" id="product_title_<?php print($row->ci_id); ?>" ><?php print($row->pro_description_short); ?></a></div>
+														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>" id="product_title_<?php print($row->ci_id); ?>"><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
@@ -359,7 +392,7 @@ include("includes/message.php");
 																		<?php } ?>
 																	</span>
 																</li>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" >Löschen</a></li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>">Löschen</a></li>
 																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>">Aktie</a></li>
 																<li><a href="<?php print($smiller_product_url); ?>">Ähnliches Produkt</a></li>
 															</ul>
@@ -597,7 +630,7 @@ include("includes/message.php");
 												<li class="dlpy_flex">
 													<div class="cart_col"><input type="text" class="gerenric_input" name="cardmonth" id="cardmonth" placeholder="12"></div>
 													<div class="cart_col"><input type="text" class="gerenric_input" name="cardyear" id="cardyear" placeholder="2028"></div>
-													<div class="cart_col"><input type="text" class="gerenric_input" name="cvv" id="cvv" placeholder="CCV"></div>
+													<div class="cart_col"><input type="text" class="gerenric_input" name="cvv" id="cvv" placeholder="CVV"></div>
 												</li>
 											</ul>
 										</div>
@@ -716,7 +749,7 @@ include("includes/message.php");
 	$(".versand_trigger").click(function() {
 		$(".btn_link_copy").text("Link kopieren");
 		let product_link = $("#product_link_" + $(this).attr("data-id")).attr("href");
-		let email_href = "mailto:?subject=Check this out at wacker24&body="+$("#product_title_" + $(this).attr("data-id")).text();
+		let email_href = "mailto:?subject=Check this out at wacker24&body=" + $("#product_title_" + $(this).attr("data-id")).text();
 		//let email_href = encodeURIComponent("mailto:?subject=Check this out at wacker24&body="+$("#product_title_" + $(this).attr("data-id")).text());
 
 		//console.log("product_link: "+product_link);
