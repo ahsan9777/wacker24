@@ -86,6 +86,16 @@ if (isset($_REQUEST['btn_login'])) {
 	}
 }
 
+if (isset($_REQUEST['verification_code'])) {
+	$user_id = returnName("user_id", "users", "user_confirmation", $_REQUEST['verification_code']);
+	if ($user_id > 0) {
+		mysqli_query($GLOBALS['conn'], "UPDATE users SET status_id = '1' WHERE user_id = '" . $user_id . "'") or die(mysqli_error($GLOBALS['conn']));
+		header('Location: anmelden/24');
+	} else{
+		header('Location: anmelden/25');
+	}
+}
+include("includes/message.php");
 ?>
 <!doctype html>
 <html lang="de">

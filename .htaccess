@@ -25,6 +25,7 @@ RewriteRule ^(.*)$ https://www.wackersystems.com/$1 [L,R=301]
 
 RewriteRule ^kontakt/([0-9]+)?$ contact_us.php?op=$1 [L]
 RewriteRule ^kontakt/?$ contact_us.php [L]
+RewriteRule ^anmelden/([0-9]+)?$ login.php?op=$1 [L]
 RewriteRule ^anmelden? login.php [L]
 RewriteRule ^registrierung? registration.php [L]
 RewriteRule ^gastbestellung? registration_as_gast.php [L]

@@ -105,6 +105,14 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Ungültige Authentifizierungsinformationen";
 			break;
+		case 24:
+			$class = "alert alert-success";
+			$strMSG = "Ihr Konto wurde erfolgreich verifiziert";
+			break;
+		case 25:
+			$class = "alert alert-danger";
+			$strMSG = "Ihr Konto wurde nicht verifiziert. Bitte kontaktieren Sie unser Team";
+			break;
 	}
 }
 ?>
