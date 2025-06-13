@@ -67,16 +67,16 @@ if (isset($_REQUEST['btn_login'])) {
 			//header("location:".$GLOBALS['siteURL']."my_account.php");
 		} else {
 
-			$status_id = returnName("status_id", "users", "user_name", $username);
+			$status_id = returnName("status_id", "users", "user_name", $username, " AND utype_id IN (3,4)");
 			if ($status_id == 0) {
-				$rs1 = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '0'") or die(mysqli_error($GLOBALS['conn']));
+				/*$rs1 = mysqli_query($GLOBALS['conn'], "SELECT * FROM users WHERE utype_id IN (3,4) AND user_name='" . $username . "' AND status_id = '0'") or die(mysqli_error($GLOBALS['conn']));
 				if (mysqli_num_rows($rs1) > 0) {
 					$rw = mysqli_fetch_object($rs1);
 					$user_verification_code = md5($rw->user_id . date("Ymdhis"));
 					mysqli_query($GLOBALS['conn'], "UPDATE users SET user_confirmation = '" . $user_verification_code . "' WHERE user_id = '" . $rw->user_id . "'") or die(mysqli_error($GLOBALS['conn']));
-					$mailer->registration_account_verification($rw->user_fname . " " . $rw->user_lname, "verification@wackersystems.com", "7v6LjC{rEIct", $rw->user_name, "Account Verification", $user_verification_code);
-					header('Location: account_registration.php');
-				}
+					$mailer->registration_account_verification($rw->user_fname . " " . $rw->user_lname, "verification@wackersystems.com", "7v6LjC{rEIct", $rw->user_name, "Account Verification", $user_verification_code);*/
+					header('Location: konto-registrierung');
+				//}
 			} else {
 				$class = "alert alert-danger";
 				$strMSG = "Dear Cuctomer, <br>
