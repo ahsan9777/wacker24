@@ -2453,7 +2453,7 @@ function PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 		"&amount=" . $order_net_amount .
 		"&currency=EUR" .
 		"&paymentBrand=PAYPAL" .
-		"&paymentType=DB" .
+		"&paymentType=PA" .
 		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/".$entityId."/".$usa_id."/".$pm_id;
 	  //print_r($data);die;
 	$ch = curl_init();
@@ -2497,6 +2497,33 @@ function check_payment_status($id, $entityId)
 
 	return $responseData;
 }
+
+function capturePayment($entityId, $paymentId, $amount)
+{
+	$url = config_payment_url . '/' . $paymentId;
+	$data = "entityId=" . $entityId .
+		"&paymentType=CP" .
+		"&amount=" . $amount .
+		"&currency=EUR"; // You can also pass currency dynamically if needed
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Authorization:Bearer ' . config_authorization_bearer
+	));
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$responseData = curl_exec($ch);
+	if (curl_errno($ch)) {
+		return curl_error($ch);
+	}
+	curl_close($ch);
+
+	return $responseData;
+}
+
 
 function cardrequest($ord_id, $order_net_amount, $request, $usa_id, $pm_id)
 {
@@ -3010,7 +3037,7 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
 	];
 }
 
-function cart_to_order($user_id, $usa_id, $pm_id, $ord_payment_transaction_id = null)
+function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment_transaction_id = null)
 {
 	$order_success = false;
 
@@ -3048,7 +3075,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $ord_payment_transaction_id = 
 		if (isset($_SESSION['ord_note']) && !empty($_SESSION['ord_note'])) {
 			$ord_note = dbStr(trim($_SESSION['ord_note']));
 		}
-		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '".$ord_payment_transaction_id."', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '".$entityId."', '".$ord_payment_transaction_id."', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
 		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
