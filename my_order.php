@@ -1,23 +1,37 @@
 <?php
 include("includes/php_includes_top_user_dashboard.php");
 if ($_SESSION["utype_id"] == 5) {
-	header("Location: ".$GLOBALS['siteURL']."bestätigung-der-gastbestellung");
+	header("Location: " . $GLOBALS['siteURL'] . "bestätigung-der-gastbestellung");
 }
 
-if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])){
+//$payment_status_request = check_payment_status("8ac7a49f9766244201976b93716b3c34", "8ac7a4ca84e4549a0184e6fc903e14a5"); // Master card
+//$payment_status_responseData = json_decode($payment_status_request, true);
+//$payment_status_request = capturePayment("8ac7a4ca84e4549a0184e6fc903e14a5", "8ac7a49f9766244201976b93716b3c34", number_format(20.45, "2", ".", ""));
+//$payment_status_responseData = json_decode($payment_status_request, true);
+
+/*print("<pre>");
+print_r($payment_status_responseData);
+print("</pre>");die();*/
+if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) { //16.70
 	//print_r($_REQUEST);die();
 	$payment_status_request = check_payment_status($_REQUEST['id'], $_REQUEST['entityId']);
 	$payment_status_responseData = json_decode($payment_status_request, true);
+	/*$payment_status_request = capturePayment($_REQUEST['entityId'], $_REQUEST['id'], number_format(16.70, "2", ".", ""));
+	$payment_status_responseData = json_decode($payment_status_request, true);*/
 
 	/*print("<pre>");
 	print_r($payment_status_responseData);
 	print("</pre>");die();*/
-	if($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded'){
-		cart_to_order($_SESSION['UID'], $_REQUEST['usa_id'], $_REQUEST['pm_id'], $_REQUEST['id']);
-		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_payment_transaction_id = '" .$_REQUEST['id']. "' ") or die(mysqli_error($GLOBALS['conn']));
-		header("Location: ".$GLOBALS['siteURL']."bestellungen/15");
+	if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
+		cart_to_order($_SESSION['UID'], $_REQUEST['usa_id'], $_REQUEST['pm_id'], $_REQUEST['entityId'], $_REQUEST['id']);
+		//mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_payment_transaction_id = '" .$_REQUEST['id']. "' ") or die(mysqli_error($GLOBALS['conn']));
+		//mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '0' WHERE ord_payment_transaction_id = '" .$_REQUEST['id']. "' ") or die(mysqli_error($GLOBALS['conn']));
+		if($payment_status_responseData['paymentBrand'] == 'PAYPAL'){
+			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_short_id = '".dbStr(trim($payment_status_responseData['descriptor']))."', ord_payment_info_detail = '" . dbStr(trim($payment_status_request)) . "' WHERE ord_payment_transaction_id = '" .$_REQUEST['id']. "' ") or die(mysqli_error($GLOBALS['conn']));
+		}
+		header("Location: " . $GLOBALS['siteURL'] . "bestellungen/15");
 	} else {
-		header("Location: ".$GLOBALS['siteURL']."einkaufswagen");
+		header("Location: " . $GLOBALS['siteURL'] . "einkaufswagen");
 	}
 }
 include("includes/message.php");

@@ -50,7 +50,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	}
 
 	if ($pm_id == 1) {
-		cart_to_order($user_id, $usa_id, $pm_id, $_REQUEST['ord_note']);
+		cart_to_order($user_id, $usa_id, $pm_id);
 		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 		header('Location: bestellungen/15');
 	} elseif ($pm_id == 2) {
@@ -97,8 +97,8 @@ if (isset($_REQUEST['btn_checkout'])) {
 		$cardresponsedata = json_decode($cardrequest, true);
 		//print_r($cardresponsedata); print($cardresponsedata['result']['code']); die();
 		if ($cardresponsedata['result']['code'] == "000.100.110") {
-			cart_to_order($user_id, $usa_id, $pm_id, $_REQUEST['ord_note']);
-			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata['id'])) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata['descriptor'])) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+			cart_to_order($user_id, $usa_id, $pm_id);
+			mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_entity_id = '" . dbStr(trim($data['entityId'])) . "', ord_payment_transaction_id = '" . dbStr(trim($cardresponsedata['id'])) . "', ord_payment_short_id = '" . dbStr(trim($cardresponsedata['descriptor'])) . "', ord_payment_info_detail = '" . dbStr(trim($cardrequest)) . "', ord_payment_status = '0' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 			header('Location: bestellungen/15');
 		} elseif ($cardresponsedata['result']['code'] == "000.200.000") {
 			/*foreach ($cardresponsedata['redirect']['preconditions'][0]['parameters'] as $key => $value) {
