@@ -268,7 +268,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 		let cat_params_one = '<?php print($_REQUEST['cat_params_one']) ?>';
 		let price_without_tex_display = '<?php print($price_without_tex_display) ?>';
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display) ?>';
-		console.log("pro_type: "+pro_type+" level_one: "+level_one+" price_without_tex_display: "+price_without_tex_display+" pbp_price_with_tex_display: "+pbp_price_with_tex_display);
+		//console.log("pro_type: "+pro_type+" level_one: "+level_one+" price_without_tex_display: "+price_without_tex_display+" pbp_price_with_tex_display: "+pbp_price_with_tex_display);
 		const ajaxCall = $.ajax({
 			url: 'ajax_calls.php?action=category_type_inner',
 			method: 'POST',

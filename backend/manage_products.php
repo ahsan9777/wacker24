@@ -155,12 +155,13 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                 }
                 
                 $art_id = $supplier_id;
-                $catalog_group_id = 0;
+                $catalog_group_id = $referance_feature_group_id;
                 $sub_group_ids = substr($catalog_group_id, 0, 3) . ",";
                 $cat_id_level_two = substr($catalog_group_id, 0, 3);
                 $sub_group_ids .= returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
-                $cat_id_level_one = returnName("parent_id", "category", "group_id", rtrim($sub_group_ids, ","));
+                $cat_id_level_one = returnName("parent_id", "category", "group_id", $cat_id_level_two);
                 //print("art_id = ".$art_id."<br>catalog_group_id = ".$catalog_group_id."<br>sub_group_ids: ".$sub_group_ids."<br>");die();
+                //print("supplier_id=".$supplier_id."<br>catalog_group_id=".$catalog_group_id."<br>cat_id_level_one = ".$cat_id_level_one."<br>cat_id_level_two = ".$cat_id_level_two."<br>");//die();
 
                 mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids, cm_type, cat_id_level_two, cat_id_level_one) VALUES ('" . $catalog_group_id . "', '" . $art_id . "', '" . dbStr(rtrim($sub_group_ids, ",")) . "', '" . $pro_type . "', '" . $cat_id_level_two . "', '" . $cat_id_level_one . "')") or die(mysqli_error($GLOBALS['conn']));
             }
