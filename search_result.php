@@ -284,16 +284,27 @@ if (isset($_REQUEST['sortby'])) {
 															$pq_quantity = $row1->pq_quantity;
 															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
 															$pq_status = $row1->pq_status;
-															if ($pq_quantity == 0 && $pq_status == 'true') {
+															/*if ($pq_quantity == 0 && $pq_status == 'true') {
 																$quantity_lenght = $pq_upcomming_quantity;
 																print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
 																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+															}*/
+															if ($pq_quantity == 0 && $pq_status == 'true') {
+																$quantity_lenght = $pq_upcomming_quantity;
+																print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
+															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
+																$quantity_lenght = $pq_quantity;
+																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
+																print('<div class="product_order_title red">Auf Anfrage</div>');
 															}
 														} else {
 															if ($row->pro_type > 0) {
 																$quantity_lenght = 1;
+															} else {
+																print('<div class="product_order_title red">Auf Anfrage</div>');
 															}
 														}
 														?>

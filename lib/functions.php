@@ -2454,8 +2454,8 @@ function PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 		"&currency=EUR" .
 		"&paymentBrand=PAYPAL" .
 		"&paymentType=PA" .
-		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/".$entityId."/".$usa_id."/".$pm_id;
-	  //print_r($data);die;
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id;
+	//print_r($data);die;
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -2479,19 +2479,19 @@ function check_payment_status($id, $entityId)
 	//$entityID = "8acda4ca8dcb3477018e0a852b7e26c3";
 	//$url = "https://vr-pay-ecommerce.de/v1/payments/$id";
 	//$url .= "?entityId=" . $entityID;
-	$url = "" . config_payment_url . "/".$id."?entityId=" . $entityId;
+	$url = "" . config_payment_url . "/" . $id . "?entityId=" . $entityId;
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		'Authorization:Bearer '.config_authorization_bearer.''
+		'Authorization:Bearer ' . config_authorization_bearer . ''
 	));
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	$responseData = curl_exec($ch);
 	if (curl_errno($ch)) {
-		return(curl_error($ch));
+		return (curl_error($ch));
 	}
 	curl_close($ch);
 
@@ -2527,7 +2527,7 @@ function capturePayment($entityId, $paymentId, $amount)
 
 function cardrequest($ord_id, $order_net_amount, $request, $usa_id, $pm_id)
 {
-header('Content-Type: text/plain; charset=utf-8');
+	header('Content-Type: text/plain; charset=utf-8');
 	//$url = "https://vr-pay-ecommerce.de/v1/payments";
 	$url = "" . config_payment_url . "";
 	$data = "entityId=" . $request['entityId'] .
@@ -2541,8 +2541,8 @@ header('Content-Type: text/plain; charset=utf-8');
 		"&card.expiryMonth=" . $request['cardmonth'] .
 		"&card.expiryYear=" . $request['cardyear'] .
 		"&card.cvv=" . $request['cvv'] .
-		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/".$request['entityId']."/".$usa_id."/".$pm_id;
-		//print($data);die();
+		"&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/" . $request['entityId'] . "/" . $usa_id . "/" . $pm_id;
+	//print($data);die();
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -2603,7 +2603,7 @@ function get_pro_price($pro_id, $supplier_id, $ci_qty)
 		while ($rw = mysqli_fetch_object($rs)) {
 			$retValue = array(
 				"pbp_id" => strval($rw->pbp_id),
-				"ci_amount" => strval( (( config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) ),
+				"ci_amount" => strval(((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax)),
 				"ci_gst_value" => strval($rw->pbp_tax)
 			);
 		}
@@ -2852,110 +2852,6 @@ function price_format($price)
 	return number_format($price, "2", ",", ".");
 }
 
-function checkQuantity($supplier_id, $quantity)
-{
-	$quantity_remaning = 0;
-	$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
-	print($Query);
-	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if (mysqli_num_rows($rs) > 0) {
-		$row = mysqli_fetch_object($rs);
-		$pq_quantity = $row->pq_quantity;
-		$pq_status = $row->pq_status;
-		if ($pq_quantity == 0 && $pq_status == 'true') {
-			quantityUpdate("pq_upcomming_quantity", $supplier_id, $quantity);
-		} elseif ($pq_quantity > 0 && $pq_status == 'false') {
-			if ($quantity > $pq_quantity) {
-				$quantity_remaning = $quantity - $pq_quantity;
-				quantityUpdate("pq_quantity", $supplier_id, $pq_quantity);
-				quantityUpdate("pq_upcomming_quantity", $supplier_id, $quantity_remaning);
-			} else {
-				quantityUpdate("pq_quantity", $supplier_id, $quantity);
-			}
-		}
-	}
-}
-
-function quantityUpdate($field, $supplier_id, $quantity)
-{
-
-	mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET " . $field . " = " . $field . " - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
-}
-
-/*function autocorrectQueryUsingProductTerms($query, $pdo) {
-    // Get all unique words from product descriptions
-    $stmt = $pdo->query("SELECT DISTINCT pro_description_short FROM products");
-    $allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    
-    // Extract all unique words from descriptions
-    $dictionaryWords = [];
-    foreach ($allDescriptions as $desc) {
-        $words = preg_split('/[\s\-_,\.\'\"]+/', $desc);
-        foreach ($words as $word) {
-            $word = trim(strtolower($word));
-            if (strlen($word) > 1) { // Skip single characters
-                $dictionaryWords[$word] = true;
-            }
-        }
-    }
-    $dictionaryWords = array_keys($dictionaryWords);
-    
-    // Break query into words
-    $queryWords = preg_split('/\s+/', $query);
-    $correctedWords = [];
-    
-    // Try to correct each word
-    foreach ($queryWords as $queryWord) {
-        $originalWord = $queryWord;
-        $queryWord = strtolower($queryWord);
-        
-        // If word is already in our dictionary, keep it
-        if (in_array($queryWord, $dictionaryWords)) {
-            $correctedWords[] = $originalWord;
-            continue;
-        }
-        
-        // Find closest word in dictionary
-        $bestMatch = null;
-        $bestScore = 0;
-        
-        foreach ($dictionaryWords as $dictWord) {
-            // Skip words with big length difference (optimization)
-            if (abs(strlen($queryWord) - strlen($dictWord)) > 3) {
-                continue;
-            }
-            
-            similar_text($queryWord, $dictWord, $score);
-            
-            // If this is a better match
-            if ($score > $bestScore) {
-                $bestScore = $score;
-                $bestMatch = $dictWord;
-            }
-        }
-        
-        // If we found a good match (over 70% similar)
-        if ($bestScore > 70 && $bestMatch !== null) {
-            // Preserve original capitalization if possible
-            if (ctype_upper($originalWord)) {
-                $correctedWords[] = strtoupper($bestMatch);
-            } elseif (ucfirst($originalWord) === $originalWord) {
-                $correctedWords[] = ucfirst($bestMatch);
-            } else {
-                $correctedWords[] = $bestMatch;
-            }
-        } else {
-            // If no good match, keep original
-            $correctedWords[] = $originalWord;
-        }
-    }
-    
-    return [
-        'original' => $query,
-        'corrected' => implode(' ', $correctedWords)
-    ];
-}*/
-
 function autocorrectQueryUsingProductTerms($query, $pdo)
 {
 	// Get all unique words from product descriptions
@@ -3075,7 +2971,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		if (isset($_SESSION['ord_note']) && !empty($_SESSION['ord_note'])) {
 			$ord_note = dbStr(trim($_SESSION['ord_note']));
 		}
-		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '".$entityId."', '".$ord_payment_transaction_id."', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $entityId . "', '" . $ord_payment_transaction_id . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
 		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
@@ -3087,6 +2983,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
 			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty);
 			$order_items_table_check = 1;
 		}
 	}
@@ -3106,4 +3003,13 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 	}
 
 	return $order_success;
+}
+
+function quantityUpdate($opration, $supplier_id, $quantity)
+{
+	if ($opration == "+") {
+		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = pq_quantity + '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+	} else {
+		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = pq_quantity - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+	}
 }
