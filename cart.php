@@ -56,7 +56,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	} elseif ($pm_id == 2) {
 		//$paypalresponseData = "";
 		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
-		//$order_net_amount = number_format(0.5, "2", ".", "");
+		//$order_net_amount = number_format(1, "2", ".", "");
 		$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $_REQUEST['ord_note']);
 		$paypalresponseData = json_decode($paypalrequest, true);
 		/*print("<pre>");

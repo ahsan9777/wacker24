@@ -68,6 +68,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
             print("<pre>");
             print_r($payment_status_responseData);
             print("</pre>");die();*/
+            //$ord_amount = number_format(0.50, "2", ".", "");
             if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
                 $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
                 $payment_status_responseData = json_decode($payment_status_request, true);
