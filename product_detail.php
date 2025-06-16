@@ -336,6 +336,10 @@ include("includes/message.php");
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
 										$pq_status = $row->pq_status;
+										$ci_qty_type = 0;
+										if($pq_status == 'true'){
+											$ci_qty_type = 1;
+										}
 										/*if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
 											$quantity_lenght = $pq_upcomming_quantity;
 											print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
@@ -348,7 +352,7 @@ include("includes/message.php");
 										} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
 											print('<div class="product_order_title red">Auf Anfrage</div>');
 										}*/
-										if ($pq_quantity == 0 && $pq_status == 'true') {
+										if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 											$quantity_lenght = $pq_upcomming_quantity;
 											print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
 										} elseif ($pq_quantity > 0 && $pq_status == 'false') {
@@ -391,6 +395,7 @@ include("includes/message.php");
 										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
 										<input type="hidden" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty" value="1">
+										<input type="hidden" id="ci_qty_type_<?php print($pro_id); ?>" name="ci_qty_type" value="<?php print($ci_qty_type); ?>">
 										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="#" role="button" onclick="return false;" data-id="<?php print($pro_id); ?>">
 											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>

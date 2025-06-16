@@ -2523,6 +2523,31 @@ function capturePayment($entityId, $paymentId, $amount)
 
 	return $responseData;
 }
+function RefundPayment($entityId, $paymentId, $amount)
+{
+	$url = config_payment_url . '/' . $paymentId;
+	$data = "entityId=" . $entityId .
+		"&paymentType=RF" .
+		"&amount=" . $amount .
+		"&currency=EUR"; // You can also pass currency dynamically if needed
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'Authorization:Bearer ' . config_authorization_bearer
+	));
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$responseData = curl_exec($ch);
+	if (curl_errno($ch)) {
+		return curl_error($ch);
+	}
+	curl_close($ch);
+
+	return $responseData;
+}
 
 
 function cardrequest($ord_id, $order_net_amount, $request, $usa_id, $pm_id)
@@ -2982,8 +3007,8 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
-			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty);
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '".$row2->ci_qty_type."', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type);
 			$order_items_table_check = 1;
 		}
 	}
@@ -3005,11 +3030,24 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 	return $order_success;
 }
 
-function quantityUpdate($opration, $supplier_id, $quantity)
+function orderquantityUpdate($ord_id){
+	$Query = "SELECT * FROM `order_items` WHERE ord_id = '".$ord_id."'";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if(mysqli_num_rows($rs) > 0){
+		while($rw = mysqli_fetch_object($rs)){
+			quantityUpdate("+", $rw->supplier_id, $rw->oi_qty, $rw->oi_qty_type);
+		}
+	}
+}
+function quantityUpdate($opration, $supplier_id, $quantity, $quantity_type)
 {
+	$field = "pq_quantity";
+	if($quantity_type > 0){
+		$field = "pq_upcomming_quantity";
+	}
 	if ($opration == "+") {
-		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = pq_quantity + '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." + '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 	} else {
-		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = pq_quantity - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 	}
 }

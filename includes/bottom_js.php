@@ -291,6 +291,7 @@
 		let ci_discount_type = $("#ci_discount_type_"+$(this).attr("data-id")).val();
 		let ci_discount_value = $("#ci_discount_value_"+$(this).attr("data-id")).val();
 		let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
+		let ci_qty_type = $("#ci_qty_type_"+$(this).attr("data-id")).val();
 
 		/*console.log("pro_type: "+pro_type);
 		console.log("supplier_id: "+supplier_id);
@@ -305,7 +306,8 @@
 				supplier_id: supplier_id,
 				ci_discount_type: ci_discount_type,
 				ci_discount_value: ci_discount_value,
-				ci_qty: ci_qty
+				ci_qty: ci_qty,
+				ci_qty_type: ci_qty_type
 			},
 			success: function(response) {
 				//console.log("response = "+response);

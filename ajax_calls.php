@@ -47,6 +47,7 @@ if (isset($_REQUEST['action'])) {
             $pro_type = $_REQUEST['pro_type'];
             $supplier_id = $_REQUEST['supplier_id'];
             $ci_qty = $_REQUEST['ci_qty'];
+            $ci_qty_type = $_REQUEST['ci_qty_type'];
             $get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty);
             $pbp_id = $get_pro_price['pbp_id'];
             $pbp_price_amount = $get_pro_price['ci_amount'];
@@ -140,7 +141,7 @@ if (isset($_REQUEST['action'])) {
                         if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
                             $ci_discounted_price_see = 1;
                         }
-                        $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total, ci_discounted_price_see) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst_value)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "', '" . $ci_discounted_price_see . "')") or die(mysqli_error($GLOBALS['conn']));
+                        $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_qty_type, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total, ci_discounted_price_see) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr($ci_qty_type) . "', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst_value)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "', '" . $ci_discounted_price_see . "')") or die(mysqli_error($GLOBALS['conn']));
                         $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                         $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                         if ($insert_cart_item == true && $update_cart == true) {
@@ -163,7 +164,7 @@ if (isset($_REQUEST['action'])) {
                 $ci_id = getMaximum("cart_items", "ci_id");
                 $_SESSION['ci_id'] = $ci_id;
 
-                $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst_value)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "')") or die(mysqli_error($GLOBALS['conn']));
+                $insert_cart_item = mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items ( ci_id, cart_id, pro_id, supplier_id, pbp_id, pbp_price_amount, ci_amount, ci_discounted_amount, ci_qty, ci_qty_type, ci_gross_total, ci_gst_value, ci_gst, ci_discount_type, ci_discount_value, ci_discount, ci_total) VALUES ('" . $ci_id . "','" . dbStr($cart_id) . "', '" . dbStr($pro_id) . "','" . dbStr($supplier_id) . "', '" . dbStr(trim($pbp_id)) . "', '" . dbStr($pbp_price_amount) . "', '" . dbStr($ci_amount) . "', '" . dbStr($ci_discounted_amount) . "', '" . dbStr($ci_qty) . "', '".dbStr($ci_qty_type)."', '" . dbStr(trim($ci_gross_total)) . "', '" . dbStr(trim($ci_gst_value)) . "', '" . dbStr(trim($ci_gst)) . "', '" . dbStr(trim($ci_discount_type)) . "', '" . dbStr(trim($ci_discount_value)) . "', '" . dbStr($ci_discount) . "', '" . dbStr($ci_total) . "')") or die(mysqli_error($GLOBALS['conn']));
                 $update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
                 $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                 if ($insert_cart == true && $insert_cart_item == true && $update_cart == true) {
@@ -670,7 +671,7 @@ if (isset($_REQUEST['action'])) {
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
 
             $category_type_inner = "";
-            if($level_one == 20){
+            if ($level_one == 20) {
                 $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id = '" . $level_one . "' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = sub_cat.group_id ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
             } else {
                 $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $level_one . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
@@ -682,9 +683,9 @@ if (isset($_REQUEST['action'])) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $last_record++;
                     $pg_mime_source_url_href = "files/no_img_1.jpg";
-                    if($level_one == 20){
+                    if ($level_one == 20) {
                         $category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
-                    } else{
+                    } else {
                         $category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
                     }
                     //print_r($category_data);die();
@@ -696,7 +697,7 @@ if (isset($_REQUEST['action'])) {
                     $pbp_price_amount = $category_data['data_3'];
                     if ($level_one == 20) {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
-                        $cat_link = "artikelarten/".$row->sub_cat_params . "/20";
+                        $cat_link = "artikelarten/" . $row->sub_cat_params . "/20";
                     } else {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
                         $cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
@@ -730,10 +731,10 @@ if (isset($_REQUEST['action'])) {
             $level_check = $_REQUEST['level_check'];
 
             $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
-            if($pro_type == 20){
+            if ($pro_type == 20) {
                 $level_check = $leve_id;
                 $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '20' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.cat_orderby ASC ";
-            } else{
+            } else {
                 $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '" . $leve_id . "' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.cat_orderby ASC ";
             }
             //print($Query);die();
@@ -795,9 +796,9 @@ if (isset($_REQUEST['action'])) {
             $manf_check = (!empty($_REQUEST['manf_check'])) ? $_REQUEST['manf_check'] : [];
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
                 //$whereclause = "WHERE cm.pro_type = '".$pro_type."'";
-                if($pro_type == 20){
+                if ($pro_type == 20) {
                     $Sidefilter_brandwith = " cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two IN (" . $_REQUEST['lf_group_id'] . ")";
-                } else{
+                } else {
                     $Sidefilter_brandwith .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
                 }
                 $lf_group_id = explode(",", $_REQUEST['lf_group_id']);
@@ -897,7 +898,7 @@ if (isset($_REQUEST['action'])) {
                         $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm " . $products_featureWhere . ") GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     } else {
                         //$Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
-                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM category_map_subgroups AS cm WHERE cm.subgroup_id='".$leve_id."') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM category_map_subgroups AS cm WHERE cm.subgroup_id='" . $leve_id . "') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     }
                     //print($Query2);die();
                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query2));
@@ -979,16 +980,16 @@ if (isset($_REQUEST['action'])) {
             $last_record = $start;
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
                 //$whereclause = "WHERE cm.pro_type = '".$pro_type."'";
-                if($pro_type == 20){
+                if ($pro_type == 20) {
                     $whereclause .= " AND cm.cat_id_level_two IN  (" . $_REQUEST['lf_group_id'] . ")";
-                } else{
+                } else {
                     $whereclause .= " AND cm.cat_id IN (" . $_REQUEST['lf_group_id'] . ")";
                 }
                 //$lf_group_id = explode(",", $_REQUEST['lf_group_id']);
 
                 //$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $_REQUEST['lf_group_id'][0]);
 
-            } elseif($level_two > 0 && $pro_type == 20){
+            } elseif ($level_two > 0 && $pro_type == 20) {
                 $whereclause .= " AND cm.cat_id_level_two IN  (" . $level_two . ")";
             }
             if (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id'])) {
@@ -1088,6 +1089,38 @@ if (isset($_REQUEST['action'])) {
                             }
                         }
                     }
+                    $quantity_lenght = 0;
+                    $Query2 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+                    //print();
+                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                    if (mysqli_num_rows($rs2) > 0) {
+                        $row2 = mysqli_fetch_object($rs2);
+                        $pq_quantity = $row2->pq_quantity;
+                        $pq_upcomming_quantity = $row2->pq_upcomming_quantity;
+                        $pq_status = $row2->pq_status;
+                        $ci_qty_type = 0;
+                        if ($pq_status == 'true') {
+                            $ci_qty_type = 1;
+                        }
+                        /*if ($pq_quantity == 0 && $pq_status == 'true') {
+																$quantity_lenght = $pq_upcomming_quantity;
+																print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
+															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
+																$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
+																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+															}*/
+                        if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
+                            $quantity_lenght = $pq_upcomming_quantity;
+                            $gerenric_product_inner .='<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>';
+                        } elseif ($pq_quantity > 0 && $pq_status == 'false') {
+                            $quantity_lenght = $pq_quantity;
+                            $gerenric_product_inner .='<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>';
+                        } elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
+                            $gerenric_product_inner .='<div class="product_order_title red">Auf Anfrage</div>';
+                        }
+                    } else {
+                        $gerenric_product_inner .='<div class="product_order_title red">Auf Anfrage</div>';
+                    }
                     $gerenric_product_inner .= '<div class="pd_rating">
                                 <ul>
                                     <li>
@@ -1107,11 +1140,12 @@ if (isset($_REQUEST['action'])) {
                                 <div class="pd_prise pbp_price_with_tex" ' . $pbp_price_with_tex_display . '>' . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . '€</div>';
                     }
                     $gerenric_product_inner .= '<div class="pd_btn">
-                                <a class="add_to_card" href="javascript:void(0)" data-id="' . $row->pro_id . '">
+                                <a class="'.(($quantity_lenght > 0) ? 'add_to_card' : '').'" href="javascript:void(0)" data-id="' . $row->pro_id . '">
                                     <input type="hidden" id="pro_id_' . $row->pro_id . '" name="pro_id" value="' . $row->pro_id . '">
                                     <input type="hidden" id="pro_type_' . $row->pro_id . '" name="pro_type" value="' . $row->pro_type . '">
                                     <input type="hidden" id="supplier_id_' . $row->pro_id . '" name="supplier_id" value="' . $row->supplier_id . '">
                                     <input type="hidden" id="ci_qty_' . $row->pro_id . '" name="ci_qty" value="1">
+                                    <input type="hidden" id="ci_qty_type_'.$row->pro_id.'" name="ci_qty_type" value="'.$ci_qty_type.'">
                                     <input type="hidden" id="ci_discount_type_' . $row->pro_id . '" name="ci_discount_type" value="' . ((!empty($special_price)) ? $special_price['usp_price_type'] : '0') . '">
                                     <input type="hidden" id="ci_discount_value_' . $row->pro_id . '" name="ci_discount_value" value="' . ((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0') . '">
                                     <div class="gerenric_btn">In den Einkaufswagen</div>
@@ -1147,6 +1181,7 @@ if (isset($_REQUEST['action'])) {
                         let ci_discount_type = $("#ci_discount_type_"+$(this).attr("data-id")).val();
                         let ci_discount_value = $("#ci_discount_value_"+$(this).attr("data-id")).val();
                         let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
+                        let ci_qty_type = $("#ci_qty_type_"+$(this).attr("data-id")).val();
 
                         /*console.log("pro_type: "+pro_type);
                         console.log("supplier_id: "+supplier_id);
@@ -1161,7 +1196,8 @@ if (isset($_REQUEST['action'])) {
                                 supplier_id: supplier_id,
                                 ci_discount_type: ci_discount_type,
                                 ci_discount_value: ci_discount_value,
-                                ci_qty: ci_qty
+                                ci_qty: ci_qty,
+                                ci_qty_type: ci_qty_type
                             },
                             success: function(response) {
                                 //console.log("response = "+response);
@@ -1180,7 +1216,7 @@ if (isset($_REQUEST['action'])) {
             //print($gerenric_product_inner);
 
             //$retValue = array("status" => "1", "message" => "Record found", "Query" => $Query, "total_count" => $total_count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
-            $retValue = array("status" => "1", "message" => "Record found","total_count" => $total_count, "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
+            $retValue = array("status" => "1", "message" => "Record found", "total_count" => $total_count, "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;

@@ -367,12 +367,12 @@ include("includes/message.php");
 															$pq_status = $row1->pq_status;
 															$quantity_txt = "pieces immediately available";
 															$quantity_txt_color = "";
-															if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
+															if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
 																$quantity_txt = "Stück bestellt";
 																$quantity_txt_color = "style = 'color: orange;'";
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
-																$pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;
+																$pq_quantity = $pq_quantity - $row->ci_qty;
 															}
 														}
 														if ($pro_type == 0) {
