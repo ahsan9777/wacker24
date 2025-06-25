@@ -50,13 +50,13 @@ if (isset($_REQUEST['btn_login'])) {
 					//print("if");die();
 					header("Location:" . $GLOBALS['siteURL']);
 				} elseif (!empty($ref)) {
-					if($ref == $GLOBALS['siteURL']){
+					if ($ref == $GLOBALS['siteURL']) {
 						header("location:" . $GLOBALS['siteURL']);
-					} else{
+					} else {
 						header("Location:" . $ref);
 					}
 				} else {
-					header("location:" . $GLOBALS['siteURL']."benutzerprofile");
+					header("location:" . $GLOBALS['siteURL'] . "benutzerprofile");
 				}
 			} else {
 
@@ -75,7 +75,7 @@ if (isset($_REQUEST['btn_login'])) {
 					$user_verification_code = md5($rw->user_id . date("Ymdhis"));
 					mysqli_query($GLOBALS['conn'], "UPDATE users SET user_confirmation = '" . $user_verification_code . "' WHERE user_id = '" . $rw->user_id . "'") or die(mysqli_error($GLOBALS['conn']));
 					$mailer->registration_account_verification($rw->user_fname . " " . $rw->user_lname, "verification@wackersystems.com", "7v6LjC{rEIct", $rw->user_name, "Account Verification", $user_verification_code);*/
-					header('Location: konto-registrierung');
+				header('Location: konto-registrierung');
 				//}
 			} else {
 				$class = "alert alert-danger";
@@ -91,7 +91,7 @@ if (isset($_REQUEST['verification_code'])) {
 	if ($user_id > 0) {
 		mysqli_query($GLOBALS['conn'], "UPDATE users SET status_id = '1' WHERE user_id = '" . $user_id . "'") or die(mysqli_error($GLOBALS['conn']));
 		header('Location: anmelden/24');
-	} else{
+	} else {
 		header('Location: anmelden/25');
 	}
 }
@@ -130,6 +130,9 @@ include("includes/message.php");
 						<form class="gerenric_form" name="frm" id="frm" method="post" action="anmelden" role="form" enctype="multipart/form-data">
 							<ul>
 								<li>
+									<b>Ich bin bereits <span>Kunde</span></b>
+								</li>
+								<li>
 									<input type="hidden" name="referer" value="<?php print($ref); ?>">
 									<div class="form_label">Email-Adresse</div>
 									<div class="form_field"><input type="text" class="gerenric_input" name="user_name" id="user_name"></div>
@@ -143,27 +146,62 @@ include("includes/message.php");
 									<div class="forgot_password"><a href="passwortvergessen">Passwort vergessen?</a></div>
 								</li>
 								<li>
-									<div class="form_term">Mit Ihrer Anmeldung stimmen Sie unseren <a href="term">Allgemeinen Geschäftsbedingungen</a> zu.Bitte lesen Sie unsere <a href="privacy">Datenschutzerklärung </a>, unser <a href="javascript:void(0)"> Hinweis auf Cookies und unser Hinweis auf interessenbezogener Werbung.</a></div>
+									<div class="or_div">
+										<div class="or_div_inner"><b>Ich bin <span>NEU</span> (Registrierung)</b></div>
+									</div>
 								</li>
 								<li>
-									<div class="or_div">
-										<div class="or_div_inner">Neu bei Wacker24?</div>
+									<div class="form_row">
+										<div class="form_left">
+											<i class="fa fa-check"></i>
+											Nachbestellen aus Bestellhistorie
+										</div>
+										<div class="form_right">
+											<i class="fa fa-check"></i>
+											Mehrere Lieferadressen nutzen
+										</div>
 									</div>
+								</li>
+								<li>
+									<div class="form_row">
+										<div class="form_left">
+											<i class="fa fa-check"></i>
+											Drucker speichern
+										</div>
+										<div class="form_right">
+											<i class="fa fa-check"></i>
+											Suchanfragen speichern
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="form_row">
+										<div class="form_left">
+											<i class="fa fa-check"></i>
+											Bestellung aus dem EU-Raum
+										</div>
+										<div class="form_right">
+											<i class="fa fa-check"></i>
+											Mehrere Merkzettel anlegen
+										</div>
+									</div>
+								</li>
+								<li>
 									<div class="new_account_btn"><a href="registrierung">
 											<div class="gerenric_btn">Erstellen Sie hier Ihr Wacker24 Konto</div>
 										</a>
 									</div>
 								</li>
-								<?php if($ref == $GLOBALS['siteURL'] . "einkaufswagen" || $ref == $GLOBALS['siteURL'] . "einkaufswagen/2") {?>
-								<li>
-									<div class="or_div">
-										<div class="or_div_inner">Als Gast bestellen?</div>
-									</div>
-									<div class="new_account_btn"><a href="gastbestellung">
-											<div class="gerenric_btn">Weiter als Gast</div>
-										</a>
-									</div>
-								</li>
+								<?php if ($ref == $GLOBALS['siteURL'] . "einkaufswagen" || $ref == $GLOBALS['siteURL'] . "einkaufswagen/2") { ?>
+									<li>
+										<div class="or_div">
+											<div class="or_div_inner">Als Gast bestellen?</div>
+										</div>
+										<div class="new_account_btn"><a href="gastbestellung">
+												<div class="gerenric_btn">Weiter als Gast</div>
+											</a>
+										</div>
+									</li>
 								<?php } ?>
 							</ul>
 						</form>

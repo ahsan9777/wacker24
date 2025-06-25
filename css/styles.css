@@ -1323,7 +1323,8 @@ body.body-white {
 }
 
 .create_list_popup,
-.form_popup,.address_form_popup,
+.form_popup,
+.address_form_popup,
 .location_popup,
 .popup {
   background: rgba(0, 0, 0, .7);
@@ -1430,7 +1431,8 @@ body.body-white {
 
 .close,
 .create_list_trigger,
-.form_popup_trigger, .address_form_popup_trigger,
+.form_popup_trigger,
+.address_form_popup_trigger,
 .location_trigger,
 .pd_detail_shirt input[type=radio]+label span label {
   cursor: pointer
@@ -1542,7 +1544,8 @@ body.body-white {
   background-color: #fff
 }
 
-.form_popup>.inner_popup, .address_form_popup>.inner_popup {
+.form_popup>.inner_popup,
+.address_form_popup>.inner_popup {
   max-width: 600px;
   border-radius: 10px;
   background-color: #fff;
@@ -1563,7 +1566,8 @@ body.body-white {
   background-color: #232f3e
 }
 
-.form_popup_content .form_popup_heading .form_popup_close, .form_popup_content .form_popup_heading .address_form_popup_close {
+.form_popup_content .form_popup_heading .form_popup_close,
+.form_popup_content .form_popup_heading .address_form_popup_close {
   position: absolute;
   top: 16px;
   right: 20px;
@@ -2938,7 +2942,7 @@ body.body-white {
 }
 
 .login_page .login_inner {
-  max-width: 30%;
+  max-width: 40%;
   margin: auto
 }
 
@@ -2997,6 +3001,16 @@ body.body-white {
 .login_page.register_page .login_inner {
   max-width: 50%;
   margin: auto
+}
+
+.gerenric_form ul li span {
+  color: #ffc107;
+}
+
+.gerenric_form ul li .form_left i,
+.gerenric_form ul li .form_right i {
+  color: green;
+  margin-right: 8px;
 }
 
 .product_cart h2 {
@@ -4665,17 +4679,81 @@ body.body-white {
   font-size: 12px;
   color: #212529;
 }
-.delivery_instructions{width: 100%;}
-.delivery_instructions .delivery_toggle{width: 100%;}
-.delivery_instructions .delivery_toggle a{font-size: 14px; color: #007bff; text-decoration: underline; cursor: pointer;}
-.delivery_instructions .grnc_tabnav{margin-top: 20px;}
-.delivery_instructions ul.grnc_tabnav_tabs{display: flex; flex-wrap: wrap;}
-.delivery_instructions ul.grnc_tabnav_tabs li{width: auto; margin: 4px;   display: inline-flex;}
-.delivery_instructions ul.grnc_tabnav_tabs li a{margin-bottom: 0px;color: #000 !important;border-radius: 5px; border: 1px solid #ccc; background-color: #fff;}
-.delivery_instructions .grnc_tabnav_tabs>.active>a, .delivery_instructions .grnc_tabnav_tabs>.active>a:hover, .delivery_instructions .grnc_tabnav_tabs>li>a:hover{border:1px solid #ffc107; text-decoration: none; background-color: #ffc107; font-weight: normal;}
-.delivery_instructions .grnc_tabnav_content{border: 1px solid #ccc; padding: 20px;}
-.delivery_instructions .grnc_tabnav_content h4{margin: -20px -20px; color: #000; font-size: 17px; padding: 20px;background-color: #ccc;}
-.delivery_instructions .grnc_tabnav_content ul{margin-top: 40px;}
-.delivery_instructions .grnc_tabnav_content .radio_button{display: flex; align-items: center;}
-.delivery_instructions .grnc_tabnav_content .radio_button span:first-child{ margin-right: 10px; margin-top: 3px;}
-.delivery_toggle_show{display: none;}
+
+.delivery_instructions {
+  width: 100%;
+}
+
+.delivery_instructions .delivery_toggle {
+  width: 100%;
+}
+
+.delivery_instructions .delivery_toggle a {
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.delivery_instructions .grnc_tabnav {
+  margin-top: 20px;
+}
+
+.delivery_instructions ul.grnc_tabnav_tabs {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.delivery_instructions ul.grnc_tabnav_tabs li {
+  width: auto;
+  margin: 4px;
+  display: inline-flex;
+}
+
+.delivery_instructions ul.grnc_tabnav_tabs li a {
+  margin-bottom: 0px;
+  color: #000 !important;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+.delivery_instructions .grnc_tabnav_tabs>.active>a,
+.delivery_instructions .grnc_tabnav_tabs>.active>a:hover,
+.delivery_instructions .grnc_tabnav_tabs>li>a:hover {
+  border: 1px solid #ffc107;
+  text-decoration: none;
+  background-color: #ffc107;
+  font-weight: normal;
+}
+
+.delivery_instructions .grnc_tabnav_content {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.delivery_instructions .grnc_tabnav_content h4 {
+  margin: -20px -20px;
+  color: #000;
+  font-size: 17px;
+  padding: 20px;
+  background-color: #ccc;
+}
+
+.delivery_instructions .grnc_tabnav_content ul {
+  margin-top: 40px;
+}
+
+.delivery_instructions .grnc_tabnav_content .radio_button {
+  display: flex;
+  align-items: center;
+}
+
+.delivery_instructions .grnc_tabnav_content .radio_button span:first-child {
+  margin-right: 10px;
+  margin-top: 3px;
+}
+
+.delivery_toggle_show {
+  display: none;
+}

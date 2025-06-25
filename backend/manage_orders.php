@@ -28,7 +28,7 @@ if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
 }
 
 //--------------Button Order Rejected --------------------
-if (isset($_REQUEST['btnRejected'])) {
+/*if (isset($_REQUEST['btnRejected'])) {
     //print_r($_REQUEST);die();
     $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'], 6);
     $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
@@ -38,7 +38,7 @@ if (isset($_REQUEST['btnRejected'])) {
         /*print("<pre>");
         print_r($payment_status_responseData);
         print("</pre>");die();*/
-        if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
+/*if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
             orderquantityUpdate($_REQUEST['ord_id']);
             mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '0', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
             $mailer->order_cancelation($_REQUEST['ord_id']);
@@ -53,40 +53,49 @@ if (isset($_REQUEST['btnRejected'])) {
         $class = "alert alert-info";
         $strMSG = "Please Select Alteast One Checkbox";
     }
-}
+}*/
+
 
 //--------------Button delivery status update --------------------
 if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "array") {
+    //print_r($_REQUEST);die();
     if (isset($_REQUEST['d_status_id'])) {
         for ($i = 0; $i < count($_REQUEST['d_status_id']); $i++) {
-            $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'][$i], 6);
-            $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
-            //print($orders_table_data['data_1']);
-            //print_r($orders_table_data); die();
-            /*$payment_status_request = check_payment_status($orders_table_data['data_2'], $orders_table_data['data_1']);
+            if ($_REQUEST['d_status_id'][$i] == 1) {
+                $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'][$i], 6);
+                $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
+                //print($orders_table_data['data_1']);
+                //print_r($orders_table_data); die();
+                /*$payment_status_request = check_payment_status($orders_table_data['data_2'], $orders_table_data['data_1']);
             $payment_status_responseData = json_decode($payment_status_request, true);
             print("<pre>");
             print_r($payment_status_responseData);
             print("</pre>");die();*/
-            //$ord_amount = number_format(0.50, "2", ".", "");
-            if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
-                $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
-                $payment_status_responseData = json_decode($payment_status_request, true);
-                /*print("<pre>");
+                //$ord_amount = number_format(0.50, "2", ".", "");
+                if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
+                    $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
+                    $payment_status_responseData = json_decode($payment_status_request, true);
+                    /*print("<pre>");
                 print_r($payment_status_responseData);
                 print("</pre>");die();*/
-                if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
-                    mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='1', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
+                    if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
+                        mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='1', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
+                        $mailer->order($_REQUEST['ord_id'][$i]);
+                        header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
+                    }
+                } elseif ($orders_table_data['data_6'] == 1) {
+                    mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'][$i] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
                     $mailer->order($_REQUEST['ord_id'][$i]);
                     header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
+                } else {
+                    $class = "alert alert-success";
+                    $strMSG = "Record(s) already updated successfully";
                 }
-            } elseif ($orders_table_data['data_6'] == 1) {
-                mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='1', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
-                $mailer->order($_REQUEST['ord_id'][$i]);
-                header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
-            } else {
-                $class = "alert alert-success";
-                $strMSG = "Record(s) already updated successfully";
+            } elseif ($_REQUEST['d_status_id'][$i] == 2) {
+                    mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
+                    orderquantityUpdate($_REQUEST['ord_id'][$i]);
+                    $mailer->order_cancelation($_REQUEST['ord_id'][$i]);
+                    header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
             }
         }
     } else {
@@ -94,21 +103,28 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
         $strMSG = "Please Select Alteast One Checkbox";
     }
 } elseif (isset($_REQUEST['d_status_id'])) {
-    $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'], 6);
-    $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
-    if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
-        $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
-        $payment_status_responseData = json_decode($payment_status_request, true);
-        /*print("<pre>");
+    //print_r($_REQUEST);die();
+    if ($_REQUEST['d_status_id'] == 1) {
+        $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'], 6);
+        $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
+        if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
+            $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
+            $payment_status_responseData = json_decode($payment_status_request, true);
+            /*print("<pre>");
         print_r($payment_status_responseData);
         print("</pre>");die();*/
-        if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
-            mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
+            if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
+                mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
+                $mailer->order($_REQUEST['ord_id'][$i]);
+            }
+        } elseif ($orders_table_data['data_6'] == 1) {
+            mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
             $mailer->order($_REQUEST['ord_id'][$i]);
         }
-    } elseif ($orders_table_data['data_6'] == 1) {
-        mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
-        $mailer->order($_REQUEST['ord_id'][$i]);
+    } elseif ($_REQUEST['d_status_id'] == 2) {
+        mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
+        orderquantityUpdate($_REQUEST['ord_id']);
+        $mailer->order_cancelation($_REQUEST['ord_id']);
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 }
@@ -247,7 +263,7 @@ include("includes/messages.php");
                                                         <div class="col-md-12 col-12 mt-3">
                                                             <input type="hidden" name="ord_id" value="<?php print($row->ord_id); ?>">
                                                             <select name="d_status_id" class="input_style" id="d_status_id" onchange="javascript: frm_table_order.submit();">
-                                                                <?php FillSelected2("deli_status", "d_status_id", "d_status_name", "", "d_status_id IN (0,1)"); ?>
+                                                                <?php FillSelected2("deli_status", "d_status_id", "d_status_name", "", "d_status_id >= 0"); ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -526,11 +542,20 @@ include("includes/messages.php");
                                                             <div class="col-md-12 col-12 mt-3">
                                                                 <input type="hidden" name="ord_id[]" value="<?php print($row->ord_id); ?>">
                                                                 <select name="d_status_id[]" class="input_style" id="d_status_id" onchange="javascript: frm.submit();">
+                                                                    <?php FillSelected2("deli_status", "d_status_id", "d_status_name", "", "d_status_id >= 0"); ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    <?php } /*elseif ($row->ord_delivery_status == 0) { ?>
+                                                        <div class="row">
+                                                            <div class="col-md-12 col-12 mt-3">
+                                                                <input type="hidden" name="ord_id[]" value="<?php print($row->ord_id); ?>">
+                                                                <select name="d_status_id[]" class="input_style" id="d_status_id" onchange="javascript: frm.submit();">
                                                                     <?php FillSelected2("deli_status", "d_status_id", "d_status_name", "", "d_status_id IN (0,1)"); ?>
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                    <?php } elseif ($row->ord_delivery_status == 1) { ?>
+                                                    <?php }*/ elseif ($row->ord_delivery_status == 1) { ?>
                                                         <span class="btn btn-success btn-style-light w-auto"> <?php print($row->d_status_name); ?> </span>
                                                     <?php } elseif ($row->ord_delivery_status == 2) { ?>
                                                         <span class="btn btn-danger btn-style-light w-auto"> <?php print($row->d_status_name); ?> </span>
@@ -547,9 +572,9 @@ include("includes/messages.php");
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="View Order" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
-                                                    <?php if (!in_array($row->ord_delivery_status, array(0, 2))) { ?>
+                                                    <?php /* if (!in_array($row->ord_delivery_status, array(0, 2)) && $row->ord_payment_method != 1) { ?>
                                                         <button type="button" class="btn btn-xs btn-danger btn-style-light w-auto mt-1" title="Order Reject" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?btnRejected&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">close</span></button>
-                                                    <?php } ?>
+                                                    <?php } */ ?>
                                                 </td>
                                             </tr>
                                     <?php

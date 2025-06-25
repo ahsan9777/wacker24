@@ -331,12 +331,12 @@ include("includes/message.php");
 									$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									$ci_qty_type = 0;
 									if (mysqli_num_rows($rs) > 0) {
 										$row = mysqli_fetch_object($rs);
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
 										$pq_status = $row->pq_status;
-										$ci_qty_type = 0;
 										if($pq_status == 'true'){
 											$ci_qty_type = 1;
 										}
