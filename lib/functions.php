@@ -2444,6 +2444,7 @@ function moveimage($dirName, $id, $inputName)
 
 function PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 {
+	header('Content-Type: text/plain; charset=utf-8');
 	//$url = "https://test.vr-pay-ecommerce.de/v1/payments";
 	//$url = "https://vr-pay-ecommerce.de/v1/payments";
 	$url = "" . config_payment_url . "";

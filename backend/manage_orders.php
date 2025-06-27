@@ -251,7 +251,7 @@ include("includes/messages.php");
                                             <td>
                                                 <?php
                                                 if ($row->ord_payment_status == 0) {
-                                                    echo '<span class="btn btn-warning btn-style-light w-auto">Pending</span>';
+                                                   echo '<span class="btn btn-success btn-style-light w-auto">PA</span>';
                                                 } else {
                                                     echo '<span class="btn btn-success btn-style-light w-auto">Success</span>';
                                                 }
@@ -530,7 +530,7 @@ include("includes/messages.php");
                                                 <td>
                                                     <?php
                                                     if ($row->ord_payment_status == 0) {
-                                                        echo '<span class="btn btn-warning btn-style-light w-auto">Pending</span>';
+                                                         echo '<span class="btn btn-success btn-style-light w-auto">PA</span>';
                                                     } else {
                                                         echo '<span class="btn btn-success btn-style-light w-auto">Success</span>';
                                                     }
