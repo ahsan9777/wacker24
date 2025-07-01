@@ -157,10 +157,10 @@ include("includes/message.php");
 				<div class="breadcrumb_inner">
 					<ul>
 						<?php
-						if ($pro_type > 0) { 
+						if ($pro_type > 0) {
 							$cat_title_heading = returnName("cat_title_de AS cat_title", "category", "group_id", 20);
 							$cat_params_heading = returnName("cat_params_de AS cat_params", "category", "group_id", 20);
-							?>
+						?>
 							<li><a href="unterkategorien/<?php print($cat_params_heading); ?>"> <?php print($cat_title_heading); ?> </a></li>
 						<?php } else { ?>
 							<li><a href="unterkategorien/<?php print($cat_one_params); ?>"> <?php print($cat_title_one); ?> </a></li>
@@ -258,7 +258,7 @@ include("includes/message.php");
 								<h4> <?php print($pro_description_short); ?> </h4>
 								<ul>
 									<li style="display: none;">Bestellnummer: <?php print($supplier_id); ?> </li>
-									<li style="display: none;" >Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
+									<li style="display: none;">Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
 									<li style="display: none;">GTIN: <?php print($pro_ean); ?> </li>
 								</ul>
 								<?php if (!empty($special_price)) { ?>
@@ -337,7 +337,7 @@ include("includes/message.php");
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
 										$pq_status = $row->pq_status;
-										if($pq_status == 'true'){
+										if ($pq_status == 'true') {
 											$ci_qty_type = 1;
 										}
 										/*if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
@@ -364,7 +364,7 @@ include("includes/message.php");
 									} else {
 										if ($pro_type > 0) {
 											$quantity_lenght = 1;
-										} else{
+										} else {
 											print('<div class="product_order_title red">Auf Anfrage</div>');
 										}
 									}
@@ -461,7 +461,17 @@ include("includes/message.php");
 											//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 											$cat_id_two = substr($cat_id_three, 0, 3);
 											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
-											$special_price = user_special_price("level_two", $cat_id_two);
+											/*$special_price = user_special_price("level_two", $cat_id_two);
+											if (!$special_price) {
+												$special_price = user_special_price("level_one", $cat_id_one);
+											}*/
+
+											$special_price = user_special_price("supplier_id", $row->supplier_id);
+
+											if (!$special_price) {
+												$special_price = user_special_price("level_two", $cat_id_two);
+											}
+
 											if (!$special_price) {
 												$special_price = user_special_price("level_one", $cat_id_one);
 											}
@@ -517,10 +527,19 @@ include("includes/message.php");
 										//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 										$cat_id_two = substr($cat_id_three, 0, 3);
 										$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
-										$special_price = user_special_price("level_two", $cat_id_two);
+										/*$special_price = user_special_price("level_two", $cat_id_two);
 										if (!$special_price) {
 											$special_price = user_special_price("level_one", $cat_id_one);
-										}
+										}*/
+										$special_price = user_special_price("supplier_id", $row->supplier_id);
+
+											if (!$special_price) {
+												$special_price = user_special_price("level_two", $cat_id_two);
+											}
+
+											if (!$special_price) {
+												$special_price = user_special_price("level_one", $cat_id_one);
+											}
 										//print_r($special_price);
 										//}
 								?>
@@ -572,7 +591,12 @@ include("includes/message.php");
 										if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 											$cat_id_two = substr($cat_id_three, 0, 3);
 											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
-											$special_price = user_special_price("level_two", $cat_id_two);
+											$special_price = user_special_price("supplier_id", $row->supplier_id);
+
+											if (!$special_price) {
+												$special_price = user_special_price("level_two", $cat_id_two);
+											}
+
 											if (!$special_price) {
 												$special_price = user_special_price("level_one", $cat_id_one);
 											}

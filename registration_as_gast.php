@@ -135,7 +135,7 @@ include("includes/message.php");
 				<div class="login_inner">
 					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<form class="login_box" name="frm" id="frm" method="post" action="gastbestellung" role="form" enctype="multipart/form-data">
-						<h2>Registrierung als Gast</h2>
+						<h2>Anschrift Gastbestellung</h2>
 						<?php if ($class != "") { ?>
 							<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 						<?php } ?>
@@ -169,7 +169,7 @@ include("includes/message.php");
 									</div>
 								</li>
 								<li>
-									<div class="form_label">Salutation</div>
+									<div class="form_label">Anrede</div>
 									<div class="form_field">
 										<select class="gerenric_input" name="gen_id" id="gen_id">
 											<option value="1" <?php print(($gen_id == 1) ? 'checked' : ''); ?>>Herr</option>
@@ -231,7 +231,7 @@ include("includes/message.php");
 									$digits = 4;
 									$confirm_code = rand(pow(10, $digits - 1), pow(10, $digits) - 1);
 									?>
-									<div class="form_label">Bitte Bestätigungscode eingeben: <span class="code_text"><?php print($confirm_code); ?></span></div>
+									<div class="form_label">Bitte folgenden Bestätigungscode eingeben: <span class="code_text"><?php print($confirm_code); ?></span></div>
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
 									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;"></div>
 								</li>

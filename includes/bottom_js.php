@@ -115,7 +115,7 @@
         $('.nav_sale').fadeOut(500);
         $('.nav_sale').fadeIn(500);
     }
-    setInterval(blinker, 1000);
+    setInterval(blinker, 2000);
 </script>
 <script>
     $(() => {

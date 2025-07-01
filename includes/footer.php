@@ -71,9 +71,9 @@
                     </ul>
                 </div>
             </div>
-            <div class="footer_btm_right">
+            <!--<div class="footer_btm_right">
                 <button class="subscribe_newsletter_btn">Newsletter abonnieren</button>
-            </div>
+            </div>-->
 
         </div>
         <div class="footer_logo"><a href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>

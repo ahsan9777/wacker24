@@ -393,7 +393,7 @@ include("includes/message.php");
 																	</span>
 																</li>
 																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>">Löschen</a></li>
-																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>">Aktie</a></li>
+																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>">Teilen</a></li>
 																<li><a href="<?php print($smiller_product_url); ?>">Ähnliches Produkt</a></li>
 															</ul>
 														</div>
