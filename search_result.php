@@ -335,6 +335,7 @@ if (isset($_REQUEST['sortby'])) {
 																<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>">
 																<input type="hidden" id="pro_type_<?php print($row->pro_id); ?>" name="pro_type" value="<?php print($row->pro_type); ?>">
 																<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>">
+																<input type="hidden" id="ci_type_<?php print($row->pro_id); ?>" name="ci_type" value="0">
 																<input type="hidden" id="ci_qty_<?php print($row->pro_id); ?>" name="ci_qty" value="1">
 																<input type="hidden" id="ci_qty_type_<?php print($row->pro_id); ?>" name="ci_qty_type" value="<?php print($ci_qty_type); ?>">
 																<input type="hidden" id="ci_discount_type_<?php print($row->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">

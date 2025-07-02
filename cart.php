@@ -323,6 +323,7 @@ include("includes/message.php");
 									</div>
 								</h2>
 								<div class="cart_pd_section">
+									
 									<?php
 									$cart_gross_total = 0;
 									$cart_gst = 0;
@@ -332,7 +333,7 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -350,12 +351,19 @@ include("includes/message.php");
 											$pro_type = $row->pro_type;
 
 											$smiller_product_url = $GLOBALS['siteURL'] . "search_result.php?search_keyword=" . implode(' ', array_slice($pro_description_short, 0, 2));
+											$cart_pd_title = "Lieferung";
+											if( $row->ci_type > 0){ $cart_pd_title = "Abholung"; }
+											$product_link = "product/".$row->supplier_id."/".url_clean($row->pro_description_short);
+											if( $row->ci_type > 0){
+												$product_link = "product/1/".$row->supplier_id."/".url_clean($row->pro_description_short);
+											}
 									?>
+											<h3 class="cart_pd_title"> <?php print($cart_pd_title); ?> </h3>
 											<div class="cart_pd_row">
 												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($GLOBALS['siteURL']); ?>product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
-														<div class="cart_pd_title"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>" id="product_title_<?php print($row->ci_id); ?>"><?php print($row->pro_description_short); ?></a></div>
+														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>"><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
@@ -364,10 +372,13 @@ include("includes/message.php");
 															$row1 = mysqli_fetch_object($rs1);
 															$pq_quantity = $row1->pq_quantity;
 															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+															$pq_physical_quantity = $row1->pq_physical_quantity;
 															$pq_status = $row1->pq_status;
 															$quantity_txt = "pieces immediately available";
 															$quantity_txt_color = "";
-															if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
+															if( $row->ci_type > 0){
+																$pq_quantity = $pq_physical_quantity - $row->ci_qty;
+															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true' ) {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
 																$quantity_txt = "Stück bestellt";
 																$quantity_txt_color = "style = 'color: orange;'";

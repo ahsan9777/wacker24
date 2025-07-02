@@ -3008,8 +3008,8 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '".$row2->ci_qty_type."', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
-			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type);
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '".$row2->ci_type."', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '".$row2->ci_qty_type."', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
 			$order_items_table_check = 1;
 		}
 	}
@@ -3036,19 +3036,43 @@ function orderquantityUpdate($ord_id){
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if(mysqli_num_rows($rs) > 0){
 		while($rw = mysqli_fetch_object($rs)){
-			quantityUpdate("+", $rw->supplier_id, $rw->oi_qty, $rw->oi_qty_type);
+			quantityUpdate("+", $rw->supplier_id, $rw->oi_qty, $rw->oi_qty_type, $rw->oi_type);
 		}
 	}
 }
-function quantityUpdate($opration, $supplier_id, $quantity, $quantity_type)
+function quantityUpdate($opration, $supplier_id, $quantity, $quantity_type, $ci_type = 0)
 {
 	$field = "pq_quantity";
-	if($quantity_type > 0){
+	if($quantity_type > 0 && $ci_type == 0){
 		$field = "pq_upcomming_quantity";
+	} elseif($ci_type > 0){
+		$field = "pq_physical_quantity";
 	}
 	if ($opration == "+") {
 		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." + '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 	} else {
 		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 	}
+}
+
+function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type){
+	$return_quantity = 0;
+	$cart_quantity_total = $ci_qty + $cart_quantity;
+	$field = "pq_quantity";
+	if($ci_qty_type > 0 && $ci_type == 0){
+		$field = "pq_upcomming_quantity";
+	} elseif($ci_type > 0){
+		$field = "pq_physical_quantity";
+	}
+	$Query = "SELECT * FROM `products_quantity` WHERE supplier_id = '".$supplier_id."'";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if(mysqli_num_rows($rs) > 0){
+		$rw = mysqli_fetch_object($rs);
+		if($cart_quantity_total >= $rw->$field){
+			$return_quantity = $rw->$field;
+		} else {
+			$return_quantity = $cart_quantity_total;
+		}
+	}
+	return $return_quantity;
 }

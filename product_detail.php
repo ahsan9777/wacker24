@@ -2,6 +2,10 @@
 
 include("includes/php_includes_top.php");
 
+$ci_type = 0;
+if(isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0){
+	$ci_type = 1;
+}
 $Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -44,6 +48,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
 	$cat_id_one = $sub_group_ids[1];
+	$pq_physical_quantity = returnName("pq_physical_quantity", "products_quantity", "supplier_id", $supplier_id);
 	$cat_title_one = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_one);
 	$cat_one_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_one);
 	$cat_id_two = $sub_group_ids[0];
@@ -291,6 +296,18 @@ include("includes/message.php");
 								<div class="btn_show product-type-show-less" style="display: none;">Weniger Produktdetails</div>
 							</div>
 							<div class="product_col2">
+								<?php if($pq_physical_quantity > 0){ ?>
+								<div class="tab_radio_button">
+										<div class="tab_radio_col">
+											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print( (($ci_type == 0) ? 'checked' : '') ); ?> >
+											<label for="cart_type_online_<?php print($pro_id); ?>">Online</label>
+										</div>
+										<div class="tab_radio_col">
+											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print( (($ci_type == 1) ? 'checked' : '') ); ?> >
+											<label for="cart_type_physical_<?php print($pro_id); ?>">Physical</label>
+										</div>
+									</div>
+									<?php } ?>
 								<div class="sticky">
 									<?php
 									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
@@ -336,23 +353,15 @@ include("includes/message.php");
 										$row = mysqli_fetch_object($rs);
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
+										$pq_physical_quantity = $row->pq_physical_quantity;
 										$pq_status = $row->pq_status;
 										if ($pq_status == 'true') {
 											$ci_qty_type = 1;
 										}
-										/*if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
-											$quantity_lenght = $pq_upcomming_quantity;
-											print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
-										} elseif ($pq_quantity > 0 && $pq_status == 'false') {
-											$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
-											if ($quantity_lenght > 500) {
-												$quantity_lenght = 500;
-											}
-											print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
-										} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
-											print('<div class="product_order_title red">Auf Anfrage</div>');
-										}*/
-										if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
+										if( $ci_type > 0){
+											$quantity_lenght = $pq_physical_quantity;
+											print('<div class="product_order_title green"> ' . $pq_physical_quantity . ' Stück sofort verfügbar</div>');
+										} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 											$quantity_lenght = $pq_upcomming_quantity;
 											print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
 										} elseif ($pq_quantity > 0 && $pq_status == 'false') {
@@ -392,6 +401,7 @@ include("includes/message.php");
 										<input type="hidden" id="pro_id_<?php print($pro_id); ?>" name="pro_id" value="<?php print($pro_id); ?>">
 										<input type="hidden" id="pro_type_<?php print($pro_id); ?>" name="pro_type" value="<?php print($pro_type); ?>">
 										<input type="hidden" id="supplier_id_<?php print($pro_id); ?>" name="supplier_id" value="<?php print($supplier_id); ?>">
+										<input type="hidden" id="ci_type_<?php print($pro_id); ?>" name="ci_type" value="<?php print($ci_type); ?>">
 										<input type="hidden" id="ci_discount_type_<?php print($pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
 										<input type="hidden" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty" value="1">
@@ -668,6 +678,19 @@ include("includes/message.php");
 			// Code for responsive action
 			$(".popup_inner").css('width', '90%');
 		}
+	});
+	$(".cart_type_online").on("click", function(){
+		//console.log("cart_type_online");
+		$("#ci_type_"+$(this).attr("data-id")).val(0);
+		let supplier_id = $(this).attr("data-supplier-id");
+		let pro_description = $(this).attr("data-pro-description");
+		window.location.href = "product/" + supplier_id + "/" + pro_description;
+	});
+	$(".cart_type_physical").on("click", function(){//ci_type
+		$("#ci_type_"+$(this).attr("data-id")).val(1);
+		let supplier_id = $(this).attr("data-supplier-id");
+		let pro_description = $(this).attr("data-pro-description");
+		window.location.href = "product/1/" + supplier_id + "/" + pro_description;
 	});
 </script>
 <script src="js/slick.js"></script>

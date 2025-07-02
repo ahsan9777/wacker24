@@ -330,7 +330,7 @@ include("includes/messages.php");
                                     $ord_discount = 0;
                                     $ord_shipping_charges = 0;
                                     $ord_amount = 0;
-                                    $Query = "SELECT oi.*, pro.pro_description_short, pg.pg_mime_source_url, ord.ord_gross_total, ord.ord_gst, ord.ord_discount, ord.ord_amount, ord.ord_shipping_charges FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE oi.ord_id =  '" . $_REQUEST['ord_id'] . "' ORDER BY oi.oi_id ASC";
+                                    $Query = "SELECT oi.*, pro.pro_description_short, pg.pg_mime_source_url, ord.ord_gross_total, ord.ord_gst, ord.ord_discount, ord.ord_amount, ord.ord_shipping_charges FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE oi.ord_id =  '" . $_REQUEST['ord_id'] . "' ORDER BY oi.oi_type DESC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                                     if (mysqli_num_rows($rs) > 0) {
@@ -341,6 +341,12 @@ include("includes/messages.php");
                                             $ord_discount = price_format($row->ord_discount);
                                             $ord_shipping_charges = price_format($row->ord_shipping_charges);
                                             $ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
+                                            $order_type = "Lieferung";
+                                            if ($row->oi_type > 0) {
+                                                $order_type = '<span class="btn btn-primary btn-style-light w-auto mb-2">Abholung</span><br>';
+                                            } else {
+                                                $order_type = '<span class="btn btn-success btn-style-light w-auto mb-2">Lieferung</span><br>';
+                                            }
                                     ?>
                                             <tr>
                                                 <td>
@@ -351,7 +357,7 @@ include("includes/messages.php");
                                                     </div>
                                                 </td>
                                                 <td><?php print($row->supplier_id); ?></td>
-                                                <td><?php print($row->pro_description_short); ?></td>
+                                                <td><?php print($order_type.$row->pro_description_short); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($row->oi_discount_value > 0) {

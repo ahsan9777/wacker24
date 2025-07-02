@@ -564,7 +564,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT pro.*, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
+                                    $Query = "SELECT pro.*, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_physical_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //$Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //print($Query);
                                     $counter = 0;
@@ -603,6 +603,10 @@ include("includes/messages.php");
                                                         <div class="table-form-group">
                                                             <label for="">Online verfügbar</label>
                                                             <input type="number" name="pq_upcomming_quantity" id="pq_upcomming_quantity_<?php print($counter); ?>" value="<?php print($row->pq_upcomming_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
+                                                        </div>
+                                                        <div class="table-form-group">
+                                                            <label for="">Abholung</label>
+                                                            <input type="number" name="pq_physical_quantity" id="pq_physical_quantity_<?php print($counter); ?>" value="<?php print($row->pq_physical_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
                                                         </div>
                                                         <div class="table-form-group">
                                                             <label for="">&nbsp;</label>
@@ -672,7 +676,7 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'] . "product_detail.php?supplier_id=" . $row->supplier_id); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'] . "product/" . $row->supplier_id."/".url_clean($row->pro_description_short)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                 </td>
                                             </tr>
@@ -749,6 +753,7 @@ include("includes/messages.php");
             let pq_id = $("#pq_id_" + $(this).attr("data-id")).val();
             let pq_quantity = $("#pq_quantity_" + $(this).attr("data-id")).val();
             let pq_upcomming_quantity = $("#pq_upcomming_quantity_" + $(this).attr("data-id")).val();
+            let pq_physical_quantity = $("#pq_physical_quantity_" + $(this).attr("data-id")).val();
             //console.log("pro_id: "+pro_id+" supplier_id: "+supplier_id+" pq_id: "+pq_id);
             $.ajax({
                 url: 'ajax_calls.php?action=pro_update_quantity',
@@ -758,7 +763,8 @@ include("includes/messages.php");
                     supplier_id: supplier_id,
                     pq_id: pq_id,
                     pq_quantity: pq_quantity,
-                    pq_upcomming_quantity: pq_upcomming_quantity
+                    pq_upcomming_quantity: pq_upcomming_quantity,
+                    pq_physical_quantity: pq_physical_quantity
                 },
                 success: function(response) {
                     //console.log("response = "+response);

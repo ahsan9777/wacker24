@@ -56,7 +56,7 @@ if (isset($_REQUEST['action'])) {
                 if(isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0){
                     $pro_custom_add = " AND pro_custom_add = '1'";
                 }
-                $where .= " WHERE pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ".$pro_custom_add." ";
+                $where .= " WHERE pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  ".$pro_custom_add." ";
             }
             $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -73,7 +73,7 @@ if (isset($_REQUEST['action'])) {
         case 'pro_update_quantity':
             $retValue = array();
             //print_r($_REQUEST);die();
-            $data_update = mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "' WHERE pq_id = '" . dbStr(trim($_REQUEST['pq_id'])) . "' AND supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "' ") or die(mysqli_error($GLOBALS['conn']));
+            $data_update = mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "', pq_physical_quantity = '".dbStr(trim($_REQUEST['pq_physical_quantity']))."' WHERE pq_id = '" . dbStr(trim($_REQUEST['pq_id'])) . "' AND supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "' ") or die(mysqli_error($GLOBALS['conn']));
             if ($data_update == true) {
                 $retValue = array("status" => "1", "message" => "Record Updated successfully");
                 $retValue['data'][] = array(

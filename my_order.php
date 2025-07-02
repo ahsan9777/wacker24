@@ -86,6 +86,10 @@ include("includes/message.php");
 								$oi_gst_value = 1 + $row->oi_gst_value;
 								$gst = $row->oi_amount * $row->oi_gst_value;
 							}
+							$product_link = "product/".$row->supplier_id."/".url_clean($row->pro_description_short);
+							if( $row->oi_type > 0){
+								$product_link = "product/1/".$row->supplier_id."/".url_clean($row->pro_description_short);
+							}
 					?>
 							<div class="my_order_box">
 								<div class="order_place_bar">
@@ -138,10 +142,10 @@ include("includes/message.php");
 										<h2><?php print($row->pro_udx_seo_internetbezeichung); ?></h2>
 										<h2 class="black_text"><?php print($row->pro_description_short); ?></h2>
 										<div class="order_button">
-											<a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>">
+											<a href="<?php print($product_link); ?>">
 												<div class="gerenric_btn">Ihren Artikel ansehen</div>
 											</a>
-											<a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>">
+											<a href="<?php print($product_link); ?>">
 												<div class="gerenric_btn gray_btn">Wieder kaufen</div>
 											</a>
 										</div>
