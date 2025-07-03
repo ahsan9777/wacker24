@@ -92,10 +92,10 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
                     $strMSG = "Record(s) already updated successfully";
                 }
             } elseif ($_REQUEST['d_status_id'][$i] == 2) {
-                    mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
-                    orderquantityUpdate($_REQUEST['ord_id'][$i]);
-                    $mailer->order_cancelation($_REQUEST['ord_id'][$i]);
-                    header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
+                mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
+                orderquantityUpdate($_REQUEST['ord_id'][$i]);
+                $mailer->order_cancelation($_REQUEST['ord_id'][$i]);
+                header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
             }
         }
     } else {
@@ -163,7 +163,7 @@ include("includes/messages.php");
                             <table>
                                 <thead>
                                     <tr>
-                                        <th width="100">Order ID</th>
+                                        <!--<th width="100">Order ID</th>
                                         <th width="250">User Info </th>
                                         <th width="100">Shipping</th>
                                         <th width="250">Delivery</th>
@@ -173,7 +173,19 @@ include("includes/messages.php");
                                         <th width="147">Date / Time</th>
                                         <th>Payment Status</th>
                                         <th width="166">Delivery Status</th>
-                                        <th>Order Status</th>
+                                        <th>Order Status</th>-->
+
+                                        <th width="100">Auftrags-ID</th>
+                                        <th width="250" >User Info </th>
+                                        <th width="100">Rechnungsadresse</th>
+                                        <th width="250">Lieferadresse</th>
+                                        <th >Betrag</th>
+                                        <th>Zahlungsart</th>
+                                        <th>Transaktions-ID</th>
+                                        <th width="147">Datum/Uhrzeit</th>
+                                        <th>Zahlungsstatus</th>
+                                        <th width="166">Lieferstatus</th>
+                                        <th>Auftragsstatus</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -196,6 +208,7 @@ include("includes/messages.php");
                                         } else {
                                             $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($user_guest . " " . $row->utype_name, "Customer") . '</span><br>';
                                         }
+                                         $user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
                                         if (!empty($user_company_name)) {
                                             $user_info .= $user_company_name . "<br>";
                                         }
@@ -251,7 +264,7 @@ include("includes/messages.php");
                                             <td>
                                                 <?php
                                                 if ($row->ord_payment_status == 0) {
-                                                   echo '<span class="btn btn-success btn-style-light w-auto">PA</span>';
+                                                    echo '<span class="btn btn-success btn-style-light w-auto">PA</span>';
                                                 } else {
                                                     echo '<span class="btn btn-success btn-style-light w-auto">Success</span>';
                                                 }
@@ -357,7 +370,7 @@ include("includes/messages.php");
                                                     </div>
                                                 </td>
                                                 <td><?php print($row->supplier_id); ?></td>
-                                                <td><?php print($order_type.$row->pro_description_short); ?></td>
+                                                <td><?php print($order_type . $row->pro_description_short); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($row->oi_discount_value > 0) {
@@ -443,7 +456,7 @@ include("includes/messages.php");
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Order ID</th>
+                                        <!--<th>Order ID</th>
                                         <th>User Info </th>
                                         <th width="100">Shipping</th>
                                         <th width="100">Delivery</th>
@@ -454,6 +467,18 @@ include("includes/messages.php");
                                         <th>Payment Status</th>
                                         <th width="170">Delivery Status</th>
                                         <th>Order Status</th>
+                                        <th width="90">Action</th>-->
+                                        <th >Auftrags-ID</th>
+                                        <th>User Info </th>
+                                        <th width="100">Rechnungsadresse</th>
+                                        <th width="100">Lieferadresse</th>
+                                        <th width="100">Betrag</th>
+                                        <th>Zahlungsart</th>
+                                        <th >Transaktions-ID</th>
+                                        <th width="147">Datum/Uhrzeit</th>
+                                        <th>Zahlungsstatus</th>
+                                        <th width="170">Lieferstatus</th>
+                                        <th>Auftragsstatus</th>
                                         <th width="90">Action</th>
                                     </tr>
                                 </thead>
@@ -536,7 +561,7 @@ include("includes/messages.php");
                                                 <td>
                                                     <?php
                                                     if ($row->ord_payment_status == 0) {
-                                                         echo '<span class="btn btn-success btn-style-light w-auto">PA</span>';
+                                                        echo '<span class="btn btn-success btn-style-light w-auto">PA</span>';
                                                     } else {
                                                         echo '<span class="btn btn-success btn-style-light w-auto">Success</span>';
                                                     }

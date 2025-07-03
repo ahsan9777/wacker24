@@ -19,6 +19,13 @@ if (mysqli_num_rows($rs) > 0) {
 	$ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
 
 	$delivery_info = "";
+	$user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
+	if (!empty($user_company_name)) {
+		$delivery_info .= $user_company_name . "<br>";
+	}
+	if (!empty($row->dinfo_fname)) {
+		$delivery_info .= $row->dinfo_fname . " " . $row->dinfo_lname . "<br>";
+	}
 	if (!empty($row->dinfo_street)) {
 		$delivery_info .= $row->dinfo_street . " " . $row->dinfo_house_no . "<br>";
 	}

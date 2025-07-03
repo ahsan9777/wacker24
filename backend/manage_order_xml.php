@@ -4,6 +4,7 @@ include '../lib/functions.php';
 $address_tag_data = "";
 $ord_id = $_REQUEST['ord_id'];
 $Query = "SELECT ord.*, u.user_id, u.customer_id, u.user_company_name, CONCAT(u.user_fname, ' ', u.user_fname) AS user_full_name, di.dinfo_email, CONCAT(di.dinfo_street, ' ', di.dinfo_house_no) AS user_street_house, di.dinfo_usa_zipcode, c.countries_iso_code_2 FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id WHERE ord.ord_id = '".$ord_id."'";
+//print($Query);die();
 $rs = $pdo->query($Query);
 if ($rs->rowCount() > 0) {
     $row = $rs->fetch(PDO::FETCH_OBJ);

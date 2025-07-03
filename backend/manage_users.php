@@ -357,8 +357,12 @@ include("includes/messages.php");
                                             $counter++;
                                             $strClass = 'label  label-danger';
                                             $user_company_name = "";
+                                            $user_as_guest = "";
                                             if(!empty($row->user_company_name) && $row->utype_id == 4){
                                                 $user_company_name = '<span class="btn btn-warning btn-style-light w-auto mb-2 d-flex align-items-center gap-1" style="font-size: 12px;"><span class="material-icons icon material-xs">apartment</span> <span>'.$row->user_company_name.' </span></span>';
+                                            }
+                                            if($row->utype_id_as_guest == 5){
+                                                $user_as_guest = '<span class="btn btn-warning btn-style-light w-auto mb-2 d-flex align-items-center gap-1" style="font-size: 12px;"> <span>Gastbestellung</span></span>';
                                             }
                                     ?>
                                             <tr>
@@ -375,9 +379,9 @@ include("includes/messages.php");
                                                 <td>
                                                     <?php
                                                     if ($row->utype_id == 4 || $row->utype_id == 1) {
-                                                        echo '<span class="btn btn-success btn-style-light w-auto">' . $row->utype_name . '</span>';
+                                                        echo '<span class="btn btn-success btn-style-light w-auto">' .$user_as_guest. $row->utype_name . '</span>';
                                                     } else {
-                                                        echo '<span class="btn btn-primary btn-style-light w-auto">' . $row->utype_name  . '</span>';
+                                                        echo '<span class="btn btn-primary btn-style-light w-auto">' .$user_as_guest. $row->utype_name  . '</span>';
                                                     }
                                                     ?>
                                                 </td>

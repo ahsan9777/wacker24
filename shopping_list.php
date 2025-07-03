@@ -138,7 +138,6 @@ include("includes/message.php");
 								</ul>
 							</div>
 						</div>
-
 						<div class="shopping_list_right">
 							<div class="grnc_tabnav_content">
 								<div class="shopping_list_detail">
