@@ -2997,8 +2997,12 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		if (isset($_SESSION['ord_note']) && !empty($_SESSION['ord_note'])) {
 			$ord_note = dbStr(trim($_SESSION['ord_note']));
 		}
+		$delivery_instruction = "";
+		if (isset($_SESSION['delivery_instruction']) && !empty($_SESSION['delivery_instruction'])) {
+			$delivery_instruction = dbStr(trim($_SESSION['delivery_instruction']));
+		}
 		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $entityId . "', '" . $ord_payment_transaction_id . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, delivery_instruction, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '".$delivery_instruction."', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
 
@@ -3022,6 +3026,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		unset($_SESSION['ci_id']);
 		unset($_SESSION['header_quantity']);
 		unset($_SESSION['ord_note']);
+		unset($_SESSION['delivery_instruction']);
 		if (isset($_SESSION["cart_check"])) {
 			unset($_SESSION["cart_check"]);
 		}
@@ -3075,4 +3080,50 @@ function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_
 		}
 	}
 	return $return_quantity;
+}
+
+function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active){
+	$delivery_instruction = "";
+	$property_type = array("Haus", "Wohnung", "Unternehmen", "Sonstiges");
+	$Query = "SELECT * FROM user_shipping_address AS usa WHERE usa.usa_id = '" . $usa_id . "' ";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if (mysqli_num_rows($rs) > 0) {
+		$row = mysqli_fetch_object($rs); 
+		if($usa_delivery_instructions_tab_active == 1){
+
+			$delivery_instruction = "<b>Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]."</b> ( ".$row->usa_house_check." )";
+
+		} elseif($usa_delivery_instructions_tab_active == 2){
+
+			$apartment_data = "";
+			if(!empty($row->usa_apartment_security_code)){
+				$apartment_data .= "<br><b>Sicherheitscode:</b> ".$row->usa_apartment_security_code;
+			}
+			if(!empty($row->usa_appartment_call_box)){
+				$apartment_data .= "<br><b>Gegensprechanlage:</b> ".$row->usa_appartment_call_box;
+			}
+			if(!empty($row->usa_appartment_check)){
+				$apartment_data .= "<br>Schlüssel oder Token benötigt";
+			}
+			$delivery_instruction = "<b>Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]."</b>".$apartment_data;
+
+		} elseif($usa_delivery_instructions_tab_active == 3){
+
+			$business_data = "<br><b>Montag - Freitag:</b> ".$row->usa_business_mf_status ."; <b>Gruppierung aufheben:</b> ".$row->usa_business_mf_uw_status;
+			$business_data .= ( ($row->usa_business_mf_24h_check > 0) ? "<br>24 Stunden geöffnet" : "" );
+			$business_data .= "<br><b>Samstag - Sonntag:</b> ".$row->usa_business_ss_status."; <b>Gruppierung aufheben:</b> ".$row->usa_business_ss_uw_status;
+			$business_data .= ( ($row->usa_business_24h_check > 0) ? "<br>24 Stunden geöffnet" : "" );
+			$business_data .= ( ($row->usa_business_close_check > 0) ? "<br>Für Lieferungen geschlossen" : "" );
+			
+
+			$delivery_instruction = "<b>Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]."</b>".$business_data;
+
+		} elseif($usa_delivery_instructions_tab_active == 4){
+
+			$delivery_instruction = "Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]." ( ".$row->usa_other_check." )";
+
+		}
+
+	}
+	return $delivery_instruction;
 }

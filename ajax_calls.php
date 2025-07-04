@@ -1247,6 +1247,7 @@ if (isset($_REQUEST['action'])) {
                 $usa_zipcode = $rsMem->usa_zipcode;
                 $usa_contactno = $rsMem->usa_contactno;
                 $countries_id = $rsMem->countries_id;
+                $usa_delivery_instructions_tab_active = (($rsMem->usa_delivery_instructions_tab_active > 0) ? $rsMem->usa_delivery_instructions_tab_active : 1);
                 $usa_house_check = $rsMem->usa_house_check;
                 $usa_apartment_security_code = $rsMem->usa_apartment_security_code;
                 $usa_appartment_call_box = $rsMem->usa_appartment_call_box;
@@ -1259,9 +1260,10 @@ if (isset($_REQUEST['action'])) {
                 $usa_business_24h_check = $rsMem->usa_business_24h_check;
                 $usa_business_close_check = $rsMem->usa_business_close_check;
                 $usa_other_check = $rsMem->usa_other_check;
-                $usa_default = $rsMem->usa_defualt; // Assuming it's a typo
-
-                $formHead = "Update delivery instruction Info";
+                $usa_default = $rsMem->usa_defualt;
+                //$property_type = array("Haus", "Wohnung", "Geschäft", "Andere");
+                $short_detail = '<b>' . $usa_fname . ' ' . $usa_lname . '</b><br> ' . $usa_street . ' ' . $usa_house_no . ', ' . $usa_zipcode . '<br> Grundstückstyp';
+                $formHead = "Lieferanweisungen hinzufügen";
             } else {
                 $user_id = "";
                 $old_user_id = "";
@@ -1275,6 +1277,7 @@ if (isset($_REQUEST['action'])) {
                 $usa_zipcode = "";
                 $usa_contactno = "";
                 $countries_id = 81;
+                $usa_delivery_instructions_tab_active = 1;
                 $usa_house_check = "";
                 $usa_apartment_security_code = "";
                 $usa_appartment_call_box = "";
@@ -1288,149 +1291,166 @@ if (isset($_REQUEST['action'])) {
                 $usa_business_close_check = "";
                 $usa_other_check = "";
                 $usa_default = "";
+                $short_detail = "";
+                $formHead = "Neue Adresse hinzufügen";
+            }
 
-                $formHead = "Add New delivery instruction";
+            $start = new DateTime('00:00');
+            $end = new DateTime('24:00');
+            $interval = new DateInterval('PT30M'); // 30 minutes
+
+            $times = [];
+
+            for ($time = clone $start; $time <= $end; $time->add($interval)) {
+                $times[] = $time->format('H:i');
+            }
+            $usa_business_mf_status_html = "";
+            foreach ($times as $t) {
+                $usa_business_mf_status_html .= '<option value="'.$t.'" '.(($usa_business_mf_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+            }
+            $usa_business_mf_uw_status_html = "";
+            foreach ($times as $t) {
+                $usa_business_mf_uw_status_html .= '<option value="'.$t.'" '.(($usa_business_mf_uw_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+            }
+            $usa_business_ss_status_html = "";
+            foreach ($times as $t) {
+                $usa_business_ss_status_html .= '<option value="'.$t.'" '.(($usa_business_ss_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+            }
+            $usa_business_ss_uw_status_html = "";
+            foreach ($times as $t) {
+                $usa_business_ss_uw_status_html .= '<option value="'.$t.'" '.(($usa_business_ss_uw_status == $t) ? 'selected' : '').' >'.$t.'</option>';
             }
 
             $delivery_instructions = "";
             $delivery_instructions = '
             <input type = "hidden" name = "usa_id" id = "usa_id" value = "' . $_REQUEST['usa_id'] . '">
+            <input type = "hidden" name = "usa_delivery_instructions_tab_active" id = "usa_delivery_instructions_tab_active" value = "' . $usa_delivery_instructions_tab_active . '">
                                 <div class="grnc_tabnav">
+                                        <div class = "black">' . $short_detail . '</div>
 										<ul class="grnc_tabnav_tabs">
-											<li class="active"><a href="#tab1" class="delivery_instructions_tab" data-id="1">House</a></li>
-											<li><a href="#tab2" class="delivery_instructions_tab" data-id="2">Apartment</a></li>
-											<li><a href="#tab3" class="delivery_instructions_tab" data-id="3">Business</a></li>
-											<li><a href="#tab4" class="delivery_instructions_tab" data-id="4">Other</a></li>
+											<li ' . (($usa_delivery_instructions_tab_active == 1) ? "class='active'" : "") . ' ><a href="#tab1" class="delivery_instructions_tab" data-id="1">Haus</a></li>
+											<li ' . (($usa_delivery_instructions_tab_active == 2) ? "class='active'" : "") . ' ><a href="#tab2" class="delivery_instructions_tab" data-id="2">Wohnung</a></li>
+											<li ' . (($usa_delivery_instructions_tab_active == 3) ? "class='active'" : "") . ' ><a href="#tab3" class="delivery_instructions_tab" data-id="3">Unternehmen</a></li>
+											<li ' . (($usa_delivery_instructions_tab_active == 4) ? "class='active'" : "") . ' ><a href="#tab4" class="delivery_instructions_tab" data-id="4">Sonstiges</a></li>
 										</ul>
-										<p id="delivery_instructions_text">Single Family home or terraced house</p>
+										<p id="delivery_instructions_text">Einfamilienhaus oder Stadthaus</p>
 									</div>
-                                    <div class="grnc_tabnav_content active" id="tab1">
-										<h4>Where should we leave packages when they donot fit in your letter box? </h4>
+                                    <div class="grnc_tabnav_content ' . (($usa_delivery_instructions_tab_active == 1) ? "active" : "hide") . ' " id="tab1">
+										<h4>Wo sollen wir Pakete ablegen, wenn sie nicht in Ihren Briefkasten passen? </h4>
 										<ul>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="1" ' . (($usa_house_check == 1) ? 'checked' : '') . '></span> <span>Tarrace</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Terrasse" ' . (($usa_house_check == "Terrasse") ? 'checked' : '') . '></span> <span>Terrasse</span></div>
 											</li>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="2" ' . (($usa_house_check == 2) ? 'checked' : '') . '></span> <span>Garage</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Garage" ' . (($usa_house_check == "Garage") ? 'checked' : '') . '></span> <span>Garage</span></div>
 											</li>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="3" ' . (($usa_house_check == 3) ? 'checked' : '') . '></span> <span>Front Door</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Vordertür" ' . (($usa_house_check == "Vordertür") ? 'checked' : '') . '></span> <span>Vordertür</span></div>
 											</li>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="4" ' . (($usa_house_check == 4) ? 'checked' : '') . '></span> <span>Garden</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Garten" ' . (($usa_house_check == "Garten") ? 'checked' : '') . '></span> <span>Garten</span></div>
 											</li>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="5" ' . (($usa_house_check == 5) ? 'checked' : '') . '></span> <span>Shed</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Schuppen" ' . (($usa_house_check == "Schuppen") ? 'checked' : '') . '></span> <span>Schuppen</span></div>
 											</li>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="6" ' . (($usa_house_check == 6) ? 'checked' : '') . '></span> <span>With a neighbour</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Bei einem Nachbarn" ' . (($usa_house_check == "Bei einem Nachbarn") ? 'checked' : '') . '></span> <span>Bei einem Nachbarn</span></div>
 											</li>
 											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="7" ' . (($usa_house_check == 7) ? 'checked' : '') . '></span> <span>None of the above</span></div>
+												<div class="radio_button"><span><input type="radio" name="usa_house_check" id="usa_house_check" value="Bei einem Nachbarn" ' . (($usa_house_check == "Bei einem Nachbarn") ? 'checked' : '') . '></span> <span>Keine Präferenz</span></div>
 											</li>
 										</ul>
 									</div>
-									<div class="grnc_tabnav_content hide" id="tab2">
-										<h4>Do we need a security code, call box number, or key to access this building?</h4>
+									<div class="grnc_tabnav_content ' . (($usa_delivery_instructions_tab_active == 2) ? "active" : "hide") . ' " id="tab2">
+										<h4>Benötigen wir einen Sicherheitscode oder einen Schlüssel um das Gebäude zu betreten?</h4>
 										<ul>
 											<li>
-												<div class="form_label">Security code</div>
-												<div class="form_field"><input type="text" class="gerenric_input" name="usa_apartment_security_code" id="usa_apartment_security_code" value="' . $usa_apartment_security_code . '" placeholder="Security code for the door"></div>
+												<div class="form_label">Sicherheitscode</div>
+												<div class="form_field"><input type="text" class="gerenric_input" name="usa_apartment_security_code" id="usa_apartment_security_code" value="' . $usa_apartment_security_code . '" placeholder="Sicherheitscode für die Tür"></div>
 											</li>
 											<li>
-												<div class="form_label">Call Box</div>
-												<div class="form_field"><input type="text" class="gerenric_input" name="usa_appartment_call_box" id="usa_appartment_call_box" value="' . $usa_appartment_call_box . '" placeholder="Call box number or name"></div>
+												<div class="form_label">Gegensprechanlage</div>
+												<div class="form_field"><input type="text" class="gerenric_input" name="usa_appartment_call_box" id="usa_appartment_call_box" value="' . $usa_appartment_call_box . '" placeholder="Nummer oder Name der Gegensprechanlage"></div>
 											</li>
 											<li>
-												<div class="form_field"><input type="checkbox" name="usa_appartment_check" id="usa_appartment_check" ' . (($usa_appartment_check > 0) ? 'checked' : '') . '> key or fob required for delivery</div>
+												<div class="form_field"><input type="checkbox" name="usa_appartment_check" id="usa_appartment_check" ' . (($usa_appartment_check > 0) ? 'checked' : '') . '> Schlüssel oder Token benötigt</div>
 											</li>
 										</ul>
 									</div>
-									<div class="grnc_tabnav_content hide" id="tab3">
-										<h4>When is this address open for deliveies? </h4>
+									<div class="grnc_tabnav_content ' . (($usa_delivery_instructions_tab_active == 3) ? "active" : "hide") . '" id="tab3">
+										<h4>Wann können an diese Adresse Lieferungen zugestellt werden? </h4>
 										<ul>
 											<li>
 												<div class="form_row">
 													<div class="form_left">
-														<div class="form_label">Monday - Firdya</div>
+														<div class="form_label">Montag - Freitag</div>
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_mf_status" id="usa_business_mf_status">
-																<option value="0" ' . (($usa_business_mf_status == 0) ? 'selected' : '') . '>Closed</option>
-																<option value="1" ' . (($usa_business_mf_status == 1) ? 'selected' : '') . '>Open</option>
+																<option value="Geöffnet" ' . (($usa_business_mf_status == "Geöffnet") ? 'selected' : '') . '>Geöffnet</option>
+                                                                '.$usa_business_mf_status_html.'
 															</select>
 														</div>
 													</div>
 													<div class="form_right">
-														<div class="form_label">Ungroup weekends</div>
+														<div class="form_label">Gruppierung aufheben</div>
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_mf_uw_status" id="usa_business_mf_uw_status">
-																<option value="0" ' . (($usa_business_mf_uw_status == 0) ? 'selected' : '') . '>Closed</option>
-																<option value="1" ' . (($usa_business_mf_uw_status == 1) ? 'selected' : '') . '>Open</option>
+																<option value="Geschlossen" ' . (($usa_business_mf_uw_status == "Geschlossen") ? 'selected' : '') . '>Geschlossen</option>
+																'.$usa_business_mf_uw_status_html.'
 															</select>
 														</div>
 													</div>
 												</div>
 											</li>
 											<li>
-												<div class="form_field"><input type="checkbox" name="usa_business_mf_24h_check" id="usa_business_mf_24h_check" ' . (($usa_business_mf_24h_check > 0) ? 'checked' : '') . '> Open 24 Hours</div>
+												<div class="form_field"><input type="checkbox" name="usa_business_mf_24h_check" id="usa_business_mf_24h_check" ' . (($usa_business_mf_24h_check > 0) ? 'checked' : '') . '> 24 Stunden geöffnet</div>
 											</li>
 											<li>
 												<div class="form_row">
 													<div class="form_left">
-														<div class="form_label">Saturday - Sunday</div>
+														<div class="form_label">Samstag - Sonntag</div>
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_ss_status" id="usa_business_ss_status">
-																<option value="0" ' . (($usa_business_ss_status == 0) ? 'selected' : '') . '>Closed</option>
-																<option value="1" ' . (($usa_business_ss_status == 1) ? 'selected' : '') . '>Open</option>
+																<option value="Geöffnet" ' . (($usa_business_ss_status == "Geöffnet") ? 'selected' : '') . '>Geöffnet</option>
+                                                                '.$usa_business_ss_status_html.'
 															</select>
 														</div>
 													</div>
 													<div class="form_right">
-														<div class="form_label">Ungroup weekends</div>
+														<div class="form_label">Gruppierung aufheben</div>
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_ss_uw_status" id="usa_business_ss_uw_status">
-																<option value="0" ' . (($usa_business_ss_uw_status == 0) ? 'selected' : '') . '>Closed</option>
-																<option value="1" ' . (($usa_business_ss_uw_status == 1) ? 'selected' : '') . '>Open</option>
+																<option value="Geschlossen" ' . (($usa_business_ss_uw_status == "Geschlossen") ? 'selected' : '') . '>Geschlossen</option>
+																'.$usa_business_ss_uw_status_html.'
 															</select>
 														</div>
 													</div>
 												</div>
 											</li>
 											<li>
-												<div class="form_field"><input type="checkbox" name="usa_business_24h_check" id="usa_business_24h_check" ' . (($usa_business_24h_check > 0) ? 'checked' : '') . '> Open 24 Hours</div>
+												<div class="form_field"><input type="checkbox" name="usa_business_24h_check" id="usa_business_24h_check" ' . (($usa_business_24h_check > 0) ? 'checked' : '') . '> 24 Stunden geöffnet</div>
 											</li>
 											<li>
-												<div class="form_field"><input type="checkbox" name="usa_business_close_check" id="usa_business_close_check" ' . (($usa_business_close_check > 0) ? 'checked' : '') . '> Closed for deliveries
+												<div class="form_field"><input type="checkbox" name="usa_business_close_check" id="usa_business_close_check" ' . (($usa_business_close_check > 0) ? 'checked' : '') . '> Für Lieferungen geschlossen</div>
+											</li>
+										</ul>
+									</div>
+									<div class="grnc_tabnav_content ' . (($usa_delivery_instructions_tab_active == 4) ? "active" : "hide") . '" id="tab4">
+										<h4>Benötigen wir zusätzliche Anweisungen, um an diese Adresse zu liefern?</h4>
+										<ul>
+											<li>
+												<div class="form_label">Zustellungsanweisungen</div>
+												<div class="form_field">
+													<textarea class="gerenric_input gerenric_textarea" name="cu_message" id="cu_message" placeholder="Geben Sie Details wie Gebäudebeschreibung, einen nahe gelegenen Orientierungspunkt oder andere Navigationsanweisungen an.">' . $usa_other_check . '</textarea>
 												</div>
 											</li>
 										</ul>
 									</div>
-									<div class="grnc_tabnav_content hide" id="tab4">
-										<h4>Where should we leave packages when they donot fit in your letter box? </h4>
-										<ul>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="1" ' . (($usa_other_check == 1) ? 'checked' : '') . '></span> <span>Tarrace</span></div>
-											</li>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="2" ' . (($usa_other_check == 2) ? 'checked' : '') . '></span> <span>Garage</span></div>
-											</li>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="3" ' . (($usa_other_check == 3) ? 'checked' : '') . '></span> <span>Front Door</span></div>
-											</li>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="4" ' . (($usa_other_check == 4) ? 'checked' : '') . '></span> <span>Garden</span></div>
-											</li>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="5" ' . (($usa_other_check == 5) ? 'checked' : '') . '></span> <span>Shed</span></div>
-											</li>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="6" ' . (($usa_other_check == 6) ? 'checked' : '') . '></span> <span>With a neighbour</span></div>
-											</li>
-											<li>
-												<div class="radio_button"><span><input type="radio" name="usa_other_check" id="usa_other_check" value="7" ' . (($usa_other_check == 7) ? 'checked' : '') . '></span> <span>None of the above</span></div>
-											</li>
-										</ul>
-									</div>
+                                    <script>
+                                    $(".delivery_instructions_tab").on("click", function(){
+                                        $("#usa_delivery_instructions_tab_active").val($(this).attr("data-id"));
+                                    });
+                                    </script>
             ';
             $retValue = array("status" => "1", "message" => "Record found", "form_popup_heading_txt" => $formHead, "delivery_instructions" => $delivery_instructions);
             //$retValue = array("status" => "1", "message" => "Record found", "count" => $count, "last_record" => $last_record,  "gerenric_product_inner_page" => ($_REQUEST['start'] + 1), "gerenric_product_inner" => $gerenric_product_inner);

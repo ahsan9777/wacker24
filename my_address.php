@@ -20,6 +20,9 @@ if (isset($_REQUEST['btn_Addbilling'])) {
 
 	$ufields = "";
 	
+	if (isset($_REQUEST['usa_delivery_instructions_tab_active'])) {
+		$ufields .= ", usa_delivery_instructions_tab_active = '" . dbStr(trim($_REQUEST['usa_delivery_instructions_tab_active'])) . "'";
+	}
 	if (isset($_REQUEST['usa_house_check'])) {
 		$ufields .= ", usa_house_check = '" . dbStr(trim($_REQUEST['usa_house_check'])) . "'";
 	}
@@ -235,6 +238,12 @@ include("includes/message.php");
 							$rs = mysqli_query($GLOBALS['conn'], $Query);
 							if (mysqli_num_rows($rs) > 0) {
 								while ($row = mysqli_fetch_object($rs)) {
+									$usa_zipcode = explode(" ", $row->usa_zipcode);
+									if(count($usa_zipcode) > 1){
+										$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
+									} else{
+										$usa_zipcode = $row->usa_zipcode;
+									}
 									if ($row->usa_defualt == 1) {
 							?>
 										<div class="address_col">
@@ -244,18 +253,19 @@ include("includes/message.php");
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
 															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
-														<?php } ?>
-														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-														<li> <?php print($row->usa_street); ?> </li>
-														<li> <?php print($row->usa_house_no); ?> </li>
-														<li> <?php print($row->usa_contactno); ?> </li>
-														<li><?php print($row->usa_zipcode); ?></li>
+															<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
+														<?php } else { ?>
+															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<?php }?>
+														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
+														<li><?php print($usa_zipcode); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
-														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Add delivery instruction</a></li>
+														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Lieferanweisungen hinzufügen</a></li>
 													</ul>
 													<div class="btn_address">
-														<a href="<?php print("addupdateaddress/" . $row->usa_id); ?>">Edit</a> |
-														<a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Entfernen</a>
+														<a href="<?php print("addupdateaddress/" . $row->usa_id); ?>">Bearbeiten</a> |
+														<a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" >Entfernen</a>
 													</div>
 												</div>
 											</div>
@@ -264,23 +274,22 @@ include("includes/message.php");
 										<div class="address_col">
 											<div class="address_card">
 												<div class="address_detail">
-													<h2 style="border-bottom: none">&nbsp;</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
 															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
-														<?php } ?>
-														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-														<li> <?php print($row->usa_street); ?> </li>
-														<li> <?php print($row->usa_house_no); ?> </li>
-														<li> <?php print($row->usa_contactno); ?> </li>
-														<li><?php print($row->usa_zipcode); ?></li>
+															<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
+														<?php } else { ?>
+															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<?php }?>
+														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
+														<li><?php print($usa_zipcode); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
-														<li><?php print($row->usa_additional_info); ?></li>
-														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Add delivery instruction</a></li>
+														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Lieferanweisungen hinzufügen</a></li>
 													</ul>
 													<div class="btn_address">
-														<a href="<?php print("addupdateaddress/" . $row->usa_id); ?>">Edit</a> |
-														<a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">Entfernen</a> |
+														<a href="<?php print("addupdateaddress/" . $row->usa_id); ?>">Bearbeiten</a> |
+														<a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" >Entfernen</a> |
 														<a href="<?php print($_SERVER['PHP_SELF'] . "?set_defualt&usa_id=" . $row->usa_id); ?>">Als Lieferadresse einstellen</a>
 													</div>
 												</div>
@@ -547,7 +556,7 @@ include("includes/message.php");
 			$(".delivery_instructions_tab").on("click", function() {
 				let delivery_instructions_tab = $(this).attr("data-id");
 				//console.log("delivery_instructions_tab: " + $(this).attr("data-id"));
-				let delivery_instructions_text = ["Single Family home or terraced house", "Multi-unit residential building", "Office, retail srore, hotel, hospital etc.", "Single Family home or terraced house"];
+				let delivery_instructions_text = ["Einfamilienhaus oder Stadthaus", "Wohngebäude mit mehreren Einheiten", "Büro, Ladengeschäft, Hotel, Krankenhaus etc.", ""];
 				$("#delivery_instructions_text").text(delivery_instructions_text[delivery_instructions_tab - 1]);
 			});
 		}

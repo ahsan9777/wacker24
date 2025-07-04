@@ -9,6 +9,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 	$order_net_amount = 0;
 	$user_id = $_SESSION['UID'];
 	$usa_id = $_REQUEST['usa_id'];
+	$_SESSION['delivery_instruction'] = $_REQUEST['delivery_instruction'];
 	$pm_id = $_REQUEST['pm_id'];
 	$_SESSION['ord_note'] = $_REQUEST['ord_note'];
 	if ($pm_id == 1) {
@@ -57,7 +58,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		//$paypalresponseData = "";
 		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
 		//$order_net_amount = number_format(1, "2", ".", "");
-		$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $_REQUEST['ord_note']);
+		$paypalrequest = PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id);
 		$paypalresponseData = json_decode($paypalrequest, true);
 		/*print("<pre>");
 				print_r($paypalresponseData);
@@ -470,10 +471,15 @@ include("includes/message.php");
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
+											$property_type = array("Haus", "Wohnung", "Unternehmen", "Sonstiges");
+											$pro_type_data = "";
+											$delivery_instruction = delivery_instruction($row->usa_id, $row->usa_delivery_instructions_tab_active);
+											
 									?>
 											<div class="cart_delivery_col">
 												<div class="gerenric_white_box">
 													<input type="hidden" name="usa_id" id="usa_id" value="<?php print($row->usa_id); ?>">
+													<input type="hidden" name="delivery_instruction" id="delivery_instruction" value="<?php print($delivery_instruction); ?>">
 													<h2>Lieferadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
@@ -486,6 +492,9 @@ include("includes/message.php");
 														<li><?php print($row->usa_zipcode); ?></li>
 														<li><?php print($row->countries_name); ?></li>
 														<li><?php print($row->usa_address); ?></li>
+														<?php if(!empty($delivery_instruction)){ ?>
+														<li><?php print($delivery_instruction); ?></li>
+														<?php } ?>
 														<?php if ($_SESSION["utype_id"] != 5) { ?>
 															<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
 														<?php } ?>

@@ -4,14 +4,6 @@ if ($_SESSION["utype_id"] == 5) {
 	header("Location: " . $GLOBALS['siteURL'] . "bestätigung-der-gastbestellung");
 }
 
-//$payment_status_request = check_payment_status("8ac7a49f9766244201976b93716b3c34", "8ac7a4ca84e4549a0184e6fc903e14a5"); // Master card
-//$payment_status_responseData = json_decode($payment_status_request, true);
-//$payment_status_request = capturePayment("8ac7a4ca84e4549a0184e6fc903e14a5", "8ac7a49f9766244201976b93716b3c34", number_format(20.45, "2", ".", ""));
-//$payment_status_responseData = json_decode($payment_status_request, true);
-
-/*print("<pre>");
-print_r($payment_status_responseData);
-print("</pre>");die();*/
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) { //16.70
 	//print_r($_REQUEST);die();
 	$payment_status_request = check_payment_status($_REQUEST['id'], $_REQUEST['entityId']);
