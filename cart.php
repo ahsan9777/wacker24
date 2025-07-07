@@ -474,6 +474,12 @@ include("includes/message.php");
 											$property_type = array("Haus", "Wohnung", "Unternehmen", "Sonstiges");
 											$pro_type_data = "";
 											$delivery_instruction = delivery_instruction($row->usa_id, $row->usa_delivery_instructions_tab_active);
+											$usa_zipcode = explode(" ", $row->usa_zipcode);
+											if(count($usa_zipcode) > 1){
+												$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
+											} else{
+												$usa_zipcode = $row->usa_zipcode;
+											}
 											
 									?>
 											<div class="cart_delivery_col">
@@ -483,15 +489,15 @@ include("includes/message.php");
 													<h2>Lieferadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
-															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
-														<?php } ?>
-														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-														<li> <?php print($row->usa_street); ?> </li>
-														<li> <?php print($row->usa_house_no); ?> </li>
-														<li> <?php print($row->usa_contactno); ?> </li>
-														<li><?php print($row->usa_zipcode); ?></li>
+														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+														<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
+														<?php } else { ?>
+															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<?php }?>
+														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
+														<li><?php print($usa_zipcode); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
-														<li><?php print($row->usa_address); ?></li>
 														<?php if(!empty($delivery_instruction)){ ?>
 														<li><?php print($delivery_instruction); ?></li>
 														<?php } ?>
@@ -513,6 +519,12 @@ include("includes/message.php");
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										$row = mysqli_fetch_object($rs);
+										$usa_zipcode = explode(" ", $row->usa_zipcode);
+										if(count($usa_zipcode) > 1){
+											$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
+										} else{
+											$usa_zipcode = $row->usa_zipcode;
+										}
 										?>
 										<div class="cart_delivery_col">
 											<div class="gerenric_white_box">
@@ -520,14 +532,14 @@ include("includes/message.php");
 												<ul>
 													<?php if (!empty($row->usa_additional_info)) { ?>
 														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
-													<?php } ?>
-													<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-													<li> <?php print($row->usa_street); ?> </li>
-													<li> <?php print($row->usa_house_no); ?> </li>
-													<li> <?php print($row->usa_contactno); ?> </li>
-													<li><?php print($row->usa_zipcode); ?></li>
-													<li><?php print($row->countries_name); ?></li>
-													<li><?php print($row->usa_address); ?></li>
+														<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
+														<?php } else { ?>
+															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+														<?php }?>
+														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
+														<li><?php print($usa_zipcode); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
+														<li><?php print($row->countries_name); ?></li>
 													<li><a href="adressen" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>

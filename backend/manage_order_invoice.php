@@ -20,9 +20,12 @@ if (mysqli_num_rows($rs) > 0) {
 
 	$delivery_info = "";
 	$user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
-	if (!empty($user_company_name)) {
+	if (!empty($row->dinfo_additional_info)) {
+		$delivery_info .= $row->dinfo_additional_info. "<br>";
+	} elseif(!empty($user_company_name)) {
 		$delivery_info .= $user_company_name . "<br>";
 	}
+	
 	if (!empty($row->dinfo_fname)) {
 		$delivery_info .= $row->dinfo_fname . " " . $row->dinfo_lname . "<br>";
 	}

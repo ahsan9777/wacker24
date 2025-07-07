@@ -192,7 +192,7 @@ include("includes/messages.php");
                                     <?php
                                     $ord_note = "";
                                     $delivery_instruction = "";
-                                    $Query = "SELECT ord.*, di.delivery_instruction, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1' WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "' ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, di.dinfo_additional_info, di.delivery_instruction, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, usp.usa_additional_info, CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1' WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "' ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                                     if (mysqli_num_rows($rs) > 0) {
@@ -224,6 +224,11 @@ include("includes/messages.php");
                                         }
 
                                         $delivery_info = "";
+                                        if (!empty($row->dinfo_additional_info)) {
+                                                $delivery_info .= $row->dinfo_additional_info . "<br>";
+                                        } elseif (!empty($user_company_name)) {
+                                            $delivery_info .= $user_company_name . "<br>";
+                                        }
                                         if (!empty($row->dinfo_street)) {
                                             $delivery_info .= $row->dinfo_street . " " . $row->dinfo_house_no . "<br>";
                                         }
@@ -238,6 +243,9 @@ include("includes/messages.php");
                                         }
                                         $shipping_info = "";
                                         if ($row->ord_payment_method == 1) {
+                                            if (!empty($row->usa_additional_info)) {
+                                                    $shipping_info .= $row->usa_additional_info . "<br>";
+                                                }
                                             if (!empty($row->shipping_street_house)) {
                                                 $shipping_info .= $row->shipping_street_house . "<br>";
                                             }
@@ -481,7 +489,7 @@ include("includes/messages.php");
                                         <th >Auftrags-ID</th>
                                         <th>User Info </th>
                                         <th width="100">Rechnungsadresse</th>
-                                        <th width="100">Lieferadresse</th>
+                                        <th width="500">Lieferadresse</th>
                                         <th width="100">Betrag</th>
                                         <th>Zahlungsart</th>
                                         <th >Transaktions-ID</th>
@@ -494,7 +502,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT ord.*, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1'  " . $searchQuery . " ORDER BY ord.ord_datetime DESC";
+                                    $Query = "SELECT ord.*, di.dinfo_additional_info, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, usp.usa_additional_info,  CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1'  " . $searchQuery . " ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 50;
@@ -531,6 +539,11 @@ include("includes/messages.php");
                                                 $user_info .= $row->dinfo_email . "<br>";
                                             }
                                             $delivery_info = "";
+                                            if (!empty($row->dinfo_additional_info)) {
+                                                $delivery_info .= $row->dinfo_additional_info . "<br>";
+                                            } elseif (!empty($user_company_name)) {
+                                                $delivery_info .= $user_company_name . "<br>";
+                                            }
                                             if (!empty($row->dinfo_street)) {
                                                 $delivery_info .= $row->dinfo_street . " " . $row->dinfo_house_no . "<br>";
                                             }
@@ -540,11 +553,11 @@ include("includes/messages.php");
                                             if (!empty($row->countries_name)) {
                                                 $delivery_info .= $row->countries_name . "<br>";
                                             }
-                                            if (!empty($row->dinfo_address)) {
-                                                $delivery_info .= $row->dinfo_address . "<br>";
-                                            }
                                             $shipping_info = "";
                                             if ($row->ord_payment_method == 1) {
+                                                if (!empty($row->usa_additional_info)) {
+                                                    $shipping_info .= $row->usa_additional_info . "<br>";
+                                                }
                                                 if (!empty($row->shipping_street_house)) {
                                                     $shipping_info .= $row->shipping_street_house . "<br>";
                                                 }

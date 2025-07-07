@@ -315,17 +315,26 @@ include("includes/message.php");
 										$rs = mysqli_query($GLOBALS['conn'], $Query);
 										if (mysqli_num_rows($rs) > 0) {
 											$row = mysqli_fetch_object($rs);
+											$usa_zipcode = explode(" ", $row->usa_zipcode);
+											if(count($usa_zipcode) > 1){
+												$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
+											} else{
+												$usa_zipcode = $row->usa_zipcode;
+											}
 										?>
-											<div class="address_detail">
+											<div class="address_detail" style="height: auto;">
 												<h2>Rechnungsadresse</h2>
 												<ul>
-													<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-													<li> <?php print($row->usa_street); ?> </li>
-													<li> <?php print($row->usa_house_no); ?> </li>
-													<li> <?php print($row->usa_contactno); ?> </li>
-													<li><?php print($row->usa_zipcode); ?></li>
+													<?php if (!empty($row->usa_additional_info)) { ?>
+														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+														<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
+													<?php } else { ?>
+														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+													<?php }?>
+													<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
+													<li><?php print($usa_zipcode); ?></li>
+													<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 													<li><?php print($row->countries_name); ?></li>
-													<li><?php print($row->usa_additional_info); ?></li>
 												</ul>
 											</div>
 											<div class="address_remove"><a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">
