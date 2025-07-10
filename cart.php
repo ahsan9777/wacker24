@@ -50,9 +50,9 @@ if (isset($_REQUEST['btn_checkout'])) {
 		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");
 	}
 
-	if ($pm_id == 1) {
+	if (in_array($pm_id, array(1, 7))) {
 		cart_to_order($user_id, $usa_id, $pm_id);
-		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '".( ($pm_id == 1) ? 1 : 0 )."' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 		header('Location: bestellungen/15');
 	} elseif ($pm_id == 2) {
 		//$paypalresponseData = "";
@@ -136,9 +136,33 @@ if (isset($_REQUEST['btn_checkout'])) {
 			}
 			exit;
 		}
+	} elseif ($pm_id == 6) {
+		//$paypalresponseData = "";
+		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
+		//$order_net_amount = number_format(1, "2", ".", "");
+		$klarnarequest = KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id);
+		$klarnaresponseData = json_decode($klarnarequest, true);
+		print("<pre>");
+		print_r($klarnaresponseData);
+		print("</pre>");die();
+		$ord_payment_transaction_id = $klarnaresponseData['id'];
+		$ord_payment_short_id = $klarnaresponseData['descriptor'];
+		$ord_payment_info_detail = $klarnarequest;
+
+		$parameters = "";
+		if ($klarnaresponseData['resultDetails']['AcquirerResponse'] == 'Success') {
+			foreach ($klarnaresponseData['redirect']['parameters'] as $key => $value) {
+				$parameters .=  $value['name'] . "=" . $value['value'] . "&";
+			}
+			//$payment_status_request = check_payment_status($paypalresponseData['id'], $entityId);
+			//$payment_status_responseData = json_decode($payment_status_request, true);
+			//cart_to_order($user_id, $usa_id, $pm_id);
+			//mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+			header('Location: ' . $klarnaresponseData['redirect']['url'] . '?' . $parameters);
+		}
 	}
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
-	//print_r($_REQUEST);die();
+	print_r($_REQUEST);die();
 	for ($i = 0; $i < count($_REQUEST['ci_id']); $i++) {
 		if ($_REQUEST['ci_qty'][$i] > 0) {
 			$cart_id = $_SESSION['cart_id'];
@@ -606,7 +630,7 @@ include("includes/message.php");
 								</div>
 								<div class="cart_payment_method">
 									<div class="cart_box">
-										<h4>Bitte klicken Sie Ihre Zahlungsart an</h4>
+										<div class="alert alert-danger payment_method_alert" style="display: none;">Bitte klicken Sie Ihre Zahlungsart an<a class="close" data-dismiss="alert">×</a></div>
 										<ul>
 											<?php
 											$Query = "SELECT pm.pm_id, pm.pm_show_detail, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
@@ -622,7 +646,7 @@ include("includes/message.php");
 											?>
 														<li>
 															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
-																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 1) ? 'checked' :  '') ?>>
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" >
 																<span class="checkmark">
 																	<div class="payment_card">
 																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
@@ -634,7 +658,7 @@ include("includes/message.php");
 													<?php } elseif ($row->pm_id != 1) { ?>
 														<li>
 															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
-																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" <?php print(($row->pm_id == 2 && $user_invoice_payment == 0) ? 'checked' :  '') ?>>
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" >
 																<span class="checkmark">
 																	<div class="payment_card">
 																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
@@ -667,7 +691,7 @@ include("includes/message.php");
 											</ul>
 										</div>
 									</div>
-									<div class="pay_btn"><button type="submit" name="btn_checkout" class="gerenric_btn full_btn mt_30">Pay <?php print(number_format($cart_amount, "2", ",", "")); ?> €</button></div>
+									<div class="pay_btn"><button type="button" name="btn_checkout" class="gerenric_btn full_btn mt_30 btn_checkout">Pay <?php print(number_format($cart_amount, "2", ",", "")); ?> €</button></div>
 								</div>
 							</div>
 						</div>
@@ -689,6 +713,30 @@ include("includes/message.php");
 </body>
 <?php include("includes/bottom_js.php"); ?>
 <script>
+
+	$(".pm_id").on("click", function() {
+		//console.log("btn_checkout");
+		let selectedPmId = $("input[name='pm_id']:checked").val();
+		if(!selectedPmId){
+			$(".payment_method_alert").show();
+		} else{
+			//console.log("Selected payment method ID is: " + selectedPmId);
+			$(".payment_method_alert").hide();
+		}
+	});
+	$(".btn_checkout").on("click", function() {
+		//console.log("btn_checkout");
+		let selectedPmId = $("input[name='pm_id']:checked").val();
+		if(!selectedPmId){
+			$(".btn_checkout").attr("type", "button");
+			$(".payment_method_alert").show();
+		} else{
+			$(".payment_method_alert").hide();
+			$(".btn_checkout").attr("type", "submit");
+			//console.log("Selected payment method ID is: " + selectedPmId);
+			$('#frmCart').submit();
+		}
+	});
 	$(".ci_qty").on("change", function() {
 		//console.log("ci_qty");
 		$('#frmCart')[0].submit();

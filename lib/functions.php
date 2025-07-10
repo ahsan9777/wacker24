@@ -2474,6 +2474,50 @@ function PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 	return $responseData;
 }
 
+function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
+{
+	header('Content-Type: text/plain; charset=utf-8');
+	$url = "" . config_payment_url . "";
+
+	$data = http_build_query([
+		'entityId' => $entityId,
+		'merchantTransactionId' => $ord_id,
+		'amount' => $order_net_amount,
+		'currency' => 'EUR',
+		'paymentBrand' => 'KLARNA_PAYMENTS_PAYLATER', // or KLARNA_PAY_NOW, KLARNA_SLICE_IT
+		'paymentType' => 'PA',
+		'shopperResultUrl' => $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id,
+
+		// Klarna requires additional customer data
+		'billing.country' => 'DE',
+		'billing.city' => 'Berlin',
+		'billing.postcode' => '10115',
+		'billing.street1' => 'Teststrasse 1',
+		'customer.givenName' => 'Max',
+		'customer.surname' => 'Mustermann',
+		'customer.email' => 'max@example.com',
+		'customer.ip' => $_SERVER['REMOTE_ADDR']
+	]);
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, [
+		'Authorization:Bearer ' . config_authorization_bearer
+	]);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // should be true in production
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$responseData = curl_exec($ch);
+
+	if (curl_errno($ch)) {
+		return curl_error($ch);
+	}
+	curl_close($ch);
+	return $responseData;
+}
+
+
 function check_payment_status($id, $entityId)
 {
 	//$id = "8acda4a78f395b8b018f4ceec5f44ce7";
@@ -2977,7 +3021,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		$dinfo_address = $rw->usa_address;
 		$dinfo_countries_id = $rw->countries_id;
 		$dinfo_usa_zipcode = $rw->usa_zipcode;
-		$dinfo_additional_info = !empty($rw->usa_additional_info) ? $rw->usa_additional_info : ' ';
+		$dinfo_additional_info = !empty($rw->usa_additional_info) ? $rw->usa_additional_info : '';
 	}
 
 	$orders_table_check = 0;
@@ -3126,4 +3170,14 @@ function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active){
 
 	}
 	return $delivery_instruction;
+}
+
+function formatDateGerman($datetime, $format = 'D F j, Y') {
+    $timestamp = strtotime($datetime);
+
+    $en = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun', 'January','February','March','April','May','June', 'July','August','September','October','November','December'];
+    $de = ['Mo','Di','Mi','Do','Fr','Sa','So', 'Januar','Februar','März','April','Mai','Juni', 'Juli','August','September','Oktober','November','Dezember'];
+
+    $formatted = date($format, $timestamp);
+    return str_replace($en, $de, $formatted);
 }

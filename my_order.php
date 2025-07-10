@@ -82,12 +82,13 @@ include("includes/message.php");
 							if( $row->oi_type > 0){
 								$product_link = "product/1/".$row->supplier_id."/".url_clean($row->pro_description_short);
 							}
+							
 					?>
 							<div class="my_order_box">
 								<div class="order_place_bar">
 									<div class="place_col">
 										<div class="place_div">Bestellung aufgegeben</div>
-										<div class="place_div"><?php print(date('D F j, Y', strtotime($row->ord_datetime))); ?></div>
+										<div class="place_div"><?php print(formatDateGerman($row->ord_datetime)); ?></div>
 									</div>
 									<div class="place_col">
 										<div class="place_div">Artikel Preis</div>
