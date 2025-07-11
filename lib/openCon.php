@@ -13,6 +13,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "wacker24";
 	$GLOBALS['siteURL'] = "http://localhost:82/wacker24/";
+	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 } elseif ($_SERVER['HTTP_HOST'] == 'localhost') {
 	$dbServer   = "localhost";
 	$dbDatabase = "gac_2024_wacker24";
@@ -20,6 +21,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "wacker24";
 	$GLOBALS['siteURL'] = "http://localhost/wacker24/";
+	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 } else {
 	$dbServer   = "localhost";
 	$dbDatabase = "wackersystems_wacker24demo";
@@ -30,6 +32,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$GLOBALS['siteName'] = "Wacker24";
 	//$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
 	$GLOBALS['siteURL'] = "https://www.wackersystems.com/";
+	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 }
 
 $GLOBALS['conn'] = new mysqli($dbServer, $dbUserName, $dbPassword, $dbDatabase);

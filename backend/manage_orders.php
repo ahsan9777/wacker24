@@ -72,7 +72,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
             print_r($payment_status_responseData);
             print("</pre>");die();*/
                 //$ord_amount = number_format(0.50, "2", ".", "");
-                if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
+                if ($orders_table_data['data_5'] == 0 && !in_array($orders_table_data['data_6'], array(1,7)) ) {
                     $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
                     $payment_status_responseData = json_decode($payment_status_request, true);
                     /*print("<pre>");
@@ -83,7 +83,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
                         $mailer->order($_REQUEST['ord_id'][$i]);
                         header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
                     }
-                } elseif ($orders_table_data['data_6'] == 1) {
+                } elseif (in_array($orders_table_data['data_6'], array(1,7))) {
                     mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'][$i] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
                     $mailer->order($_REQUEST['ord_id'][$i]);
                     header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
@@ -107,7 +107,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
     if ($_REQUEST['d_status_id'] == 1) {
         $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'], 6);
         $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
-        if ($orders_table_data['data_5'] == 0 && $orders_table_data['data_6'] != 1) {
+        if ($orders_table_data['data_5'] == 0 && !in_array($orders_table_data['data_6'], array(1,7)) ) {
             $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
             $payment_status_responseData = json_decode($payment_status_request, true);
             /*print("<pre>");
@@ -117,7 +117,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
                 mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
                 $mailer->order($_REQUEST['ord_id'][$i]);
             }
-        } elseif ($orders_table_data['data_6'] == 1) {
+        } elseif (in_array($orders_table_data['data_6'], array(1,7))) {
             mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
             $mailer->order($_REQUEST['ord_id'][$i]);
         }

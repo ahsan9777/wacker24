@@ -3063,6 +3063,11 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 	}
 
 	if ($orders_table_check == 1 && $order_items_table_check == 1) {
+		if($pm_id == 7){
+			require_once("mailer.php");
+			$mailer = new Mailer();
+			$mailer->vorkasse($dinfo_email, $ord_id);
+		}
 		mysqli_query($GLOBALS['conn'], "DELETE FROM cart WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
 		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
 		unset($_SESSION['cart_id']);

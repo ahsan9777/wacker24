@@ -299,6 +299,35 @@ class Mailer
 
 
 
+    public function vorkasse($email, $ord_id)
+    {
+        $username = "";
+        $password = "";
+        $subject = "Ihre Bestellung bei Wacker Bürocenter – Zahlungsinformationen zur Vorkasse";
+        //$to = "ahsannawaz9777@gmail.com";
+        $to = $email;
+
+        $message = 'Sehr geehrte Kundin, <br>
+				<br><br>vielen Dank für Ihre Bestellung in unserem Webshop!         
+				<br>Sie haben sich für die Zahlungsart <b>Vorkasse</b> entschieden.
+				<br><br>Bitte überweisen Sie den Gesamtbetrag Ihrer Bestellung <b>innerhalb von 7 Tagen</b> auf folgendes Konto:
+				<br><br><b>Wacker Bürocenter GmbH</b>
+				<br>Bank: <b>VR-Bank Südpfalz</b>
+				<br>IBAN: <b>DE95 5486 2500 0006 7025 70</b>
+				<br>BIC: <b>GENODE61SUW</b>
+				<br><br>Verwendungszweck: '.$ord_id.'
+				<br><br>Nach Zahlungseingang erhalten Sie eine Bestätigung per E-Mail. Anschließend wird Ihre Bestellung schnellstmöglich versendet.
+				<br><br><b><img style="width: 20px;" data-emoji="📞" class="an1" alt="📞" aria-label="📞" draggable="false" src="'.$GLOBALS['siteURL'].'images/phone.png" loading="lazy" data-emailtracker-detector="1"> Bei Fragen sind wir gerne für Sie da:</b>
+                <br><br>Hotline: <b>06321 9124-80</b>
+                <br>E-Mail: <a href="mailto:'.$GLOBALS['vorkasse_email'].'" style="color:rgb(70,120,134)" target="_blank"><b>'.$GLOBALS['vorkasse_email'].'</b></a>
+				<br><br>Vielen Dank für Ihr Vertrauen!
+				<br><br>Mit freundlichen Grüßen
+				<br><br>Ihr Team vom <b>Wacker Bürocenter</b>';
+
+
+        $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
+        //print($ret);
+    }
     public function forgotpassword($email, $token)
     {
         $username = "";
