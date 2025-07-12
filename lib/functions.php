@@ -3177,7 +3177,7 @@ function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active){
 	return $delivery_instruction;
 }
 
-function formatDateGerman($datetime, $format = 'D F j, Y') {
+function formatDateGerman($datetime, $format = 'j F, Y') {
     $timestamp = strtotime($datetime);
 
     $en = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun', 'January','February','March','April','May','June', 'July','August','September','October','November','December'];

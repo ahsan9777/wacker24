@@ -162,7 +162,7 @@ if (isset($_REQUEST['btn_checkout'])) {
 		}
 	}
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
-	print_r($_REQUEST);die();
+	//print_r($_REQUEST);die();
 	for ($i = 0; $i < count($_REQUEST['ci_id']); $i++) {
 		if ($_REQUEST['ci_qty'][$i] > 0) {
 			$cart_id = $_SESSION['cart_id'];
@@ -498,13 +498,6 @@ include("includes/message.php");
 											$property_type = array("Haus", "Wohnung", "Unternehmen", "Sonstiges");
 											$pro_type_data = "";
 											$delivery_instruction = delivery_instruction($row->usa_id, $row->usa_delivery_instructions_tab_active);
-											$usa_zipcode = explode(" ", $row->usa_zipcode);
-											if(count($usa_zipcode) > 1){
-												$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
-											} else{
-												$usa_zipcode = $row->usa_zipcode;
-											}
-											
 									?>
 											<div class="cart_delivery_col">
 												<div class="gerenric_white_box">
@@ -519,7 +512,7 @@ include("includes/message.php");
 															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
-														<li><?php print($usa_zipcode); ?></li>
+														<li><?php print($row->usa_zipcode); ?></li>
 														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
 														<?php if(!empty($delivery_instruction)){ ?>
@@ -543,12 +536,6 @@ include("includes/message.php");
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										$row = mysqli_fetch_object($rs);
-										$usa_zipcode = explode(" ", $row->usa_zipcode);
-										if(count($usa_zipcode) > 1){
-											$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
-										} else{
-											$usa_zipcode = $row->usa_zipcode;
-										}
 										?>
 										<div class="cart_delivery_col">
 											<div class="gerenric_white_box">
@@ -561,7 +548,7 @@ include("includes/message.php");
 															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
-														<li><?php print($usa_zipcode); ?></li>
+														<li><?php print($row->usa_zipcode); ?></li>
 														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
 													<li><a href="adressen" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>

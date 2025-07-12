@@ -238,18 +238,13 @@ include("includes/message.php");
 							$rs = mysqli_query($GLOBALS['conn'], $Query);
 							if (mysqli_num_rows($rs) > 0) {
 								while ($row = mysqli_fetch_object($rs)) {
-									$usa_zipcode = explode(" ", $row->usa_zipcode);
-									if(count($usa_zipcode) > 1){
-										$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
-									} else{
-										$usa_zipcode = $row->usa_zipcode;
-									}
+									
 									if ($row->usa_defualt == 1) {
 							?>
 										<div class="address_col">
-											<div class="address_card">
+											<div class="address_card" style="border: 4px solid #fffc04;">
 												<div class="address_detail">
-													<h2> Lieferadresse</h2>
+													<h2> Standard: Lieferadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
 															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
@@ -258,7 +253,7 @@ include("includes/message.php");
 															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
-														<li><?php print($usa_zipcode); ?></li>
+														<li><?php print($row->usa_zipcode); ?></li>
 														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
 														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Lieferanweisungen hinzufügen</a></li>
@@ -282,7 +277,7 @@ include("includes/message.php");
 															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
-														<li><?php print($usa_zipcode); ?></li>
+														<li><?php print($row->usa_zipcode); ?></li>
 														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
 														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Lieferanweisungen hinzufügen</a></li>
@@ -315,12 +310,6 @@ include("includes/message.php");
 										$rs = mysqli_query($GLOBALS['conn'], $Query);
 										if (mysqli_num_rows($rs) > 0) {
 											$row = mysqli_fetch_object($rs);
-											$usa_zipcode = explode(" ", $row->usa_zipcode);
-											if(count($usa_zipcode) > 1){
-												$usa_zipcode = $usa_zipcode[1].", ".$usa_zipcode[0];
-											} else{
-												$usa_zipcode = $row->usa_zipcode;
-											}
 										?>
 											<div class="address_detail" style="height: auto;">
 												<h2>Rechnungsadresse</h2>
@@ -332,7 +321,7 @@ include("includes/message.php");
 														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
 													<?php }?>
 													<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
-													<li><?php print($usa_zipcode); ?></li>
+													<li><?php print($row->usa_zipcode); ?></li>
 													<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 													<li><?php print($row->countries_name); ?></li>
 												</ul>
