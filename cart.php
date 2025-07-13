@@ -513,8 +513,7 @@ include("includes/message.php");
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
 														<li><?php print($row->usa_zipcode); ?></li>
-														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
-														<li><?php print($row->countries_name); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>														
 														<?php if(!empty($delivery_instruction)){ ?>
 														<li><?php print($delivery_instruction); ?></li>
 														<?php } ?>
@@ -550,7 +549,6 @@ include("includes/message.php");
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
 														<li><?php print($row->usa_zipcode); ?></li>
 														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
-														<li><?php print($row->countries_name); ?></li>
 													<li><a href="adressen" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>

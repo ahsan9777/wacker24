@@ -26,6 +26,12 @@ if (isset($_REQUEST['btn_Addbilling'])) {
 	if (isset($_REQUEST['usa_house_check'])) {
 		$ufields .= ", usa_house_check = '" . dbStr(trim($_REQUEST['usa_house_check'])) . "'";
 	}
+	if (isset($_REQUEST['usa_house_neighbor_name'])) {
+		$ufields .= ", usa_house_neighbor_name = '" . dbStr(trim($_REQUEST['usa_house_neighbor_name'])) . "'";
+	}
+	if (isset($_REQUEST['usa_house_neighbor_address'])) {
+		$ufields .= ", usa_house_neighbor_address = '" . dbStr(trim($_REQUEST['usa_house_neighbor_address'])) . "'";
+	}
 	if (isset($_REQUEST['usa_apartment_security_code']) && !empty($_REQUEST['usa_apartment_security_code'])) {
 		$ufields .= ", usa_apartment_security_code = '" . dbStr(trim($_REQUEST['usa_apartment_security_code'])) . "'";
 	}
@@ -37,6 +43,10 @@ if (isset($_REQUEST['btn_Addbilling'])) {
 	} else{
 		$ufields .= ", usa_appartment_check = '0'";
 	}
+	if (isset($_REQUEST['usa_business_mf_type'])) {
+		$usa_business_mf_type = $_REQUEST['usa_business_mf_type'];
+		$ufields .= ", usa_business_mf_type = '" . dbStr(trim($_REQUEST['usa_business_mf_type'])) . "'";
+	}
 	if (isset($_REQUEST['usa_business_mf_status'])) {
 		$ufields .= ", usa_business_mf_status = '" . dbStr(trim($_REQUEST['usa_business_mf_status'])) . "'";
 	}
@@ -47,6 +57,10 @@ if (isset($_REQUEST['btn_Addbilling'])) {
 		$ufields .= ", usa_business_mf_24h_check = '1'";
 	} else{
 		$ufields .= ", usa_business_mf_24h_check = '0'";
+	}
+	if (isset($_REQUEST['usa_business_ss_type'])) {
+		$usa_business_ss_type = $_REQUEST['usa_business_ss_type'];
+		$ufields .= ", usa_business_ss_type = '" . dbStr(trim($_REQUEST['usa_business_ss_type'])) . "'";
 	}
 	if (isset($_REQUEST['usa_business_ss_status'])) {
 		$ufields .= ", usa_business_ss_status = '" . dbStr(trim($_REQUEST['usa_business_ss_status'])) . "'";
@@ -69,6 +83,37 @@ if (isset($_REQUEST['btn_Addbilling'])) {
 	}
 
 	mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET " . ltrim($ufields, ", ") . " WHERE usa_id = '" . $_REQUEST['usa_id'] . "' ") or die(mysqli_error($GLOBALS['conn']));
+	if ($usa_business_mf_type > 0) {
+		for ($i = 0; $i < 5; $i++) {
+			$Query = "SELECT * FROM shipping_business_ungroup_days WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND sbugd_day = '" . $_REQUEST['sbugd_day'][$i] . "'";
+			$rs = mysqli_query($GLOBALS['conn'], $Query);
+			if (mysqli_num_rows($rs) > 0) {
+				$rw = mysqli_fetch_object($rs);
+
+				mysqli_query($GLOBALS['conn'], "UPDATE shipping_business_ungroup_days SET sbugd_open = '" . dbStr(trim($_REQUEST['sbugd_open'][$i])) . "', sbugd_close = '" . dbStr(trim($_REQUEST['sbugd_close'][$i])) . "', sbugd_24hour_open = '" . dbStr(trim($_REQUEST['sbugd_24hour_open'][$i])) . "', sbugd_orderby = '" . $i . "' WHERE sbugd_id = '" . $rw->sbugd_id . "'") or die(mysqli_error($GLOBALS['conn']));
+			} else {
+				$sbugd_id = getMaximum("shipping_business_ungroup_days", "sbugd_id");
+				mysqli_query($GLOBALS['conn'], " INSERT INTO shipping_business_ungroup_days (sbugd_id, usa_id, sbugd_day, sbugd_open, sbugd_close, sbugd_24hour_open, sbugd_orderby) VALUES ('" . $sbugd_id . "', '" . $_REQUEST['usa_id'] . "', '" . dbStr(trim($_REQUEST['sbugd_day'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_open'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_close'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_24hour_open'][$i])) . "', '" . $i . "') ") or die(mysqli_error($GLOBALS['conn']));
+			}
+		}
+	}
+
+	if ($usa_business_ss_type > 0) {
+		/*print("<pre>");
+		print_r($_REQUEST);
+		print("</pre>");die();*/
+		for ($i = 5; $i < 7; $i++) {
+			$Query = "SELECT * FROM shipping_business_ungroup_days WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND sbugd_day = '" . $_REQUEST['sbugd_day'][$i] . "'";
+			$rs = mysqli_query($GLOBALS['conn'], $Query);
+			if (mysqli_num_rows($rs) > 0) {
+				$rw = mysqli_fetch_object($rs);
+				mysqli_query($GLOBALS['conn'], "UPDATE shipping_business_ungroup_days SET sbugd_open = '" . dbStr(trim($_REQUEST['sbugd_open'][$i])) . "', sbugd_close = '" . dbStr(trim($_REQUEST['sbugd_close'][$i])) . "', sbugd_24hour_open = '" . dbStr(trim($_REQUEST['sbugd_24hour_open'][$i])) . "', sbugd_close_delivery = '" . dbStr(trim($_REQUEST['sbugd_close_delivery'][$i])) . "', sbugd_orderby = '" . $i . "' WHERE sbugd_id = '" . $rw->sbugd_id . "'") or die(mysqli_error($GLOBALS['conn']));
+			} else {
+				$sbugd_id = getMaximum("shipping_business_ungroup_days", "sbugd_id");
+				mysqli_query($GLOBALS['conn'], " INSERT INTO shipping_business_ungroup_days (sbugd_id, usa_id, sbugd_day, sbugd_open, sbugd_close, sbugd_24hour_open, sbugd_close_delivery, sbugd_type, sbugd_orderby) VALUES ('" . $sbugd_id . "', '" . $_REQUEST['usa_id'] . "', '" . dbStr(trim($_REQUEST['sbugd_day'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_open'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_close'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_24hour_open'][$i])) . "', '" . dbStr(trim($_REQUEST['sbugd_close_delivery'][$i])) . "', '1', '" . $i . "') ") or die(mysqli_error($GLOBALS['conn']));
+			}
+		}
+	}
 
 	header("Location: adressen/2");
 }
@@ -85,6 +130,7 @@ if (isset($_REQUEST['set_defualt'])) {
 if (isset($_REQUEST['deleted'])) {
 	//print_r($_REQUEST);die();
 	mysqli_query($GLOBALS['conn'], "DELETE FROM user_shipping_address WHERE usa_id = '" . $_REQUEST['usa_id'] . "' AND user_id = '" . $_SESSION["UID"] . "'") or die(mysqli_error($GLOBALS['conn']));
+	mysqli_query($GLOBALS['conn'], "DELETE FROM shipping_business_ungroup_days WHERE usa_id = '" . $_REQUEST['usa_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
 	header("Location: adressen/3");
 }
 

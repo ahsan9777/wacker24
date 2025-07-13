@@ -1528,9 +1528,9 @@ function returnMulCat($ID)
 function returnMultiName($Field, $Table, $IDField, $ID, $fieldcount, $AND = "")
 {
 	$retRes = array();
-	if(strlen($ID) < 4){
+	if (strlen($ID) < 4) {
 		//$strQry = "SELECT $Field FROM $Table WHERE FIND_IN_SET ('" . $ID . "', ".$IDField.") " . $AND . "";
-		$strQry = "SELECT $Field FROM $Table WHERE ".$IDField." = '" . $ID . "' ". $AND . "";
+		$strQry = "SELECT $Field FROM $Table WHERE " . $IDField . " = '" . $ID . "' " . $AND . "";
 	} else {
 		$strQry = "SELECT $Field FROM $Table WHERE $IDField= '" . $ID . "' " . $AND . "";
 	}
@@ -3046,7 +3046,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 			$delivery_instruction = dbStr(trim($_SESSION['delivery_instruction']));
 		}
 		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '" . $entityId . "', '" . $ord_payment_transaction_id . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
-		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, delivery_instruction, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '".$delivery_instruction."', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, delivery_instruction, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $delivery_instruction . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
 
@@ -3056,14 +3056,14 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '".$row2->ci_type."', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '".$row2->ci_qty_type."', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
 			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
 			$order_items_table_check = 1;
 		}
 	}
 
 	if ($orders_table_check == 1 && $order_items_table_check == 1) {
-		if($pm_id == 7){
+		if ($pm_id == 7) {
 			require_once("mailer.php");
 			$mailer = new Mailer();
 			$mailer->vorkasse($dinfo_email, $ord_id);
@@ -3085,11 +3085,12 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 	return $order_success;
 }
 
-function orderquantityUpdate($ord_id){
-	$Query = "SELECT * FROM `order_items` WHERE ord_id = '".$ord_id."'";
+function orderquantityUpdate($ord_id)
+{
+	$Query = "SELECT * FROM `order_items` WHERE ord_id = '" . $ord_id . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if(mysqli_num_rows($rs) > 0){
-		while($rw = mysqli_fetch_object($rs)){
+	if (mysqli_num_rows($rs) > 0) {
+		while ($rw = mysqli_fetch_object($rs)) {
 			quantityUpdate("+", $rw->supplier_id, $rw->oi_qty, $rw->oi_qty_type, $rw->oi_type);
 		}
 	}
@@ -3097,32 +3098,33 @@ function orderquantityUpdate($ord_id){
 function quantityUpdate($opration, $supplier_id, $quantity, $quantity_type, $ci_type = 0)
 {
 	$field = "pq_quantity";
-	if($quantity_type > 0 && $ci_type == 0){
+	if ($quantity_type > 0 && $ci_type == 0) {
 		$field = "pq_upcomming_quantity";
-	} elseif($ci_type > 0){
+	} elseif ($ci_type > 0) {
 		$field = "pq_physical_quantity";
 	}
 	if ($opration == "+") {
-		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." + '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET " . $field . " = " . $field . " + '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 	} else {
-		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET ".$field." = ".$field." - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET " . $field . " = " . $field . " - '" . $quantity . "' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 	}
 }
 
-function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type){
+function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type)
+{
 	$return_quantity = 0;
 	$cart_quantity_total = $ci_qty + $cart_quantity;
 	$field = "pq_quantity";
-	if($ci_qty_type > 0 && $ci_type == 0){
+	if ($ci_qty_type > 0 && $ci_type == 0) {
 		$field = "pq_upcomming_quantity";
-	} elseif($ci_type > 0){
+	} elseif ($ci_type > 0) {
 		$field = "pq_physical_quantity";
 	}
-	$Query = "SELECT * FROM `products_quantity` WHERE supplier_id = '".$supplier_id."'";
+	$Query = "SELECT * FROM `products_quantity` WHERE supplier_id = '" . $supplier_id . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if(mysqli_num_rows($rs) > 0){
+	if (mysqli_num_rows($rs) > 0) {
 		$rw = mysqli_fetch_object($rs);
-		if($cart_quantity_total >= $rw->$field){
+		if ($cart_quantity_total >= $rw->$field) {
 			$return_quantity = $rw->$field;
 		} else {
 			$return_quantity = $cart_quantity_total;
@@ -3131,58 +3133,104 @@ function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_
 	return $return_quantity;
 }
 
-function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active){
+function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active)
+{
 	$delivery_instruction = "";
 	$property_type = array("Haus", "Wohnung", "Unternehmen", "Sonstiges");
 	$Query = "SELECT * FROM user_shipping_address AS usa WHERE usa.usa_id = '" . $usa_id . "' ";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
-		$row = mysqli_fetch_object($rs); 
-		if($usa_delivery_instructions_tab_active == 1){
+		$row = mysqli_fetch_object($rs);
+		if ($usa_delivery_instructions_tab_active == 1) {
 
-			$delivery_instruction = "<b>Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]."</b> ( ".$row->usa_house_check." )";
-
-		} elseif($usa_delivery_instructions_tab_active == 2){
+			$delivery_instruction = "<br><b>Grundstückstyp: " . $property_type[$row->usa_delivery_instructions_tab_active - 1] . ":</b> " . $row->usa_house_check . "";
+			if ($row->usa_house_check == "Bei einem Nachbarn") {
+				$delivery_instruction = "<br><b>Grundstückstyp: " . $property_type[$row->usa_delivery_instructions_tab_active - 1] . ":</b> " . $row->usa_house_check . "
+				<br> <b>Name des Nachbarn: </b>" . $row->usa_house_neighbor_name . "
+				<br> <b>Adresse des Nachbarn/der Nachbarin: </b>" . $row->usa_house_neighbor_address . "";
+			}
+		} elseif ($usa_delivery_instructions_tab_active == 2) {
 
 			$apartment_data = "";
-			if(!empty($row->usa_apartment_security_code)){
-				$apartment_data .= "<br><b>Sicherheitscode:</b> ".$row->usa_apartment_security_code;
+			if (!empty($row->usa_apartment_security_code)) {
+				$apartment_data .= "<br><b>Sicherheitscode:</b> " . $row->usa_apartment_security_code;
 			}
-			if(!empty($row->usa_appartment_call_box)){
-				$apartment_data .= "<br><b>Gegensprechanlage:</b> ".$row->usa_appartment_call_box;
+			if (!empty($row->usa_appartment_call_box)) {
+				$apartment_data .= "<br><b>Gegensprechanlage:</b> " . $row->usa_appartment_call_box;
 			}
-			if(!empty($row->usa_appartment_check)){
+			if (!empty($row->usa_appartment_check)) {
 				$apartment_data .= "<br>Schlüssel oder Token benötigt";
 			}
-			$delivery_instruction = "<b>Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]."</b>".$apartment_data;
+			$delivery_instruction = "<br><b>Grundstückstyp: " . $property_type[$row->usa_delivery_instructions_tab_active - 1] . "</b>" . $apartment_data;
+		} elseif ($usa_delivery_instructions_tab_active == 3) {
+			$business_data = "";
+			if($row->usa_business_mf_24h_check > 0){
+				$business_data .= "<br><b>Montag - Freitag:</b> 24 Stunden geöffnet";
+			} else{
+				$business_data .= "<br><b>Montag - Freitag:</b> " . $row->usa_business_mf_status . "; <b>Gruppierung aufheben:</b> " . $row->usa_business_mf_uw_status;
+			}
+			if($row->usa_business_24h_check == 0 && $row->usa_business_close_check == 0){
+				$business_data .= "<br><b>Samstag - Sonntag:</b> " . $row->usa_business_ss_status . "; <b>Gruppierung aufheben:</b> " . $row->usa_business_ss_uw_status;
+			}
 
-		} elseif($usa_delivery_instructions_tab_active == 3){
-
-			$business_data = "<br><b>Montag - Freitag:</b> ".$row->usa_business_mf_status ."; <b>Gruppierung aufheben:</b> ".$row->usa_business_mf_uw_status;
-			$business_data .= ( ($row->usa_business_mf_24h_check > 0) ? "<br>24 Stunden geöffnet" : "" );
-			$business_data .= "<br><b>Samstag - Sonntag:</b> ".$row->usa_business_ss_status."; <b>Gruppierung aufheben:</b> ".$row->usa_business_ss_uw_status;
-			$business_data .= ( ($row->usa_business_24h_check > 0) ? "<br>24 Stunden geöffnet" : "" );
-			$business_data .= ( ($row->usa_business_close_check > 0) ? "<br>Für Lieferungen geschlossen" : "" );
+			if($row->usa_business_24h_check > 0){
+				$business_data .= "<br><b>Samstag - Sonntag:</b> 24 Stunden geöffnet";
+			}
+			if($row->usa_business_close_check > 0){
+				$business_data .= "<br><b>Samstag - Sonntag:</b> Für Lieferungen geschlossen";
+			}
 			
 
-			$delivery_instruction = "<b>Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]."</b>".$business_data;
+			if ($row->usa_business_mf_type > 0 || $row->usa_business_ss_type > 0) {
+				$business_data = "";
+			}
+			if ($row->usa_business_mf_type > 0) {
+				$Query = "SELECT * FROM shipping_business_ungroup_days WHERE sbugd_type = '0' AND usa_id = '" . $usa_id . "' ORDER BY sbugd_orderby ASC";
+				$rs = mysqli_query($GLOBALS['conn'], $Query);
+				if (mysqli_num_rows($rs) > 0) {
+					while ($rw = mysqli_fetch_object($rs)) {
+						if($rw->sbugd_24hour_open > 0){
+							$business_data .= "<br><b>".$rw->sbugd_day.":</b> 24 Stunden geöffnet";
+						} else{
+							$business_data .= "<br><b>".$rw->sbugd_day.":</b> " . $rw->sbugd_open . "; <b>Gruppierung aufheben:</b> " . $rw->sbugd_close;
+						}
+					}
+				}
+			}
+			if ($row->usa_business_ss_type > 0) {
+				$Query = "SELECT * FROM shipping_business_ungroup_days WHERE sbugd_type = '1' AND usa_id = '" . $usa_id . "' ORDER BY sbugd_orderby ASC";
+				$rs = mysqli_query($GLOBALS['conn'], $Query);
+				if (mysqli_num_rows($rs) > 0) {
+					while ($rw = mysqli_fetch_object($rs)) {
+						if($rw->sbugd_24hour_open == 0 && $rw->sbugd_close_delivery == 0){
+							$business_data .= "<br><b>".$rw->sbugd_day.":</b> " . $rw->sbugd_open . "; <b>Gruppierung aufheben:</b> " . $rw->sbugd_close;
+						} 
+						if($rw->sbugd_24hour_open > 0){
+							$business_data .= "<br><b>".$rw->sbugd_day.":</b> 24 Stunden geöffnet";
+						}
+						if($rw->sbugd_close_delivery > 0){
+							$business_data .= "<br><b>".$rw->sbugd_day.":</b> Für Lieferungen geschlossen";
+						}
+					}
+				}
+			}
 
-		} elseif($usa_delivery_instructions_tab_active == 4){
+			$delivery_instruction = "<br><b>Grundstückstyp: " . $property_type[$row->usa_delivery_instructions_tab_active - 1] . "</b>" . $business_data;
+		} elseif ($usa_delivery_instructions_tab_active == 4) {
 
-			$delivery_instruction = "Grundstückstyp: ".$property_type[$row->usa_delivery_instructions_tab_active - 1]." ( ".$row->usa_other_check." )";
-
+			$delivery_instruction = "<br><b>Grundstückstyp: " . $property_type[$row->usa_delivery_instructions_tab_active - 1] . "</b> <br> " . $row->usa_other_check . "";
 		}
-
 	}
 	return $delivery_instruction;
 }
 
-function formatDateGerman($datetime, $format = 'j F, Y') {
-    $timestamp = strtotime($datetime);
+function formatDateGerman($datetime, $format = 'j F, Y')
+{
+	$timestamp = strtotime($datetime);
 
-    $en = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun', 'January','February','March','April','May','June', 'July','August','September','October','November','December'];
-    $de = ['Mo','Di','Mi','Do','Fr','Sa','So', 'Januar','Februar','März','April','Mai','Juni', 'Juli','August','September','Oktober','November','Dezember'];
+	$en = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	$de = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So', 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 
-    $formatted = date($format, $timestamp);
-    return str_replace($en, $de, $formatted);
+	$formatted = date($format, $timestamp);
+	return str_replace($en, $de, $formatted);
 }
