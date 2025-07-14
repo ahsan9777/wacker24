@@ -3,7 +3,7 @@
 include("includes/php_includes_top.php");
 
 $ci_type = 0;
-if(isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0){
+if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
 	$ci_type = 1;
 }
 $Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
@@ -57,6 +57,28 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_id_three = $row->cat_id_three;
 	$cat_title_three = $row->cat_title_three;
 	$cat_three_params = $row->cat_three_params;
+	$pro_udx_manufacturer_address = $row->pro_udx_manufacturer_address;
+	$pro_udx_manufacturer_mail = $row->pro_udx_manufacturer_mail;
+
+
+	//$street = ""; $postal_city = ""; $country = "";
+	//$parts = preg_split('/\bGmbH\b\s*/', $pro_udx_manufacturer_address, 2);
+	/*$company = $parts[0] . 'GmbH';
+	if (preg_match('/^(.*?)(\b\d{5}\b.*)$/', $parts[1], $matches)) {
+		$firstPart = trim($matches[1]);
+    	$secondPart = trim($matches[2]);
+
+		$words = explode(' ', $secondPart);
+		$lastWord = end($words);
+
+		$street = $firstPart;
+		$postal_city = rtrim($secondPart, $lastWord);
+		$country = $lastWord;
+	}
+	$pro_udx_manufacturer_address =*/ 
+	//print_r($parts);
+	
+	$pg_mime_source_url_pdf = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else {
 	header("Location: " . $GLOBALS['siteURL'] . "nicht-verfügbar");
@@ -296,18 +318,18 @@ include("includes/message.php");
 								<div class="btn_show product-type-show-less" style="display: none;">Weniger Produktdetails</div>
 							</div>
 							<div class="product_col2">
-								<?php if($pq_physical_quantity > 0){ ?>
-								<div class="tab_radio_button">
+								<?php if ($pq_physical_quantity > 0) { ?>
+									<div class="tab_radio_button">
 										<div class="tab_radio_col">
-											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print( (($ci_type == 0) ? 'checked' : '') ); ?> >
+											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print((($ci_type == 0) ? 'checked' : '')); ?>>
 											<label for="cart_type_online_<?php print($pro_id); ?>">Online</label>
 										</div>
 										<div class="tab_radio_col">
-											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print( (($ci_type == 1) ? 'checked' : '') ); ?> >
+											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print((($ci_type == 1) ? 'checked' : '')); ?>>
 											<label for="cart_type_physical_<?php print($pro_id); ?>">Physical</label>
 										</div>
 									</div>
-									<?php } ?>
+								<?php } ?>
 								<div class="sticky">
 									<?php
 									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
@@ -358,7 +380,7 @@ include("includes/message.php");
 										if ($pq_status == 'true') {
 											$ci_qty_type = 1;
 										}
-										if( $ci_type > 0){
+										if ($ci_type > 0) {
 											$quantity_lenght = $pq_physical_quantity;
 											print('<div class="product_order_title green"> ' . $pq_physical_quantity . ' Stück sofort verfügbar</div>');
 										} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
@@ -453,6 +475,22 @@ include("includes/message.php");
 											<?php } ?>
 										</div>
 									</div>
+									<style>
+										
+									</style>
+									<div class="info_link_detailpage">
+										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
+											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>"><i class="fa fa-info-circle" aria-hidden="true"></i> Produktdatenblatt</a>
+										<?php } if(!empty($pro_udx_manufacturer_address)){ ?>
+										<div class="manufacturer_detail">
+											<div class="popup_manufacturer_detail">
+												<p><?php print($pro_udx_manufacturer_address);?></p>
+												<p><?php print($pro_udx_manufacturer_mail); ?></p>
+											</div>
+											<a  href="javascript:void(0);"><i class="fa fa-info-circle" aria-hidden="true"></i> Herstellerinformationen </a>
+										</div>
+										<?php } ?>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -543,13 +581,13 @@ include("includes/message.php");
 										}*/
 										$special_price = user_special_price("supplier_id", $row->supplier_id);
 
-											if (!$special_price) {
-												$special_price = user_special_price("level_two", $cat_id_two);
-											}
+										if (!$special_price) {
+											$special_price = user_special_price("level_two", $cat_id_two);
+										}
 
-											if (!$special_price) {
-												$special_price = user_special_price("level_one", $cat_id_one);
-											}
+										if (!$special_price) {
+											$special_price = user_special_price("level_one", $cat_id_one);
+										}
 										//print_r($special_price);
 										//}
 								?>
@@ -679,15 +717,15 @@ include("includes/message.php");
 			$(".popup_inner").css('width', '90%');
 		}
 	});
-	$(".cart_type_online").on("click", function(){
+	$(".cart_type_online").on("click", function() {
 		//console.log("cart_type_online");
-		$("#ci_type_"+$(this).attr("data-id")).val(0);
+		$("#ci_type_" + $(this).attr("data-id")).val(0);
 		let supplier_id = $(this).attr("data-supplier-id");
 		let pro_description = $(this).attr("data-pro-description");
 		window.location.href = "product/" + supplier_id + "/" + pro_description;
 	});
-	$(".cart_type_physical").on("click", function(){//ci_type
-		$("#ci_type_"+$(this).attr("data-id")).val(1);
+	$(".cart_type_physical").on("click", function() { //ci_type
+		$("#ci_type_" + $(this).attr("data-id")).val(1);
 		let supplier_id = $(this).attr("data-supplier-id");
 		let pro_description = $(this).attr("data-pro-description");
 		window.location.href = "product/1/" + supplier_id + "/" + pro_description;
