@@ -60,6 +60,18 @@ if (isset($_REQUEST['btnImport'])) {
             $cat_description = $rsMem->cat_description;
             $formHead = "Update Info";
         }
+    } elseif ($_REQUEST['action'] == 3) {
+        $rs = mysqli_query($GLOBALS['conn'], "SELECT * FROM category_map");
+        if (mysqli_num_rows($rs) > 0) {
+            while($row = mysqli_fetch_object($rs)) {
+                $subgroups = explode(',', $row->sub_group_ids);
+                foreach ($subgroups as $sub_id) {
+                    mysqli_Query($GLOBALS['conn'], "INSERT IGNORE INTO category_map_subgroups (supplier_id, subgroup_id) VALUES ('".$row->supplier_id."', '".$sub_id."')")  or die(mysqli_error($GLOBALS['conn']));
+                        $counter++;
+                }
+            }
+        }
+        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
     } else {
         $cat_title_en = "";
         $cat_title_de = "";
@@ -179,8 +191,10 @@ include("includes/messages.php");
                 <?php } else { ?>
                     <div class="table-controls">
                         <h1 class="text-white">Category Management</h1>
-                        <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
-
+                        <div class="d-flex gap-1">
+                            <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">update</span> <span class="text">Update Category Map</span></a>
+                            <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
+                        </div>
                     </div>
                     <div class="main_table_container">
                         <?php
