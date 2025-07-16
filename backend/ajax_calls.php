@@ -52,17 +52,44 @@ if (isset($_REQUEST['action'])) {
             $json = array();
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                $pro_custom_add = "";
+                $pro_custom_add = " pro_custom_add = '0' AND";
                 if(isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0){
-                    $pro_custom_add = " AND pro_custom_add = '1'";
+                    $pro_custom_add = "pro_custom_add = '1' AND";
                 }
-                $where .= " WHERE pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  ".$pro_custom_add." ";
+                $where .= " WHERE ".$pro_custom_add." pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
             }
             $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
+            //print($Query);
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
                     'pro_id' => strip_tags(html_entity_decode($row->pro_id, ENT_QUOTES, 'UTF-8')),
+                    'value' => strip_tags(html_entity_decode($row->pro_description_short, ENT_QUOTES, 'UTF-8'))
+                );
+            }
+            $jsonResults = json_encode($json);
+            print($jsonResults);
+            break;
+
+        case 'usp_pro_description_short':
+            $json = array();
+            $where = "";
+            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+                $level_ids = "";
+                if(isset($_REQUEST['level_one_id']) && $_REQUEST['level_one_id'] > 0){
+                    $level_ids .= "usp.level_one_id = '".$_REQUEST['level_one_id']."' AND ";
+                }
+                if(isset($_REQUEST['level_two_id']) && $_REQUEST['level_two_id'] > 0){
+                    $level_ids .= "usp.level_two_id = '".$_REQUEST['level_two_id']."' AND ";
+                }
+                $where .= " WHERE ".$level_ids." usp.supplier_id > 0  AND usp.user_id = '0' AND pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR usp.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+            }
+            $Query = "SELECT usp.supplier_id, pro.pro_description_short FROM user_special_price AS usp LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id " . $where . " ORDER BY usp.supplier_id  LIMIT 0,20";
+            //print($Query);
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            while ($row = mysqli_fetch_object($rs)) {
+                $json[] = array(
+                    'supplier_id' => strip_tags(html_entity_decode($row->supplier_id, ENT_QUOTES, 'UTF-8')),
                     'value' => strip_tags(html_entity_decode($row->pro_description_short, ENT_QUOTES, 'UTF-8'))
                 );
             }

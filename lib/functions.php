@@ -1085,6 +1085,7 @@ function FillSelected22($Table, $IDField, $TextField, $ID)
 function FillSelectedJoin($Table, $IDField, $TextField, $ID, $Join = '')
 {
 	$strQuery = "SELECT $IDField, $TextField FROM $Table $Join ORDER BY $IDField";
+	//print($strQuery);die();
 	$nResult = mysqli_query($GLOBALS['conn'], $strQuery);
 	$returnStr = "";
 	if (mysqli_num_rows($nResult) >= 1) {
@@ -1095,7 +1096,22 @@ function FillSelectedJoin($Table, $IDField, $TextField, $ID, $Join = '')
 				$returnStr .= "<option value=" . $row[0] . ">" . $row[1] . "</option>";
 			}
 		}
-		return $returnStr;
+		return print($returnStr);
+	}
+}
+function FillSelectedJoin2($Table, $IDField, $TextField, $ID, $Join = '')
+{
+	$strQuery = "SELECT DISTINCT($IDField), $TextField FROM $Table $Join ORDER BY $IDField";
+	//print($strQuery);die();
+	$nResult = mysqli_query($GLOBALS['conn'], $strQuery);
+	if (mysqli_num_rows($nResult) >= 1) {
+		while ($row = mysqli_fetch_row($nResult)) {
+			if ($row[0] == $ID) {
+				print("<option value=" . $row[0] . " selected>" . $row[1] . "</option>");
+			} else {
+				print("<option value=" . $row[0] . ">" . $row[1] . "</option>");
+			}
+		}
 	}
 }
 
@@ -2001,6 +2017,7 @@ function createThumbnail3($imageDirectory, $imageName, $thumbDirectory, $thumbWi
 
 function createThumbnail2($imageDirectory, $imageName, $thumbDirectory, $thumbWidth, $thumbHeight)
 {
+	$success = ""; 
 	$file_path = $imageDirectory . $imageName;
 	$option['jpeg_quality'] = 75;
 	$option['png_quality'] = 9;

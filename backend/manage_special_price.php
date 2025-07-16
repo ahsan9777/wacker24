@@ -243,7 +243,53 @@ include("includes/messages.php");
                         </div>
                     </div>
                     <div class="main_table_container">
+                        <?php
+                        $level_one_ids = 0;
+                        $level_two_ids = 0;
+                        $usp_supplier_id = 0;
+                        $usp_pro_description_short = "";
+                        $searchQuery = "";
+                        $level_one_id_where = "";
 
+                        if (isset($_REQUEST['level_one_ids']) && $_REQUEST['level_one_ids'] > 0) {
+                            $level_one_ids = $_REQUEST['level_one_ids'];
+                            $searchQuery .= "AND usp.level_one_id = '" . $_REQUEST['level_one_ids'] . "'";
+                            $level_one_id_where = "AND usp.level_one_id = '" . $_REQUEST['level_one_ids'] . "'";
+                        }
+                        if (isset($_REQUEST['level_two_ids']) && $_REQUEST['level_two_ids'] > 0) {
+                            $level_two_ids = $_REQUEST['level_two_ids'];
+                            $searchQuery .= "AND usp.level_two_id = '" . $_REQUEST['level_two_ids'] . "'";
+                        }
+                        if (isset($_REQUEST['usp_supplier_id']) && $_REQUEST['usp_supplier_id'] > 0) {
+                            if (!empty($_REQUEST['usp_pro_description_short'])) {
+                                $usp_supplier_id = $_REQUEST['usp_supplier_id'];
+                                $usp_pro_description_short = $_REQUEST['usp_pro_description_short'];
+                                $searchQuery .= " AND usp.supplier_id = '" . $_REQUEST['usp_supplier_id'] . "'";
+                            }
+                        }
+
+                        ?>
+                        <form class="row flex-row" name="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
+                            <div class="col-md-2 col-12 mt-2">
+                                <label for="" class="text-white">Category Level One</label>
+                                <select class="input_style" name="level_one_ids" id="level_one_ids" onchange="javascript: frm_search.submit();">
+                                    <option value="">N/A</option>
+                                    <?php FillSelectedJoin2("user_special_price AS usp", "usp.level_one_id", "c.cat_title_de AS cat_title", $level_one_ids, "LEFT OUTER JOIN category AS c ON c.group_id = usp.level_one_id WHERE usp.user_id = '0'"); ?>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-12 mt-2">
+                                <label for="" class="text-white">Category Level Two</label>
+                                <select class="input_style" name="level_two_ids" id="level_two_ids" onchange="javascript: frm_search.submit();">
+                                    <option value="">N/A</option>
+                                    <?php FillSelectedJoin2("user_special_price AS usp", "usp.level_two_id", "c.cat_title_de AS cat_title", $level_two_ids, "LEFT OUTER JOIN category AS c ON c.group_id = usp.level_two_id WHERE usp.user_id = '0' AND usp.level_two_id > 0 " . $level_one_id_where . ""); ?>
+                                </select>
+                            </div>
+                            <div class=" col-md-4 col-12 mt-2">
+                                <label for="" class="text-white">Title</label>
+                                <input type="hidden" name="usp_supplier_id" id="usp_supplier_id" value="<?php print($usp_supplier_id); ?>">
+                                <input type="text" class="input_style usp_pro_description_short" name="usp_pro_description_short" id="usp_pro_description_short" value="<?php print($usp_pro_description_short); ?>" placeholder="Title:" autocomplete="off" onchange="javascript: frm_search.submit();">
+                            </div>
+                        </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
                                 <thead>
@@ -261,7 +307,7 @@ include("includes/messages.php");
                                 <tbody>
                                     <?php
                                     //$Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, (SELECT GROUP_CONCAT(pro.pro_description_short) FROM products AS pro WHERE FIND_IN_SET(pro.supplier_id, usp.supplier_id)) AS pro_title, ( SELECT GROUP_CONCAT(pbp.pbp_price_amount) FROM products_bundle_price AS pbp WHERE FIND_IN_SET(pbp.supplier_id, usp.supplier_id) AND pbp.pbp_lower_bound = '1') AS pro_actual_price FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id WHERE usp.user_id = '" . $_REQUEST['user_id'] . "' ORDER BY usp.usp_id ASC ";
-                                    $Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, pro.pro_description_short AS pro_title, pbp.pbp_price_amount AS pro_actual_price   FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = usp.supplier_id AND pbp.pbp_lower_bound = '1' WHERE usp.user_id = '".$user_id."' ORDER BY usp.usp_id ASC ";
+                                    $Query = "SELECT usp.*, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, pro.pro_description_short AS pro_title, pbp.pbp_price_amount AS pro_actual_price   FROM user_special_price AS usp LEFT OUTER JOIN category AS cat ON cat.group_id = usp.level_one_id LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = usp.level_two_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = usp.supplier_id AND pbp.pbp_lower_bound = '1' WHERE usp.user_id = '" . $user_id . "' " . $searchQuery . " ORDER BY usp.usp_id ASC ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -366,6 +412,31 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
+    $('input.usp_pro_description_short').autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: 'ajax_calls.php?action=usp_pro_description_short&level_one_id=<?php print($level_one_ids); ?>&level_two_id=<?php print($level_two_ids); ?>',
+                dataType: "json",
+                data: {
+                    term: request.term
+                },
+                success: function(data) {
+                    response(data);
+
+                }
+            });
+        },
+        minLength: 1,
+        select: function(event, ui) {
+            var usp_supplier_id = $("#usp_supplier_id");
+            var pro_description_short = $("#usp_pro_description_short");
+            $(usp_supplier_id).val(ui.item.supplier_id);
+            $(pro_description_short).val(ui.item.value);
+            frm_search.submit();
+            //return false;
+            //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        }
+    });
     $(window).load(function() {
         $("#level_one_id").trigger("click");
     });
