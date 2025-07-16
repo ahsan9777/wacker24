@@ -636,7 +636,7 @@ include("includes/message.php");
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								if (mysqli_num_rows($rs) > 0) {
 									while ($row = mysqli_fetch_object($rs)) {
-										if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+										//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 											$cat_id_two = substr($cat_id_three, 0, 3);
 											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
 											$special_price = user_special_price("supplier_id", $row->supplier_id);
@@ -649,7 +649,7 @@ include("includes/message.php");
 												$special_price = user_special_price("level_one", $cat_id_one);
 											}
 											//print_r($special_price);
-										}
+										//}
 								?>
 										<div>
 											<div class="pd_card txt_align_left">

@@ -79,8 +79,7 @@ if (isset($_REQUEST['btn_login'])) {
 				//}
 			} else {
 				$class = "alert alert-danger";
-				$strMSG = "Dear Cuctomer, <br>
-						Invalid login credential try again";
+				$strMSG = "Lieber Cuctomer, <br> Ungültige Anmeldedaten, bitte versuchen Sie es erneut";
 			}
 		}
 	}

@@ -11,7 +11,7 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $pro_id = getMaximum("products", "pro_id");
         mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids) VALUES ('" . dbStr(trim($_REQUEST['level_three_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-        mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_custom_add, pro_status, manf_id, supplier_id, pro_ean, pro_manufacture_aid, pro_description_short, pro_description_long, pro_udx_seo_internetbezeichung, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '1', '0', '" . dbStr(trim($_REQUEST['manf_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['pro_ean'])) . "', '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_custom_add, pro_status, manf_id, supplier_id, pro_ean, pro_manufacture_aid, pro_description_short, pro_description_long, pro_udx_seo_internetbezeichung, pro_udx_manufacturer_address, pro_udx_manufacturer_mail, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '1', '0', '" . dbStr(trim($_REQUEST['manf_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['pro_ean'])) . "', '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '".dbStr(trim($_REQUEST['pro_udx_manufacturer_address']))."', '".dbStr(trim($_REQUEST['pro_udx_manufacturer_mail']))."', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -24,7 +24,7 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $old_supplier_id = returnName("supplier_id", "products", "pro_id", $_REQUEST['pro_id']);
         mysqli_query($GLOBALS['conn'], "UPDATE category_map SET cat_id = '" . dbStr(trim($_REQUEST['level_three_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', sub_group_ids = '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "'  WHERE supplier_id='" . $old_supplier_id."'") or die(mysqli_error($GLOBALS['conn']));
-        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '" . dbStr(trim($_REQUEST['manf_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', pro_ean = '" . dbStr(trim($_REQUEST['pro_ean'])) . "', pro_manufacture_aid = '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', pro_description_long = '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '" . dbStr(trim($_REQUEST['manf_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', pro_ean = '" . dbStr(trim($_REQUEST['pro_ean'])) . "', pro_manufacture_aid = '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', pro_description_long = '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_udx_manufacturer_address = '".dbStr(trim($_REQUEST['pro_udx_manufacturer_address']))."', pro_udx_manufacturer_mail = '".dbStr(trim($_REQUEST['pro_udx_manufacturer_mail']))."', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
     }
 } elseif (isset($_REQUEST['action'])) {
@@ -39,6 +39,8 @@ if (isset($_REQUEST['btnAdd'])) {
             $pro_description_short = $rsMem->pro_description_short;
             $pro_description_long = $rsMem->pro_description_long;
             $pro_udx_seo_internetbezeichung = $rsMem->pro_udx_seo_internetbezeichung;
+            $pro_udx_manufacturer_address = $rsMem->pro_udx_manufacturer_address;
+            $pro_udx_manufacturer_mail = $rsMem->pro_udx_manufacturer_mail;
             $level_three_id = returnName("cat_id", "category_map", "supplier_id", $supplier_id);
             $sub_group_ids = explode(",", returnName("sub_group_ids", "category_map", "supplier_id", $supplier_id));
             $level_two_id = $sub_group_ids[0];
@@ -54,6 +56,8 @@ if (isset($_REQUEST['btnAdd'])) {
         $pro_description_short = "";
         $pro_description_long = "";
         $pro_udx_seo_internetbezeichung = "";
+        $pro_udx_manufacturer_address = "";
+        $pro_udx_manufacturer_mail = "";
         $level_three_id = 0;
         $level_two_id = 0;
         $level_one_id = 0;
@@ -179,7 +183,14 @@ include("includes/messages.php");
                                     <label for="">UDX SEO Internetbezeichung</label>
                                     <textarea type="text" class="input_style" name="pro_udx_seo_internetbezeichung" id="pro_udx_seo_internetbezeichung" placeholder="UDX SEO Internetbezeichung" required> <?php print($pro_udx_seo_internetbezeichung); ?> </textarea>
                                 </div>
-
+                                <div class="col-md-12 col-12 mt-3">
+                                    <label for="">Manufacturer Info</label>
+                                    <input type="text" class="input_style" name="pro_udx_manufacturer_address" id="pro_udx_manufacturer_address" value="<?php print($pro_udx_manufacturer_address); ?>" placeholder="Manufacturer Info">
+                                </div>
+                                <div class="col-md-12 col-12 mt-3">
+                                    <label for="">Manufacturer Email</label>
+                                    <input type="email" class="input_style" name="pro_udx_manufacturer_mail" id="pro_udx_manufacturer_mail" value="<?php print($pro_udx_manufacturer_mail); ?>" placeholder="Manufacturer Email">
+                                </div>
                                 <div class="col-md-12 col-12 mt-3">
                                     <button class="btn btn-primary" type="submit" name="<?php print(($_REQUEST['action'] == 1) ? 'btnAdd' : 'btnUpdate'); ?>">Upload</button>
                                     <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>

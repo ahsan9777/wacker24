@@ -26,7 +26,16 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_source, pg_mime_source_url, pg_mime_description, pg_mime_alt) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . $mfileName . "', '" . ltrim($dirName . $mfileName, "../") . "', '" . dbStr(trim($_REQUEST['pg_mime_description'])) . "', '" . pathinfo($mfileName, PATHINFO_FILENAME) . "')") or die(mysqli_error($GLOBALS['conn']));
+    $pg_mime_type = "image/jpeg";
+    $pg_mime_purpose = "normal";
+    $pg_mime_alt = pathinfo($mfileName, PATHINFO_FILENAME);
+    $ext = pathinfo($_FILES['mFile']['name'], PATHINFO_EXTENSION);
+    if ($ext == "pdf") {
+        $pg_mime_type = "application/pdf";
+        $pg_mime_purpose = "data_sheet";
+        $pg_mime_alt = $_REQUEST['pg_mime_description'];
+    }
+    mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_type, pg_mime_source, pg_mime_source_url, pg_mime_description, pg_mime_alt, pg_mime_purpose) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pg_mime_type)) . "', '" . $mfileName . "', '" . ltrim($dirName . $mfileName, "../") . "', '" . dbStr(trim($_REQUEST['pg_mime_description'])) . "', '" . dbStr(trim($pg_mime_alt)) . "', '" . dbStr(trim($pg_mime_purpose)) . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -184,13 +193,19 @@ include("includes/messages.php");
                                 ?>
                                         <tr>
                                             <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pg_id); ?>"></td>
-                                            <td>
-                                                <div class="popup_container" style="width:100px">
-                                                    <div class="container__img-holder">
-                                                        <img src="<?php print($image_path); ?>">
+                                            <?php if ($row->pg_mime_type == "application/pdf") { ?>
+                                                <td>
+                                                    <a target="_blank" href="<?php print($image_path); ?>"><span class="material-icons icon material-xs">picture_as_pdf</span> PDF</a>
+                                                </td>
+                                            <?php } else { ?>
+                                                <td>
+                                                    <div class="popup_container" style="width:100px">
+                                                        <div class="container__img-holder">
+                                                            <img src="<?php print($image_path); ?>">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
+                                                </td>
+                                            <?php } ?>
                                             <td><?php print($row->pg_mime_description); ?></td>
                                             <td>
                                                 <input type="hidden" name="pg_id[]" id="pg_id" value="<?php print($row->pg_id); ?>">

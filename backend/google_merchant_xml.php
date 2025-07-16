@@ -29,12 +29,16 @@ if (mysqli_num_rows($rs) > 0) {
         $product_type .= " > ". returnName("cat_title_de AS cat_title", "category", "group_id", $sub_group_ids[0]); //cat_title_two
         $product_type .= " > ". returnName("cat_title_de AS cat_title", "category", "group_id", $row->cat_id); //cat_title_three
         $brand = returnName("manf_name", "manufacture", "manf_id", $row->manf_id); //cat_title_three
+        $pg_mime_source_url = $row->pg_mime_source_url;
+        if($row->pro_custom_add > 0){
+            $pg_mime_source_url = $GLOBALS['siteURL'].$row->pg_mime_source_url;
+        }
         $product = array(
                 'id' => $row->supplier_id,
                 'title' => $row->pro_description_short,
                 'description' => $row->pro_description_long,
                 'link' => $GLOBALS['siteURL']."product/".$row->supplier_id."/".url_clean($row->pro_description_short),
-                'image_link' => $row->pg_mime_source_url,
+                'image_link' => $pg_mime_source_url,
                 'price' => $row->pbp_price_amount.' EUR',
                 'brand' => $brand,
                 'condition' => 'new',
