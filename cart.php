@@ -615,7 +615,7 @@ include("includes/message.php");
 								</div>
 								<div class="cart_payment_method">
 									<div class="cart_box">
-										<div class="alert alert-danger payment_method_alert" style="display: none;">Bitte klicken Sie Ihre Zahlungsart an<a class="close" data-dismiss="alert">×</a></div>
+										<div class="alert alert-danger payment_method_alert" style="display: none;">Bitte wählen Sie die gewünschte Zahlungsart aus<a class="close" data-dismiss="alert">×</a></div>
 										<ul>
 											<?php
 											$Query = "SELECT pm.pm_id, pm.pm_show_detail, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";

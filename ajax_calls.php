@@ -1185,6 +1185,7 @@ if (isset($_REQUEST['action'])) {
                         let pro_id = $("#pro_id_"+$(this).attr("data-id")).val();
                         let pro_type = $("#pro_type_"+$(this).attr("data-id")).val();
                         let supplier_id = $("#supplier_id_"+$(this).attr("data-id")).val();
+                        let ci_type = $("#ci_type_"+$(this).attr("data-id")).val();
                         let ci_discount_type = $("#ci_discount_type_"+$(this).attr("data-id")).val();
                         let ci_discount_value = $("#ci_discount_value_"+$(this).attr("data-id")).val();
                         let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
@@ -1201,6 +1202,7 @@ if (isset($_REQUEST['action'])) {
                                 pro_id: pro_id,
                                 pro_type: pro_type,
                                 supplier_id: supplier_id,
+                                ci_type: ci_type,
                                 ci_discount_type: ci_discount_type,
                                 ci_discount_value: ci_discount_value,
                                 ci_qty: ci_qty,

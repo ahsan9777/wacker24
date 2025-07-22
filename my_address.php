@@ -300,8 +300,8 @@ include("includes/message.php");
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
 														<li><?php print($row->usa_zipcode); ?></li>
-														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Lieferanweisungen hinzufügen</a></li>
 													</ul>
 													<div class="btn_address">
@@ -324,8 +324,8 @@ include("includes/message.php");
 														<?php }?>
 														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
 														<li><?php print($row->usa_zipcode); ?></li>
-														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><?php print($row->countries_name); ?></li>
+														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 														<li><a href="javasript:void(0);" class="address_form_popup_trigger" data-id="<?php print($row->usa_id); ?>">Lieferanweisungen hinzufügen</a></li>
 													</ul>
 													<div class="btn_address">
@@ -368,8 +368,8 @@ include("includes/message.php");
 													<?php }?>
 													<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
 													<li><?php print($row->usa_zipcode); ?></li>
-													<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 													<li><?php print($row->countries_name); ?></li>
+													<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
 												</ul>
 											</div>
 											<div class="address_remove"><a href="<?php print($_SERVER['PHP_SELF'] . "?deleted&usa_id=" . $row->usa_id); ?>" onclick="return confirm('Are you sure you want to delete selected item(s)?');">

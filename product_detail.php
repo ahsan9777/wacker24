@@ -79,6 +79,7 @@ if (mysqli_num_rows($rs) > 0) {
 	//print_r($parts);
 	
 	$pg_mime_source_url_pdf = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
+	$pg_mime_description = returnName("pg_mime_description", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else {
 	header("Location: " . $GLOBALS['siteURL'] . "nicht-verfügbar");
@@ -480,7 +481,7 @@ include("includes/message.php");
 									</style>
 									<div class="info_link_detailpage">
 										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
-											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>"><i class="fa fa-info-circle" aria-hidden="true"></i> Produktdatenblatt</a>
+											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>"><i class="fa fa-info-circle" aria-hidden="true"></i> <?php print($pg_mime_description); ?></a>
 										<?php } if(!empty($pro_udx_manufacturer_address)){ ?>
 										<div class="manufacturer_detail">
 											<div class="popup_manufacturer_detail">
