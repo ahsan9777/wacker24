@@ -1,7 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 
-if (isset($_REQUEST['btn_checkout'])) {
+if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) && $_REQUEST['btn_checkout_value'] > 0) ) {
 	//print_r($_REQUEST);die();
 	$user_id = 0;
 	$ord_id = 0;
@@ -215,7 +215,6 @@ if (isset($_REQUEST['btn_checkout'])) {
 }
 
 if (isset($_REQUEST['product_remove'])) {
-	echo "product_remove";
 	$Query = "SELECT * FROM `cart_items` WHERE `ci_id` = '" . $_REQUEST['ci_id'] . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
@@ -696,7 +695,10 @@ include("includes/message.php");
 											</ul>
 										</div>
 									</div>
-									<div class="pay_btn"><button type="button" name="btn_checkout" class="gerenric_btn full_btn mt_30 btn_checkout">Pay <?php print(number_format($cart_amount, "2", ",", "")); ?> €</button></div>
+									<div class="pay_btn">
+										<input type="hidden" name="btn_checkout_value" id="btn_checkout_value" value="0">
+										<button type="button" name="btn_checkout" class="gerenric_btn full_btn mt_30 btn_checkout">Pay <?php print(number_format($cart_amount, "2", ",", "")); ?> €</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -731,10 +733,11 @@ include("includes/message.php");
 		}
 	});
 	$(".btn_checkout").on("click", function() {
-		//console.log("btn_checkout");
+		console.log("btn_checkout");
 		let selectedPmId = $("input[name='pm_id']:checked").val();
 		if (!selectedPmId) {
 			$(".btn_checkout").attr("type", "button");
+			$("#btn_checkout_value").val(0);
 			$('.payment_method_popup').show();
 			$('.payment_method_popup').resize();
 			$('body').css({
@@ -742,12 +745,14 @@ include("includes/message.php");
 			});
 		} else {
 			$(".btn_checkout").attr("type", "submit");
-			//console.log("Selected payment method ID is: " + selectedPmId);
-			$('#frmCart').submit();
+			$("#btn_checkout_value").val(1);
+			console.log("Selected payment method ID is: " + selectedPmId);
+			document.getElementById('frmCart').submit();
 		}
 	});
 	$(".ci_qty").on("change", function() {
 		//console.log("ci_qty");
+		$("#btn_checkout_value").val(0);
 		$('#frmCart')[0].submit();
 	});
 
