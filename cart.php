@@ -52,8 +52,12 @@ if (isset($_REQUEST['btn_checkout'])) {
 
 	if (in_array($pm_id, array(1, 7))) {
 		cart_to_order($user_id, $usa_id, $pm_id);
-		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '".( ($pm_id == 1) ? 1 : 0 )."' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-		header('Location: bestellungen/15');
+		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '" . (($pm_id == 1) ? 1 : 0) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+		if($pm_id == 7){
+			header('Location: bestellungen/26/'.$ord_id.'');
+		} else {
+			header('Location: bestellungen/15');
+		}
 	} elseif ($pm_id == 2) {
 		//$paypalresponseData = "";
 		$entityId = returnName("pm_entity_id", "payment_method", "pm_id", $pm_id);
@@ -144,7 +148,8 @@ if (isset($_REQUEST['btn_checkout'])) {
 		$klarnaresponseData = json_decode($klarnarequest, true);
 		print("<pre>");
 		print_r($klarnaresponseData);
-		print("</pre>");die();
+		print("</pre>");
+		die();
 		$ord_payment_transaction_id = $klarnaresponseData['id'];
 		$ord_payment_short_id = $klarnaresponseData['descriptor'];
 		$ord_payment_info_detail = $klarnarequest;
@@ -311,6 +316,19 @@ include("includes/message.php");
 				</div>
 			</div>
 		</div>
+		<div class="popup payment_method_popup">
+			<div class="popup_inner wd_30">
+				<div class="popup_content">
+					<div class="popup_heading">&nbsp;<div class="popup_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="popup_content_inner">
+						<div class="popup_inner_container">
+							<p><strong>Bitte wählen Sie die gewünschte Zahlungsart aus</strong></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!--CREATE_LIST_POPUP_END-->
 
 		<!--HEADER_SECTION_START-->
@@ -348,7 +366,7 @@ include("includes/message.php");
 									</div>
 								</h2>
 								<div class="cart_pd_section">
-									
+
 									<?php
 									$cart_gross_total = 0;
 									$cart_gst = 0;
@@ -377,10 +395,12 @@ include("includes/message.php");
 
 											$smiller_product_url = $GLOBALS['siteURL'] . "search_result.php?search_keyword=" . implode(' ', array_slice($pro_description_short, 0, 2));
 											$cart_pd_title = "Lieferung";
-											if( $row->ci_type > 0){ $cart_pd_title = "Abholung"; }
-											$product_link = "product/".$row->supplier_id."/".url_clean($row->pro_description_short);
-											if( $row->ci_type > 0){
-												$product_link = "product/1/".$row->supplier_id."/".url_clean($row->pro_description_short);
+											if ($row->ci_type > 0) {
+												$cart_pd_title = "Abholung";
+											}
+											$product_link = "product/" . $row->supplier_id . "/" . url_clean($row->pro_description_short);
+											if ($row->ci_type > 0) {
+												$product_link = "product/1/" . $row->supplier_id . "/" . url_clean($row->pro_description_short);
 											}
 									?>
 											<h3 class="cart_pd_title"> <?php print($cart_pd_title); ?> </h3>
@@ -401,9 +421,9 @@ include("includes/message.php");
 															$pq_status = $row1->pq_status;
 															$quantity_txt = "pieces immediately available";
 															$quantity_txt_color = "";
-															if( $row->ci_type > 0){
+															if ($row->ci_type > 0) {
 																$pq_quantity = $pq_physical_quantity - $row->ci_qty;
-															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true' ) {
+															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
 																$quantity_txt = "Stück bestellt";
 																$quantity_txt_color = "style = 'color: orange;'";
@@ -506,16 +526,16 @@ include("includes/message.php");
 													<h2>Lieferadresse</h2>
 													<ul>
 														<?php if (!empty($row->usa_additional_info)) { ?>
-														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
-														<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
+															<li><span> <?php print($row->usa_additional_info); ?> </span></li>
+															<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
 														<?php } else { ?>
 															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-														<?php }?>
-														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
+														<?php } ?>
+														<li> <?php print($row->usa_street . " " . $row->usa_house_no); ?> </li>
 														<li><?php print($row->usa_zipcode); ?></li>
-														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>														
-														<?php if(!empty($delivery_instruction)){ ?>
-														<li><?php print($delivery_instruction); ?></li>
+														<li> <?php print("Telefonnummer : " . $row->usa_contactno); ?> </li>
+														<?php if (!empty($delivery_instruction)) { ?>
+															<li><?php print($delivery_instruction); ?></li>
 														<?php } ?>
 														<?php if ($_SESSION["utype_id"] != 5) { ?>
 															<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
@@ -543,12 +563,12 @@ include("includes/message.php");
 													<?php if (!empty($row->usa_additional_info)) { ?>
 														<li><span> <?php print($row->usa_additional_info); ?> </span></li>
 														<li> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </li>
-														<?php } else { ?>
-															<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
-														<?php }?>
-														<li> <?php print($row->usa_street." ".$row->usa_house_no); ?> </li>
-														<li><?php print($row->usa_zipcode); ?></li>
-														<li> <?php print("Telefonnummer : ".$row->usa_contactno); ?> </li>
+													<?php } else { ?>
+														<li><span> <?php print($row->usa_fname . " " . $row->usa_lname); ?> </span></li>
+													<?php } ?>
+													<li> <?php print($row->usa_street . " " . $row->usa_house_no); ?> </li>
+													<li><?php print($row->usa_zipcode); ?></li>
+													<li> <?php print("Telefonnummer : " . $row->usa_contactno); ?> </li>
 													<li><a href="adressen" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>
@@ -631,7 +651,7 @@ include("includes/message.php");
 											?>
 														<li>
 															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
-																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" >
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>">
 																<span class="checkmark">
 																	<div class="payment_card">
 																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
@@ -643,7 +663,7 @@ include("includes/message.php");
 													<?php } elseif ($row->pm_id != 1) { ?>
 														<li>
 															<label class="cart_pyment_radio <?php print(($row->pm_show_detail > 0) ? 'card_click_show' :  'card_click_hide') ?>">
-																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>" >
+																<input type="radio" class="pm_id" id="pm_id" name="pm_id" value="<?php print($row->pm_id) ?>">
 																<span class="checkmark">
 																	<div class="payment_card">
 																		<div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
@@ -698,25 +718,29 @@ include("includes/message.php");
 </body>
 <?php include("includes/bottom_js.php"); ?>
 <script>
-
 	$(".pm_id").on("click", function() {
 		//console.log("btn_checkout");
 		let selectedPmId = $("input[name='pm_id']:checked").val();
-		if(!selectedPmId){
+		if (!selectedPmId) {
 			$(".payment_method_alert").show();
-		} else{
-			//console.log("Selected payment method ID is: " + selectedPmId);
-			$(".payment_method_alert").hide();
+			$('.payment_method_popup').show();
+			$('.payment_method_popup').resize();
+			$('body').css({
+				'overflow': 'hidden'
+			});
 		}
 	});
 	$(".btn_checkout").on("click", function() {
 		//console.log("btn_checkout");
 		let selectedPmId = $("input[name='pm_id']:checked").val();
-		if(!selectedPmId){
+		if (!selectedPmId) {
 			$(".btn_checkout").attr("type", "button");
-			$(".payment_method_alert").show();
-		} else{
-			$(".payment_method_alert").hide();
+			$('.payment_method_popup').show();
+			$('.payment_method_popup').resize();
+			$('body').css({
+				'overflow': 'hidden'
+			});
+		} else {
 			$(".btn_checkout").attr("type", "submit");
 			//console.log("Selected payment method ID is: " + selectedPmId);
 			$('#frmCart').submit();

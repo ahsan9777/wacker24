@@ -113,6 +113,24 @@ if(isset($_REQUEST['op'])){
 			$class = "alert alert-danger";
 			$strMSG = "Ihr Konto wurde nicht verifiziert. Bitte kontaktieren Sie unser Team";
 			break;
+		case 26:
+			$class = "alert alert-success";
+			$strMSG = '<b>Vielen Dank für Ihre Bestellung!</b>
+						<br><br>Sie haben als Zahlungsart <b>Vorkasse</b> gewählt.
+						<br><br>Bitte überweisen Sie den Gesamtbetrag Ihrer Bestellung <b>innerhalb von 7 Tagen</b> auf folgendes Konto:
+						<br><br><b>Wacker Bürocenter GmbH</b>
+						<br>Bank: <b>VR-Bank Südpfalz</b>
+						<br>IBAN: <b>DE95 5486 2500 0006 7025 70</b>
+						<br>BIC: <b>GENODE61SUW</b>
+						<br><br>Verwendungszweck:  <b>'.$_REQUEST['ord_id'].'</b>
+						<br><br>Nach Zahlungseingang erhalten Sie eine Bestätigung per E-Mail. Anschließend wird Ihre Bestellung schnellstmöglich versendet.
+						<br><br><b><img style="width: 20px;" data-emoji="📞" class="an1" alt="📞" aria-label="📞" draggable="false" src="'.$GLOBALS['siteURL'].'images/phone.png" loading="lazy" data-emailtracker-detector="1"> Bei Fragen sind wir gerne für Sie da:</b>
+						<br><br>Hotline: <b>06321 9124-80</b>
+						<br>E-Mail: <a href="mailto:'.$GLOBALS['vorkasse_email'].'" style="color:rgb(70,120,134)" target="_blank"><b>'.$GLOBALS['vorkasse_email'].'</b></a>
+						<br><br>Vielen Dank für Ihr Vertrauen!
+						<br><br>Mit freundlichen Grüßen
+						<br><br>Ihr Team vom <b>Wacker Bürocenter</b>';
+			break;
 	}
 }
 ?>

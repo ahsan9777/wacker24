@@ -188,6 +188,11 @@ include("includes/message.php");
 																if (!$special_price) {
 																	$special_price = user_special_price("level_one", $cat_id_one);
 																}
+																$pq_status = $pq_physical_quantity = returnName("pq_status", "products_quantity", "supplier_id", $row3->supplier_id);;
+																$ci_qty_type = 0;
+																if($pq_status == 'true'){
+																	$ci_qty_type = 1;
+																}
 														?>
 																<div class="pd_card">
 																	<div class="pd_image"><a href="product/<?php print($row3->supplier_id); ?>/<?php print(url_clean($row3->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row3->pg_mime_source_url)); ?>" alt=""></a></div>
@@ -241,9 +246,11 @@ include("includes/message.php");
 																				<input type="hidden" id="pro_id_<?php print($row3->pro_id); ?>" name="pro_id" value="<?php print($row3->pro_id); ?>">
 																				<input type="hidden" id="pro_type_<?php print($row3->pro_id); ?>" name="pro_type" value="<?php print($row3->pro_type); ?>">
 																				<input type="hidden" id="supplier_id_<?php print($row3->pro_id); ?>" name="supplier_id" value="<?php print($row3->supplier_id); ?>">
+																				<input type="hidden" id="ci_type_<?php print($row3->pro_id); ?>" name="ci_type" value="0">
 																				<input type="hidden" id="ci_qty_<?php print($row3->pro_id); ?>" name="ci_qty" value="1">
 																				<input type="hidden" id="ci_discount_type_<?php print($row3->pro_id); ?>" name="ci_discount_type" value="<?php print((!empty($special_price)) ? $special_price['usp_price_type'] : '0'); ?>">
 																				<input type="hidden" id="ci_discount_value_<?php print($row3->pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
+																				<input type="hidden" id="ci_qty_type_<?php print($row3->pro_id); ?>" name="ci_qty_type" value="<?php print($ci_qty_type); ?>">
 																				<div class="gerenric_btn">In den Einkaufswagen</div>
 																			</a>
 																		</div>

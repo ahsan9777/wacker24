@@ -299,7 +299,7 @@ class Mailer
 
 
 
-    public function vorkasse($email, $ord_id)
+    public function vorkasse($email, $ord_id, $customer_name)
     {
         $username = "";
         $password = "";
@@ -307,7 +307,7 @@ class Mailer
         //$to = "ahsannawaz9777@gmail.com";
         $to = $email;
 
-        $message = 'Sehr geehrte Kundin, <br>
+        $message = 'Sehr geehrter, '.$customer_name.'<br>
 				<br><br>vielen Dank für Ihre Bestellung in unserem Webshop!         
 				<br>Sie haben sich für die Zahlungsart <b>Vorkasse</b> entschieden.
 				<br><br>Bitte überweisen Sie den Gesamtbetrag Ihrer Bestellung <b>innerhalb von 7 Tagen</b> auf folgendes Konto:

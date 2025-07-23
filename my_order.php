@@ -64,7 +64,7 @@ include("includes/message.php");
 			<div class="my_order_page gerenric_padding">
 				<div class="page_width_1480">
 					<?php if ($class != "") { ?>
-						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+						<div class="<?php print($class); ?>"><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a> <?php print($strMSG); ?></div>
 					<?php } ?>
 					<h1>Meine Bestellungen</h1>
 					<?php
