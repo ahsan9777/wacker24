@@ -69,6 +69,9 @@ if (isset($_REQUEST['action'])) {
                 $ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * $ci_gst_value);
                 //print($ci_amount);die();
             }
+            if ($pro_type > 0) {
+                $checkquantity = 1;
+            }
             $ci_gross_total = $ci_amount * $checkquantity;
             $ci_gst = $ci_gross_total * $ci_gst_value;
             $ci_total = $ci_gross_total + $ci_gst;
@@ -89,6 +92,7 @@ if (isset($_REQUEST['action'])) {
                         $cart_quantity = returnName("ci_qty", "cart_items", "ci_id", $row->ci_id);
                         $checkquantity = checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type);
                         if ($pro_type > 0) {
+                            $checkquantity = $ci_qty + $cart_quantity;
                             $get_pro_price = get_pro_price($pro_id, $supplier_id, 1);
                         } else {
                             //$get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty + $cart_quantity);
@@ -1125,7 +1129,12 @@ if (isset($_REQUEST['action'])) {
                             $gerenric_product_inner .= '<div class="product_order_title red">Auf Anfrage</div>';
                         }
                     } else {
-                        $gerenric_product_inner .= '<div class="product_order_title red">Auf Anfrage</div>';
+                        if ($pro_type > 0) {
+                            $quantity_lenght = 1;
+                            $ci_qty_type = 0;
+                        } else {
+                            $gerenric_product_inner .= '<div class="product_order_title red">Auf Anfrage</div>';
+                        }
                     }
                     $gerenric_product_inner .= '<div class="pd_rating">
                                 <ul>
@@ -1360,21 +1369,21 @@ if (isset($_REQUEST['action'])) {
             }
             $usa_business_mf_status_html = "";
             foreach ($times as $t) {
-                $usa_business_mf_status_html .= '<option value="'.$t.'" '.(($usa_business_mf_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+                $usa_business_mf_status_html .= '<option value="' . $t . '" ' . (($usa_business_mf_status == $t) ? 'selected' : '') . ' >' . $t . '</option>';
             }
-            
+
             $usa_business_mf_uw_status_html = "";
             foreach ($times as $t) {
-                $usa_business_mf_uw_status_html .= '<option value="'.$t.'" '.(($usa_business_mf_uw_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+                $usa_business_mf_uw_status_html .= '<option value="' . $t . '" ' . (($usa_business_mf_uw_status == $t) ? 'selected' : '') . ' >' . $t . '</option>';
             }
-            
+
             $usa_business_ss_status_html = "";
             foreach ($times as $t) {
-                $usa_business_ss_status_html .= '<option value="'.$t.'" '.(($usa_business_ss_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+                $usa_business_ss_status_html .= '<option value="' . $t . '" ' . (($usa_business_ss_status == $t) ? 'selected' : '') . ' >' . $t . '</option>';
             }
             $usa_business_ss_uw_status_html = "";
             foreach ($times as $t) {
-                $usa_business_ss_uw_status_html .= '<option value="'.$t.'" '.(($usa_business_ss_uw_status == $t) ? 'selected' : '').' >'.$t.'</option>';
+                $usa_business_ss_uw_status_html .= '<option value="' . $t . '" ' . (($usa_business_ss_uw_status == $t) ? 'selected' : '') . ' >' . $t . '</option>';
             }
             $german_days = array("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag");
             $monday_to_friday_ungroup_days_html = "";
@@ -1382,37 +1391,37 @@ if (isset($_REQUEST['action'])) {
                 $sbugd_24hour_open = ((!empty($shipping_business_ungroup_days)) ? $shipping_business_ungroup_days[$i][$i]['sbugd_24hour_open'] : 0);
                 $sbugd_close_delivery = ((!empty($shipping_business_ungroup_days)) ? $shipping_business_ungroup_days[$i][$i]['sbugd_close_delivery'] : 0);
                 $sbugd_24hour_open_check = ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_24hour_open'] == 1) ? 'checked' : '');
-                
-                $usa_business_mf_status_ungroup_html = "<option value='Geöffnet' ".((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == 'Geöffnet') ? 'selected' : '').">Geöffnet</option>";
+
+                $usa_business_mf_status_ungroup_html = "<option value='Geöffnet' " . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == 'Geöffnet') ? 'selected' : '') . ">Geöffnet</option>";
                 foreach ($times as $t) {
-                    $usa_business_mf_status_ungroup_html .= '<option value="'.$t.'" '.((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == $t) ? 'selected' : '').' >'.$t.'</option>';
+                    $usa_business_mf_status_ungroup_html .= '<option value="' . $t . '" ' . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == $t) ? 'selected' : '') . ' >' . $t . '</option>';
                 }
-                $usa_business_mf_uw_status_ungroup_html = "<option value='Geschlossen' ".((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == 'Geschlossen') ? 'selected' : '').">Geschlossen</option>";
+                $usa_business_mf_uw_status_ungroup_html = "<option value='Geschlossen' " . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == 'Geschlossen') ? 'selected' : '') . ">Geschlossen</option>";
                 foreach ($times as $t) {
-                    $usa_business_mf_uw_status_ungroup_html .= '<option value="'.$t.'" '.((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == $t) ? 'selected' : '').' >'.$t.'</option>';
+                    $usa_business_mf_uw_status_ungroup_html .= '<option value="' . $t . '" ' . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == $t) ? 'selected' : '') . ' >' . $t . '</option>';
                 }
-            $monday_to_friday_ungroup_days_html .= '<div class="form_row">
-                <input type="hidden" name="sbugd_day[]" id="sbugd_day" value="'.$german_days[$i].'">
+                $monday_to_friday_ungroup_days_html .= '<div class="form_row">
+                <input type="hidden" name="sbugd_day[]" id="sbugd_day" value="' . $german_days[$i] . '">
                 <div class="form_left">
-                    <div class="form_label">'.$german_days[$i].'</div>
+                    <div class="form_label">' . $german_days[$i] . '</div>
                     <div class="form_field">
                         <select class="gerenric_input" name="sbugd_open[]" id="sbugd_open">
                             
-                            '.$usa_business_mf_status_ungroup_html.'
+                            ' . $usa_business_mf_status_ungroup_html . '
                         </select>
                     </div>
                 </div>
                 <div class="form_right">
-                    <div class="form_label">'.(($i == 0) ? "<a href='javascript: void(0);' id='group_weekdays' >Wochentage gruppieren</a>" : "&nbsp;").'</div>
+                    <div class="form_label">' . (($i == 0) ? "<a href='javascript: void(0);' id='group_weekdays' >Wochentage gruppieren</a>" : "&nbsp;") . '</div>
                     <div class="form_field">
                         <select class="gerenric_input" name="sbugd_close[]" id="sbugd_close">
-                            '.$usa_business_mf_uw_status_ungroup_html.'
+                            ' . $usa_business_mf_uw_status_ungroup_html . '
                         </select>
                     </div>
                 </div>
-                <input type="hidden" name="sbugd_24hour_open[]" id="sbugd_24hour_open_'.$i.'" data-id="'.$i.'" value="'.$sbugd_24hour_open.'">
-                <input type="hidden" name="sbugd_close_delivery[]" id="sbugd_close_delivery_'.$i.'" data-id="'.$i.'" value="'.$sbugd_close_delivery.'">
-                <div class="form_field margin_10"><input type="checkbox" name="sbugd_24hour_open_check[]" class="sbugd_24hour_open_check" id="sbugd_24hour_open_check_'.$i.'" data-id="'.$i.'" '.$sbugd_24hour_open_check.'> 24 Stunden geöffnet</div>
+                <input type="hidden" name="sbugd_24hour_open[]" id="sbugd_24hour_open_' . $i . '" data-id="' . $i . '" value="' . $sbugd_24hour_open . '">
+                <input type="hidden" name="sbugd_close_delivery[]" id="sbugd_close_delivery_' . $i . '" data-id="' . $i . '" value="' . $sbugd_close_delivery . '">
+                <div class="form_field margin_10"><input type="checkbox" name="sbugd_24hour_open_check[]" class="sbugd_24hour_open_check" id="sbugd_24hour_open_check_' . $i . '" data-id="' . $i . '" ' . $sbugd_24hour_open_check . '> 24 Stunden geöffnet</div>
             </div>';
             }
 
@@ -1422,38 +1431,38 @@ if (isset($_REQUEST['action'])) {
                 $sbugd_close_delivery = ((!empty($shipping_business_ungroup_days)) ? $shipping_business_ungroup_days[$i][$i]['sbugd_close_delivery'] : 0);
                 $sbugd_24hour_open_check = ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_24hour_open'] == 1) ? 'checked' : '');
                 $sbugd_close_delivery_check = ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close_delivery'] == 1) ? 'checked' : '');
-                
-                $usa_business_mf_status_ungroup_html = "<option value='Geöffnet' ".((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == 'Geöffnet') ? 'selected' : '').">Geöffnet</option>";
+
+                $usa_business_mf_status_ungroup_html = "<option value='Geöffnet' " . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == 'Geöffnet') ? 'selected' : '') . ">Geöffnet</option>";
                 foreach ($times as $t) {
-                    $usa_business_mf_status_ungroup_html .= '<option value="'.$t.'" '.((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == $t) ? 'selected' : '').' >'.$t.'</option>';
+                    $usa_business_mf_status_ungroup_html .= '<option value="' . $t . '" ' . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_open'] == $t) ? 'selected' : '') . ' >' . $t . '</option>';
                 }
-                $usa_business_mf_uw_status_ungroup_html = "<option value='Geschlossen' ".((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == 'Geschlossen') ? 'selected' : '').">Geschlossen</option>";
+                $usa_business_mf_uw_status_ungroup_html = "<option value='Geschlossen' " . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == 'Geschlossen') ? 'selected' : '') . ">Geschlossen</option>";
                 foreach ($times as $t) {
-                    $usa_business_mf_uw_status_ungroup_html .= '<option value="'.$t.'" '.((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == $t) ? 'selected' : '').' >'.$t.'</option>';
+                    $usa_business_mf_uw_status_ungroup_html .= '<option value="' . $t . '" ' . ((!empty($shipping_business_ungroup_days) && $shipping_business_ungroup_days[$i][$i]['sbugd_close'] == $t) ? 'selected' : '') . ' >' . $t . '</option>';
                 }
-            $saturday_to_sunday_ungroup_days_html .= '<div class="form_row">
-                <input type="hidden" name="sbugd_day[]" id="sbugd_day" value="'.$german_days[$i].'">
+                $saturday_to_sunday_ungroup_days_html .= '<div class="form_row">
+                <input type="hidden" name="sbugd_day[]" id="sbugd_day" value="' . $german_days[$i] . '">
                 <div class="form_left">
-                    <div class="form_label">'.$german_days[$i].'</div>
+                    <div class="form_label">' . $german_days[$i] . '</div>
                     <div class="form_field">
                         <select class="gerenric_input" name="sbugd_open[]" id="sbugd_open">
                             
-                            '.$usa_business_mf_status_ungroup_html.'
+                            ' . $usa_business_mf_status_ungroup_html . '
                         </select>
                     </div>
                 </div>
                 <div class="form_right">
-                    <div class="form_label">'.(($i == 5) ? "<a href='javascript: void(0);' id='group_weekends' >Gruppe wochenenden</a>" : "&nbsp;").'</div>
+                    <div class="form_label">' . (($i == 5) ? "<a href='javascript: void(0);' id='group_weekends' >Gruppe wochenenden</a>" : "&nbsp;") . '</div>
                     <div class="form_field">
                         <select class="gerenric_input" name="sbugd_close[]" id="sbugd_close">
-                            '.$usa_business_mf_uw_status_ungroup_html.'
+                            ' . $usa_business_mf_uw_status_ungroup_html . '
                         </select>
                     </div>
                 </div>
-                <input type="hidden" name="sbugd_24hour_open[]" id="sbugd_24hour_open_'.$i.'" data-id="'.$i.'" value="'.$sbugd_24hour_open.'">
-                <input type="hidden" name="sbugd_close_delivery[]" id="sbugd_close_delivery_'.$i.'" data-id="'.$i.'" value="'.$sbugd_close_delivery.'">
-                <div class="form_field margin_10"><input type="checkbox" name="sbugd_24hour_open_check[]" class="sbugd_24hour_open_check" id="sbugd_24hour_open_check_'.$i.'" data-id="'.$i.'" '.$sbugd_24hour_open_check.'> 24 Stunden geöffnet</div>
-                <div class="form_field margin_10"><input type="checkbox" name="sbugd_close_delivery_check[]" class="sbugd_close_delivery_check" id="sbugd_close_delivery_check_'.$i.'" data-id="'.$i.'" '.$sbugd_close_delivery_check.'> 24 Stunden geöffnet</div>
+                <input type="hidden" name="sbugd_24hour_open[]" id="sbugd_24hour_open_' . $i . '" data-id="' . $i . '" value="' . $sbugd_24hour_open . '">
+                <input type="hidden" name="sbugd_close_delivery[]" id="sbugd_close_delivery_' . $i . '" data-id="' . $i . '" value="' . $sbugd_close_delivery . '">
+                <div class="form_field margin_10"><input type="checkbox" name="sbugd_24hour_open_check[]" class="sbugd_24hour_open_check" id="sbugd_24hour_open_check_' . $i . '" data-id="' . $i . '" ' . $sbugd_24hour_open_check . '> 24 Stunden geöffnet</div>
+                <div class="form_field margin_10"><input type="checkbox" name="sbugd_close_delivery_check[]" class="sbugd_close_delivery_check" id="sbugd_close_delivery_check_' . $i . '" data-id="' . $i . '" ' . $sbugd_close_delivery_check . '> 24 Stunden geöffnet</div>
             </div>';
             }
 
@@ -1492,15 +1501,15 @@ if (isset($_REQUEST['action'])) {
 											<li>
 												<div class="radio_button"><span><input type="radio" name="usa_house_check" class="usa_house_check" id="usa_house_check" value="Bei einem Nachbarn" ' . (($usa_house_check == "Bei einem Nachbarn") ? 'checked' : '') . '></span> <span>Bei einem Nachbarn</span></div>
 											</li>
-                                            <li id="usa_apartment_security_code_fields" '.$apartment_security_code_display.'>
+                                            <li id="usa_apartment_security_code_fields" ' . $apartment_security_code_display . '>
 												<div class="form_row">
 													<div class="form_left">
 														<div class="form_label">Name des Nachbarn</div>
-														<div class="form_field"><input type="text" class="gerenric_input" name="usa_house_neighbor_name" id="usa_house_neighbor_name" value="'.$usa_house_neighbor_name.'" placeholder="Name des Nachbarn"></div>
+														<div class="form_field"><input type="text" class="gerenric_input" name="usa_house_neighbor_name" id="usa_house_neighbor_name" value="' . $usa_house_neighbor_name . '" placeholder="Name des Nachbarn"></div>
 													</div>
 													<div class="form_right">
 														<div class="form_label">Adresse des Nachbarn</div>
-														<div class="form_field"><input type="text" class="gerenric_input" name="usa_house_neighbor_address" id="usa_house_neighbor_address" value="'.$usa_house_neighbor_address.'" placeholder="Adresse des Nachbarn/der Nachbarin"></div>
+														<div class="form_field"><input type="text" class="gerenric_input" name="usa_house_neighbor_address" id="usa_house_neighbor_address" value="' . $usa_house_neighbor_address . '" placeholder="Adresse des Nachbarn/der Nachbarin"></div>
 													</div>
 												</div>
 											</li>
@@ -1539,17 +1548,17 @@ if (isset($_REQUEST['action'])) {
 									</div>
 									<div class="grnc_tabnav_content ' . (($usa_delivery_instructions_tab_active == 3) ? "active" : "hide") . '" id="tab3">
 										<h4>Wann können an diese Adresse Lieferungen zugestellt werden? </h4>
-                                        <input type="hidden" name="usa_business_mf_type" id="usa_business_mf_type" value="'.$usa_business_mf_type.'">
-										<input type="hidden" name="usa_business_ss_type" id="usa_business_ss_type" value="'.$usa_business_ss_type.'">
+                                        <input type="hidden" name="usa_business_mf_type" id="usa_business_mf_type" value="' . $usa_business_mf_type . '">
+										<input type="hidden" name="usa_business_ss_type" id="usa_business_ss_type" value="' . $usa_business_ss_type . '">
 										<ul>
-											<li id="monday_to_friday_group_days" '.$monday_to_friday_group_display.' >
+											<li id="monday_to_friday_group_days" ' . $monday_to_friday_group_display . ' >
 												<div class="form_row">
 													<div class="form_left">
 														<div class="form_label">Montag - Freitag</div>
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_mf_status" id="usa_business_mf_status">
 																<option value="Geöffnet" ' . (($usa_business_mf_status == "Geöffnet") ? 'selected' : '') . '>Geöffnet</option>
-                                                                '.$usa_business_mf_status_html.'
+                                                                ' . $usa_business_mf_status_html . '
 															</select>
 														</div>
 													</div>
@@ -1558,15 +1567,15 @@ if (isset($_REQUEST['action'])) {
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_mf_uw_status" id="usa_business_mf_uw_status">
 																<option value="Geschlossen" ' . (($usa_business_mf_uw_status == "Geschlossen") ? 'selected' : '') . '>Geschlossen</option>
-																'.$usa_business_mf_uw_status_html.'
+																' . $usa_business_mf_uw_status_html . '
 															</select>
 														</div>
 													</div>
 												</div>
                                                 <div class="form_field margin_10"><input type="checkbox" name="usa_business_mf_24h_check" id="usa_business_mf_24h_check" ' . (($usa_business_mf_24h_check > 0) ? 'checked' : '') . '> 24 Stunden geöffnet</div>
 											</li>
-                                            <li id="monday_to_friday_ungroup_days" '.$monday_to_friday_ungroup_display.'>
-												'.$monday_to_friday_ungroup_days_html.'
+                                            <li id="monday_to_friday_ungroup_days" ' . $monday_to_friday_ungroup_display . '>
+												' . $monday_to_friday_ungroup_days_html . '
 											</li>
                                             <script>
 												$("#ungroup_weekdays").on("click", function() {
@@ -1580,14 +1589,14 @@ if (isset($_REQUEST['action'])) {
 													$("#usa_business_mf_type").val(0);
 												});
 											</script>
-											<li id="saturday_to_sunday_group_days" '.$saturday_to_sunday_group_display.' >
+											<li id="saturday_to_sunday_group_days" ' . $saturday_to_sunday_group_display . ' >
 												<div class="form_row">
 													<div class="form_left">
 														<div class="form_label">Samstag - Sonntag</div>
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_ss_status" id="usa_business_ss_status">
 																<option value="Geöffnet" ' . (($usa_business_ss_status == "Geöffnet") ? 'selected' : '') . '>Geöffnet</option>
-                                                                '.$usa_business_ss_status_html.'
+                                                                ' . $usa_business_ss_status_html . '
 															</select>
 														</div>
 													</div>
@@ -1596,7 +1605,7 @@ if (isset($_REQUEST['action'])) {
 														<div class="form_field">
 															<select class="gerenric_input" name="usa_business_ss_uw_status" id="usa_business_ss_uw_status">
 																<option value="Geschlossen" ' . (($usa_business_ss_uw_status == "Geschlossen") ? 'selected' : '') . '>Geschlossen</option>
-																'.$usa_business_ss_uw_status_html.'
+																' . $usa_business_ss_uw_status_html . '
 															</select>
 														</div>
 													</div>
@@ -1604,8 +1613,8 @@ if (isset($_REQUEST['action'])) {
                                                 <div class="form_field margin_10"><input type="checkbox" name="usa_business_24h_check" id="usa_business_24h_check" ' . (($usa_business_24h_check > 0) ? 'checked' : '') . '> 24 Stunden geöffnet</div>
                                                 <div class="form_field"><input type="checkbox" name="usa_business_close_check" id="usa_business_close_check" ' . (($usa_business_close_check > 0) ? 'checked' : '') . '> Für Lieferungen geschlossen</div>
 											</li>
-                                            <li id="saturday_to_sunday_ungroup_days" '.$saturday_to_sunday_ungroup_display.'>
-												'.$saturday_to_sunday_ungroup_days_html.'
+                                            <li id="saturday_to_sunday_ungroup_days" ' . $saturday_to_sunday_ungroup_display . '>
+												' . $saturday_to_sunday_ungroup_days_html . '
 											</li>
                                             <script>
 												$("#ungroup_weekends").on("click", function() {

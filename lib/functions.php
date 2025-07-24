@@ -2939,7 +2939,7 @@ function price_format($price)
 	return number_format($price, "2", ",", ".");
 }
 
-function autocorrectQueryUsingProductTerms($query, $pdo)
+function autocorrectQueryUsingProductTerms_bk($query, $pdo)
 {
 	// Get all unique words from product descriptions
 	$stmt = $pdo->query("SELECT DISTINCT pro_description_short FROM products");
@@ -2999,7 +2999,7 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
 				$bestDistance = $lev;
 			}
 		}
-
+		print("bestMatch: ".$bestMatch."<br> bestScore: ".$bestScore."<br> bestDistance: ".$bestDistance);die();
 		if ($bestMatch !== null && $bestScore > 65) {
 			// Try to restore proper case
 			if (ctype_upper($originalWord)) {
@@ -3019,6 +3019,95 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
 		'corrected' => implode(' ', $correctedWords)
 	];
 }
+
+function autocorrectQueryUsingProductTerms($query, $pdo)
+{
+    // Get all unique short descriptions from the products
+    $stmt = $pdo->query("SELECT DISTINCT pro_description_short FROM products");
+    $allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    // Normalization function for words
+    function normalizeWord($word)
+    {
+        $map = ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss'];
+        $word = mb_strtolower(trim($word), 'UTF-8');
+        $word = strtr($word, $map);
+        return preg_replace('/[^a-z0-9]/', '', $word); // remove non-alphanumerics
+    }
+
+    // Build dictionary: normalized word => original word
+    $dictionaryWords = [];
+    foreach ($allDescriptions as $desc) {
+        $words = preg_split('/[\s\-_,\.\'\"\/\(\)\[\]]+/', $desc);
+        foreach ($words as $word) {
+            $normalized = normalizeWord($word);
+            if (strlen($normalized) > 1 && !isset($dictionaryWords[$normalized])) {
+                $dictionaryWords[$normalized] = $word;
+            }
+        }
+    }
+
+    // Split the query into words
+    $queryWords = preg_split('/\s+/', $query);
+    $correctedWords = [];
+
+    foreach ($queryWords as $queryWord) {
+        $originalWord = $queryWord;
+        $normalizedQueryWord = normalizeWord($queryWord);
+
+        // ✅ Exact match
+        if (isset($dictionaryWords[$normalizedQueryWord])) {
+            $correctedWords[] = matchCase($originalWord, $dictionaryWords[$normalizedQueryWord]);
+            continue;
+        }
+
+        // Fallback: fuzzy match
+        $bestMatch = null;
+        $bestOriginal = null;
+        $bestScore = 0;
+        $bestDistance = PHP_INT_MAX;
+
+        foreach ($dictionaryWords as $dictNorm => $dictOriginal) {
+            if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 4) {
+                continue;
+            }
+
+            similar_text($normalizedQueryWord, $dictNorm, $similarity);
+            $lev = levenshtein($normalizedQueryWord, $dictNorm);
+
+            if (($similarity > 70 && $lev < $bestDistance) || $similarity > $bestScore) {
+                $bestMatch = $dictNorm;
+                $bestOriginal = $dictOriginal;
+                $bestScore = $similarity;
+                $bestDistance = $lev;
+            }
+        }
+
+        if ($bestOriginal !== null && $bestScore > 65) {
+            $correctedWords[] = matchCase($originalWord, $bestOriginal);
+        } else {
+            $correctedWords[] = $originalWord;
+        }
+    }
+
+    return [
+        'original' => $query,
+        'corrected' => implode(' ', $correctedWords)
+    ];
+}
+
+// Helper to preserve casing style
+function matchCase($input, $reference)
+{
+    if (ctype_upper($input)) {
+        return strtoupper($reference);
+    } elseif (ucfirst($input) === $input) {
+        return ucfirst($reference);
+    } else {
+        return strtolower($reference);
+    }
+}
+
 
 function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment_transaction_id = null)
 {
