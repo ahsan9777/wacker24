@@ -931,9 +931,9 @@ include("includes/message.php");
 
 <script>
 	$(".addwhishlist").on("click", function() {
-		let supplier_id = <?php print($supplier_id); ?>;
+		let supplier_id = '<?php print($supplier_id); ?>';
 		let sl_id = $(this).attr("data-id");
-		//console.log("sl_id: "+sl_id);
+		//console.log("supplier_id:"+supplier_id+" sl_id: "+sl_id);
 		$.ajax({
 			url: 'ajax_calls.php?action=addwhishlist',
 			method: 'POST',
@@ -944,7 +944,7 @@ include("includes/message.php");
 			success: function(response) {
 				//console.log("response = "+response);
 				const obj = JSON.parse(response);
-				console.log(obj);
+				//console.log(obj);
 				if (obj.status == 1) {
 					$("#alert_wishlist_txt").text(obj.message);
 					$("#alert_wishlist").removeClass("alert alert-danger");
@@ -999,6 +999,7 @@ include("includes/message.php");
 	$(".quantity").on("click", function() {
 		//let quantity = $(this).attr("data-id");
 		//console.log("quantity: "+quantity);
+		console.log("quantity:");
 		$("#ci_qty_" + <?php print($pro_id); ?>).val($(this).attr("data-id"));
 	});
 </script>

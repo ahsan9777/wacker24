@@ -306,6 +306,7 @@ if (isset($_REQUEST['sortby'])) {
 															}
 														} else {
 															if ($row->pro_type > 0) {
+																$ci_qty_type = 0;
 																$quantity_lenght = 1;
 															} else {
 																print('<div class="product_order_title red">Auf Anfrage</div>');
