@@ -28,8 +28,7 @@ if(isset($_REQUEST['op'])){
 			break;
         case 6:
 			$class = "alert alert-success";
-			$strMSG = "Dear Cuctomer, <br>
-            your account has been created successfully. Please <a href='login.php'>log in</a> to your account  and enjoy our services";
+			$strMSG = "Sehr geehrter Kunde, <br>Ihr Konto wurde erfolgreich erstellt. Melden Sie sich bitte bei Ihrem Konto an und nutzen Sie unsere Dienste";
 			break;
 		case 7:
 			$class = "alert alert-danger";
