@@ -18,6 +18,7 @@ if (isset($_GET['data'])) {
 }*/
 //print_r($_REQUEST);die();
 $lf_action_type = 1;
+$lf_group_id = 0;
 $pro_type = (isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0);
 $whereclause = "WHERE 1 = 1";
 $whereclause_top_category = "";
@@ -51,6 +52,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND (" . $lf_group_id . ", cm.cat_id)";
 	} else {
 		if($pro_type == 20){
+			$lf_group_id = $_REQUEST['lf_group_id'][0];
 			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' ";
 		} else {
 			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND FIND_IN_SET(" . $lf_group_id . ", cm.sub_group_ids)";
@@ -294,6 +296,8 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_group_id = lf_group_id_data;
+		} else if(pro_type > 0){
+			lf_group_id = <?php print($lf_group_id); ?>
 		}
 		let lf_manf_id = "";
 		if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
