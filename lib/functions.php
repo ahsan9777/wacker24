@@ -3023,7 +3023,7 @@ function autocorrectQueryUsingProductTerms_bk($query, $pdo)
 function autocorrectQueryUsingProductTerms($query, $pdo)
 {
     // Get all unique short descriptions from the products
-    $stmt = $pdo->query("SELECT DISTINCT pro_description_short FROM products");
+    $stmt = $pdo->query("SELECT DISTINCT pro_udx_seo_internetbezeichung FROM products");
     $allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     // Normalization function for words

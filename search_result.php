@@ -27,18 +27,18 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	//print_r($pro_description_short_keyword);
 	$search_keyword_where = "";
 	if (count($search_keyword_array) > 1) {
-		$search_keyword_case = "(CASE WHEN  pro.pro_description_short LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 1 ELSE 0 END) + ";
+		$search_keyword_case = "(CASE WHEN  pro.pro_udx_seo_internetbezeichung LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 1 ELSE 0 END) + ";
 		for ($i = 0; $i < count($search_keyword_array); $i++) {
 			$search_keyword_array_data = "";
 			if (!empty($search_keyword_array[$i])) {
-				$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
+				$search_keyword_array_data = "pro.pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
 				$search_keyword_case .= "(CASE WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
 				$search_keyword_where .= $search_keyword_array_data;
 			}
 		}
 	} else {
-		$search_keyword_array_data = "pro.pro_description_short LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR ";
-		$search_keyword_case = "CASE WHEN  pro.pro_description_short LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 10 ";
+		$search_keyword_array_data = "pro.pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR ";
+		$search_keyword_case = "CASE WHEN  pro.pro_udx_seo_internetbezeichung LIKE '" . dbStr(trim($result['corrected'])) . " %' THEN 10 ";
 		$search_keyword_case .= " WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END";
 		$search_keyword_where .= $search_keyword_array_data;
 	}
