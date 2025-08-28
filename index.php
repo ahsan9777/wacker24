@@ -71,7 +71,7 @@ include("includes/php_includes_top.php");
 													}
 											?>
 													<div class="pd_ctg_card">
-														<a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>">
+														<a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>">
 															<div class="pd_ctg_image">
 																<img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="">
 																<span class="pd_tag"><b>-</b> <?php print((($special_price['usp_price_type'] > 0) ? price_format($special_price['usp_discounted_value']).'€' : $special_price['usp_discounted_value'].'%')); ?></span>
@@ -142,7 +142,7 @@ include("includes/php_includes_top.php");
 											<div>
 												<div class="pd_card">
 													<div class="pd_image">
-														<a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>">
+														<a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>">
 															<img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt="">
 															<?php
 															if($TotalRecords > 80){
@@ -152,7 +152,7 @@ include("includes/php_includes_top.php");
 														</a>
 													</div>
 													<div class="pd_detail">
-														<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+														<h5><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -196,9 +196,9 @@ include("includes/php_includes_top.php");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 													<div class="pd_detail">
-														<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+														<h5><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -250,9 +250,9 @@ include("includes/php_includes_top.php");
 											?>
 													<div>
 														<div class="pd_card">
-															<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
+															<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt=""></a></div>
 															<div class="pd_detail">
-																<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($row2->supplier_id); ?>/<?php print(url_clean($row2->pro_description_short)); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
+																<h5><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
 																<div class="pd_rating">
 																	<ul>
 																		<li>
@@ -305,9 +305,9 @@ include("includes/php_includes_top.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -351,9 +351,9 @@ include("includes/php_includes_top.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a aria-hidden="true" tabindex="-1" href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a aria-hidden="true" tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>

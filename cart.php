@@ -397,9 +397,10 @@ include("includes/message.php");
 											if ($row->ci_type > 0) {
 												$cart_pd_title = "Abholung";
 											}
-											$product_link = "product/" . $row->supplier_id . "/" . url_clean($row->pro_description_short);
+											$product_link = product_detail_url($row->supplier_id);
 											if ($row->ci_type > 0) {
-												$product_link = "product/1/" . $row->supplier_id . "/" . url_clean($row->pro_description_short);
+												//$product_link = "product/1/" . $row->supplier_id . "/" . product_detail_url($row->supplier_id, 1);
+												$product_link = product_detail_url($row->supplier_id, 1);
 											}
 									?>
 											<h3 class="cart_pd_title"> <?php print($cart_pd_title); ?> </h3>

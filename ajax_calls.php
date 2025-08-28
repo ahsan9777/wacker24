@@ -1067,9 +1067,9 @@ if (isset($_REQUEST['action'])) {
                     }
                     //print_r($special_price);die();
                     $gerenric_product_inner .= '<div class="pd_card">
-                        <div class="pd_image"><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
+                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
                         <div class="pd_detail">
-                            <h5><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"> ' . $row->pro_description_short . ' </a></h5>';
+                            <h5><a href="' . product_detail_url($row->supplier_id) . '"> ' . $row->pro_description_short . ' </a></h5>';
                     $count = 0;
                     if ($row->pro_udx_seo_epag_id > 0) {
                         $Query1 = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";

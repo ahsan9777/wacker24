@@ -78,9 +78,9 @@ include("includes/message.php");
 								$oi_gst_value = 1 + $row->oi_gst_value;
 								$gst = $row->oi_amount * $row->oi_gst_value;
 							}
-							$product_link = "product/".$row->supplier_id."/".url_clean($row->pro_description_short);
+							$product_link = product_detail_url($row->supplier_id);
 							if( $row->oi_type > 0){
-								$product_link = "product/1/".$row->supplier_id."/".url_clean($row->pro_description_short);
+								$product_link = product_detail_url($row->supplier_id, 1);
 							}
 							
 					?>

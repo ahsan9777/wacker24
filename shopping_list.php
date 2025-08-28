@@ -195,9 +195,9 @@ include("includes/message.php");
 																}
 														?>
 																<div class="pd_card">
-																	<div class="pd_image"><a href="product/<?php print($row3->supplier_id); ?>/<?php print(url_clean($row3->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row3->pg_mime_source_url)); ?>" alt=""></a></div>
+																	<div class="pd_image"><a href="<?php print(product_detail_url($row3->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row3->pg_mime_source_url)); ?>" alt=""></a></div>
 																	<div class="pd_detail">
-																		<h5><a href="product/<?php print($row3->supplier_id); ?>/<?php print(url_clean($row3->pro_description_short)); ?>"> <?php print($row3->pro_description_short); ?> </a></h5>
+																		<h5><a href="<?php print(product_detail_url($row3->supplier_id)); ?>"> <?php print($row3->pro_description_short); ?> </a></h5>
 																		<div class="pd_rating">
 																			<ul>
 																				<li>
@@ -291,9 +291,9 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -337,9 +337,9 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-												<h5><a href="product/<?php print($rw->supplier_id); ?>/<?php print(url_clean($rw->pro_description_short)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+												<h5><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>

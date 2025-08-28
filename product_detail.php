@@ -6,7 +6,9 @@ $ci_type = 0;
 if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
 	$ci_type = 1;
 }
-$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $_REQUEST['supplier_id'] . "'";
+//print_r($_REQUEST);die();
+$params_supplier_id = returnName("supplier_id", "products", "pro_udx_seo_internetbezeichung_params_de", $_REQUEST['product_params']);
+$Query = "SELECT pro.*, pbp.pbp_id, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
 //print($Query);die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -106,11 +108,11 @@ if (isset($_REQUEST['btnAdd_to_list'])) {
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
 		//header("Location: " . $_SERVER['PHP_SELF'] . "?supplier_id=" . $_REQUEST['supplier_id'] . "&op=14");
-		header("Location: product/" . $supplier_id . "/" . url_clean($pro_description_short) . "/14");
+		header("Location: " . product_detail_url($supplier_id) . "/14");
 	} else {
 		$sl_id = getMaximum("shopping_list", "sl_id");
 		mysqli_query($GLOBALS['conn'], "INSERT INTO shopping_list (sl_id, user_id, sl_title) VALUES (" . $sl_id . ", '" . $_SESSION["UID"] . "','" . dbStr(trim($_REQUEST['sl_title'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-		header("Location: product/" . $supplier_id . "/" . url_clean($pro_description_short) . "/1");
+		header("Location: " . product_detail_url($supplier_id) . "/1");
 	}
 }
 
@@ -222,7 +224,7 @@ include("includes/message.php");
 											<div class="simpleLens-thumbnails-container">
 												<?php
 												//$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' AND pg_mime_purpose != 'others' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
-												$Query = "SELECT pg_mime_source_url, pg_mime_description FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_type = 'image/jpeg' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
+												$Query = "SELECT pg_mime_source_url, pg_mime_description FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' AND pg_mime_type = 'image/jpeg' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
 												$rs = mysqli_query($GLOBALS['conn'], $Query);
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
@@ -298,7 +300,7 @@ include("includes/message.php");
 								<?php } ?>
 								<ul class="product_type">
 									<?php
-									$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pf_forder ASC";
+									$Query = "SELECT pf_fname, pf_fvalue FROM `products_feature` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pf_forder ASC";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
@@ -333,7 +335,7 @@ include("includes/message.php");
 								<?php } ?>
 								<div class="sticky">
 									<?php
-									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
+									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										$row = mysqli_fetch_object($rs);
@@ -352,7 +354,7 @@ include("includes/message.php");
 										<div class="product_vat txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>inkl. MwSt + <span class="versand_trigger">Versand</span></div>
 										<?php
 									}
-									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM `products_bundle_price` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound ASC";
+									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM `products_bundle_price` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound ASC";
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
@@ -529,9 +531,9 @@ include("includes/message.php");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 													<div class="pd_detail">
-														<h5><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -594,9 +596,9 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -654,9 +656,9 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
