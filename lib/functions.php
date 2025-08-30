@@ -257,7 +257,7 @@ function url_clean($string)
 	/*$string = str_replace(" ", "-", strtolower(trim($string)));
 	$string = str_replace(array(',','’'), "", $string);*/
 	$string = str_replace(" ", "-", strtolower(trim($string)));
-	$string = str_replace(array(",", "’", "'", "&", ".", "%"), "", $string);
+	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":"), "", $string);
 	$string = str_replace(array("/", "+", "--"), "-", $string);
 	return $string;
 }
@@ -3347,9 +3347,11 @@ function product_detail_url($supplier_id, $ci_type = 0){
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
-		$pro_udx_seo_internetbezeichung_params_de = "product/".$row->pro_udx_seo_internetbezeichung_params_de;
+		//$pro_udx_seo_internetbezeichung_params_de = "product/".$row->pro_udx_seo_internetbezeichung_params_de;
+		$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
 		if ($ci_type > 0) {
-			$pro_udx_seo_internetbezeichung_params_de = "product/1/".$row->pro_udx_seo_internetbezeichung_params_de;
+			//$pro_udx_seo_internetbezeichung_params_de = "product/1/".$row->pro_udx_seo_internetbezeichung_params_de;
+			$pro_udx_seo_internetbezeichung_params_de = "1/".$row->pro_udx_seo_internetbezeichung_params_de;
 		}
 
 	}

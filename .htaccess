@@ -60,9 +60,7 @@ RewriteRule ^addupdateaddress/([0-9]+)?$ add_update_address.php?usa_id=$1 [L]
 RewriteRule ^addupdateaddress? add_update_address.php [L]
 RewriteRule ^abmelden? logout.php [L]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^\s\/]+)/?$ page.php?cnt_slug=$1 [L,QSA]
+
 RewriteRule ^unterkategorien/([0-9]+)/(.*)?$ product_category.php?page=$1&cat_params_one=$2 [L]
 RewriteRule ^unterkategorien/(.*)?$ product_category.php?cat_params_one=$1 [L]
 
@@ -75,9 +73,32 @@ RewriteRule ^artikelarten/(.*)?$ products.php?level_two=$1 [L]
 #RewriteRule ^product/([A-Za-z0-9]+)/(.*)/([0-9]+)?$ product_detail.php?supplier_id=$1&op=$3 [L]
 #RewriteRule ^product/([A-Za-z0-9]+)/(.*)?$ product_detail.php?supplier_id=$1 [L]
 
-RewriteRule ^product/([0-9]+)/(.*)?$ product_detail.php?ci_type=$1&product_params=$2 [L]
-RewriteRule ^product/(.*)/([0-9]+)?$ product_detail.php?product_params=$1&op=$3 [L]
-RewriteRule ^product/(.*)?$ product_detail.php?product_params=$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# Page slugs (letters, numbers, underscores, hyphens, German umlauts)
+#RewriteRule ^([^\s\/]+)/?$ page.php?cnt_slug=$1 [L,QSA]
+#RewriteRule ^([a-zA-Z0-9üÜöÖäÄß_-]+)/?$ page.php?cnt_slug=$1 [L,QSA]
+RewriteRule ^(über-uns|privacy|abg|partner|wacker_and_the_environment|impressum|widerrufsbelehrung|altgeräte_entsorgung|rücknahme_von_altbatterien|rücknahme_von_verpackungen|dhl_paketshop|contact_us|kontakt)/?$ page.php?cnt_slug=$1 [L,QSA]
+
+
+# -----------------
+# Product detail rules
+# -----------------
+
+# Case: product has numeric type and extra params
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([0-9]+)/(.+)$ product_detail.php?ci_type=$1&product_params=$2 [L,QSA]
+
+# Case: product slug + numeric ID
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/([0-9]+)$ product_detail.php?product_params=$1&op=$2 [L,QSA]
+
+# Catch-all fallback → treat as product
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ product_detail.php?product_params=$1 [L,QSA]
 
 # END OF RULE 1
 

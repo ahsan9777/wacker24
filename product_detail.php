@@ -21,6 +21,7 @@ if (mysqli_num_rows($rs) > 0) {
 	}
 	$supplier_id = $row->supplier_id;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
+	$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
 	$pro_description_short = $row->pro_description_short;
 	$pro_description_long = $row->pro_description_long;
 	$pro_ean = $row->pro_ean;
@@ -50,6 +51,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
 	$cat_id_one = $sub_group_ids[1];
+	$meta_keywords = implode(", ", returnNameArray("pk_title", "products_keyword", "supplier_id", $supplier_id));
 	$pq_physical_quantity = returnName("pq_physical_quantity", "products_quantity", "supplier_id", $supplier_id);
 	$cat_title_one = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_one);
 	$cat_one_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_one);
@@ -77,9 +79,9 @@ if (mysqli_num_rows($rs) > 0) {
 		$postal_city = rtrim($secondPart, $lastWord);
 		$country = $lastWord;
 	}
-	$pro_udx_manufacturer_address =*/ 
+	$pro_udx_manufacturer_address =*/
 	//print_r($parts);
-	
+
 	$pg_mime_source_url_pdf = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	$pg_mime_description = returnName("pg_mime_description", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
@@ -251,7 +253,7 @@ include("includes/message.php");
 								<?php
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
-									$Query = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
+									$Query = "SELECT pf.*, pro.pro_udx_seo_internetbezeichung_params_de, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$count = mysqli_num_rows($rs);
@@ -266,11 +268,11 @@ include("includes/message.php");
 														<li>
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
-																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px; width: 60px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>">
+																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px; width: 60px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" pro_udx_seo_internetbezeichung_params_de="<?php print($row->pro_udx_seo_internetbezeichung_params_de); ?>" data-title="<?php print($row->pf_fvalue); ?>">
 																	<?php if (in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { ?>
-																		<img class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
+																		<img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
 																	<?php } else { ?>
-																		<label for="" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->supplier_id); ?>" data-pro-description="<?php print(url_clean($row->pro_description_short)); ?>" title="<?php print($row->pf_fvalue); ?>"><?php print($row->pf_fvalue); ?></label>
+																		<label for="" title="<?php print($row->pf_fvalue); ?>"><?php print($row->pf_fvalue); ?></label>
 																	<?php } ?>
 																</span>
 															</label>
@@ -324,12 +326,18 @@ include("includes/message.php");
 								<?php if ($pq_physical_quantity > 0) { ?>
 									<div class="tab_radio_button">
 										<div class="tab_radio_col">
-											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print((($ci_type == 0) ? 'checked' : '')); ?>>
-											<label for="cart_type_online_<?php print($pro_id); ?>">Online</label>
+											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" pro_udx_seo_internetbezeichung_params_de="<?php print($pro_udx_seo_internetbezeichung_params_de); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print((($ci_type == 0) ? 'checked' : '')); ?>>
+											<label for="cart_type_online_<?php print($pro_id); ?>">
+												<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) {
+													print(getShippingTiming($_SESSION['plz']));
+												} else {
+													print("Lieferung " . date('d-m-Y', strtotime("+7 day", strtotime(date_time))));
+												} ?>
+											</label>
 										</div>
 										<div class="tab_radio_col">
-											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" data-pro-description="<?php print(url_clean($pro_description_short)); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print((($ci_type == 1) ? 'checked' : '')); ?>>
-											<label for="cart_type_physical_<?php print($pro_id); ?>">Physical</label>
+											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" pro_udx_seo_internetbezeichung_params_de="<?php print($pro_udx_seo_internetbezeichung_params_de); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print((($ci_type == 1) ? 'checked' : '')); ?>>
+											<label for="cart_type_physical_<?php print($pro_id); ?>">Marktabholung heute ab <?php print(date('H:i', strtotime("+1 hour"))); ?> Uhr</label>
 										</div>
 									</div>
 								<?php } ?>
@@ -479,19 +487,20 @@ include("includes/message.php");
 										</div>
 									</div>
 									<style>
-										
+
 									</style>
 									<div class="info_link_detailpage">
 										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
 											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>"><i class="fa fa-info-circle" aria-hidden="true"></i> <?php print($pg_mime_description); ?></a>
-										<?php } if(!empty($pro_udx_manufacturer_address)){ ?>
-										<div class="manufacturer_detail">
-											<div class="popup_manufacturer_detail">
-												<p><?php print($pro_udx_manufacturer_address);?></p>
-												<p><?php print($pro_udx_manufacturer_mail); ?></p>
+										<?php }
+										if (!empty($pro_udx_manufacturer_address)) { ?>
+											<div class="manufacturer_detail">
+												<div class="popup_manufacturer_detail">
+													<p><?php print($pro_udx_manufacturer_address); ?></p>
+													<p><?php print($pro_udx_manufacturer_mail); ?></p>
+												</div>
+												<a href="javascript:void(0);"><i class="fa fa-info-circle" aria-hidden="true"></i> Herstellerinformationen </a>
 											</div>
-											<a  href="javascript:void(0);"><i class="fa fa-info-circle" aria-hidden="true"></i> Herstellerinformationen </a>
-										</div>
 										<?php } ?>
 									</div>
 								</div>
@@ -640,18 +649,18 @@ include("includes/message.php");
 								if (mysqli_num_rows($rs) > 0) {
 									while ($row = mysqli_fetch_object($rs)) {
 										//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-											$cat_id_two = substr($cat_id_three, 0, 3);
-											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
-											$special_price = user_special_price("supplier_id", $row->supplier_id);
+										$cat_id_two = substr($cat_id_three, 0, 3);
+										$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
+										$special_price = user_special_price("supplier_id", $row->supplier_id);
 
-											if (!$special_price) {
-												$special_price = user_special_price("level_two", $cat_id_two);
-											}
+										if (!$special_price) {
+											$special_price = user_special_price("level_two", $cat_id_two);
+										}
 
-											if (!$special_price) {
-												$special_price = user_special_price("level_one", $cat_id_one);
-											}
-											//print_r($special_price);
+										if (!$special_price) {
+											$special_price = user_special_price("level_one", $cat_id_one);
+										}
+										//print_r($special_price);
 										//}
 								?>
 										<div>
@@ -724,14 +733,15 @@ include("includes/message.php");
 		//console.log("cart_type_online");
 		$("#ci_type_" + $(this).attr("data-id")).val(0);
 		let supplier_id = $(this).attr("data-supplier-id");
-		let pro_description = $(this).attr("data-pro-description");
-		window.location.href = "product/" + supplier_id + "/" + pro_description;
+		let pro_udx_seo_internetbezeichung_params_de = $(this).attr("pro_udx_seo_internetbezeichung_params_de");
+		window.location.href = pro_udx_seo_internetbezeichung_params_de;
 	});
 	$(".cart_type_physical").on("click", function() { //ci_type
 		$("#ci_type_" + $(this).attr("data-id")).val(1);
 		let supplier_id = $(this).attr("data-supplier-id");
-		let pro_description = $(this).attr("data-pro-description");
-		window.location.href = "product/1/" + supplier_id + "/" + pro_description;
+		let pro_udx_seo_internetbezeichung_params_de = $(this).attr("pro_udx_seo_internetbezeichung_params_de");
+		//window.location.href = "product/1/" + supplier_id + "/" + pro_description;
+		window.location.href = "1/" + pro_udx_seo_internetbezeichung_params_de;
 	});
 </script>
 <script src="js/slick.js"></script>
@@ -980,28 +990,26 @@ include("includes/message.php");
 	});
 
 	$(".color_tab").on("mouseover", function() {
-		let color_title = $(this).attr('title');
+		let color_title = $(this).attr('data-title');
 		//console.log("color_tab: "+color_title);
 		$("#color_title").text(color_title);
 	});
 	$(".color_tab").on("mouseout", function() {
 		let color_radio = $('input[name="color_radio"]:checked').val();;
-		let color_title = $("#color_tab_" + color_radio).attr('title');
+		let color_title = $("#color_tab_" + color_radio).attr('data-title');
 		//console.log("mouseout: "+color_title);
 		$("#color_title").text(color_title);
 	});
 
 	$(".color_tab").on("click", function() {
-		let supplier_id = $(this).attr("data-id");
-		let pro_description = $(this).attr("data-pro-description");
+		let pro_udx_seo_internetbezeichung_params_de = $(this).attr("pro_udx_seo_internetbezeichung_params_de");
 		//console.log("pro_description: "+pro_description);
-		window.location.href = "product/" + supplier_id + "/" + pro_description;
-		//$("#ci_qty_" + <?php print($pro_id); ?>).val($(this).attr("data-id"));
+		window.location.href = pro_udx_seo_internetbezeichung_params_de;
 	});
 	$(".quantity").on("click", function() {
 		//let quantity = $(this).attr("data-id");
 		//console.log("quantity: "+quantity);
-		console.log("quantity:");
+		//console.log("quantity:");
 		$("#ci_qty_" + <?php print($pro_id); ?>).val($(this).attr("data-id"));
 	});
 </script>

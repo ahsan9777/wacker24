@@ -72,7 +72,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
             print_r($payment_status_responseData);
             print("</pre>");die();*/
                 //$ord_amount = number_format(0.50, "2", ".", "");
-                if ($orders_table_data['data_5'] == 0 && !in_array($orders_table_data['data_6'], array(1,7)) ) {
+                if ($orders_table_data['data_5'] == 0 && !in_array($orders_table_data['data_6'], array(1, 7))) {
                     $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
                     $payment_status_responseData = json_decode($payment_status_request, true);
                     /*print("<pre>");
@@ -83,7 +83,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
                         $mailer->order($_REQUEST['ord_id'][$i]);
                         header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
                     }
-                } elseif (in_array($orders_table_data['data_6'], array(1,7))) {
+                } elseif (in_array($orders_table_data['data_6'], array(1, 7))) {
                     mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'][$i] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id'][$i]);
                     $mailer->order($_REQUEST['ord_id'][$i]);
                     header("Location: " . $_SERVER['PHP_SELF'] . "?op=2");
@@ -107,7 +107,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
     if ($_REQUEST['d_status_id'] == 1) {
         $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'], 6);
         $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
-        if ($orders_table_data['data_5'] == 0 && !in_array($orders_table_data['data_6'], array(1,7)) ) {
+        if ($orders_table_data['data_5'] == 0 && !in_array($orders_table_data['data_6'], array(1, 7))) {
             $payment_status_request = capturePayment($orders_table_data['data_1'], $orders_table_data['data_2'], $ord_amount);
             $payment_status_responseData = json_decode($payment_status_request, true);
             /*print("<pre>");
@@ -117,7 +117,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
                 mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
                 $mailer->order($_REQUEST['ord_id'][$i]);
             }
-        } elseif (in_array($orders_table_data['data_6'], array(1,7))) {
+        } elseif (in_array($orders_table_data['data_6'], array(1, 7))) {
             mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
             $mailer->order($_REQUEST['ord_id'][$i]);
         }
@@ -176,10 +176,10 @@ include("includes/messages.php");
                                         <th>Order Status</th>-->
 
                                         <th width="100">Auftrags-ID</th>
-                                        <th width="250" >User Info </th>
+                                        <th width="250">User Info </th>
                                         <th width="100">Rechnungsadresse</th>
                                         <th width="250">Lieferadresse</th>
-                                        <th >Betrag</th>
+                                        <th>Betrag</th>
                                         <th>Zahlungsart</th>
                                         <th>Transaktions-ID</th>
                                         <th width="147">Datum/Uhrzeit</th>
@@ -192,6 +192,7 @@ include("includes/messages.php");
                                     <?php
                                     $ord_note = "";
                                     $delivery_instruction = "";
+                                    $ord_datetime = "";
                                     $Query = "SELECT ord.*, di.dinfo_additional_info, di.delivery_instruction, CONCAT(di.dinfo_fname, ' ', di.dinfo_lname) AS deliver_full_name, di.dinfo_phone, di.dinfo_email, di.dinfo_street, di.dinfo_address, di.dinfo_house_no, di.dinfo_usa_zipcode, di.dinfo_countries_id, c.countries_name, pm.pm_title_de AS pm_title, ds.d_status_name,u.utype_id, (SELECT ut.utype_name FROM user_type AS ut WHERE ut.utype_id = u.utype_id) utype_name, usp.usa_additional_info, CONCAT(usp.usa_street, ' ', usp.usa_house_no) AS shipping_street_house, usp.usa_zipcode, usp.countries_id, usp.usa_address AS shipping_countrie_id FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN payment_method AS pm ON pm.pm_id = ord.ord_payment_method LEFT OUTER JOIN deli_status AS ds ON ds.d_status_id = ord.ord_delivery_status LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN user_shipping_address AS usp ON usp.user_id = ord.user_id AND usp.usa_type = '1' WHERE ord.ord_id = '" . $_REQUEST['ord_id'] . "' ORDER BY ord.ord_datetime DESC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -209,7 +210,7 @@ include("includes/messages.php");
                                         } else {
                                             $user_info .= '<span class="btn btn-success btn-style-light w-auto mb-2">' . rtrim($user_guest . " " . $row->utype_name, "Customer") . '</span><br>';
                                         }
-                                         $user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
+                                        $user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
                                         if (!empty($user_company_name)) {
                                             $user_info .= $user_company_name . "<br>";
                                         }
@@ -225,7 +226,7 @@ include("includes/messages.php");
 
                                         $delivery_info = "";
                                         if (!empty($row->dinfo_additional_info)) {
-                                                $delivery_info .= $row->dinfo_additional_info . "<br>";
+                                            $delivery_info .= $row->dinfo_additional_info . "<br>";
                                         } elseif (!empty($user_company_name)) {
                                             $delivery_info .= $user_company_name . "<br>";
                                         }
@@ -244,8 +245,8 @@ include("includes/messages.php");
                                         $shipping_info = "";
                                         if ($row->ord_payment_method == 1) {
                                             if (!empty($row->usa_additional_info)) {
-                                                    $shipping_info .= $row->usa_additional_info . "<br>";
-                                                }
+                                                $shipping_info .= $row->usa_additional_info . "<br>";
+                                            }
                                             if (!empty($row->shipping_street_house)) {
                                                 $shipping_info .= $row->shipping_street_house . "<br>";
                                             }
@@ -261,6 +262,7 @@ include("includes/messages.php");
                                         }
                                         $ord_note = $row->ord_note;
                                         $delivery_instruction = $row->delivery_instruction;
+                                        $ord_datetime = $row->ord_datetime;
                                     ?>
                                         <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
                                             <td><?php print($row->ord_id); ?></td>
@@ -374,15 +376,41 @@ include("includes/messages.php");
                                             $ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
                                             $order_type = "Lieferung";
                                             if ($row->oi_type > 0) {
-                                                $order_type = '<span class="btn btn-primary btn-style-light w-auto mb-2">Abholung</span><br>';
+
+                                                $order_time   = $ord_datetime; // Example order time
+                                            //$current_time = date("Y-m-d H:i:s");
+                                            $current_time = date_time;
+
+                                            // Convert to timestamps
+                                            $order_timestamp   = strtotime($order_time);
+                                            $expiry_timestamp  = strtotime($order_time . " +1 hour"); // order time + 1 hour
+                                            $current_timestamp = strtotime($current_time);
+
+                                            // Remaining seconds
+                                            $remaining = $expiry_timestamp - $current_timestamp;
+                                            $show_text = "";
+                                            if ($remaining > 0) {
+                                                $hours   = floor($remaining / 3600);
+                                                $minutes = floor(($remaining % 3600) / 60);
+                                                $seconds = $remaining % 60;
+
+                                                //echo "⏳ Remaining time: $hours hours $minutes minutes $seconds seconds";
+                                                $show_text = " : $hours hours $minutes minutes $seconds seconds";
+                                            } else {
+                                                //echo "❌ Time expired (more than 1 hour passed after order time)";
+                                                $show_text =  ": Time expired";
+                                            }
+
+                                                $order_type = '<span class="btn btn-primary btn-style-light w-auto mb-2">Abholung'.$show_text.'</span><br>';
                                             } else {
                                                 $order_type = '<span class="btn btn-success btn-style-light w-auto mb-2">Lieferung</span><br>';
                                             }
 
                                             $pg_mime_source_url = $row->pg_mime_source_url;
-                                            if($row->pro_custom_add > 0){
-                                                $pg_mime_source_url = $GLOBALS['siteURL'].$row->pg_mime_source_url;
+                                            if ($row->pro_custom_add > 0) {
+                                                $pg_mime_source_url = $GLOBALS['siteURL'] . $row->pg_mime_source_url;
                                             }
+
                                     ?>
                                             <tr>
                                                 <td>
@@ -491,13 +519,13 @@ include("includes/messages.php");
                                         <th width="170">Delivery Status</th>
                                         <th>Order Status</th>
                                         <th width="90">Action</th>-->
-                                        <th >Auftrags-ID</th>
+                                        <th>Auftrags-ID</th>
                                         <th>User Info </th>
                                         <th width="100">Rechnungsadresse</th>
                                         <th width="500">Lieferadresse</th>
                                         <th width="100">Betrag</th>
                                         <th>Zahlungsart</th>
-                                        <th >Transaktions-ID</th>
+                                        <th>Transaktions-ID</th>
                                         <th width="147">Datum/Uhrzeit</th>
                                         <th>Zahlungsstatus</th>
                                         <th width="170">Lieferstatus</th>

@@ -233,9 +233,13 @@ if (isset($_REQUEST['action'])) {
                             $cart_price_data .= '<div class="side_cart_pd_prise price_without_tex" ' . $display_one . ' >' . price_format($row->ci_amount) . ' €</div>';
                             $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" ' . $display_two . ' >' . price_format($row->ci_amount + $gst) . ' €</div>';
                         }
+                        $product_link = product_detail_url($row->supplier_id);
+                        if ($row->ci_type > 0) {
+                            $product_link = product_detail_url($row->supplier_id, 1);
+                        }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="product/' . $row->supplier_id . '/' . url_clean($row->pro_description_short) . '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
+                                    <div class="side_cart_pd_image"><a href="' .$product_link. '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">

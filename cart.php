@@ -395,7 +395,7 @@ include("includes/message.php");
 											$smiller_product_url = $GLOBALS['siteURL'] . "search_result.php?search_keyword=" . implode(' ', array_slice($pro_description_short, 0, 2));
 											$cart_pd_title = "Lieferung";
 											if ($row->ci_type > 0) {
-												$cart_pd_title = "Abholung";
+												$cart_pd_title = "Abholung ".date('H:i', strtotime("+1 hour"));
 											}
 											$product_link = product_detail_url($row->supplier_id);
 											if ($row->ci_type > 0) {
@@ -405,7 +405,7 @@ include("includes/message.php");
 									?>
 											<h3 class="cart_pd_title"> <?php print($cart_pd_title); ?> </h3>
 											<div class="cart_pd_row">
-												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($GLOBALS['siteURL']); ?>product/<?php print($row->supplier_id); ?>/<?php print(url_clean($row->pro_description_short)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($product_link); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
 														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>"><?php print($row->pro_description_short); ?></a></div>
