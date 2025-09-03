@@ -52,7 +52,7 @@ $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
             }
             $date = new DateTime($dt, new DateTimeZone('Europe/Berlin'));
             //$date->format('c');
-            $pgURL = $GLOBALS['siteURL'] . "product/" . $rwp->supplier_id . "/" . url_clean($rwp->pro_description_short);
+            $pgURL = $GLOBALS['siteURL'] . $rwp->pro_udx_seo_internetbezeichung_params;
             echo "<url>
                     <loc>" . $pgURL . "</loc>
                     <lastmod>" . $date->format('c') . "</lastmod>
