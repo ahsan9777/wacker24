@@ -86,7 +86,14 @@ if (mysqli_num_rows($rs) > 0) {
 	$pg_mime_description = returnName("pg_mime_description", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else {
-	header("Location: " . $GLOBALS['siteURL'] . "nicht-verfügbar");
+	$product_params = explode("/", $_REQUEST['product_params']);
+	$pro_status = returnName("pro_status", "products", "supplier_id", $product_params[1]);
+	if($pro_status > 0){
+		$pro_udx_seo_internetbezeichung_params_de = returnName("pro_udx_seo_internetbezeichung_params_de", "products", "supplier_id", $product_params[1]);
+		header("Location: " . $GLOBALS['siteURL'] .$pro_udx_seo_internetbezeichung_params_de);
+	} else {
+		header("Location: " . $GLOBALS['siteURL'] . "nicht-verfügbar");
+	}
 }
 
 //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {

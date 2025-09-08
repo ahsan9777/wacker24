@@ -52,7 +52,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND (" . $lf_group_id . ", cm.cat_id)";
 	} else {
 		if($pro_type == 20){
-			$lf_group_id = $_REQUEST['lf_group_id'][0];
+			//$lf_group_id = $_REQUEST['lf_group_id'][0];
 			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' ";
 		} else {
 			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND FIND_IN_SET(" . $lf_group_id . ", cm.sub_group_ids)";
