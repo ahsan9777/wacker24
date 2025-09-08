@@ -37,7 +37,7 @@ if (mysqli_num_rows($rs) > 0) {
                 'id' => $row->supplier_id,
                 'title' => $row->pro_description_short,
                 'description' => $row->pro_description_long,
-                'link' => $GLOBALS['siteURL']."product/".$row->supplier_id."/".url_clean($row->pro_description_short),
+                'link' => $GLOBALS['siteURL'].$row->pro_udx_seo_internetbezeichung_params_de,
                 'image_link' => $pg_mime_source_url,
                 'price' => $row->pbp_price_amount.' EUR',
                 'brand' => $brand,
