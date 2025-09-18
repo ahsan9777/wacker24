@@ -78,7 +78,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # Page slugs (letters, numbers, underscores, hyphens, German umlauts)
 #RewriteRule ^([^\s\/]+)/?$ page.php?cnt_slug=$1 [L,QSA]
 #RewriteRule ^([a-zA-Z0-9üÜöÖäÄß_-]+)/?$ page.php?cnt_slug=$1 [L,QSA]
-RewriteRule ^(über-uns|privacy|abg|partner|wacker_and_the_environment|impressum|widerrufsbelehrung|altgeräte_entsorgung|rücknahme_von_altbatterien|rücknahme_von_verpackungen|dhl_paketshop|contact_us|kontakt)/?$ page.php?cnt_slug=$1 [L,QSA]
+RewriteRule ^(barrierefreiheit|agb|datenschutz|über-uns|privacy|abg|partner|wacker_and_the_environment|impressum|widerrufsbelehrung|altgeräte_entsorgung|rücknahme_von_altbatterien|rücknahme_von_verpackungen|dhl_paketshop|contact_us|kontakt)/?$ page.php?cnt_slug=$1 [L,QSA]
 
 
 # -----------------

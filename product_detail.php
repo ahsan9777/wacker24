@@ -257,6 +257,7 @@ include("includes/message.php");
 						</div>
 						<div class="product_right">
 							<div class="product_col1">
+								<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
 								<?php
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
@@ -293,7 +294,6 @@ include("includes/message.php");
 										}
 									}
 								} ?>
-								<h1> <?php print($pro_udx_seo_internetbezeichung); ?> </h1>
 								<h4> <?php print($pro_description_short); ?> </h4>
 								<ul>
 									<li style="display: none;">Bestellnummer: <?php print($supplier_id); ?> </li>
@@ -1010,7 +1010,7 @@ include("includes/message.php");
 
 	$(".color_tab").on("click", function() {
 		let pro_udx_seo_internetbezeichung_params_de = $(this).attr("pro_udx_seo_internetbezeichung_params_de");
-		//console.log("pro_description: "+pro_description);
+		//console.log("pro_description: "+pro_udx_seo_internetbezeichung_params_de);
 		window.location.href = pro_udx_seo_internetbezeichung_params_de;
 	});
 	$(".quantity").on("click", function() {
