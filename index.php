@@ -128,7 +128,7 @@ include("includes/php_includes_top.php");
 					<div class="hm_section_2">
 						<div class="gerenric_white_box">
 							<div class="gerenric_product full_column">
-								<h2 class="pd_heading">Meist verkaufte Produkte</h2>
+								<h1 class="pd_heading">Meist verkaufte Produkte</h1>
 								<div class="gerenric_slider">
 									<?php
 									$special_price = "";
