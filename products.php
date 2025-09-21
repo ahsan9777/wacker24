@@ -147,9 +147,9 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 
 												print('<div>
 													<div class="ctg_type_col">
-													<a href="' . $cat_link . '">
+													<a href="' . $cat_link . '" title = "' . $row->sub_cat_title . '">
 														<div class="ctg_type_card">
-															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(160, $pg_mime_source_url_href) . '" alt=""></div>
+															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(160, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
 															<div class="ctg_type_detail">
 																<div class="ctg_type_title">' . $row->sub_cat_title . '</div>
 																<div class="ctg_type_price price_without_tex" ' . $price_without_tex_display . ' > ab ' . price_format(($pbp_price_without_tax > 0) ? $pbp_price_without_tax : 0.00) . ' €</div>
@@ -167,7 +167,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 							</div>
 							<div class="pd_row_heading">
 								<div class="list_type_row">
-									<h2> <?php print($heading_title) ?> </h2>
+									<h1> <?php print($heading_title) ?> </h1>
 									<ul>
 										<li>Ansicht </li>
 										<li class="click_th"><i class="fa fa-th"></i></li>
@@ -176,13 +176,13 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 											<div class="drop-down_2">
 												<div class="selected">
 													<input type="hidden" name="sort_by_selected" id="sort_by_selected" value="<?php print($sortby); ?>">
-													<a href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
+													<a title = "<?php print($sortby_array[$sortby]); ?>" href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
 												</div>
 												<div class="options">
 													<ul>
 														<?php for ($i = 0; $i < count($sortby_array); $i++) {
 															if ($i != $sortby) { ?>
-																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>"><?php print($sortby_array[$i]); ?></a></li>
+																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>" title="<?php print($sortby_array[$i]); ?>" ><?php print($sortby_array[$i]); ?></a></li>
 														<?php }
 														} ?>
 													</ul>
