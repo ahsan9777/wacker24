@@ -200,12 +200,12 @@ include("includes/message.php");
 							$cat_title_heading = returnName("cat_title_de AS cat_title", "category", "group_id", 20);
 							$cat_params_heading = returnName("cat_params_de AS cat_params", "category", "group_id", 20);
 						?>
-							<li><a href="unterkategorien/<?php print($cat_params_heading); ?>"> <?php print($cat_title_heading); ?> </a></li>
+							<li><a href="unterkategorien/<?php print($cat_params_heading); ?>" title="<?php print($cat_title_heading); ?>" > <?php print($cat_title_heading); ?> </a></li>
 						<?php } else { ?>
-							<li><a href="unterkategorien/<?php print($cat_one_params); ?>"> <?php print($cat_title_one); ?> </a></li>
+							<li><a href="unterkategorien/<?php print($cat_one_params); ?>" title="<?php print($cat_title_one); ?>" > <?php print($cat_title_one); ?> </a></li>
 						<?php } ?>
-						<li><a href="artikelarten/<?php print($cat_two_params . $qryStrURL); ?>"> <?php print($cat_title_two); ?> </a></li>
-						<li><a href="artikelarten/<?php print($cat_two_params . "/" . $cat_three_params . $qryStrURL); ?>"> <?php print($cat_title_three); ?> </a></li>
+						<li><a href="artikelarten/<?php print($cat_two_params . $qryStrURL); ?>" title="<?php print($cat_title_two); ?>" > <?php print($cat_title_two); ?> </a></li>
+						<li><a href="artikelarten/<?php print($cat_two_params . "/" . $cat_three_params . $qryStrURL); ?>" title="<?php print($cat_title_three); ?>"> <?php print($cat_title_three); ?> </a></li>
 					</ul>
 				</div>
 			</div>
@@ -217,7 +217,7 @@ include("includes/message.php");
 			<div class="product_detail_page gerenric_padding">
 				<div class="page_width_1480">
 					<?php if ($class != "") { ?>
-						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
+						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a title="close" href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
 					<?php } ?>
 					<div class="product_detail_section1">
 						<div class="product_left">
@@ -238,7 +238,7 @@ include("includes/message.php");
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
 												?>
-														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>"> <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
+														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>" > <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
 												<?php
 													}
 												}
@@ -247,7 +247,7 @@ include("includes/message.php");
 										</div>
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(427, $pg_mime_source_url)); ?>"> <img src="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -424,12 +424,12 @@ include("includes/message.php");
 												<div class="drop-down_2">
 													<div class="selected">
 														<div class="qtu_slt">Menge:</div>
-														<a href="#" role="button" onclick="return false;"><span>1</span></a>
+														<a title="1" href="#" role="button" onclick="return false;"><span>1</span></a>
 													</div>
 													<div class="options">
 														<ul>
 															<?php for ($i = 1; $i <= $quantity_lenght; $i++) { ?>
-																<li><a href="#" role="button" onclick="return false;" class="quantity" id="quantity_<?php print($i); ?>" data-id="<?php print($i); ?>"><?php print($i); ?></a></li>
+																<li><a href="#" role="button" onclick="return false;" class="quantity" id="quantity_<?php print($i); ?>" data-id="<?php print($i); ?>" title="<?php print($i); ?>" ><?php print($i); ?></a></li>
 															<?php } ?>
 														</ul>
 													</div>
@@ -446,7 +446,7 @@ include("includes/message.php");
 										<input type="hidden" id="ci_discount_value_<?php print($pro_id); ?>" name="ci_discount_value" value="<?php print((!empty($special_price)) ? $special_price['usp_discounted_value'] : '0'); ?>">
 										<input type="hidden" id="ci_qty_<?php print($pro_id); ?>" name="ci_qty" value="1">
 										<input type="hidden" id="ci_qty_type_<?php print($pro_id); ?>" name="ci_qty_type" value="<?php print($ci_qty_type); ?>">
-										<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="#" role="button" onclick="return false;" data-id="<?php print($pro_id); ?>">
+										<a title="In den Einkaufswagen" class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="#" role="button" onclick="return false;" data-id="<?php print($pro_id); ?>">
 											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>
 									</div>
@@ -454,7 +454,7 @@ include("includes/message.php");
 									<div class="product_shippment">
 										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
 										<div class="shippment_text">
-											<a href="#" role="button" onclick="return false;"><i class="fa fa-map-marker" aria-hidden="true"></i>
+											<a title="Lieferung an Standort aktualisieren" href="#" role="button" onclick="return false;"><i class="fa fa-map-marker" aria-hidden="true"></i>
 												<div class="location_text location_trigger"> Lieferung an Standort aktualisieren</div>
 											</a>
 											<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) { ?>
@@ -464,10 +464,10 @@ include("includes/message.php");
 										</div>
 									</div>
 									<div class="product_create_liste">
-										<div id="alert_wishlist" style="display: none;"><span id="alert_wishlist_txt"></span><a href="#" role="button" onclick="return false;" class="close" data-dismiss="alert">×</a></div>
+										<div id="alert_wishlist" style="display: none;"><span id="alert_wishlist_txt"></span><a title="close" href="#" role="button" onclick="return false;" class="close" data-dismiss="alert">×</a></div>
 										<div class="drop-down">
 											<div class="selected <?php print(isset($_SESSION["UID"]) ? 'show' : ''); ?>">
-												<a href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Auf die Liste</span></a>
+												<a title="Auf die Liste" href=" <?php print(isset($_SESSION["UID"]) ? 'javascript:void(0)' : 'login.php'); ?>"><span>Auf die Liste</span></a>
 											</div>
 											<?php if (isset($_SESSION["UID"])) { ?>
 												<div class="options">
@@ -480,7 +480,7 @@ include("includes/message.php");
 															while ($row = mysqli_fetch_object($rs)) {
 																$count++;
 														?>
-																<li><a href="#" role="button" onclick="return false;" class="addwhishlist" data-id="<?php print($row->sl_id); ?>"><?php print($row->sl_title); ?></a></li>
+																<li><a href="#" role="button" onclick="return false;" class="addwhishlist" data-id="<?php print($row->sl_id); ?>" title="<?php print($row->sl_title); ?>" ><?php print($row->sl_title); ?></a></li>
 														<?php
 															}
 														}
@@ -498,7 +498,7 @@ include("includes/message.php");
 									</style>
 									<div class="info_link_detailpage">
 										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
-											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>"><i class="fa fa-info-circle" aria-hidden="true"></i> <?php print($pg_mime_description); ?></a>
+											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description); ?>" ><i class="fa fa-info-circle" aria-hidden="true"></i> <?php print($pg_mime_description); ?></a>
 										<?php }
 										if (!empty($pro_udx_manufacturer_address)) { ?>
 											<div class="manufacturer_detail">
@@ -506,7 +506,7 @@ include("includes/message.php");
 													<p><?php print($pro_udx_manufacturer_address); ?></p>
 													<p><?php print($pro_udx_manufacturer_mail); ?></p>
 												</div>
-												<a href="javascript:void(0);"><i class="fa fa-info-circle" aria-hidden="true"></i> Herstellerinformationen </a>
+												<a href="javascript:void(0);" title="Herstellerinformationen" ><i class="fa fa-info-circle" aria-hidden="true"></i> Herstellerinformationen </a>
 											</div>
 										<?php } ?>
 									</div>
@@ -547,9 +547,9 @@ include("includes/message.php");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
-														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -612,9 +612,9 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" ><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -672,9 +672,9 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" ><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>" ></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>

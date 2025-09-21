@@ -194,7 +194,7 @@ if (isset($_REQUEST['action'])) {
                 $count = 0;
                 $cart_amount = 0;
                 //$Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
-                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_description_short, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
                 //print($Query);die();
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
@@ -239,14 +239,14 @@ if (isset($_REQUEST['action'])) {
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="' .$product_link. '"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt=""></a></div>
+                                    <div class="side_cart_pd_image"><a href="' .$product_link. '" title = "'.$row->pro_udx_seo_internetbezeichung.'" ><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
                                             <input type="number" class="qlt_number" id = "ci_qty_' . $row->ci_id . '" data-id = "' . $row->ci_id . '" value="' . $row->ci_qty . '" onkeyup="if(this.value === \'\' || parseFloat(this.value) <= 0) { this.value = 0; } else if (parseFloat(this.value) > ' . ($pq_quantity + $row->ci_qty) . ') { this.value = ' . ($pq_quantity + $row->ci_qty) . '; return false; }" min="1" max="' . $pq_quantity . '">
                                         </div>
 
-                                        <div class="side_pd_delete"><a  class = "item_deleted" data-id = "' . $row->ci_id . '" href="javascript:void(0)"><i class="fa fa-trash"></i></a></div>
+                                        <div class="side_pd_delete"><a  class = "item_deleted" data-id = "' . $row->ci_id . '" href="javascript:void(0)" title = "delete"><i class="fa fa-trash"></i></a></div>
                                     </div>
                                 </div>
                                 <script>

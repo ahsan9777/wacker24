@@ -297,7 +297,7 @@ include("includes/message.php");
 						<div class="popup_inner_container">
 							<p><strong>Dieses Produkt mit Freunden teilen</strong></p>
 							<div class="share_icon">
-								<a class="icon" id="email_href" href="">
+								<a class="icon" id="email_href" href="" title="email">
 									<i class="fa fa-envelope" aria-hidden="true"></i>
 									<p>Email</p>
 								</a>
@@ -339,8 +339,8 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="javascript:void(0)">Meine Daten</a></li>
-						<li><a href="javascript:void(0)">Meine Einkaufswagen</a></li>
+						<li><a href="javascript:void(0)" title="Meine Daten" >Meine Daten</a></li>
+						<li><a href="javascript:void(0)" title="Meine Einkaufswagen" >Meine Einkaufswagen</a></li>
 					</ul>
 				</div>
 			</div>
@@ -352,13 +352,13 @@ include("includes/message.php");
 			<div class="product_cart">
 				<div class="page_width_1480">
 					<?php if ($class != "") { ?>
-						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert">×</a></div>
+						<div class="<?php print($class); ?>"><?php print($strMSG); ?><a class="close" data-dismiss="alert" title="close">×</a></div>
 					<?php } ?>
 					<form class="product_cart_inner" name="frmCart" id="frmCart" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
 						<div class="cart_left">
 							<div class="gerenric_white_box">
 								<h2>
-									<div class="shopping_title">Einkaufswagen</div>
+									<div class="shopping_title"><h1>Einkaufswagen</h1></div>
 									<div class="cart_prise_label_row">
 										<div class="cart_prise_label">Einzelpreis</div>
 										<div class="cart_prise_label">Gesamtpreis</div>
@@ -375,7 +375,7 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -405,10 +405,10 @@ include("includes/message.php");
 									?>
 											<h3 class="cart_pd_title"> <?php print($cart_pd_title); ?> </h3>
 											<div class="cart_pd_row">
-												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($product_link); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($product_link); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
-														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>"><?php print($row->pro_description_short); ?></a></div>
+														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" ><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
@@ -448,9 +448,9 @@ include("includes/message.php");
 																		<?php } ?>
 																	</span>
 																</li>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>">Löschen</a></li>
-																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>">Teilen</a></li>
-																<li><a href="<?php print($smiller_product_url); ?>">Ähnliches Produkt</a></li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" title="Löschen" >Löschen</a></li>
+																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>" title="Teilen" >Teilen</a></li>
+																<li><a href="<?php print($smiller_product_url); ?>" title="Ähnliches Produkt" >Ähnliches Produkt</a></li>
 															</ul>
 														</div>
 													</div>
@@ -538,7 +538,7 @@ include("includes/message.php");
 															<li><?php print($delivery_instruction); ?></li>
 														<?php } ?>
 														<?php if ($_SESSION["utype_id"] != 5) { ?>
-															<li><a href="adressen" class="gerenric_btn mt_30">Lieferadresse ändern</a></li>
+															<li><a href="adressen" class="gerenric_btn mt_30" title="Lieferadresse ändern">Lieferadresse ändern</a></li>
 														<?php } ?>
 													</ul>
 												</div>
@@ -569,7 +569,7 @@ include("includes/message.php");
 													<li> <?php print($row->usa_street . " " . $row->usa_house_no); ?> </li>
 													<li><?php print($row->usa_zipcode); ?></li>
 													<li> <?php print("Telefonnummer : " . $row->usa_contactno); ?> </li>
-													<li><a href="adressen" class="gerenric_btn mt_30">Rechnungsadresse ändern</a></li>
+													<li><a href="adressen" class="gerenric_btn mt_30" title="Rechnungsadresse ändern" >Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>
 										</div>
@@ -624,7 +624,7 @@ include("includes/message.php");
 											<div class="success_message">Kaufen Sie nur noch für <b><?php print(price_format($schipping_cost_waived)); ?> €</b> ein und die <b>Kosten der Verpackungspauschale und Versandkosten entfallen.</b></div>
 										</li>
 										<li>
-											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>">Zur Kasse</a>
+											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>" title="Zur Kasse" >Zur Kasse</a>
 										</li>
 										<?php if (!isset($_SESSION["UID"])) { ?>
 											<!--<li>
@@ -635,7 +635,7 @@ include("includes/message.php");
 								</div>
 								<div class="cart_payment_method">
 									<div class="cart_box">
-										<div class="alert alert-danger payment_method_alert" style="display: none;">Bitte wählen Sie die gewünschte Zahlungsart aus<a class="close" data-dismiss="alert">×</a></div>
+										<div class="alert alert-danger payment_method_alert" style="display: none;">Bitte wählen Sie die gewünschte Zahlungsart aus<a title="close" class="close" data-dismiss="alert">×</a></div>
 										<ul>
 											<?php
 											$Query = "SELECT pm.pm_id, pm.pm_show_detail, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
