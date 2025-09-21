@@ -1159,7 +1159,7 @@ if (isset($_REQUEST['action'])) {
                                 <div class="pd_prise pbp_price_with_tex" ' . $pbp_price_with_tex_display . '>' . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . '€</div>';
                     }
                     $gerenric_product_inner .= '<div class="pd_btn">
-                                <a class="' . (($quantity_lenght > 0) ? 'add_to_card' : '') . '" href="javascript:void(0)" data-id="' . $row->pro_id . '">
+                                <a title="In den Warenkorb" class="' . (($quantity_lenght > 0) ? 'add_to_card' : '') . '" href="javascript:void(0)" data-id="' . $row->pro_id . '">
                                     <input type="hidden" id="pro_id_' . $row->pro_id . '" name="pro_id" value="' . $row->pro_id . '">
                                     <input type="hidden" id="pro_type_' . $row->pro_id . '" name="pro_type" value="' . $row->pro_type . '">
                                     <input type="hidden" id="supplier_id_' . $row->pro_id . '" name="supplier_id" value="' . $row->supplier_id . '">

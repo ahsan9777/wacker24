@@ -197,13 +197,13 @@ if (isset($_REQUEST['sortby'])) {
 										<li>
 											<div class="drop-down_2">
 												<div class="selected">
-													<a href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
+													<a href="javascript:void(0)" title="<?php print($sortby_array[$sortby]); ?>" ><span> <?php print($sortby_array[$sortby]); ?> </span></a>
 												</div>
 												<div class="options">
 													<ul>
 														<?php for ($i = 0; $i < count($sortby_array); $i++) {
 															if ($i != $sortby) { ?>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?sortby=" . $i . "&" . $qryStrURL); ?>"><?php print($sortby_array[$i]); ?></a></li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?sortby=" . $i . "&" . $qryStrURL); ?>" title="<?php print($sortby_array[$i]); ?>" ><?php print($sortby_array[$i]); ?></a></li>
 														<?php }
 														} ?>
 													</ul>
@@ -237,10 +237,10 @@ if (isset($_REQUEST['sortby'])) {
 												//}
 										?>
 												<div class="pd_card">
-													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></a></div>
+													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
-														<h3 class="detail_data_show"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" style="display:block"> <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
-														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
+														<h3 class="detail_data_show"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" style="display:block" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
+														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_description_short); ?> </a></h5>
 														<?php
 														$count = 0;
 														if ($row->pro_udx_seo_epag_id > 0) {
@@ -332,7 +332,7 @@ if (isset($_REQUEST['sortby'])) {
 															<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?>€</div>
 														<?php } ?>
 														<div class="pd_btn">
-															<a class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
+															<a title="In den Warenkorb" class="<?php print(($quantity_lenght > 0) ? 'add_to_card' : ''); ?>" href="javascript:void(0)" data-id="<?php print($row->pro_id); ?>">
 																<input type="hidden" id="pro_id_<?php print($row->pro_id); ?>" name="pro_id" value="<?php print($row->pro_id); ?>">
 																<input type="hidden" id="pro_type_<?php print($row->pro_id); ?>" name="pro_type" value="<?php print($row->pro_type); ?>">
 																<input type="hidden" id="supplier_id_<?php print($row->pro_id); ?>" name="supplier_id" value="<?php print($row->supplier_id); ?>">
