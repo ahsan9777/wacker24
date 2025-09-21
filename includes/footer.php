@@ -16,7 +16,7 @@
                             if (mysqli_num_rows($rs2) > 0) {
                                 while ($row2 = mysqli_fetch_object($rs2)) {
                             ?>
-                                    <li><a href="<?php print($row2->cnt_slug); ?>"><?php print($row2->cnt_title); ?></a></li>
+                                    <li><a title="<?php print($row2->cnt_title); ?>" href="<?php print($row2->cnt_slug); ?>"><?php print($row2->cnt_title); ?></a></li>
                             <?php
 
                                 }
@@ -31,9 +31,9 @@
             <div class="footer-col">
                 <h2>Kontakt & Anfahrt</h2>
                 <ul>
-                    <li><a href="kontakt">Kontaktformular</a></li>
-                    <li><a href="kontakt">Öffnungszeiten</a></li>
-                    <li><a href="kontakt">Anfahrt</a></li>
+                    <li><a title="Kontaktformular" href="kontakt">Kontaktformular</a></li>
+                    <li><a title="Kontaktformular" href="kontakt">Öffnungszeiten</a></li>
+                    <li><a title="Kontaktformular" href="kontakt">Anfahrt</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -64,10 +64,10 @@
             <div class="footer_btm_left">
                 <div class="social_medial">
                     <ul>
-                        <li><a href="#" role="button" onclick="return false;" aria-label="Youtube"><img src="images/youtube_icon.webp" alt=""></a></li>
-                        <li><a href="#" role="button" onclick="return false;" aria-label="Facebook"><img src="images/facebook_icon.webp" alt=""></a></li>
-                        <li><a href="#" role="button" onclick="return false;" aria-label="Twitter" ><img src="images/twitter_icon.webp" alt=""></a></li>
-                        <li><a href="#" role="button" onclick="return false;" aria-label="Instagram" ><img src="images/instagram_icon.webp" alt=""></a></li>
+                        <li><a title="Youtube" href="#" role="button" onclick="return false;" aria-label="Youtube"><img src="images/youtube_icon.webp" alt=""></a></li>
+                        <li><a title="Facebook" href="#" role="button" onclick="return false;" aria-label="Facebook"><img src="images/facebook_icon.webp" alt=""></a></li>
+                        <li><a title="Twitter" href="#" role="button" onclick="return false;" aria-label="Twitter" ><img src="images/twitter_icon.webp" alt=""></a></li>
+                        <li><a title="Instagram" href="#" role="button" onclick="return false;" aria-label="Instagram" ><img src="images/instagram_icon.webp" alt=""></a></li>
                     </ul>
                 </div>
             </div>
@@ -76,6 +76,6 @@
             </div>-->
 
         </div>
-        <div class="footer_logo"><a href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
+        <div class="footer_logo"><a title="logo" href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>
     </div>
 </footer>
