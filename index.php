@@ -225,7 +225,7 @@ include("includes/php_includes_top.php");
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a aria-hidden="true" tabindex="-1" href="unterkategorien/schulranzen">Mehr anzeigen</a></div>
+								<div class="gerenric_show_All"><a aria-hidden="true" tabindex="-1" href="unterkategorien/schulranzen" title="Schulranzen">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<?php
@@ -280,7 +280,7 @@ include("includes/php_includes_top.php");
 											?>
 										</div>
 									</div>
-									<div class="gerenric_show_All"><a aria-hidden="true" tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>">Mehr anzeigen</a></div>
+									<div class="gerenric_show_All"><a aria-hidden="true" tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
 								</div>
 						<?php
 							}
@@ -384,10 +384,10 @@ include("includes/php_includes_top.php");
 					</div>
 					<div class="gerenric_white_box">
 						<div class="hm_register">
-							<div class="full_width txt_align_center"><a aria-hidden="true" tabindex="-1" href="anmelden">
+							<div class="full_width txt_align_center"><a aria-hidden="true" tabindex="-1" href="anmelden" title="Anmelden">
 									<div class="gerenric_btn">Anmelden</div>
 								</a></div>
-							<p>Neues Konto? <a aria-hidden="true" tabindex="-1"  href="registrierung">Erstellen Sie hier.</a></p>
+							<p>Neues Konto? <a aria-hidden="true" tabindex="-1"  href="registrierung" title="Erstellen Sie hier">Erstellen Sie hier.</a></p>
 						</div>
 					</div>
 				</div>
@@ -408,15 +408,15 @@ include("includes/php_includes_top.php");
 										}
 									?>
 										<div>
-											<div class="brand_col"><a aria-hidden="true" tabindex="-1"  href="#">
-													<div class="brand_item"><img loading="lazy" src="<?php print($brand_image_href) ?>" alt="<?php print($row->brand_name) ?>" title="<?php print($row->brand_name) ?>">
+											<div class="brand_col"><a aria-hidden="true" tabindex="-1"  href="#" title="<?php print($row->brand_name) ?>">
+													<div class="brand_item"><img loading="lazy" src="<?php print($brand_image_href) ?>" alt="<?php print($row->brand_name) ?>">
 													</div>
 												</a></div>
 										</div>
 									<?php } ?>
 								</div>
 							</div>
-							<div class="brand_btn"><a aria-hidden="true" tabindex="-1" href="#">
+							<div class="brand_btn"><a aria-hidden="true" tabindex="-1" href="#" title="Alle anzeigen">
 									<div class="gerenric_btn">Alle anzeigen</div>
 								</a></div>
 						</div>
