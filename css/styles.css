@@ -7,6 +7,10 @@ p {
   text-align: left
 }
 
+.margin_10 {
+  margin: 10px 0
+}
+
 .product_cart .cart_pd_section .cart_pd_total .total_prise_text span,
 h1,
 h2,
@@ -93,6 +97,8 @@ p {
 .category_type_product .ctg_type_detail,
 .contact_page,
 .contact_table,
+.delivery_instructions,
+.delivery_instructions .delivery_toggle,
 .form_popup_content,
 .full_width,
 .gerenric_form,
@@ -180,6 +186,7 @@ a {
 .category_type_product .ctg_type_detail .ctg_type_price.price_without_tex,
 .categroy_list h2 .categroy_close_mb,
 .categroy_list ul.list_checkbox_hide a::after,
+.delivery_toggle_show,
 .drop-down .options span.value,
 .drop-down .selected span.value,
 .drop-down_2 .options span.value,
@@ -192,6 +199,7 @@ a {
 .hdr_side_cart .side_cart_pd_row .side_cart_pd_prise.price_without_tex,
 .hide,
 .pd_detail_shirt input[type=radio],
+.pd_detail_shirt ul li,
 .product_cart .cart_orderview .cart_prise_orderview ul li .cart_prise_vl.price_without_tex,
 .product_cart .cart_pd_section .cart_pd_detail .cart_pd_col2 .cart_price.price_without_tex,
 .product_cart .cart_pd_section .cart_pd_detail .cart_pd_option ul li:first-child::after,
@@ -200,6 +208,7 @@ a {
 .product_detail_page .product_detail_section1 .product_right .product_col1 .product_prise.price_without_tex,
 .product_detail_page .product_detail_section1 .product_right .product_col2 .piece_prise.price_without_tex,
 .product_detail_page .product_detail_section1 .product_right .product_col2 .product_vat.price_without_tex,
+.product_type li,
 .ui-datepicker-next span,
 .ui-datepicker-prev span {
   display: none
@@ -299,6 +308,7 @@ a {
 .drop-down_2,
 .drop-down_2 .selected,
 .header_nav_2 ul li a span,
+.manufacturer_detail,
 .position_relative {
   position: relative
 }
@@ -338,7 +348,10 @@ h3 {
 .red {
   color: #cc0f19 !important
 }
-.black{ color: #000 !important}
+
+.black {
+  color: #000 !important
+}
 
 .gerenric_btn.mt_30,
 .gerenric_form ul li.mt_30,
@@ -493,7 +506,8 @@ body.body-white {
 .tab_radio_button,
 .tab_radio_button .tab_radio_col label {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 10px;
   border-radius: 5px;
   width: 100%;
   overflow: hidden
@@ -520,7 +534,6 @@ body.body-white {
 }
 
 .tab_radio_button .tab_radio_col {
-  width: 120px;
   margin-right: 20px
 }
 
@@ -724,7 +737,7 @@ body.body-white {
   flex-wrap: wrap
 }
 
-.gerenric_product h2.pd_heading {
+.gerenric_product h1.pd_heading {
   width: 100%;
   padding: .5rem !important;
   background-image: linear-gradient(to right, #ff0000bf, #ffc106d4);
@@ -898,7 +911,8 @@ body.body-white {
 }
 
 .gerenric_product .pd_detail h5 a:hover,
-.home_page .hm_register p a:hover {
+.home_page .hm_register p a:hover,
+.info_link_detailpage a:hover {
   color: #007bff;
   text-decoration: underline
 }
@@ -929,6 +943,7 @@ body.body-white {
 
 #header_section .header_bottom .header_account ul,
 #header_section .header_top ul,
+.delivery_instructions .grnc_tabnav_content .radio_button,
 .gerenric_product .pd_detail .pd_action ul,
 .new_shopping_list_page .shopping_list_detail .shopping_list_title .shopping_list_profile {
   display: flex;
@@ -1021,6 +1036,7 @@ body.body-white {
 .grnc_tabnav_content.active,
 .header_nav_2 ul li a:hover span::after,
 .list_porduct.list_class .gerenric_product .pd_detail .pd_action,
+.manufacturer_detail:hover .popup_manufacturer_detail,
 .my_order_page .my_order_box .order_place_bar .placeser_name:hover .placeser_info,
 .product_category .pd_card:hover .pd_detail ul,
 .product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-gallery-container.active {
@@ -1101,6 +1117,7 @@ body.body-white {
   display: inline-flex
 }
 
+.delivery_instructions ul.grnc_tabnav_tabs,
 .gerenric_breadcrumb ul,
 .pd_detail_shirt ul,
 .product_cart .cart_payment_method .cart_box ul,
@@ -1323,9 +1340,9 @@ body.body-white {
   top: -6px
 }
 
+.address_form_popup,
 .create_list_popup,
 .form_popup,
-.address_form_popup,
 .location_popup,
 .popup {
   background: rgba(0, 0, 0, .7);
@@ -1430,10 +1447,10 @@ body.body-white {
   position: relative
 }
 
+.address_form_popup_trigger,
 .close,
 .create_list_trigger,
 .form_popup_trigger,
-.address_form_popup_trigger,
 .location_trigger,
 .pd_detail_shirt input[type=radio]+label span label {
   cursor: pointer
@@ -1506,6 +1523,12 @@ body.body-white {
   margin-bottom: 20px
 }
 
+.product_detail_page .product_detail_section1 .product_right .product_col1 .pd_detail_shirt ul {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border: none
+}
+
 .location_content .popup_select_box .select_input {
   width: 100%;
   height: 34px;
@@ -1545,8 +1568,8 @@ body.body-white {
   background-color: #fff
 }
 
-.form_popup>.inner_popup,
-.address_form_popup>.inner_popup {
+.address_form_popup>.inner_popup,
+.form_popup>.inner_popup {
   max-width: 600px;
   border-radius: 10px;
   background-color: #fff;
@@ -1567,8 +1590,8 @@ body.body-white {
   background-color: #232f3e
 }
 
-.form_popup_content .form_popup_heading .form_popup_close,
-.form_popup_content .form_popup_heading .address_form_popup_close {
+.form_popup_content .form_popup_heading .address_form_popup_close,
+.form_popup_content .form_popup_heading .form_popup_close {
   position: absolute;
   top: 16px;
   right: 20px;
@@ -1635,7 +1658,7 @@ body.body-white {
 }
 
 .gerenric_address .address_col {
-  width: 33.333%;
+  width: 28.333%;
   padding: 10px
 }
 
@@ -1645,7 +1668,8 @@ body.body-white {
   box-shadow: 0 0 15px rgba(0, 0, 0, .2);
   border: 1px solid rgba(0, 0, 0, .125);
   padding: 25px 15px;
-  border-radius: 10px
+  border-radius: 10px;
+  min-height: 285px
 }
 
 .gerenric_address .address_card h2 {
@@ -1661,7 +1685,9 @@ body.body-white {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px
+  gap: 10px;
+  height: 235px;
+  justify-content: space-between
 }
 
 .gerenric_address .address_card .address_detail ul li,
@@ -1669,8 +1695,7 @@ body.body-white {
   list-style-type: none;
   font-size: 15px;
   font-weight: 400;
-  color: #212529;
-  margin-bottom: 10px
+  color: #212529
 }
 
 .about_page .about_block ul li span,
@@ -1690,6 +1715,7 @@ body.body-white {
 
 #footer_register ul li a,
 .gerenric_address .address_card .address_detail .btn_address a,
+.gerenric_address .address_card .address_detail ul li a,
 .home_page .hm_register p a {
   color: #007bff
 }
@@ -1714,7 +1740,7 @@ body.body-white {
   cursor: pointer;
   border: 3px dashed rgba(0, 0, 0, .125);
   background-color: #fff;
-  height: 260px;
+  height: 278px;
   display: flex;
   align-items: center;
   justify-content: center
@@ -1734,6 +1760,10 @@ body.body-white {
   font-weight: 700;
   font-size: 18px;
   color: #000
+}
+
+.gerenric_address .address_card .address_detail ul li:last-child {
+  margin-top: 10px
 }
 
 .header_overlay {
@@ -2186,7 +2216,8 @@ body.body-white {
 }
 
 #navigation_section ul li a.nav_sale {
-  color: #ffc107;
+  color: #b12704;
+  background-color: #fff;
   font-weight: 700
 }
 
@@ -2521,7 +2552,7 @@ body.body-white {
 
 .product_cart .cart_pd_section .cart_pd_detail .cart_pd_col1,
 .product_detail_page .product_detail_section1 .product_right .product_col1 {
-  width: 70%;
+  width: 65%;
   padding-right: 20px
 }
 
@@ -2531,6 +2562,7 @@ body.body-white {
   overflow: hidden
 }
 
+.btn_show,
 .product-type-show-more {
   cursor: pointer;
   color: #cc0f19;
@@ -2540,7 +2572,7 @@ body.body-white {
 }
 
 .product_detail_page .product_detail_section1 .product_right .product_col2 {
-  width: 30%;
+  width: 35%;
   border: 1px solid #dedede;
   padding: 15px;
   z-index: 2
@@ -2744,6 +2776,30 @@ body.body-white {
   border-width: 2px
 }
 
+.info_link_detailpage {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
+.manufacturer_detail .popup_manufacturer_detail {
+  width: 250px;
+  display: none;
+  z-index: 99;
+  right: 0;
+  left: -17px;
+  top: 35px;
+  box-shadow: 0 0 9px rgba(0, 0, 0, .1);
+  position: absolute;
+  background-color: #fff;
+  border-radius: 3px;
+  padding: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal
+}
+
 .drop-down .selected a {
   background: right center no-repeat #fff;
   position: relative;
@@ -2781,7 +2837,8 @@ body.body-white {
   top: 32px;
   width: auto;
   min-width: 100%;
-  border: 1px solid #ccc
+  border: 1px solid #ccc;
+  z-index: 1
 }
 
 .drop-down .options ul li a,
@@ -3005,13 +3062,13 @@ body.body-white {
 }
 
 .gerenric_form ul li span {
-  color: #ffc107;
+  color: #ffc107
 }
 
 .gerenric_form ul li .form_left i,
 .gerenric_form ul li .form_right i {
   color: green;
-  margin-right: 8px;
+  margin-right: 8px
 }
 
 .product_cart h2 {
@@ -3179,6 +3236,7 @@ body.body-white {
   padding: 10px
 }
 
+.delivery_instructions .grnc_tabnav,
 .load-more-button,
 .product_cart .cart_delivery ul {
   margin-top: 20px
@@ -3979,7 +4037,12 @@ body.body-white {
 
 .new_shopping_list_page .shopping_list_detail .shopping_list_title .shopping_list_create {
   cursor: pointer;
-  color: #000
+  color: #000;
+  border-bottom: 1px solid #ffc107;
+  border-radius: 5px;
+  background-color: #ffc107;
+  font-weight: 700;
+  padding: 10px
 }
 
 .new_shopping_list_page .shopping_list_detail .list_image {
@@ -4365,7 +4428,7 @@ body.body-white {
   padding: 0 5px;
   top: 0;
   left: 0;
-  border: 1px solid #620613;
+  border: 2px solid #620613;
   z-index: 99;
   font-weight: 700
 }
@@ -4662,61 +4725,31 @@ body.body-white {
   border-radius: 0 4px 4px 0
 }
 
-.pd_detail_shirt ul li,
-.product_type li {
-  display: none
-}
-
-.btn_show {
-  cursor: pointer;
-  color: #cc0f19;
-  border-bottom: 1px solid #dedede;
-  margin-bottom: 20px;
-  padding-bottom: 20px
-}
-
 .product_detail_page .product_detail_section1 .product_right .product_col2 .best_nr {
   text-align: right;
   font-size: 12px;
-  color: #212529;
-}
-
-.delivery_instructions {
-  width: 100%;
-}
-
-.delivery_instructions .delivery_toggle {
-  width: 100%;
+  color: #212529
 }
 
 .delivery_instructions .delivery_toggle a {
   font-size: 14px;
   color: #007bff;
   text-decoration: underline;
-  cursor: pointer;
-}
-
-.delivery_instructions .grnc_tabnav {
-  margin-top: 20px;
-}
-
-.delivery_instructions ul.grnc_tabnav_tabs {
-  display: flex;
-  flex-wrap: wrap;
+  cursor: pointer
 }
 
 .delivery_instructions ul.grnc_tabnav_tabs li {
   width: auto;
   margin: 4px;
-  display: inline-flex;
+  display: inline-flex
 }
 
 .delivery_instructions ul.grnc_tabnav_tabs li a {
-  margin-bottom: 0px;
+  margin-bottom: 0;
   color: #000 !important;
   border-radius: 5px;
   border: 1px solid #ccc;
-  background-color: #fff;
+  background-color: #fff
 }
 
 .delivery_instructions .grnc_tabnav_tabs>.active>a,
@@ -4725,36 +4758,76 @@ body.body-white {
   border: 1px solid #ffc107;
   text-decoration: none;
   background-color: #ffc107;
-  font-weight: normal;
+  font-weight: 400
 }
 
 .delivery_instructions .grnc_tabnav_content {
   border: 1px solid #ccc;
-  padding: 20px;
+  padding: 20px
 }
 
 .delivery_instructions .grnc_tabnav_content h4 {
-  margin: -20px -20px;
+  margin: -20px;
   color: #000;
   font-size: 17px;
   padding: 20px;
-  background-color: #ccc;
+  background-color: #ccc
 }
 
 .delivery_instructions .grnc_tabnav_content ul {
-  margin-top: 40px;
-}
-
-.delivery_instructions .grnc_tabnav_content .radio_button {
-  display: flex;
-  align-items: center;
+  margin-top: 40px
 }
 
 .delivery_instructions .grnc_tabnav_content .radio_button span:first-child {
   margin-right: 10px;
-  margin-top: 3px;
+  margin-top: 3px
 }
 
-.delivery_toggle_show {
-  display: none;
+.share_icon {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center
+}
+
+.share_icon .icon i {
+  color: #000;
+  font-size: 30px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 30px
+}
+
+.share_icon .icon p {
+  text-align: center;
+  font-weight: 500
+}
+
+.link_copy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 10px
+}
+
+.link_copy .link_section {
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}
+
+.link_copy .btn_link_copy {
+  color: #000;
+  border: 1px solid #ddd;
+  padding: 10px 5px;
+  border-radius: 10px;
+  width: 200px
+}
+
+.product_cart .cart_pd_section .cart_pd_title {
+  margin: 0;
+  padding: 10px 0
 }

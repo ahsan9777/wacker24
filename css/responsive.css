@@ -441,6 +441,10 @@
     .list_porduct .gerenric_product .pd_card {
         width: calc(50% - 4px)
     }
+
+    .popup .popup_inner {
+        width: 90%
+    }
 }
 
 @media screen and (max-width:650px) and (min-width:240px) {
