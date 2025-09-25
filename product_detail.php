@@ -168,7 +168,7 @@ include("includes/message.php");
 			"@type": "Product",
 			"name": "<?php print($pro_udx_seo_internetbezeichung); ?>",
 			"image": "<?php print($pg_mime_source_url); ?>",
-			"description": "<?php print($pro_description_long); ?>",
+			"description": "<?php print(addslashes($pro_description_long)); ?>",
 			"sku": "<?php print($pro_manufacture_aid); ?>",
 			"mpn": "<?php print($pro_manufacture_aid); ?>",
 			"brand": {
@@ -210,16 +210,16 @@ include("includes/message.php");
 						}
 					}
 				}
-			]
-			},
+			],
 			"hasMerchantReturnPolicy": {
 				"@type": "MerchantReturnPolicy",
-				"returnPolicyCategory": "<?php print($GLOBALS['siteURL']."datenschutz"); ?>",
+				"returnPolicyCategory": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>",
 				"applicableCountry": "DE",
-				"merchantReturnDays": 0,
-				"returnMethod": "<?php print($GLOBALS['siteURL']."datenschutz"); ?>",
-				"returnFees": "<?php print($GLOBALS['siteURL']."datenschutz"); ?>",
-				"merchantReturnLink": "<?php print($GLOBALS['siteURL']."datenschutz"); ?>"
+				"merchantReturnDays": 14,
+				"returnMethod": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>",
+				"returnFees": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>",
+				"merchantReturnLink": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>"
+			}
 			}
 		}
 	</script>
