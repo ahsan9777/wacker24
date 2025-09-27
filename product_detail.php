@@ -8,7 +8,7 @@ if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
 }
 //print_r($_REQUEST);die();
 $params_supplier_id = returnName("supplier_id", "products", "pro_udx_seo_internetbezeichung_params_de", $_REQUEST['product_params']);
-$Query = "SELECT pro.*, pbp.pbp_id, manf.manf_name, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, pro.pro_ean, manf.manf_name, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
 //print($Query);//die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -25,6 +25,8 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
 	$pro_description_short = $row->pro_description_short;
 	$pro_description_long = $row->pro_description_long;
+	$pro_description_long_schema = addslashes(str_replace(array("-"), "", strip_tags($pro_description_long)));
+	$pro_description_long_schema = trim(preg_replace('/\s+/', ' ', $pro_description_long_schema));
 	$pro_ean = $row->pro_ean;
 	$pro_buyer_id = $row->pro_buyer_id;
 	$pro_manufacture_aid = $row->pro_manufacture_aid;
@@ -53,6 +55,7 @@ if (mysqli_num_rows($rs) > 0) {
 	//print_r($sub_group_ids);
 	$cat_id_one = $sub_group_ids[1];
 	$meta_keywords = implode(", ", returnNameArray("pk_title", "products_keyword", "supplier_id", $supplier_id));
+	$meta_description = $pro_udx_seo_internetbezeichung;
 	$pq_physical_quantity = returnName("pq_physical_quantity", "products_quantity", "supplier_id", $supplier_id);
 	$cat_title_one = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_one);
 	$cat_one_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_one);
@@ -162,15 +165,16 @@ include("includes/message.php");
 <html lang="de">
 
 <head>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>">
 	<script type="application/ld+json">
 		{
 			"@context": "https://schema.org/",
 			"@type": "Product",
 			"name": "<?php print($pro_udx_seo_internetbezeichung); ?>",
 			"image": "<?php print($pg_mime_source_url); ?>",
-			"description": "<?php print(addslashes($pro_description_long)); ?>",
-			"sku": "<?php print($pro_manufacture_aid); ?>",
-			"mpn": "<?php print($pro_manufacture_aid); ?>",
+			"description": "<?php print($pro_description_long_schema); ?>",
+			"sku": "<?php print($pro_ean); ?>",
+			"mpn": "<?php print($pro_ean); ?>",
 			"brand": {
 				"@type": "Brand",
 				"name": "<?php print($manf_name); ?>"
@@ -209,17 +213,21 @@ include("includes/message.php");
 							"unitCode": "d"
 						}
 					}
+				}],
+				"hasMerchantReturnPolicy": {
+					"@type": "MerchantReturnPolicy",
+					"returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+					"applicableCountry": "DE",
+					"merchantReturnDays": 14,
+					"returnMethod": "ReturnByMail",
+					"returnFees": "ReturnShippingFees",
+					"returnShippingFeesAmount": {
+						"@type": "MonetaryAmount",
+						"value": "<?php print(config_courier_fix_charges); ?>",
+						"currency": "EUR"
+					},
+					"merchantReturnLink": "<?php print($GLOBALS['siteURL'] . "widerrufsbelehrung"); ?>"
 				}
-			],
-			"hasMerchantReturnPolicy": {
-				"@type": "MerchantReturnPolicy",
-				"returnPolicyCategory": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>",
-				"applicableCountry": "DE",
-				"merchantReturnDays": 14,
-				"returnMethod": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>",
-				"returnFees": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>",
-				"merchantReturnLink": "<?php print($GLOBALS['siteURL']."widerrufsbelehrung"); ?>"
-			}
 			}
 		}
 	</script>
