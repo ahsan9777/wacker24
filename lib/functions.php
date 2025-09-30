@@ -2706,16 +2706,16 @@ function get_delivery_charges($total)
 		if (isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4) {
 			$delivery_charges = array(
 				"packing" => 4,
-				"shipping" => 2.99,
-				"tex" => 1.33,
-				"total" => 6.99
+				"shipping" => 3.99,
+				"tex" => 1.52,
+				"total" => 7.99
 			);
 		} else {
 			$delivery_charges = array(
 				"packing" => 4.76,
-				"shipping" => 3.56,
+				"shipping" => 4.75,
 				"tex" => 0,
-				"total" => 8.32
+				"total" => 9.51
 			);
 		}
 	} else {

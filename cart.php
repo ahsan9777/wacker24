@@ -425,7 +425,7 @@ include("includes/message.php");
 																$pq_quantity = $pq_physical_quantity - $row->ci_qty;
 															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
-																$quantity_txt = "kurfristig lieferbar";
+																$quantity_txt = "Stück kurfristig lieferbar";
 																$quantity_txt_color = "style = 'color: green;'";
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$pq_quantity = $pq_quantity - $row->ci_qty;
@@ -481,8 +481,8 @@ include("includes/message.php");
 									if ($count > 0) {
 										if ($delivery_charges['total'] > 0) {
 											$display = "";
-											$shipping_one = 6.99;
-											$shipping_two = 7;
+											$shipping_one = 7.99;
+											$shipping_two = 8;
 											$delivery_charges_shipping = $delivery_charges['shipping'];
 											$delivery_charges_packing = $delivery_charges['packing'];
 											$delivery_charges_total = $delivery_charges['total'];
