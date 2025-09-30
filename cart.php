@@ -419,14 +419,14 @@ include("includes/message.php");
 															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
 															$pq_physical_quantity = $row1->pq_physical_quantity;
 															$pq_status = $row1->pq_status;
-															$quantity_txt = "pieces immediately available";
+															$quantity_txt = "Stück sofort verfügbar";
 															$quantity_txt_color = "";
 															if ($row->ci_type > 0) {
 																$pq_quantity = $pq_physical_quantity - $row->ci_qty;
 															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
-																$quantity_txt = "Stück bestellt";
-																$quantity_txt_color = "style = 'color: orange;'";
+																$quantity_txt = "kurfristig lieferbar";
+																$quantity_txt_color = "style = 'color: green;'";
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$pq_quantity = $pq_quantity - $row->ci_qty;
 															}

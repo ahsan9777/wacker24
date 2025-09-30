@@ -1125,19 +1125,19 @@ if (isset($_REQUEST['action'])) {
 															}*/
                         if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
                             $quantity_lenght = $pq_upcomming_quantity;
-                            $gerenric_product_inner .= '<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>';
+                            $gerenric_product_inner .= '<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' kurfristig lieferbar</div>';
                         } elseif ($pq_quantity > 0 && $pq_status == 'false') {
                             $quantity_lenght = $pq_quantity;
                             $gerenric_product_inner .= '<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>';
                         } elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
-                            $gerenric_product_inner .= '<div class="product_order_title red">Auf Anfrage</div>';
+                            $gerenric_product_inner .= '<div class="product_order_title">Auf Anfrage</div>';
                         }
                     } else {
                         if ($pro_type > 0) {
                             $quantity_lenght = 1;
                             $ci_qty_type = 0;
                         } else {
-                            $gerenric_product_inner .= '<div class="product_order_title red">Auf Anfrage</div>';
+                            $gerenric_product_inner .= '<div class="product_order_title">Auf Anfrage</div>';
                         }
                     }
                     $gerenric_product_inner .= '<div class="pd_rating">

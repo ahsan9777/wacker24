@@ -35,8 +35,8 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li id="switch_click_text"><?php print($switch_click_text); ?></li>
         </ul>
         <ul>
-            <li><a href="Über uns" title="über-uns">Über Wacker 24</a></li>
-            <li><a href="Kontaktformular" title="kontakt">Kontakt</a></li>
+            <li><a href="über-uns" title="Über uns">Über Wacker 24</a></li>
+            <li><a href="kontakt" title="Kontaktformular">Kontakt</a></li>
             <li>
                 <div class="header_language">
                     <div class="language_select"><a href="#" role="button" onclick="return false;" title="DE"><img src="images/gm_icon.png" alt="DE"> Germany</a></div>

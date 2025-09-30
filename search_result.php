@@ -297,19 +297,19 @@ if (isset($_REQUEST['sortby'])) {
 															}*/
 															if ($pq_quantity == 0 && $pq_status == 'true') {
 																$quantity_lenght = $pq_upcomming_quantity;
-																print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
+																print('<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' kurfristig lieferbar</div>');
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$quantity_lenght = $pq_quantity;
 																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
 															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
-																print('<div class="product_order_title red">Auf Anfrage</div>');
+																print('<div class="product_order_title">Auf Anfrage</div>');
 															}
 														} else {
 															if ($row->pro_type > 0) {
 																$ci_qty_type = 0;
 																$quantity_lenght = 1;
 															} else {
-																print('<div class="product_order_title red">Auf Anfrage</div>');
+																print('<div class="product_order_title">Auf Anfrage</div>');
 															}
 														}
 														?>
