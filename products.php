@@ -16,6 +16,10 @@ if (isset($_GET['data'])) {
     echo "pro_type: " . $params['pro_type'] . "<br>";
     echo "lf_group_id: " . $params['lf_group_id'][0] . "<br>";
 }*/
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+$requestUri = $_SERVER['REQUEST_URI'];
+$url = $protocol . $host . $requestUri;
 //print_r($_REQUEST);die();
 $lf_action_type = 1;
 $lf_group_id = 0;
@@ -86,6 +90,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 <html lang="de">
 
 <head>
+	<link rel="canonical" href="<?php print($url); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

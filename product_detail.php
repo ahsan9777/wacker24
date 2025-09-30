@@ -686,7 +686,7 @@ include("includes/message.php");
 							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
-								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '".$supplier_id."' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 								//print($Query);die();
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								if (mysqli_num_rows($rs) > 0) {
@@ -750,7 +750,7 @@ include("includes/message.php");
 							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
-								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '".$supplier_id."' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 								//print($Query);die();
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								if (mysqli_num_rows($rs) > 0) {

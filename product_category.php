@@ -32,6 +32,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 <html lang="de">
 
 <head>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] ."unterkategorien/".$_REQUEST['cat_params_one']); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

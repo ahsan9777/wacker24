@@ -6,6 +6,7 @@ $page = 1;
 <html>
 
 <head>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL']."verkäufe-angebote"); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 
