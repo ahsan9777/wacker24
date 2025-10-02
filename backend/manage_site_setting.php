@@ -158,7 +158,7 @@ include("includes/messages.php");
 
                             <div class="col-md-6 col-12 mt-3">
                                 <label for="config_courier_fix_charges">Courier Fixed Charges</label>
-                                <input type="number" class="input_style" name="config_courier_fix_charges" id="config_courier_fix_charges" value="<?php print($config_courier_fix_charges); ?>" placeholder="Courier Fixed Charges">
+                                <input type="number" class="input_style" name="config_courier_fix_charges" id="config_courier_fix_charges" step="any" value="<?php print($config_courier_fix_charges); ?>" placeholder="Courier Fixed Charges">
                             </div>
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="config_authorization_bearer">Authorization Bearer</label>
