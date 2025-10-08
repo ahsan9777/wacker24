@@ -142,6 +142,39 @@ if (!$special_price) {
 }
 //print_r($special_price);
 //}
+$price_schema = '
+	"price": "'.$pbp_price_amount.'", 
+    "priceValidUntil": "2099-12-31",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "'.$quantity_status.'",
+';
+if (!empty($special_price)) {
+	$Query_special_price = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
+	$rs_special_price = mysqli_query($GLOBALS['conn'], $Query_special_price);
+	if (mysqli_num_rows($rs_special_price) > 0) {
+		$row_special_price = mysqli_fetch_object($rs_special_price);
+		$discounted_price = 0;
+		$discounted_price = discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row_special_price->pbp_special_price_amount > 0) ? $row_special_price->pbp_special_price_amount : $row_special_price->pbp_price_amount), $special_price['usp_discounted_value'], $row_special_price->pbp_tax);
+
+		$price_schema = '
+			"price": "'.$discounted_price.'", 
+			"priceValidUntil": "2099-12-31",
+			"itemCondition": "https://schema.org/NewCondition",
+			"availability": "'.$quantity_status.'",
+
+			"priceSpecification": {
+			"@type": "PriceSpecification",
+			"priceCurrency": "EUR",
+			"price": "'.$pbp_price_amount.'",
+			"name": "Original price",
+			"eligibleQuantity": {
+				"@type": "QuantitativeValue",
+				"value": 1
+			}
+			},
+		';
+	}
+}
 
 if (isset($_REQUEST['btnAdd_to_list'])) {
 	//print_r($_REQUEST);die();
@@ -165,7 +198,7 @@ include("includes/message.php");
 <html lang="de">
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . $_REQUEST['product_params']); ?>">
 	<script type="application/ld+json">
 		{
 			"@context": "https://schema.org/",
@@ -181,12 +214,9 @@ include("includes/message.php");
 			},
 			"offers": {
 				"@type": "Offer",
-				"url": "<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>",
+				"url": "<?php print($GLOBALS['siteURL_main'] . $_REQUEST['product_params']); ?>",
 				"priceCurrency": "EUR",
-				"price": "<?php print($pbp_price_amount); ?>",
-				"priceValidUntil": "2099-12-31",
-				"itemCondition": "https://schema.org/NewCondition",
-				"availability": "<?php print($quantity_status); ?>",
+				<?php print($price_schema);?>
 				"shippingDetails": [{
 					"@type": "OfferShippingDetails",
 					"shippingRate": {
@@ -686,7 +716,7 @@ include("includes/message.php");
 							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
-								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '".$supplier_id."' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '" . $supplier_id . "' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 								//print($Query);die();
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								if (mysqli_num_rows($rs) > 0) {
@@ -750,7 +780,7 @@ include("includes/message.php");
 							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
-								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '".$supplier_id."' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
+								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '" . $supplier_id . "' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
 								//print($Query);die();
 								$rs = mysqli_query($GLOBALS['conn'], $Query);
 								if (mysqli_num_rows($rs) > 0) {

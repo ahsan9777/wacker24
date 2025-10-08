@@ -33,10 +33,13 @@ if (mysqli_num_rows($rs) > 0) {
         if($row->pro_custom_add > 0){
             $pg_mime_source_url = $GLOBALS['siteURL'].$row->pg_mime_source_url;
         }
+        $pro_description_long = "";
+        $pro_description_long = addslashes(str_replace(array("-"), "", strip_tags($row->pro_description_long)));
+	    $pro_description_long = trim(preg_replace('/\s+/', ' ', $pro_description_long));
         $product = array(
                 'id' => $row->supplier_id,
                 'title' => $row->pro_description_short,
-                'description' => $row->pro_description_long,
+                'description' => $pro_description_long,
                 'link' => $GLOBALS['siteURL'].$row->pro_udx_seo_internetbezeichung_params_de,
                 'image_link' => $pg_mime_source_url,
                 'price' => $row->pbp_price_amount.' EUR',
@@ -46,6 +49,7 @@ if (mysqli_num_rows($rs) > 0) {
                 'mpn' => $row->pro_manufacture_aid,
                 'product_type' => $product_type,
                 'availability' => (($row->pq_quantity > 0) ? 'in stock' : 'out of stock'),
+                'quantity' => (($row->pq_quantity > 0) ? $row->pq_quantity : 0),
                 'shipping' => [
                     'country' => 'DE',
                     'service' => 'Standard',
@@ -83,7 +87,7 @@ foreach ($products as $product) {
     $item->appendChild($doc->createElement('g:id', $product['id']));
     
     // Use createTextNode for content that might contain special characters
-    foreach (['title', 'description', 'link', 'image_link', 'price', 'sale_price', 'brand', 'condition', 'gtin', 'mpn', 'product_type', 'availability'] as $tag) {
+    foreach (['title', 'description', 'link', 'image_link', 'price', 'sale_price', 'brand', 'condition', 'gtin', 'mpn', 'product_type', 'availability', 'quantity'] as $tag) {
         if ($tag === 'sale_price' && (empty($product[$tag]) || trim($product[$tag]) === '')) {
             continue;
         }

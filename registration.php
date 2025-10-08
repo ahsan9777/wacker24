@@ -112,7 +112,7 @@ include("includes/message.php");
 	<meta charset="utf-8">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL']."registrierung"); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main']."registrierung"); ?>">
 	<base href="<?php print($GLOBALS['siteURL']); ?>">
 	<title>Registrierung</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />

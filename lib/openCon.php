@@ -12,6 +12,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbUserName = "root";
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "wacker24";
+	$GLOBALS['siteURL_main'] = "http://localhost/";
 	$GLOBALS['siteURL'] = "http://localhost:82/wacker24/";
 	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 } elseif ($_SERVER['HTTP_HOST'] == 'localhost') {
@@ -20,6 +21,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbUserName = "root";
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "wacker24";
+	$GLOBALS['siteURL_main'] = "http://localhost/";
 	$GLOBALS['siteURL'] = "http://localhost/wacker24/";
 	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 } else {
@@ -31,6 +33,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbPassword = "MU8s)gKIeQyD";
 	$GLOBALS['siteName'] = "Wacker24";
 	//$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
+	$GLOBALS['siteURL_main'] = "https://www.wacker-buerocenter.de/";
 	$GLOBALS['siteURL'] = "https://www.wackersystems.com/";
 	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 }
