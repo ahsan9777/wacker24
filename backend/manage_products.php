@@ -587,12 +587,12 @@ include("includes/messages.php");
                                                 <td>
                                                     <div class="popup_container">
                                                         <div class="container__img-holder">
-                                                            <img src="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>">
+                                                            <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>">
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td><?php print($row->supplier_id); ?></td>
-                                                <td><?php print($row->pro_description_short); ?></td>
+                                                <td><?php print($row->pro_udx_seo_internetbezeichung); ?></td>
                                                 <td>
                                                     <div class="table-box-body">
                                                         <input type="hidden" name="pro_id" id="pro_id_<?php print($counter); ?>" value="<?php print($row->pro_id); ?>">

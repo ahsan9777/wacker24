@@ -38,7 +38,7 @@ if (mysqli_num_rows($rs) > 0) {
 	    $pro_description_long = trim(preg_replace('/\s+/', ' ', $pro_description_long));
         $product = array(
                 'id' => $row->supplier_id,
-                'title' => $row->pro_description_short,
+                'title' => $row->pro_udx_seo_internetbezeichung,
                 'description' => $pro_description_long,
                 'link' => $GLOBALS['siteURL'].$row->pro_udx_seo_internetbezeichung_params_de,
                 'image_link' => $pg_mime_source_url,
@@ -48,6 +48,7 @@ if (mysqli_num_rows($rs) > 0) {
                 'gtin' => $row->pro_ean,
                 'mpn' => $row->pro_manufacture_aid,
                 'product_type' => $product_type,
+                'store_code' => "17413492330710547225",
                 'availability' => (($row->pq_quantity > 0) ? 'in stock' : 'out of stock'),
                 'quantity' => (($row->pq_quantity > 0) ? $row->pq_quantity : 0),
                 'shipping' => [
@@ -76,7 +77,7 @@ $doc->appendChild($rss);
 $channel = $doc->createElement('channel');
 $rss->appendChild($channel);
 
-$channel->appendChild($doc->createElement('title', config_sitename));
+$channel->appendChild($doc->createElement('title', $GLOBALS['siteName']));
 $channel->appendChild($doc->createElement('link', $GLOBALS['siteURL']));
 $channel->appendChild($doc->createElement('description', config_metades));
 
@@ -87,7 +88,7 @@ foreach ($products as $product) {
     $item->appendChild($doc->createElement('g:id', $product['id']));
     
     // Use createTextNode for content that might contain special characters
-    foreach (['title', 'description', 'link', 'image_link', 'price', 'sale_price', 'brand', 'condition', 'gtin', 'mpn', 'product_type', 'availability', 'quantity'] as $tag) {
+    foreach (['title', 'description', 'link', 'image_link', 'price', 'sale_price', 'brand', 'condition', 'gtin', 'mpn', 'store_code', 'product_type', 'availability', 'quantity'] as $tag) {
         if ($tag === 'sale_price' && (empty($product[$tag]) || trim($product[$tag]) === '')) {
             continue;
         }

@@ -25,7 +25,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
 	$pro_description_short = $row->pro_description_short;
 	$pro_description_long = $row->pro_description_long;
-	$pro_description_long_schema = addslashes(str_replace(array("-"), "", strip_tags($pro_description_long)));
+	$pro_description_long_schema = addslashes(str_replace(array("-", '"'), "", strip_tags($pro_description_long)));
 	$pro_description_long_schema = trim(preg_replace('/\s+/', ' ', $pro_description_long_schema));
 	$pro_ean = $row->pro_ean;
 	$pro_buyer_id = $row->pro_buyer_id;
@@ -203,7 +203,7 @@ include("includes/message.php");
 		{
 			"@context": "https://schema.org/",
 			"@type": "Product",
-			"name": "<?php print($pro_udx_seo_internetbezeichung); ?>",
+			"name": "<?php print(str_replace(array('"'), "",$pro_udx_seo_internetbezeichung)); ?>",
 			"image": "<?php print($pg_mime_source_url); ?>",
 			"description": "<?php print($pro_description_long_schema); ?>",
 			"sku": "<?php print($pro_ean); ?>",
