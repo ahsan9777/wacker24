@@ -1,14 +1,2 @@
 User-agent: *
-
-Disallow: /backend/
-Disallow: /css/
-Disallow: /cssbk/
-Disallow: /images/
-Disallow: /includes/
-Disallow: /files/
-Disallow: /js/
-Disallow: /lib/
-Disallow: /template/
-Disallow: /vendor/
-
-Sitemap: https://www.wacker24.de/sitemap.xml
+Disallow: /
