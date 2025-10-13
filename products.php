@@ -19,7 +19,7 @@ if (isset($_GET['data'])) {
 //$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 //$host = $_SERVER['HTTP_HOST'];
 //$requestUri = $_SERVER['REQUEST_URI'];
-$requestUri =rtrim( $GLOBALS['siteURL_main'], "/").$_SERVER['REQUEST_URI'];
+$requestUri =rtrim( $GLOBALS['siteURL'], "/").$_SERVER['REQUEST_URI'];
 //$url = $protocol . $host . $requestUri;
 //print_r($_REQUEST);die();
 $lf_action_type = 1;
@@ -220,8 +220,8 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 									</div>
 									<div class="txt_align_center" id="btn_load" style="display: none;">
 										<input type="hidden" name="gerenric_product_inner_page" id="gerenric_product_inner_page" value="0">
-										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></div>
-										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
+										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" ></i></div>
+										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" ></i></div>
 									</div>
 									<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
 										<div></div>

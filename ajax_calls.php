@@ -1176,8 +1176,8 @@ if (isset($_REQUEST['action'])) {
                 }
                 /*$gerenric_product_inner .= '<div class="txt_align_center" id="btn_load" style="display: none;">
 										<input type="hidden" name="gerenric_product_inner_page" id="gerenric_product_inner_page" value="'.($_REQUEST['start'] + 1).'">
-										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></div>
-										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
+										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" ></i></div>
+										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" ></i></div>
 									</div>';*/
                 $gerenric_product_inner .= '
                 <script>

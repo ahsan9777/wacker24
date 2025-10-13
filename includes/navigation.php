@@ -40,7 +40,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li>
                 <div class="header_language">
                     <div class="language_select"><a href="#" role="button" onclick="return false;" title="DE"><img src="images/gm_icon.png" alt="DE"> Germany</a></div>
-                    <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" aria-hidden="true"></i></a></div>
+                    <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" ></i></a></div>
                     <ul>
                         <li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
                         <li><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany</a></li>
@@ -52,7 +52,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
     <div class="header_sticky">
         <div class="header_bottom" <?php print($background_color_two); ?>>
             <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>" title="logo" aria-label="logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>
-            <div class="header_location location_trigger"><i class="fa fa-map-marker" aria-hidden="true"></i> <span> <?php print((isset($_SESSION['ort']) && !empty($_SESSION['ort']))? $_SESSION['ort'] : 'Versand Germany'); ?> </span></div>
+            <div class="header_location location_trigger"><i class="fa fa-map-marker" ></i> <span> <?php print((isset($_SESSION['ort']) && !empty($_SESSION['ort']))? $_SESSION['ort'] : 'Versand Germany'); ?> </span></div>
             <form class="header_search" name="frm_search" id="frm_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
                     <select class="header_select_slt" name="level_one" id="level_one" aria-label="Category">
@@ -67,10 +67,10 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <div class="header_account">
                 <ul>
                     <li><a href="termine" title="termine">
-                            <div class="appointment_booking"><i class="fa fa-check-square-o" aria-hidden="true"></i> Terminbuchung</div>
+                            <div class="appointment_booking"><i class="fa fa-check-square-o" ></i> Terminbuchung</div>
                         </a></li>
                     <li>
-                        <div class="hdr_icon"><i class="fa fa-user" aria-hidden="true"></i> </div>
+                        <div class="hdr_icon"><i class="fa fa-user" ></i> </div>
                         <div class="hdr_text">
                             <a href="#" role="button" onclick="return false;"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
                             <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
@@ -101,11 +101,11 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         </div>
                     </li>
                     <li>
-                        <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart" aria-hidden="true"></i> </div>
+                        <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart" ></i> </div>
                         <!--<div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>-->
                         <div class="hdr_text"><a title="einkaufswagen" href="<?php print(isset($_SESSION['header_quantity']) ? 'einkaufswagen' : '#'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
                         <div class="hdr_side_cart">
-                            <div class="side_bar_close"><i class="fa fa-times" aria-hidden="true"></i></div>
+                            <div class="side_bar_close"><i class="fa fa-times" ></i></div>
                             <div class="side_cart_subtotal">
                                 <div class="subtotal_title">Zwischensumme</div>
                                 <div class="subtotal_prise" id="cart_amount">0,00 €</div>

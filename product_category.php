@@ -32,7 +32,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 <html lang="de">
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] ."unterkategorien/".$_REQUEST['cat_params_one']); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] ."unterkategorien/".$_REQUEST['cat_params_one']); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 
@@ -77,8 +77,8 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 								</div>
 								<div class="txt_align_center" id="btn_load" style="display: none;">
 									<input type="hidden" name="category_type_inner_page" id="category_type_inner_page" value="0">
-									<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" aria-hidden="true"></i></div>
-									<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" aria-hidden="true"></i></div>
+									<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" ></i></div>
+									<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" ></i></div>
 								</div>
 								<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
 									<div></div>

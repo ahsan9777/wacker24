@@ -198,7 +198,7 @@ include("includes/message.php");
 <html lang="de">
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . $_REQUEST['product_params']); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>">
 	<script type="application/ld+json">
 		{
 			"@context": "https://schema.org/",
@@ -214,7 +214,7 @@ include("includes/message.php");
 			},
 			"offers": {
 				"@type": "Offer",
-				"url": "<?php print($GLOBALS['siteURL_main'] . $_REQUEST['product_params']); ?>",
+				"url": "<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>",
 				"priceCurrency": "EUR",
 				<?php print($price_schema);?>
 				"shippingDetails": [{
@@ -584,7 +584,7 @@ include("includes/message.php");
 									<div class="product_shippment">
 										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
 										<div class="shippment_text">
-											<a title="Lieferung an Standort aktualisieren" href="#" role="button" onclick="return false;"><i class="fa fa-map-marker" aria-hidden="true"></i>
+											<a title="Lieferung an Standort aktualisieren" href="#" role="button" onclick="return false;"><i class="fa fa-map-marker" ></i>
 												<div class="location_text location_trigger"> Lieferung an Standort aktualisieren</div>
 											</a>
 											<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) { ?>
@@ -628,7 +628,7 @@ include("includes/message.php");
 									</style>
 									<div class="info_link_detailpage">
 										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
-											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description); ?>"><i class="fa fa-info-circle" aria-hidden="true"></i> <?php print($pg_mime_description); ?></a>
+											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description); ?>"><i class="fa fa-info-circle" ></i> <?php print($pg_mime_description); ?></a>
 										<?php }
 										if (!empty($pro_udx_manufacturer_address)) { ?>
 											<div class="manufacturer_detail">
@@ -636,7 +636,7 @@ include("includes/message.php");
 													<p><?php print($pro_udx_manufacturer_address); ?></p>
 													<p><?php print($pro_udx_manufacturer_mail); ?></p>
 												</div>
-												<a href="javascript:void(0);" title="Herstellerinformationen"><i class="fa fa-info-circle" aria-hidden="true"></i> Herstellerinformationen </a>
+												<a href="javascript:void(0);" title="Herstellerinformationen"><i class="fa fa-info-circle" ></i> Herstellerinformationen </a>
 											</div>
 										<?php } ?>
 									</div>
