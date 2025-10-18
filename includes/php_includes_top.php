@@ -21,6 +21,7 @@ $qryStrURL = "";
 $search_keyword = "";
 $cat_id = "";
 $special_price = array();
+$page_title = "";
 $meta_keywords = "";
 $meta_description = "";
 

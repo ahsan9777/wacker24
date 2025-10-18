@@ -22,6 +22,7 @@ if (mysqli_num_rows($rs) > 0) {
 	}
 	$supplier_id = $row->supplier_id;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
+	$page_title = $pro_udx_seo_internetbezeichung;
 	$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
 	$pro_description_short = $row->pro_description_short;
 	$pro_description_long = $row->pro_description_long;
@@ -148,12 +149,18 @@ $price_schema = '
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "'.$quantity_status.'",
 ';
+$discounted_price = 0;
+$shipping_price_free = 0;
+$returnShippingFeesAmount = '"returnShippingFeesAmount": {
+						"@type": "MonetaryAmount",
+						"value": "'.config_courier_fix_charges.'",
+						"currency": "EUR"
+					},';
 if (!empty($special_price)) {
 	$Query_special_price = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
 	$rs_special_price = mysqli_query($GLOBALS['conn'], $Query_special_price);
 	if (mysqli_num_rows($rs_special_price) > 0) {
 		$row_special_price = mysqli_fetch_object($rs_special_price);
-		$discounted_price = 0;
 		$discounted_price = discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row_special_price->pbp_special_price_amount > 0) ? $row_special_price->pbp_special_price_amount : $row_special_price->pbp_price_amount), $special_price['usp_discounted_value'], $row_special_price->pbp_tax);
 
 		$price_schema = '
@@ -175,6 +182,21 @@ if (!empty($special_price)) {
 		';
 	}
 }
+
+if($discounted_price > 0){
+	//echo "if: ";
+	if($discounted_price >= config_condition_courier_amount){
+		$shipping_price_free = 1;
+		$returnShippingFeesAmount = "";
+	}
+} else{
+	//echo "else: ";
+	if($pbp_price_amount >= config_condition_courier_amount){
+		$shipping_price_free = 1;
+		$returnShippingFeesAmount = "";
+	}
+}
+//echo $shipping_price_free;
 
 if (isset($_REQUEST['btnAdd_to_list'])) {
 	//print_r($_REQUEST);die();
@@ -219,9 +241,11 @@ include("includes/message.php");
 				<?php print($price_schema);?>
 				"shippingDetails": [{
 					"@type": "OfferShippingDetails",
+					<?php print( ($shipping_price_free > 0) ? '"name": "Free shipping",' : '' ) ?>
+					<?php print( ($shipping_price_free > 0) ? '"shippingLabel": "Free delivery",' : '' ) ?>
 					"shippingRate": {
 						"@type": "MonetaryAmount",
-						"value": "<?php print(config_courier_fix_charges); ?>",
+						"value": "<?php print(($shipping_price_free > 0) ? 0.00 : config_courier_fix_charges); ?>",
 						"currency": "EUR"
 					},
 					"shippingDestination": {
@@ -250,12 +274,8 @@ include("includes/message.php");
 					"applicableCountry": "DE",
 					"merchantReturnDays": 14,
 					"returnMethod": "ReturnByMail",
-					"returnFees": "ReturnShippingFees",
-					"returnShippingFeesAmount": {
-						"@type": "MonetaryAmount",
-						"value": "<?php print(config_courier_fix_charges); ?>",
-						"currency": "EUR"
-					},
+					"returnFees": <?php print( ($shipping_price_free > 0) ? '"FreeReturn"' : '"ReturnShippingFees"' ) ?>,
+					<?php print($returnShippingFeesAmount); ?>
 					"merchantReturnLink": "<?php print($GLOBALS['siteURL'] . "widerrufsbelehrung"); ?>"
 				}
 			}

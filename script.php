@@ -444,5 +444,22 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record updated: " . $counter);
             }
             break;
+
+        case 'schulranzen_pro_udx_seo_internetbezeichung_params_de':
+            print("schulranzen_pro_udx_seo_internetbezeichung_params_de");die();
+            $counter = 0;
+            $Query = "SELECT * FROM products WHERE pro_type = '20' ORDER BY pro_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $pro_id = $row->pro_id;
+                    $pro_udx_seo_internetbezeichung_params_de = url_clean(trim($row->pro_description_short));
+                    
+                    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_udx_seo_internetbezeichung_params_de = '" . dbStr($pro_udx_seo_internetbezeichung_params_de) . "' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record updated: " . $counter);
+            }
+            break;
     }
 }

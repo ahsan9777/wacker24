@@ -56,7 +56,7 @@ if (isset($_REQUEST['action'])) {
                 if(isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0){
                     $pro_custom_add = "pro_custom_add = '1' AND";
                 }
-                $where .= " WHERE ".$pro_custom_add." pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+                $where .= " WHERE ".$pro_custom_add." pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
             }
             $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
             //print($Query);
