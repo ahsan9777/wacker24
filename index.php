@@ -73,7 +73,7 @@ include("includes/php_includes_top.php");
 													<div class="pd_ctg_card">
 														<a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>">
 															<div class="pd_ctg_image">
-																<img src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>">
+																<img src="<?php print(get_image_link(75, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>">
 																<span class="pd_tag"><b>-</b> <?php print((($special_price['usp_price_type'] > 0) ? price_format($special_price['usp_discounted_value']).'€' : $special_price['usp_discounted_value'].'%')); ?></span>
 															</div>
 															<div class="pd_ctg_title price_without_tex" <?php print($price_without_tex_display); ?>>
@@ -109,7 +109,7 @@ include("includes/php_includes_top.php");
 											?>
 													<div class="pd_ctg_card">
 														<a href="artikelarten/<?php print($row2->cat_params); ?>" title="artikelarten/<?php print($row2->cat_params); ?>">
-															<div class="pd_ctg_image"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source)); ?>" alt="artikelarten/<?php print($row2->cat_params); ?>"></div>
+															<div class="pd_ctg_image"><img loading="lazy" src="<?php print(get_image_link(75, $row2->pg_mime_source)); ?>" alt="artikelarten/<?php print($row2->cat_params); ?>"></div>
 															<div class="pd_ctg_title"> <?php print($row2->cat_title); ?> </div>
 														</a>
 													</div>
@@ -143,7 +143,7 @@ include("includes/php_includes_top.php");
 												<div class="pd_card">
 													<div class="pd_image">
 														<a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
-															<img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
+															<img loading="lazy" src="<?php print(get_image_link(75, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
 															<?php
 															if($TotalRecords > 80){
 																print('<span class="pd_tag">Best Seller</span>');
@@ -196,7 +196,7 @@ include("includes/php_includes_top.php");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
+													<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
 														<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
@@ -250,7 +250,7 @@ include("includes/php_includes_top.php");
 											?>
 													<div>
 														<div class="pd_card">
-															<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
+															<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
 															<div class="pd_detail">
 																<h5><a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"> <?php print($row2->pro_description_short); ?> </a></h5>
 																<div class="pd_rating">
@@ -305,7 +305,7 @@ include("includes/php_includes_top.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
 													<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
@@ -351,7 +351,7 @@ include("includes/php_includes_top.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
 													<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">

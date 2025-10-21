@@ -286,56 +286,6 @@ include("includes/message.php");
 
 <body style="background-color: #fff;">
 	<div id="container" align="center">
-
-		<!--LOCATION_POPUP_START-->
-		<?php include("includes/popup.php"); ?>
-		<!--LOCATION_POPUP_END-->
-		<!--CREATE_LIST_POPUP_START-->
-		<div class="create_list_popup list_popup">
-			<div class="inner_popup">
-				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-					<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
-					</div>
-					<div class="create_list_content_inner">
-						<p>Listenname (erforderlich)</p>
-						<input type="text" class="input_list" required name="sl_title" id="sl_title">
-						<div class="create_button">
-							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">hinzufügen</button>
-							<div class="gerenric_btn popup_close">Abbrechen</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		<!--CREATE_LIST_POPUP_END-->
-		<!--CREATE_LIST_POPUP_START-->
-		<div class="popup versand_popup">
-			<div class="popup_inner wd_60">
-				<div class="popup_content">
-					<div class="popup_heading">Versand & Verpackung <div class="popup_close"><i class="fa fa-times"></i></div>
-					</div>
-					<div class="popup_content_inner">
-						<div class="popup_inner_container">
-							<p>Lieferland: <strong>Deutschland</strong></p>
-							<h2 class="green">Versandkostenfrei <span>ab 66,39 € zzgl. MwSt. (79,00 € inkl. MwSt.) Warenwert*</span></h2>
-							<p>unter 66,39 € (79,00 € inkl. MwSt.) Warenwert: 4,76 € Verpackungspauschale + 4,75 € Versandkosten (je Auftrag)</p>
-							<div class="underline"></div>
-							<p>Folgende Kosten können optional je nach Auftrag anfallen:</p>
-							<p>Maximalgewicht:</p>
-							<p>Bis zu 31 kg: Sendungen, die das maximale Gewicht oder die maximale Größe unserer Versanddienstleister überschreiten, müssen gegebenenfalls per Spedition oder als Sperrgut verschickt werden. Die Lieferzeit kann sich bei schweren oder sperrigen Sendungen verlängern.</p>
-							<p>Inselzuschlag:</p>
-							<p>Für die Lieferung auf deutsche Inseln fallen 15,70 € pro Paket (max. 31 kg) an.</p>
-							<p>Dies gilt für folgende PLZ: 18565, 25849, 25859, 25863, 25869, 25938, 25939, 25946, 25980, 25981, 25982, 25983, 25984, 25985, 25986, 25987, 25988, 25989, 25990, 25992, 25991, 25993, 25994, 25995, 25996, 25997, 25998, 25999, 26465, 26474, 26486, 26548, 26571, 26579, 26757, 27498, 27499</p>
-							<p>Versanddienstleister:</p>
-							<p>Ihre Bestellung wird im Standardversand mit DHL versendet. </p>
-							<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--CREATE_LIST_POPUP_END-->
-
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
@@ -388,7 +338,7 @@ include("includes/message.php");
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
 												?>
-														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>"> <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
+														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>"> <img src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
 												<?php
 													}
 												}
@@ -397,7 +347,7 @@ include("includes/message.php");
 										</div>
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(160, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(160, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -697,7 +647,7 @@ include("includes/message.php");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
 														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 														<div class="pd_rating">
@@ -762,7 +712,7 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
 													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
@@ -822,7 +772,7 @@ include("includes/message.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
 													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_description_short); ?> </a></h5>
 													<div class="pd_rating">
@@ -865,6 +815,54 @@ include("includes/message.php");
 
 	</div>
 
+	<!--LOCATION_POPUP_START-->
+		<?php include("includes/popup.php"); ?>
+		<!--LOCATION_POPUP_END-->
+		<!--CREATE_LIST_POPUP_START-->
+		<div class="create_list_popup list_popup">
+			<div class="inner_popup">
+				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+					<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="create_list_content_inner">
+						<p>Listenname (erforderlich)</p>
+						<input type="text" class="input_list" required name="sl_title" id="sl_title">
+						<div class="create_button">
+							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">hinzufügen</button>
+							<div class="gerenric_btn popup_close">Abbrechen</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!--CREATE_LIST_POPUP_END-->
+		<!--CREATE_LIST_POPUP_START-->
+		<div class="popup versand_popup">
+			<div class="popup_inner wd_60">
+				<div class="popup_content">
+					<div class="popup_heading">Versand & Verpackung <div class="popup_close"><i class="fa fa-times"></i></div>
+					</div>
+					<div class="popup_content_inner">
+						<div class="popup_inner_container">
+							<p>Lieferland: <strong>Deutschland</strong></p>
+							<h2 class="green">Versandkostenfrei <span>ab 66,39 € zzgl. MwSt. (79,00 € inkl. MwSt.) Warenwert*</span></h2>
+							<p>unter 66,39 € (79,00 € inkl. MwSt.) Warenwert: 4,76 € Verpackungspauschale + 4,75 € Versandkosten (je Auftrag)</p>
+							<div class="underline"></div>
+							<p>Folgende Kosten können optional je nach Auftrag anfallen:</p>
+							<p>Maximalgewicht:</p>
+							<p>Bis zu 31 kg: Sendungen, die das maximale Gewicht oder die maximale Größe unserer Versanddienstleister überschreiten, müssen gegebenenfalls per Spedition oder als Sperrgut verschickt werden. Die Lieferzeit kann sich bei schweren oder sperrigen Sendungen verlängern.</p>
+							<p>Inselzuschlag:</p>
+							<p>Für die Lieferung auf deutsche Inseln fallen 15,70 € pro Paket (max. 31 kg) an.</p>
+							<p>Dies gilt für folgende PLZ: 18565, 25849, 25859, 25863, 25869, 25938, 25939, 25946, 25980, 25981, 25982, 25983, 25984, 25985, 25986, 25987, 25988, 25989, 25990, 25992, 25991, 25993, 25994, 25995, 25996, 25997, 25998, 25999, 26465, 26474, 26486, 26548, 26571, 26579, 26757, 27498, 27499</p>
+							<p>Versanddienstleister:</p>
+							<p>Ihre Bestellung wird im Standardversand mit DHL versendet. </p>
+							<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--CREATE_LIST_POPUP_END-->
 </body>
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">

@@ -719,7 +719,7 @@ if (isset($_REQUEST['action'])) {
                     $category_type_inner .= '<div class="ctg_type_col">
 												<a href="' . $cat_link . '" title = "' . $row->sub_cat_title . '">
 													<div class="ctg_type_card">
-														<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(100, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
+														<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(75, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
 														<div class="ctg_type_detail">
 															<div class="ctg_type_title">' . $row->sub_cat_title . '</div>
 															<div class="ctg_type_price price_without_tex" ' . $price_without_tex_display . ' > ab ' . price_format(($pbp_price_without_tax > 0) ? $pbp_price_without_tax : 0.00) . ' €</div>
@@ -1071,7 +1071,7 @@ if (isset($_REQUEST['action'])) {
                     }
                     //print_r($special_price);die();
                     $gerenric_product_inner .= '<div class="pd_card">
-                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
+                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'"><img src="' . get_image_link(75, $row->pg_mime_source_url) . '" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
                         <div class="pd_detail">
                             <h5><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'" > ' . $row->pro_description_short . ' </a></h5>';
                     $count = 0;

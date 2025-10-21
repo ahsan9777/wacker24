@@ -155,7 +155,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 													<div class="ctg_type_col">
 													<a href="' . $cat_link . '" title = "' . $row->sub_cat_title . '">
 														<div class="ctg_type_card">
-															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(160, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
+															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(75, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
 															<div class="ctg_type_detail">
 																<div class="ctg_type_title">' . $row->sub_cat_title . '</div>
 																<div class="ctg_type_price price_without_tex" ' . $price_without_tex_display . ' > ab ' . price_format(($pbp_price_without_tax > 0) ? $pbp_price_without_tax : 0.00) . ' €</div>
