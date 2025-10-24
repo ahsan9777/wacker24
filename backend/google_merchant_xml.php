@@ -48,13 +48,11 @@ if (mysqli_num_rows($rs) > 0) {
                 'gtin' => $row->pro_ean,
                 'mpn' => $row->pro_manufacture_aid,
                 'product_type' => $product_type,
-                'store_code' => "17413492330710547225",
                 'availability' => (($row->pq_quantity > 0) ? 'in stock' : 'out of stock'),
-                'quantity' => (($row->pq_quantity > 0) ? $row->pq_quantity : 0),
                 'shipping' => [
                     'country' => 'DE',
                     'service' => 'Standard',
-                    'price' => '3.56 EUR',
+                    'price' => '4.75 EUR',
                 ]
                 );
 
