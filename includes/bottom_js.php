@@ -119,13 +119,13 @@
 </script>
 <script>
     $(() => {
-
+        <?php if($page_bottom_js == 1) { ?>
         //On Scroll Functionality
         $(window).scroll(() => {
             var windowTop = $(window).scrollTop();
             windowTop > 10 ? $('.header_sticky').addClass('headersticky') : $('.header_sticky').removeClass('headersticky');
         });
-
+        <?php } ?>
         //Click Logo To Scroll To Top
         $('#scroll_top').on('click', () => {
             $('html,body').animate({

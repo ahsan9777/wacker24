@@ -306,15 +306,15 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'manufacture_paramer':
-            print("manufacture_paramer");
-            die();
+            print("manufacture_paramer");die();
             $counter = 0;
             $Query = "SELECT * FROM manufacture ORDER BY manf_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $manf_id = $row->manf_id;
-                    $manf_name_params = url_clean($row->manf_name);
+                    $manf_name_params = convertGermanChars($row->manf_name);
+                    $manf_name_params = url_clean($manf_name_params);
 
                     mysqli_query($GLOBALS['conn'], "UPDATE manufacture SET manf_name_params = '" . dbStr(trim($manf_name_params)) . "' WHERE manf_id = '" . $manf_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
@@ -431,31 +431,32 @@ if (isset($_REQUEST['action'])) {
         case 'pro_udx_seo_internetbezeichung_params_de':
             print("pro_udx_seo_internetbezeichung_params_de");die();
             $counter = 0;
-            $Query = "SELECT * FROM products ORDER BY pro_id ASC";
+            $Query = "SELECT * FROM products WHERE pro_id != '20841' ORDER BY pro_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $pro_id = $row->pro_id;
-                    $pro_udx_seo_internetbezeichung_params_de = url_clean(trim($row->pro_udx_seo_internetbezeichung));
-                    
-                    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_udx_seo_internetbezeichung_params_de = '" . dbStr($pro_udx_seo_internetbezeichung_params_de) . "' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $pro_udx_seo_internetbezeichung_params_de = url_clean(convertGermanChars(trim($row->pro_udx_seo_internetbezeichung)));
+                    $update_query = "UPDATE products SET pro_udx_seo_internetbezeichung_params_de = '" . dbStr($pro_udx_seo_internetbezeichung_params_de) . "' WHERE pro_id = '" . $pro_id . "' ";
+                    //print($update_query."<br>");
+                    mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
                     $counter++;
                 }
                 print("Total no of record updated: " . $counter);
             }
             break;
 
-        case 'schulranzen_pro_udx_seo_internetbezeichung_params_de':
-            print("schulranzen_pro_udx_seo_internetbezeichung_params_de");die();
+        case 'schulranzen_pro_udx_seo_epag_title_params_de':
+            print("schulranzen_pro_udx_seo_epag_title_params_de");die();
             $counter = 0;
             $Query = "SELECT * FROM products WHERE pro_type = '20' ORDER BY pro_id ASC";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             if (mysqli_num_rows($rs) > 0) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $pro_id = $row->pro_id;
-                    $pro_udx_seo_internetbezeichung_params_de = url_clean(trim($row->pro_description_short));
+                    $pro_udx_seo_epag_title_params_de = url_clean(convertGermanChars(trim($row->pro_description_short)));
                     
-                    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_udx_seo_internetbezeichung_params_de = '" . dbStr($pro_udx_seo_internetbezeichung_params_de) . "' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_udx_seo_epag_title_params_de = '" . dbStr($pro_udx_seo_epag_title_params_de) . "' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record updated: " . $counter);
