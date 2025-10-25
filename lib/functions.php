@@ -257,7 +257,7 @@ function url_clean($string)
 	/*$string = str_replace(" ", "-", strtolower(trim($string)));
 	$string = str_replace(array(',','’'), "", $string);*/
 	$string = str_replace(" ", "-", strtolower(trim($string)));
-	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":", '"'), "", $string);
+	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":", '"', "<", ">", "(", ")", "!", "*", "@", "~", "+", "×", "³", "²", "¹", "®", "™", "©"), "", $string);
 	$string = str_replace(array("/", "+", "--"), "-", $string);
 	return $string;
 }
@@ -3341,19 +3341,32 @@ function formatDateGerman($datetime, $format = 'j F, Y')
 	return str_replace($en, $de, $formatted);
 }
 
+function convertGermanChars($string) {
+    $map = [
+        'ä' => 'ae',
+		'ö' => 'oe',
+		'ü' => 'ue',
+        'Ä' => 'Ae',
+		'Ö' => 'Oe',
+		'Ü' => 'Ue',
+        'ß' => 'ss'
+    ];
+    return strtr($string, $map);
+}
+
 function product_detail_url($supplier_id, $ci_type = 0){
-	$pro_udx_seo_internetbezeichung_params_de = "javascript: void();";
-	$Query = "SELECT pro_id, pro_udx_seo_internetbezeichung_params_de FROM products WHERE supplier_id = '".$supplier_id."' ORDER BY pro_id ASC";
+	$product_detail_url = "javascript: void();";
+	$Query = "SELECT pro_id, supplier_id, pro_udx_seo_epag_title_params_de FROM products WHERE supplier_id = '".$supplier_id."' ORDER BY pro_id ASC";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
 		//$pro_udx_seo_internetbezeichung_params_de = "product/".$row->pro_udx_seo_internetbezeichung_params_de;
-		$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
+		$product_detail_url = $row->pro_udx_seo_epag_title_params_de."-".$supplier_id;
 		if ($ci_type > 0) {
 			//$pro_udx_seo_internetbezeichung_params_de = "product/1/".$row->pro_udx_seo_internetbezeichung_params_de;
-			$pro_udx_seo_internetbezeichung_params_de = "1/".$row->pro_udx_seo_internetbezeichung_params_de;
+			$product_detail_url = "1/".$row->pro_udx_seo_epag_title_params_de."-".$supplier_id;
 		}
 
 	}
-	return $pro_udx_seo_internetbezeichung_params_de;
+	return $product_detail_url;
 }

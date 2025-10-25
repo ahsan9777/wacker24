@@ -737,15 +737,18 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'lf_group_id_inner':
+            //print_r($_REQUEST);die();
             $retValue = array();
             $lf_group_id_inner = "";
             $lf_action_type = $_REQUEST['lf_action_type'];
             $pro_type = isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0;
             $leve_id = $_REQUEST['leve_id'];
             $level_check = $_REQUEST['level_check'];
-
+            $manf_id = isset($_REQUEST['manf_id']) ? $_REQUEST['manf_id'] : 0;
             $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
-            if ($pro_type == 20) {
+            if ($manf_id > 0) {
+                $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY cat.cat_orderby ASC";
+            } elseif ($pro_type == 20) {
                 $level_check = $leve_id;
                 $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '20' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.cat_orderby ASC ";
             } else {
@@ -764,7 +767,25 @@ if (isset($_REQUEST['action'])) {
                     </li>';
                 }
             }
-            if ($lf_action_type == 1 && strlen($leve_id) > 2) {
+            if ( $manf_id > 0) {
+                $lf_group_id_inner .= '
+                <script>
+                    $(".lf_group_id").on("click", function() {
+                        $("#gerenric_product_inner_page").val(0);
+                        $("#gerenric_product_inner").html("");
+                        $(".lf_manf_id").attr("checked", false);
+                        $(".lf_pf_fvalue").attr("checked", false);
+                        var lf_group_id = [];
+                        $(".lf_group_id:checked").each(function() {
+                            lf_group_id.push($(this).val());
+                        });
+                        //console.log("Selected values: " + lf_group_id.join(", "));
+                        lf_pf_fvalue_inner(lf_group_id.join(", "));
+                        gerenric_product_inner(lf_group_id.join(", "));
+                    });
+                </script>
+                ';
+            } elseif ( $lf_action_type == 1 && strlen($leve_id) > 2 ) {
                 $lf_group_id_inner .= '
                 <script>
                     $(".lf_group_id").on("click", function() {
@@ -893,16 +914,22 @@ if (isset($_REQUEST['action'])) {
             if (isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) {
                 $leve_id = $_REQUEST['lf_group_id'];
             }
-
+            $manf_id = isset($_REQUEST['manf_id']) ? $_REQUEST['manf_id'] : 0;
             $counter = 0;
-            $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (" . $leve_id . ") ORDER BY csf.csf_orderby ASC";
+            if($manf_id > 0){
+                $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY csf.csf_orderby ASC";
+            } else {
+                $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (" . $leve_id . ") ORDER BY csf.csf_orderby ASC";
+            }
             //print_r($Query1);die();
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
             if (mysqli_num_rows($rs) > 0) {
                 while ($rw1 = mysqli_fetch_object($rs1)) {
                     $counter++;
                     //$Query2 = "";
-                    if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id']))) {
+                    if($manf_id > 0){
+                        $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm  WHERE cm.manf_id = '" . $manf_id . "') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
+                    } elseif ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id']))) {
                         $products_featureWhere = "";
                         $products_featureWhere .= " WHERE cm.cat_id IN (" . $leve_id . ")";
 
@@ -914,7 +941,7 @@ if (isset($_REQUEST['action'])) {
                         //$Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                         $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM category_map_subgroups AS cm WHERE cm.subgroup_id='" . $leve_id . "') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     }
-                    //print($Query2);die();
+                    print($Query2);die();
                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query2));
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     $rw2 = mysqli_fetch_object($rs2);
@@ -986,6 +1013,7 @@ if (isset($_REQUEST['action'])) {
             $gerenric_product_inner  = "";
             $pro_type = $_REQUEST['pro_type'];
             $level_two = isset($_REQUEST['level_two']) ? $_REQUEST['level_two'] : 0;
+            $manf_id = isset($_REQUEST['manf_id']) ? $_REQUEST['manf_id'] : 0;
             $whereclause = $_REQUEST['whereclause'];
             $price_without_tex_display = $_REQUEST['price_without_tex_display'];
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
@@ -1043,7 +1071,11 @@ if (isset($_REQUEST['action'])) {
                 }
             }
             $total_count = 0;
-            $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' " . $order_by . "";
+            if($manf_id > 0){
+                $Query = "SELECT * FROM vu_category_map AS cm WHERE cm.manf_id = '".$manf_id."' ".$whereclause." " . $order_by . "";
+            } else {
+                $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' " . $order_by . "";
+            }
             //print($Query);die();
             $counter = $start;
 

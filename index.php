@@ -416,7 +416,7 @@ include("includes/php_includes_top.php");
 									<?php } ?>
 								</div>
 							</div>
-							<div class="brand_btn"><a  tabindex="-1" href="#" title="Alle anzeigen">
+							<div class="brand_btn"><a  tabindex="-1" href="marken" title="Alle anzeigen">
 									<div class="gerenric_btn">Alle anzeigen</div>
 								</a></div>
 						</div>
