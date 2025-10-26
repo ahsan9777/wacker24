@@ -446,6 +446,24 @@ if (isset($_REQUEST['action'])) {
             }
             break;
 
+        case 'pro_custom_add_pro_udx_seo_epag_title_params_de':
+            print("pro_custom_add_pro_udx_seo_epag_title_params_de");die();
+            $counter = 0;
+            $Query = "SELECT * FROM products WHERE pro_custom_add = '1' ORDER BY pro_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $pro_id = $row->pro_id;
+                    $pro_udx_seo_epag_title_params_de = url_clean(convertGermanChars(trim($row->pro_description_short)));
+                    $update_query = "UPDATE products SET pro_udx_seo_epag_title_params_de = '" . dbStr($pro_udx_seo_epag_title_params_de) . "' WHERE pro_id = '" . $pro_id . "' ";
+                    //print($update_query."<br>");
+                    mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
+                    $counter++;
+                }
+                print("Total no of record updated: " . $counter);
+            }
+            break;
+
         case 'schulranzen_pro_udx_seo_epag_title_params_de':
             print("schulranzen_pro_udx_seo_epag_title_params_de");die();
             $counter = 0;
@@ -460,6 +478,24 @@ if (isset($_REQUEST['action'])) {
                     $counter++;
                 }
                 print("Total no of record updated: " . $counter);
+            }
+            break;
+
+        case 'category_paramer':
+            print("category_paramer");die();
+            $counter = 0;
+            $Query = "SELECT * FROM category ORDER BY cat_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $cat_id = $row->cat_id;
+                    $cat_params_de = convertGermanChars($row->cat_title_de);
+                    $cat_params_de = url_clean($cat_params_de);
+
+                    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_params_de = '" . dbStr(trim($cat_params_de)) . "' WHERE cat_id = '" . $cat_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record added: " . $counter);
             }
             break;
     }

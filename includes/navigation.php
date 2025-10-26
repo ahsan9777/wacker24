@@ -136,7 +136,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 }
                 ?>
                 <!--<li><a href="unterkategorien/schulranzen">Schulranzen</a></li>-->
-                <li><a title="verkäufe-angebote" href="verkäufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
+                <li><a title="verkäufe-angebote" href="verkaeufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
                 <div class="nav_submenu_logo"><a title="logo" href="index.php"><img src="images/logo.png" alt="logo"></a>

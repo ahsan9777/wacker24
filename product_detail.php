@@ -124,12 +124,13 @@ if (mysqli_num_rows($rs) > 0) {
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else {
 	$product_params = explode("/", $_REQUEST['product_params']);
-	$pro_status = returnName("pro_status", "products", "supplier_id", $product_params[1]);
+	$pro_status = returnName("pro_status", "products", "pro_udx_seo_internetbezeichung_params_de", $product_params[0]);
+	$product_params_supplier_id = returnName("supplier_id", "products", "pro_udx_seo_internetbezeichung_params_de", $product_params[0]);
 	if ($pro_status > 0) {
-		$pro_udx_seo_internetbezeichung_params_de = returnName("pro_udx_seo_internetbezeichung_params_de", "products", "supplier_id", $product_params[1]);
-		header("Location: " . $GLOBALS['siteURL'] . $pro_udx_seo_internetbezeichung_params_de);
+		$pro_udx_seo_epag_title_params_de = returnName("pro_udx_seo_epag_title_params_de", "products", "supplier_id", $product_params_supplier_id);
+		header("Location: " . $GLOBALS['siteURL'] . $pro_udx_seo_epag_title_params_de."-".$product_params_supplier_id);
 	} else {
-		header("Location: " . $GLOBALS['siteURL'] . "nicht-verfügbar");
+		header("Location: " . $GLOBALS['siteURL'] . "nicht-verfuegbar");
 	}
 }
 
