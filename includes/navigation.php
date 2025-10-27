@@ -39,7 +39,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li><a href="kontakt" title="Kontaktformular">Kontakt</a></li>
             <li>
                 <div class="header_language">
-                    <div class="language_select"><a href="#" role="button" onclick="return false;" title="DE"><img src="images/gm_icon.png" alt="DE"> Germany</a></div>
+                    <div class="language_select"><a href="#" role="button" onclick="return false;" title="DE"><img src="images/gm_icon.webp" alt="DE"> Germany</a></div>
                     <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" ></i></a></div>
                     <ul>
                         <li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>

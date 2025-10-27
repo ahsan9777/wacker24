@@ -152,6 +152,8 @@ $price_schema = '
     "itemCondition": "https://schema.org/NewCondition",
     "availability": "'.$quantity_status.'",
 ';
+$versand_txt_color = "";
+$versand_txt = "Versand";
 $discounted_price = 0;
 $shipping_price_free = 0;
 $returnShippingFeesAmount = '"returnShippingFeesAmount": {
@@ -191,12 +193,16 @@ if($discounted_price > 0){
 	if($discounted_price >= config_condition_courier_amount){
 		$shipping_price_free = 1;
 		$returnShippingFeesAmount = "";
+		$versand_txt_color = "green";
+		$versand_txt = "Versandkostenfrei";
 	}
 } else{
 	//echo "else: ";
 	if($pbp_price_amount >= config_condition_courier_amount){
 		$shipping_price_free = 1;
 		$returnShippingFeesAmount = "";
+		$versand_txt_color = "green";
+		$versand_txt = "Versandkostenfrei";
 	}
 }
 //echo $shipping_price_free;
@@ -468,8 +474,8 @@ include("includes/message.php");
 											<div class="main_staffel_price pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><span><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?> €</span></div>
 										<?php } ?>
 										<div class="main_staffel_price_quantity"><?php print(($row->pbp_lower_bound > 1) ? 'Staffelpreis (ab ' . $row->pbp_lower_bound . ' Stück)' : "Sonderpreis"); ?> </div>
-										<div class="product_vat txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>exkl. MwSt + <span class="versand_trigger">Versand</span></div>
-										<div class="product_vat txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>inkl. MwSt + <span class="versand_trigger">Versand</span></div>
+										<div class="product_vat txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>exkl. MwSt + <span class="versand_trigger <?php print($versand_txt_color); ?>"><?php print($versand_txt); ?></span></div>
+										<div class="product_vat txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>inkl. MwSt + <span class="versand_trigger <?php print($versand_txt_color); ?>"><?php print($versand_txt); ?></span></div>
 										<?php
 									}
 									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM `products_bundle_price` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound ASC";

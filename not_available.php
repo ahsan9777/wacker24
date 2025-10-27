@@ -27,7 +27,7 @@ $page = 1;
 						<p>👋 Hallo!</p>
 						<p>🛍️ Alle unsere Produkte sind vorrätig.</p>
 						<p>⚙️ Aufgrund einiger Systemaktualisierungen werden sie momentan möglicherweise als „nicht verfügbar“ angezeigt.</p>
-						<p> <strong>🔎 Bitte suchen Sie die Artikel direkt im Shop</strong> – vielen Dank für Ihre Geduld! 💛</p>
+						<p> <strong>🔎 Bitte suchen Sie die Artikel direkt im Shop</strong> – vielen Dank für Ihre verständnis! 💛</p>
 					</div>
 				</div>
 			</div>

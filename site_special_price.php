@@ -126,7 +126,7 @@ $page = 1;
 											<ul class="pagination" style="margin: 0px;">
 												<?php
 												//$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
-												$pageList = $p->pageList($_GET['page'], "verkäufe-angebote", $pages, '');
+												$pageList = $p->pageList($_GET['page'], "verkaeufe-angebote", $pages, '');
 												print($pageList);
 												?>
 											</ul>
