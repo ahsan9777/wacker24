@@ -58,9 +58,8 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-	<title></title>
+	<?php include("includes/html_header.php"); ?>
 </head>
-<?php include("includes/html_header.php"); ?>
 <script>
 	$(function() {
 		$(".category_type_product .ctg_type_col").slice(0, 5).show();

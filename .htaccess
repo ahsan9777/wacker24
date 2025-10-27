@@ -79,6 +79,9 @@ RewriteRule ^artikelarten/(.*)?$ products.php?level_two=$1 [L]
 RewriteRule ^marken/(.*)?$ manufacture_products.php?manf_name_params=$1 [L]
 RewriteRule ^marken? manufacture.php [L]
 
+RewriteRule ^tint-toner/(.*)?$ manufacture_tinte_toner_products.php?manf_name_params=$1 [L]
+RewriteRule ^tint-toner? manufacture_tinte_toner.php [L]
+
 #RewriteRule ^product/([0-9]+)/([A-Za-z0-9]+)/(.*)?$ product_detail.php?ci_type=$1&supplier_id=$2 [L]
 #RewriteRule ^product/([A-Za-z0-9]+)/(.*)/([0-9]+)?$ product_detail.php?supplier_id=$1&op=$3 [L]
 #RewriteRule ^product/([A-Za-z0-9]+)/(.*)?$ product_detail.php?supplier_id=$1 [L]

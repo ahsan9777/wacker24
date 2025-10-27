@@ -746,8 +746,14 @@ if (isset($_REQUEST['action'])) {
             $level_check = $_REQUEST['level_check'];
             $manf_id = isset($_REQUEST['manf_id']) ? $_REQUEST['manf_id'] : 0;
             $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
+            $input_type = "checkbox";
             if ($manf_id > 0) {
-                $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY cat.cat_orderby ASC";
+                if($leve_id > 0){
+                    $input_type = "radio";
+                    $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE  cat.parent_id = '".$leve_id."'  ORDER BY cat.cat_orderby ASC";
+                } else {
+                    $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE  cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY cat.cat_orderby ASC";
+                }
             } elseif ($pro_type == 20) {
                 $level_check = $leve_id;
                 $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE cat.parent_id = '20' AND EXISTS (SELECT 1 FROM vu_category_map AS cm WHERE " . $left_filter_cat_WhereQuery . " ) ORDER BY cat.cat_orderby ASC ";
@@ -761,7 +767,7 @@ if (isset($_REQUEST['action'])) {
                     $lf_group_id_inner .= '<li>
                         <label class="gerenric_checkbox">
                            ' . $row->cat_title . '
-                            <input type="checkbox" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '" ' . (($level_check == $row->group_id) ? "checked" : "") . '>
+                            <input type="'.$input_type.'" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '" ' . (($level_check == $row->group_id) ? "checked" : "") . '>
                             <span class="checkmark"></span>
                         </label>
                     </li>';
@@ -917,7 +923,11 @@ if (isset($_REQUEST['action'])) {
             $manf_id = isset($_REQUEST['manf_id']) ? $_REQUEST['manf_id'] : 0;
             $counter = 0;
             if($manf_id > 0){
-                $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY csf.csf_orderby ASC";
+                if($leve_id == 701){
+                    $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id = '70100' ORDER BY csf.csf_orderby ASC";
+                } else {
+                    $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY csf.csf_orderby ASC";
+                }
             } else {
                 $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (" . $leve_id . ") ORDER BY csf.csf_orderby ASC";
             }
@@ -941,7 +951,7 @@ if (isset($_REQUEST['action'])) {
                         //$Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('" . $leve_id . "', cm.sub_group_ids)) GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                         $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM category_map_subgroups AS cm WHERE cm.subgroup_id='" . $leve_id . "') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     }
-                    print($Query2);die();
+                    //print($Query2);die();
                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query2));
                     $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                     $rw2 = mysqli_fetch_object($rs2);

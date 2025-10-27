@@ -1,6 +1,13 @@
 <?php
 include("includes/php_includes_top.php");
 
+if(isset($leve_id)  && $leve_id > 0){
+	$leve_id = $leve_id;
+	$level_check = $level_check;
+} else {
+	$leve_id = 0;
+	$level_check = 0;
+}
 $lf_action_type = 1;
 $lf_group_id = 0;
 $pro_type = (isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0);
@@ -50,7 +57,11 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 									<div class="category-slider">
 										<?php
 										//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-										$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id )  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+										if($level_check > 0){
+											$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.group_id = '".$level_check."'  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+										} else {
+											$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id )  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+										}
 										//print($Query);die();
 										$rs = mysqli_query($GLOBALS['conn'], $Query);
 										if (mysqli_num_rows($rs) > 0) {
@@ -203,7 +214,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			$(".drop-down_2 .options ul").hide();
 	});
 
-	<?php if (!isset($_REQUEST['level_three'])) { ?>
+	<?php if($leve_id == 0){ ?>
 		$(window).load(function() {
 			gerenric_product_inner();
 		});
@@ -407,9 +418,9 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		//setTimeout(function() {
 		let lf_action_type = 1;
 		let pro_type = "0";
-		let leve_id = "0";
+		let leve_id = <?php print($leve_id); ?>;
 		let left_filter_cat_WhereQuery = "";
-		let level_check = "";
+		let level_check = <?php print($level_check); ?>;
 		let manf_id = "<?php print($manf_id); ?>";
 
 		$.ajax({
@@ -451,7 +462,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 	function lf_pf_fvalue_inner(lf_group_id_data = "", lf_manf_id_data = "") {
 		//setTimeout(function() {
 		let lf_action_type = "1";
-		let leve_id = 0;
+		let leve_id = <?php print($leve_id); ?>;
 		let pf_fvalue_check = "";
 		let lf_group_id = "";
 		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
