@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="./assets/js/select2/select2.min.css" />
     <!-- <link rel="stylesheet" href="./assets/style/toggle.css"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
     <!-- Bootstrap CSS -->
     <link href="./assets/style/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts, "../"));?>" />

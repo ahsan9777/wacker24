@@ -1,9 +1,10 @@
 <?php
 include("includes/php_includes_top.php");
+$page_title = "Toner, Tinte, Bänder - ".$GLOBALS['siteName'];
 $Query = "SELECT manf_id, manf_name, manf_name_params FROM `manufacture` WHERE manf_id IN (SELECT DISTINCT(manf_id) FROM vu_category_map WHERE cat_id = '70100') ORDER BY manf_name ASC";
 //print($Query . "<br>");
 $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
-$data_break_check = round($count / 4);
+$data_break_check = ceil($count / 5);
 //print($data_break_check);die();
 $i = 0;
 $j = 0;
@@ -47,16 +48,31 @@ print("</pre>");
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
+		<style>
+			
+		</style>
 		<section id="content_section">
 			<div class="marken-page">
 				<div class="page_width_1480">
-					<div class="marken-two-part ">
-						<div class="marken-content-left">
-							<div class="marken-heading">HP Toner Tinte Bander</div>
+					<div class="marken-two-part margin_20">
+						<div class="marken-content-left" style="width: 100%;">
+							<div class="marken-heading">Toner, Tinte, Bänder</div>
+							<div class="marken-logos">
+								<div class="marken-img"><img src="images/tint-toner/brother.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/canon.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/edding.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/epson.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/hp.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/kyocera.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/lexmark.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/logo_ok.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/soennecken.png" alt=""></div>
+								<div class="marken-img"><img src="images/tint-toner/ufp_deutschland.png" alt=""></div>
+							</div>
 							<div class="marken-listing-content">
 								<div class="marken-listing-block">
 									<div class="marken-list-data">
-										<?php for($i = 0; $i < 4; $i++){?>
+										<?php for($i = 0; $i < 5; $i++){?>
 										<div class="marken-list-col">
 											<ul>
 												<?php foreach ($manufacture_data[$i] as $item) { ?>

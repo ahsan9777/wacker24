@@ -15,13 +15,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 25px 30px;
+            padding: 20px 10px;
         }
 
         .cart_icon {
             border-radius: 10px;
             width: 60px;
             height: 60px;
+            padding: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -44,8 +45,8 @@
         .cart_text .cart_text_right p {
             background: red;
             color: #fff;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 500;
             padding: 5px 10px;
             border-radius: 5px;
             margin: 0px;
@@ -81,11 +82,11 @@
                     Backend Control Panel
                 </h2>
                 <div class="row mt-3 column-gap-4">
-                    <div class="col-md-5 col-12 mt-3 cart ">
+                    <div class="col-md-2-half col-12 mt-3 cart ">
                         <a class="text-decoration-none" href="manage_products.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
-                                    <i class="material-icons icon fs-3">shopping_cart</i>
+                                    <i class="material-icons icon fs-1">shopping_cart</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -97,11 +98,11 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-5 col-12 mt-3 cart">
+                    <div class="col-md-2-half col-12 mt-3 cart">
                         <a class="text-decoration-none" href="manage_orders.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
-                                    <i class="material-icons icon fs-3">inventory</i>
+                                    <i class="material-icons icon fs-1">inventory</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -119,11 +120,43 @@
                             </div>
                         </a>
                     </div>
+                    <div class="col-md-2-half col-12 mt-3 cart ">
+                        <a class="text-decoration-none" href="manage_products.php?pro_status=1">
+                            <div class="cart_body">
+                                <div class="cart_icon btn btn-xs btn-success btn-style-light">
+                                    <i class="material-icons icon fs-1">shopping_cart</i>
+                                </div>
+                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
+                                    <div class="cart_text_left">
+                                        <label for="">Live Artikel</label>
+                                        <h2><?php print(TotalRecords("pro_id", "products", "WHERE pro_status = '1'")); ?></h2>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-2-half col-12 mt-3 cart ">
+                        <a class="text-decoration-none" href="manage_products.php?pro_status=2">
+                            <div class="cart_body">
+                                <div class="cart_icon btn btn-xs btn-danger btn-style-light">
+                                    <i class="material-symbols-outlined icon fs-1">shopping_cart_off</i>
+                                </div>
+                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
+                                    <div class="cart_text_left">
+                                        <label for="">Offline Artikel</label>
+                                        <h2><?php print(TotalRecords("pro_id", "products", "WHERE pro_status = '0'")); ?></h2>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
                         <a class="text-decoration-none" href="manage_users.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
-                                    <i class="material-icons icon fs-3">face</i>
+                                    <i class="material-icons icon fs-1">face</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -138,7 +171,7 @@
                         <a class="text-decoration-none" href="manage_users.php?utype_id=3">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
-                                    <i class="material-icons icon fs-3">person</i>
+                                    <i class="material-icons icon fs-1">person</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -153,7 +186,7 @@
                         <a class="text-decoration-none" href="manage_users.php?utype_id=4">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
-                                    <i class="material-icons icon fs-3">business</i>
+                                    <i class="material-icons icon fs-1">business</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -168,7 +201,7 @@
                         <a class="text-decoration-none" href="javascript:void(0)">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-3">sell</i>
+                                    <i class="material-icons icon fs-1">sell</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -183,7 +216,7 @@
                         <a class="text-decoration-none" href="manage_category.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-primary btn-style-light">
-                                    <i class="material-icons icon fs-3">category</i>
+                                    <i class="material-icons icon fs-1">category</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -198,7 +231,7 @@
                         <a class="text-decoration-none" href="manage_sub_category.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-3">category</i>
+                                    <i class="material-icons icon fs-1">category</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -214,7 +247,7 @@
                         <a class="text-decoration-none" href="javascript:void(0)">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-3">alternate_email</i>
+                                    <i class="material-icons icon fs-1">alternate_email</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -229,7 +262,7 @@
                         <a class="text-decoration-none" href="manage_brands.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-3">star</i>
+                                    <i class="material-icons icon fs-1">star</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -244,7 +277,7 @@
                         <a class="text-decoration-none" href="manage_appointment.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
-                                    <i class="material-icons icon fs-3">calendar_month</i>
+                                    <i class="material-icons icon fs-1">calendar_month</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
@@ -266,7 +299,7 @@
                         <a class="text-decoration-none" href="manage_contact_request.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-danger btn-style-light">
-                                    <i class="material-icons icon fs-3">mail</i>
+                                    <i class="material-icons icon fs-1">mail</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
