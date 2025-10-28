@@ -455,7 +455,7 @@ if (isset($_REQUEST['action'])) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $pro_id = $row->pro_id;
                     $pro_udx_seo_epag_title_params_de = url_clean(convertGermanChars(trim($row->pro_description_short)));
-                    $update_query = "UPDATE products SET pro_udx_seo_epag_title_params_de = '" . dbStr($pro_udx_seo_epag_title_params_de) . "' WHERE pro_id = '" . $pro_id . "' ";
+                    $update_query = "UPDATE products SET pro_udx_seo_epag_title = '".dbStr(trim($row->pro_description_short))."', pro_udx_seo_epag_title_params_de = '" . dbStr($pro_udx_seo_epag_title_params_de) . "' WHERE pro_id = '" . $pro_id . "' ";
                     //print($update_query."<br>");
                     mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
                     $counter++;
@@ -474,7 +474,7 @@ if (isset($_REQUEST['action'])) {
                     $pro_id = $row->pro_id;
                     $pro_udx_seo_epag_title_params_de = url_clean(convertGermanChars(trim($row->pro_description_short)));
                     
-                    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_udx_seo_epag_title_params_de = '" . dbStr($pro_udx_seo_epag_title_params_de) . "' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_udx_seo_epag_title = '".dbStr(trim($row->pro_description_short))."', pro_udx_seo_epag_title_params_de = '" . dbStr($pro_udx_seo_epag_title_params_de) . "' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;
                 }
                 print("Total no of record updated: " . $counter);

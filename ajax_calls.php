@@ -1115,10 +1115,10 @@ if (isset($_REQUEST['action'])) {
                     $gerenric_product_inner .= '<div class="pd_card">
                         <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'"><img src="' . get_image_link(75, $row->pg_mime_source_url) . '" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
                         <div class="pd_detail">
-                            <h5><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'" > ' . $row->pro_description_short . ' </a></h5>';
+                            <h5><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'" > ' . $row->pro_udx_seo_epag_title . ' </a></h5>';
                     $count = 0;
                     if ($row->pro_udx_seo_epag_id > 0) {
-                        $Query1 = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
+                        $Query1 = "SELECT pf.*, pro.pro_description_short, pro.pro_udx_seo_epag_title, pro.pro_udx_seo_epag_title_params_de, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
                         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
                         $count = mysqli_num_rows($rs1);
                         if ($count > 1) {
@@ -1132,9 +1132,9 @@ if (isset($_REQUEST['action'])) {
                                                         <label for="color_' . $counter . '">
                                                             <span style="' . ((in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px;' : 'height: 30px;') . '">';
                                     if (in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) {
-                                        $gerenric_product_inner .= '<img class="color_tab" id="color_tab_' . $row1->supplier_id . '" data-id="' . $counter . '" data-supplier-id="' . $row1->supplier_id . '" data-pro-description="' . url_clean($row1->pro_description_short) . '" src="' . get_image_link(160, $row1->pg_mime_source_url) . '" title="' . $row1->pf_fvalue . '" alt="' . $row1->pf_fvalue . '">';
+                                        $gerenric_product_inner .= '<img class="color_tab" id="color_tab_' . $row1->supplier_id . '" data-id="' . $counter . '" data-supplier-id="' . $row1->supplier_id . '" data-pro-description="' . $row1->pro_udx_seo_epag_title_params_de . '" src="' . get_image_link(160, $row1->pg_mime_source_url) . '" title="' . $row1->pf_fvalue . '" alt="' . $row1->pf_fvalue . '">';
                                     } else {
-                                        $gerenric_product_inner .= '<label for="" class="color_tab" id="color_tab_' . $row1->supplier_id . '" data-id="' . $counter . '" data-supplier-id="' . $row1->supplier_id . '" data-pro-description="' . url_clean($row1->pro_description_short) . '" title="' . $row1->pf_fvalue . '">' . $row1->pf_fvalue . '</label>';
+                                        $gerenric_product_inner .= '<label for="" class="color_tab" id="color_tab_' . $row1->supplier_id . '" data-id="' . $counter . '" data-supplier-id="' . $row1->supplier_id . '" data-pro-description="' . $row1->pro_udx_seo_epag_title_params_de . '" title="' . $row1->pf_fvalue . '">' . $row1->pf_fvalue . '</label>';
                                     }
                                     $gerenric_product_inner .= '</span>
                                                         </label>

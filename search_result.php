@@ -240,15 +240,16 @@ if (isset($_REQUEST['sortby'])) {
 													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
 														<h3 class="detail_data_show"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" style="display:block" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
-														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_description_short); ?> </a></h5>
+														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
 														<?php
 														$count = 0;
 														if ($row->pro_udx_seo_epag_id > 0) {
-															$Query1 = "SELECT pf.*, pro.pro_description_short, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
+															$Query1 = "SELECT pf.*, pro.pro_description_short, pro.pro_udx_seo_epag_title, pro.pro_udx_seo_epag_title_params_de, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
 															$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 															$count = mysqli_num_rows($rs1);
 															if ($count > 1) {
 																if (mysqli_num_rows($rs1) > 0) {
+																	$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe');
 														?>
 																	<div class="pd_detail_shirt detail_data_show">
 																		<h2><?php print($row->pro_udx_seo_selection_feature); ?>: <span id="color_title_<?php print($counter); ?>"> <?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = '" . $row->pro_udx_seo_selection_feature . "'")); ?> </span> </h2>
@@ -257,11 +258,11 @@ if (isset($_REQUEST['sortby'])) {
 																				<li>
 																					<input type="radio" class="color" id="color_<?php print($counter); ?>" name="color_radio_<?php print($counter) ?>" data-id="<?php print($counter); ?>" value="<?php print($row1->supplier_id); ?>" <?php print(($row1->supplier_id == $row->supplier_id) ? 'checked' : ''); ?>>
 																					<label for="color_<?php print($counter); ?>">
-																						<span style="<?php print(((in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) ? 'height: 60px;' : 'height: 30px;')); ?>">
-																							<?php if (in_array($row->pro_udx_seo_selection_feature, array('Farbe', 'Schreibfarbe'))) { ?>
-																								<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
+																						<span style="<?php print(((in_array($row->pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px;' : 'height: 30px;')); ?>">
+																							<?php if (in_array($row->pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { ?>
+																								<img class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print($row1->pro_udx_seo_epag_title_params_de); ?>" src="<?php print(get_image_link(160, $row1->pg_mime_source_url)); ?>" title="<?php print($row1->pf_fvalue); ?>" alt="<?php print($row1->pf_fvalue); ?>">
 																							<?php } else { ?>
-																								<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print(url_clean($row1->pro_description_short)); ?>" title="<?php print($row1->pf_fvalue); ?>"><?php print($row1->pf_fvalue); ?></label>
+																								<label for="" class="color_tab" id="color_tab_<?php print($row1->supplier_id); ?>" data-id="<?php print($counter); ?>" data-supplier-id="<?php print($row1->supplier_id); ?>" data-pro-description="<?php print($row1->pro_udx_seo_epag_title_params_de); ?>" title="<?php print($row1->pf_fvalue); ?>"><?php print($row1->pf_fvalue); ?></label>
 																							<?php } ?>
 																						</span>
 																					</label>
@@ -404,7 +405,7 @@ if (isset($_REQUEST['sortby'])) {
 		let supplier_id = $(this).attr("data-supplier-id");
 		let pro_description = $(this).attr("data-pro-description");
 		//console.log("color_tab: "+supplier_id);
-		window.location.href = "product/" + supplier_id + "/" + pro_description;
+		window.location.href = pro_description+"-"+supplier_id;
 	});
 	//TOGGLING NESTED ul
 	$(".drop-down_2 .selected a").click(function() {

@@ -170,7 +170,7 @@ include("includes/message.php");
 													<div class="gerenric_product_inner">
 														<?php
 														$special_price = "";
-														$Query3 = "SELECT wl.*, cm.cat_id, cm.sub_group_ids, cm.cm_type, pro.pro_id, pro.pro_type, pro.pro_description_short, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url FROM wishlist AS wl LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = wl.supplier_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = wl.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = wl.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = wl.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE wl.sl_id = '" . $row2->sl_id . "' ORDER BY wl.wl_id ASC";
+														$Query3 = "SELECT wl.*, cm.cat_id, cm.sub_group_ids, cm.cm_type, pro.pro_id, pro.pro_type, pro.pro_description_short, pro.pro_udx_seo_epag_title, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url FROM wishlist AS wl LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = wl.supplier_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = wl.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = wl.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = wl.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE wl.sl_id = '" . $row2->sl_id . "' ORDER BY wl.wl_id ASC";
 														//print($Query);die();
 														$rs3 = mysqli_query($GLOBALS['conn'], $Query3);
 														if (mysqli_num_rows($rs3) > 0) {
@@ -197,7 +197,7 @@ include("includes/message.php");
 																<div class="pd_card">
 																	<div class="pd_image"><a href="<?php print(product_detail_url($row3->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $row3->pg_mime_source_url)); ?>" alt=""></a></div>
 																	<div class="pd_detail">
-																		<h5><a href="<?php print(product_detail_url($row3->supplier_id)); ?>"> <?php print($row3->pro_description_short); ?> </a></h5>
+																		<h5><a href="<?php print(product_detail_url($row3->supplier_id)); ?>"> <?php print($row3->pro_udx_seo_epag_title); ?> </a></h5>
 																		<?php
 																		$quantity_lenght = 0;
 																		$Query4 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row3->supplier_id)) . "'";
@@ -325,7 +325,7 @@ include("includes/message.php");
 											<div class="pd_card txt_align_left">
 												<div class="pd_image"><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -371,7 +371,7 @@ include("includes/message.php");
 											<div class="pd_card txt_align_left">
 												<div class="pd_image"><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img src="<?php print(get_image_link(160, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_description_short); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
