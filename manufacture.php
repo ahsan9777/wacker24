@@ -94,7 +94,7 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 					<div class="marken-logo"><img src="<?php print(config_site_logo) ?>" alt=""></div>
 					<div class="marken-nav">
 						<?php for ($i = 0; $i < count($manufacture_title); $i++) { ?>
-							<div class="marken-nav-link"><a href="#m_<?php print($i); ?>"><?php print($manufacture_title[$i]); ?></a>
+							<div class="marken-nav-link"><a class="marken-nav-link-href" href="#m_<?php print($i); ?>"><?php print($manufacture_title[$i]); ?></a>
 								<div class="marken-listing-content">
 									<div class="marken-listing-block">
 										<div class="marken-letter-head"><?php print($manufacture_title[$i]); ?></div>
@@ -140,7 +140,7 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 	$(document).ready(function() {
 
 		// ✅ Smooth scroll on click
-		$(".marken-nav-link a").on("click", function(e) {
+		$(".marken-nav-link .marken-nav-link-href").on("click", function(e) {
 			e.preventDefault();
 
 			var target = $(this).attr("href");
@@ -151,7 +151,7 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 			}, 600);
 
 			// Active class set on click
-			$(".marken-nav-link a").removeClass("active");
+			$(".marken-nav-link .marken-nav-link-href").removeClass("active");
 			$(this).addClass("active");
 		});
 
@@ -166,7 +166,7 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 
 				if (scrollPos >= top && scrollPos < bottom) {
 					var id = $(this).attr("id");
-					$(".marken-nav-link a").removeClass("active");
+					$(".marken-nav-link .marken-nav-link-href").removeClass("active");
 					$('.marken-nav-link a[href="#' + id + '"]').addClass("active");
 				}
 			});

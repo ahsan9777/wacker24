@@ -13,14 +13,35 @@ if (isset($_REQUEST['btnAdd'])) {
         $strMSG = "Dear Admin, This manufacture already exists against the manufacture name!";
     } else {
         $manf_id = getMaximum("manufacture", "manf_id");
-        $manf_name_params = url_clean(trim($_REQUEST['manf_name']));
-        mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params) VALUES ('" . $manf_id . "', '" . dbStr(trim($_REQUEST['manf_name'])) . "', '" . $manf_name_params . "')") or die(mysqli_error($GLOBALS['conn']));
+        $manf_name_params = url_clean(convertGermanChars(trim($_REQUEST['manf_name'])));
+        $mfileName = "";
+        $dirName = "../files/manufacture/";
+        if (!empty($_FILES["mFile"]["name"])) {
+            $mfileName = $manf_id . "_" . $_FILES["mFile"]["name"];
+            $mfileName = str_replace(" ", "_", strtolower($mfileName));
+            if (move_uploaded_file($_FILES['mFile']['tmp_name'], $dirName . $mfileName)) {
+                createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
+            }
+        }
+        mysqli_query($GLOBALS['conn'], "INSERT INTO manufacture (manf_id, manf_name, manf_name_params, manf_file) VALUES ('" . $manf_id . "', '" . dbStr(trim($_REQUEST['manf_name'])) . "', '" . $manf_name_params . "', '".$mfileName."')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
-    $manf_name_params = url_clean(trim($_REQUEST['manf_name']));
-    mysqli_query($GLOBALS['conn'], "UPDATE manufacture SET manf_name = '" . dbStr(trim($_REQUEST['manf_name'])) . "', manf_name_params = '" . $manf_name_params . "' WHERE manf_id=" . $_REQUEST['manf_id']) or die(mysqli_error($GLOBALS['conn']));
+    $manf_name_params = url_clean(convertGermanChars(trim($_REQUEST['manf_name'])));
+
+    $dirName = "../files/manufacture/";
+    $mfileName = $_REQUEST['mfileName'];
+    if (!empty($_FILES["mFile"]["name"])) {
+        @unlink("../files/manufacture/" . $_REQUEST['mfileName']);
+        @unlink("../files/manufacture/th/" . $_REQUEST['mfileName']);
+        $mfileName = $_REQUEST['manf_id'] . "_" . $_FILES["mFile"]["name"];
+        $mfileName = str_replace(" ", "_", strtolower($mfileName));
+        if (move_uploaded_file($_FILES['mFile']['tmp_name'], $dirName . $mfileName)) {
+            createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
+        }
+    }
+    mysqli_query($GLOBALS['conn'], "UPDATE manufacture SET manf_name = '" . dbStr(trim($_REQUEST['manf_name'])) . "', manf_name_params = '" . $manf_name_params . "', manf_file = '".$mfileName."' WHERE manf_id=" . $_REQUEST['manf_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -101,6 +122,16 @@ include("includes/messages.php");
                                     <input type="text" class="input_style" name="manf_name" id="manf_name" value="<?php print($manf_name); ?>" placeholder="Title">
                                 </div>
                                 <div class="col-md-12 col-12 mt-3">
+                                    <label for="">File</label>
+                                    <div class="">
+                                        <label for="file-upload" class="upload-btn">
+                                            <span class="material-icons">cloud_upload</span>
+                                            <span>Upload Files</span>
+                                        </label>
+                                        <input id="file-upload" type="file" class="file-input" name="mFile">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-12 mt-3">
                                     <button class="btn btn-primary" type="submit" name="<?php print(($_REQUEST['action'] == 1) ? 'btnAdd' : 'btnUpdate'); ?>">Upload</button>
                                     <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
                                 </div>
@@ -141,7 +172,9 @@ include("includes/messages.php");
                                 <thead>
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
+                                        <th width="100">Logo</th>
                                         <th>Title</th>
+                                        <th width="150">Show On Home</th>
                                         <th width="50">Status</th>
                                         <th width="50">Action</th>
                                     </tr>
@@ -160,10 +193,22 @@ include("includes/messages.php");
                                         while ($row = mysqli_fetch_object($rs)) {
                                             $counter++;
                                             $strClass = 'label  label-danger';
+                                            $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
+                                            if (!empty($row->manf_file)) {
+                                                $image_path = $GLOBALS['siteURL'] . "files/manufacture/" . $row->manf_file;
+                                            }
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->manf_id); ?>"></td>
+                                                <td>
+                                                    <div class="popup_container" style="width:100px">
+                                                        <div class="container__img-holder">
+                                                            <img src="<?php print($image_path); ?>">
+                                                        </div>
+                                                    </div>
+                                                </td>
                                                 <td><?php print($row->manf_name); ?></td>
+                                                <td> <input type="checkbox" class="manf_showhome" id="manf_showhome" data-id="<?php print($row->manf_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->manf_showhome == 1) ? 'checked' : ''); ?>> </td>
                                                 <td>
                                                     <?php
                                                     if ($row->manf_status == 0) {
@@ -243,6 +288,49 @@ include("includes/messages.php");
             //return false;
             //console.log( "Selected: " + ui.item.value + " manf_id " + ui.item.manf_id );
         }
+    });
+    $(document).ready(function() {
+        // Listen for toggle changes
+        $('.manf_showhome').change(function() {
+            let id = $(this).attr('data-id');
+            let set_field_data = 0;
+            //console.log("cat_id: "+cat_id)
+            if ($(this).prop('checked')) {
+                set_field_data = 1;
+            }
+            //console.log("set_field_data: "+set_field_data);
+            $.ajax({
+                url: 'ajax_calls.php?action=btn_toggle',
+                method: 'POST',
+                data: {
+                    table: "manufacture",
+                    set_field: "manf_showhome",
+                    set_field_data: set_field_data,
+                    where_field: "manf_id",
+                    id: id
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    console.log(obj);
+                    if (obj.status == 1 && set_field_data == 1) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Toggle is ON',
+                            icon: 'success',
+                            position: 'top-right'
+                        });
+                    } else if (obj.status == 1 && set_field_data == 0) {
+                        $.toast({
+                            heading: 'Warning',
+                            text: 'Toggle is OFF',
+                            icon: 'warning',
+                            position: 'top-right'
+                        });
+                    }
+                }
+            });
+        });
     });
 </script>
 
