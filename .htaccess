@@ -66,6 +66,7 @@ RewriteRule ^verkaeufe-angebote? site_special_price.php [L]
 RewriteRule ^addupdateaddress/([0-9]+)?$ add_update_address.php?usa_id=$1 [L]
 RewriteRule ^addupdateaddress? add_update_address.php [L]
 RewriteRule ^abmelden? logout.php [L]
+RewriteRule ^kostenlose-produktgeschenke? free_products.php [L]
 
 
 RewriteRule ^unterkategorien/([0-9]+)/(.*)?$ product_category.php?page=$1&cat_params_one=$2 [L]

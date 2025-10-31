@@ -30,7 +30,7 @@ $meta_description = "";
 if ((isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["cart_check"]) && $_SESSION["cart_check"] == true)) {
     $cart_id = $_SESSION['cart_id'];
     mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_discounted_price_see = '0' WHERE cart_id = '" . $cart_id . "'") or die(mysqli_error($GLOBALS['conn']));
-    $Query = "SELECT ci.*, cm.sub_group_ids FROM cart_items AS ci LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = ci.supplier_id WHERE cart_id = '" . $cart_id . "' AND ci_discounted_price_see = '0' ";
+    $Query = "SELECT ci.*, cm.sub_group_ids FROM cart_items AS ci LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = ci.supplier_id WHERE ci_type IN (0,1) cart_id = '" . $cart_id . "' AND ci_discounted_price_see = '0' ";
     //print($Query);die();
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {

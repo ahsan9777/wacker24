@@ -1,7 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 
-if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) && $_REQUEST['btn_checkout_value'] > 0) ) {
+if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) && $_REQUEST['btn_checkout_value'] > 0)) {
 	//print_r($_REQUEST);die();
 	$user_id = 0;
 	$ord_id = 0;
@@ -53,8 +53,8 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 	if (in_array($pm_id, array(1, 7))) {
 		cart_to_order($user_id, $usa_id, $pm_id);
 		mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '" . (($pm_id == 1) ? 1 : 0) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-		if($pm_id == 7){
-			header('Location: bestellungen/26/'.$ord_id.'');
+		if ($pm_id == 7) {
+			header('Location: bestellungen/26/' . $ord_id . '');
 		} else {
 			header('Location: bestellungen/15');
 		}
@@ -169,45 +169,61 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
 	//print_r($_REQUEST);die();
 	for ($i = 0; $i < count($_REQUEST['ci_id']); $i++) {
-		if ($_REQUEST['ci_qty'][$i] > 0) {
-			$cart_id = $_SESSION['cart_id'];
-			$Query = "SELECT * FROM cart_items WHERE ci_id = '" . $_REQUEST['ci_id'][$i] . "' ";
-			$rs = mysqli_query($GLOBALS['conn'], $Query);
-			if (mysqli_num_rows($rs) > 0) {
-				$row = mysqli_fetch_object($rs);
+		if (in_array($_REQUEST['ci_type'][$i], array(0, 1))) {
+			if ($_REQUEST['ci_qty'][$i] > 0) {
+				$cart_id = $_SESSION['cart_id'];
+				$Query = "SELECT * FROM cart_items WHERE ci_id = '" . $_REQUEST['ci_id'][$i] . "' ";
+				$rs = mysqli_query($GLOBALS['conn'], $Query);
+				if (mysqli_num_rows($rs) > 0) {
+					$row = mysqli_fetch_object($rs);
 
-				//$cart_quantity = returnName("ci_qty","cart_items", "ci_id", $row->ci_id);
-				$get_pro_price = get_pro_price($row->pro_id, $row->supplier_id, $_REQUEST['ci_qty'][$i]);
-				//print_r($get_pro_price);
-				$pbp_id = $get_pro_price['pbp_id'];
-				$pbp_price_amount = $get_pro_price['ci_amount'];
-				$ci_amount = $get_pro_price['ci_amount'];
-				$ci_gst_value = $get_pro_price['ci_gst_value'];
-				$ci_discount_type = $row->ci_discount_type;
-				$ci_discount_value = $row->ci_discount_value;
-				$ci_discounted_amount = 0;
-				$ci_discount = 0;
-				if ($ci_discount_value > 0) {
-					$ci_discounted_amount_gross = 0;
-					$ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value);
-					$ci_discounted_amount = $pbp_price_amount - $ci_amount;
+					//$cart_quantity = returnName("ci_qty","cart_items", "ci_id", $row->ci_id);
+					$get_pro_price = get_pro_price($row->pro_id, $row->supplier_id, $_REQUEST['ci_qty'][$i]);
+					//print_r($get_pro_price);
+					$pbp_id = $get_pro_price['pbp_id'];
+					$pbp_price_amount = $get_pro_price['ci_amount'];
+					$ci_amount = $get_pro_price['ci_amount'];
+					$ci_gst_value = $get_pro_price['ci_gst_value'];
+					$ci_discount_type = $row->ci_discount_type;
+					$ci_discount_value = $row->ci_discount_value;
+					$ci_discounted_amount = 0;
+					$ci_discount = 0;
+					if ($ci_discount_value > 0) {
+						$ci_discounted_amount_gross = 0;
+						$ci_amount = discounted_price($ci_discount_type, $ci_amount, $ci_discount_value);
+						$ci_discounted_amount = $pbp_price_amount - $ci_amount;
 
-					$ci_discounted_amount_gross = $ci_discounted_amount * ($_REQUEST['ci_qty'][$i]);
-					$ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * $ci_gst_value);
+						$ci_discounted_amount_gross = $ci_discounted_amount * ($_REQUEST['ci_qty'][$i]);
+						$ci_discount = $ci_discounted_amount_gross + ($ci_discounted_amount_gross * $ci_gst_value);
+					}
+					$ci_gross_total = $ci_amount * ($_REQUEST['ci_qty'][$i]);
+					$ci_gst = $ci_gross_total * $ci_gst_value;
+					$ci_total = $ci_gross_total + $ci_gst;
+
+					$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total', ci_gst_value = '" . $ci_gst_value . "', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
+					$update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
+					$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
+					if ($updated_cart_item == true && $update_cart == true) {
+						//echo "success";
+						header("Location: einkaufswagen/2");
+					} else {
+						//header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=10");
+						header("Location: einkaufswagen/10");
+					}
 				}
-				$ci_gross_total = $ci_amount * ($_REQUEST['ci_qty'][$i]);
-				$ci_gst = $ci_gross_total * $ci_gst_value;
-				$ci_total = $ci_gross_total + $ci_gst;
-
-				$updated_cart_item = mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET pbp_id = '" . $pbp_id . "', pbp_price_amount = '" . $pbp_price_amount . "', ci_amount = '" . $ci_amount . "', ci_discounted_amount = '" . $ci_discounted_amount . "', ci_qty = '" . $_REQUEST['ci_qty'][$i] . "',  ci_gross_total =  '$ci_gross_total', ci_gst_value = '" . $ci_gst_value . "', ci_gst =  '$ci_gst', ci_discount =  '$ci_discount', ci_total =  '$ci_total' WHERE ci_id = '" . $row->ci_id . "'") or die(mysqli_error($GLOBALS['conn']));
-				$update_cart = mysqli_query($GLOBALS['conn'], "UPDATE cart SET cart_gross_total=(SELECT SUM(ci_gross_total) FROM cart_items WHERE cart_id=$cart_id), cart_gst=(SELECT SUM(ci_gst) FROM cart_items WHERE cart_id=$cart_id), cart_discount=(SELECT SUM(ci_discount) FROM cart_items WHERE cart_id=$cart_id), cart_amount=(SELECT SUM(ci_total) FROM cart_items WHERE cart_id=$cart_id) WHERE cart_id=" . $cart_id) or die(mysqli_error($GLOBALS['conn']));
-				$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
-				if ($updated_cart_item == true && $update_cart == true) {
-					//echo "success";
+			}
+		} elseif ($_REQUEST['ci_type'][$i] == 2) {
+			if ($_REQUEST['ci_qty'][$i] > 0) {
+				$cart_id = $_SESSION['cart_id'];
+				$ci_qty = $_REQUEST['ci_qty'][$i];
+				$Query = "SELECT * FROM cart_items WHERE ci_id = '" . $_REQUEST['ci_id'][$i] . "' ";
+				$rs = mysqli_query($GLOBALS['conn'], $Query);
+				if (mysqli_num_rows($rs) > 0) {
+					$row = mysqli_fetch_object($rs);
+					mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_max_quentity = ci_max_quentity + ci_qty WHERE ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = '" . $ci_qty . "', ci_max_quentity = ci_max_quentity - '" . $ci_qty . "' WHERE ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					$_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
 					header("Location: einkaufswagen/2");
-				} else {
-					//header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=10");
-					header("Location: einkaufswagen/10");
 				}
 			}
 		}
@@ -215,6 +231,7 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 }
 
 if (isset($_REQUEST['product_remove'])) {
+	//print_r($_REQUEST);die();
 	$Query = "SELECT * FROM `cart_items` WHERE `ci_id` = '" . $_REQUEST['ci_id'] . "'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
@@ -233,7 +250,7 @@ if (isset($_SESSION['UID']) && $_SESSION['UID'] > 0) {
 	$checkout_click = "checkout_click";
 	$checkout_click_href = "javascript:void(0);";
 }
-
+ci_max_quentity();
 include("includes/message.php");
 ?>
 <!doctype html>
@@ -339,8 +356,8 @@ include("includes/message.php");
 			<div class="page_width_1480">
 				<div class="breadcrumb_inner">
 					<ul>
-						<li><a href="javascript:void(0)" title="Meine Daten" >Meine Daten</a></li>
-						<li><a href="javascript:void(0)" title="Meine Einkaufswagen" >Meine Einkaufswagen</a></li>
+						<li><a href="javascript:void(0)" title="Meine Daten">Meine Daten</a></li>
+						<li><a href="javascript:void(0)" title="Meine Einkaufswagen">Meine Einkaufswagen</a></li>
 					</ul>
 				</div>
 			</div>
@@ -358,7 +375,9 @@ include("includes/message.php");
 						<div class="cart_left">
 							<div class="gerenric_white_box">
 								<h2>
-									<div class="shopping_title"><h1>Einkaufswagen</h1></div>
+									<div class="shopping_title">
+										<h1>Einkaufswagen</h1>
+									</div>
 									<div class="cart_prise_label_row">
 										<div class="cart_prise_label">Einzelpreis</div>
 										<div class="cart_prise_label">Gesamtpreis</div>
@@ -375,7 +394,7 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.ci_type IN (0,1) AND ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -395,7 +414,7 @@ include("includes/message.php");
 											$smiller_product_url = $GLOBALS['siteURL'] . "search_result.php?search_keyword=" . implode(' ', array_slice($pro_description_short, 0, 2));
 											$cart_pd_title = "Lieferung";
 											if ($row->ci_type > 0) {
-												$cart_pd_title = "Abholung ".date('H:i', strtotime("+1 hour"));
+												$cart_pd_title = "Abholung " . date('H:i', strtotime("+1 hour"));
 											}
 											$product_link = product_detail_url($row->supplier_id);
 											if ($row->ci_type > 0) {
@@ -408,7 +427,7 @@ include("includes/message.php");
 												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="<?php print($product_link); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="cart_pd_detail">
 													<div class="cart_pd_col1">
-														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" ><?php print($row->pro_description_short); ?></a></div>
+														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
 														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
@@ -440,6 +459,7 @@ include("includes/message.php");
 																<li>
 																	<span>Menge:</span>
 																	<span>
+																		<input type="hidden" name="ci_type[]" id="ci_type" value="<?php print($row->ci_type); ?>">
 																		<input type="hidden" name="ci_id[]" id="ci_id" value="<?php print($row->ci_id); ?>">
 																		<?php if ($pro_type > 0) { ?>
 																			<input type="number" class="qlt_number ci_qty" name="ci_qty[]" id="ci_qty" value="<?php print($row->ci_qty); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} else if(parseFloat(this.value) > <?php print($pq_quantity + $row->ci_qty); ?> ){ this.value =<?php print($row->ci_qty); ?>; return false; } " min="1" max="1">
@@ -448,9 +468,9 @@ include("includes/message.php");
 																		<?php } ?>
 																	</span>
 																</li>
-																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" title="Löschen" >Löschen</a></li>
-																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>" title="Teilen" >Teilen</a></li>
-																<li><a href="<?php print($smiller_product_url); ?>" title="Ähnliches Produkt" >Ähnliches Produkt</a></li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_id=" . $row->ci_id); ?>" title="Löschen">Löschen</a></li>
+																<li><a href="javascript:void(0)" class="versand_trigger" data-id="<?php print($row->ci_id); ?>" title="Teilen">Teilen</a></li>
+																<li><a href="<?php print($smiller_product_url); ?>" title="Ähnliches Produkt">Ähnliches Produkt</a></li>
 															</ul>
 														</div>
 													</div>
@@ -468,7 +488,7 @@ include("includes/message.php");
 													</div>
 												</div>
 											</div>
-									<?php
+										<?php
 										}
 									}
 									$shipping_one = 0;
@@ -489,6 +509,46 @@ include("includes/message.php");
 											$delivery_charges_tex = $delivery_charges['tex'];
 											$cart_amount = $cart_amount + $delivery_charges_total + $delivery_charges_tex;
 											$schipping_cost_waived = config_condition_courier_amount - $ci_total;
+										}
+									}
+									$Query = "SELECT ci.*, fp.fp_title_de AS fp_title, fp.fp_file FROM cart_items AS ci LEFT OUTER JOIN free_product AS fp ON fp.fp_id = ci.fp_id WHERE ci.ci_type = '2' AND ci.cart_id = '" . $_SESSION['cart_id'] . "'";
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										while ($row = mysqli_fetch_object($rs)) {
+											$image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
+											if (!empty($row->fp_file)) {
+												$image_path = $GLOBALS['siteURL'] . "files/free_product/" . $row->fp_file;
+											}
+										?>
+											<div class="cart_pd_row">
+												<div class="cart_pd_image"><a id="product_link_<?php print($row->ci_id); ?>" href="javascript: void(0);" title="<?php print($row->fp_title); ?>"><img src="<?php print($image_path); ?>" alt="<?php print($row->fp_title); ?>"></a></div>
+												<div class="cart_pd_detail">
+													<div class="cart_pd_col1">
+														<div class="cart_pd_title"><a href="javascript: void(0);" id="product_title_<?php print($row->ci_id); ?>" title="<?php print($row->fp_title); ?>"><?php print($row->fp_title); ?></a></div>
+														<div class="cart_pd_option">
+															<ul>
+																<li>
+																	<span>Menge:</span>
+																	<span>
+																		<input type="hidden" name="ci_type[]" id="ci_type" value="<?php print($row->ci_type); ?>">
+																		<input type="hidden" name="ci_id[]" id="ci_id" value="<?php print($row->ci_id); ?>">
+																		<input type="number" class="qlt_number ci_qty" name="ci_qty[]" id="ci_qty" value="<?php print($row->ci_qty); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} else if(parseFloat(this.value) > <?php print($row->ci_max_quentity); ?> ){ this.value =<?php print($row->ci_max_quentity); ?>; return false; } " min="1" max="<?php print($row->ci_max_quentity); ?>">
+																	</span>
+																</li>
+																<li><a href="<?php print($_SERVER['PHP_SELF'] . "?product_remove&ci_type=2&ci_id=" . $row->ci_id); ?>" title="Löschen">Löschen</a></li>
+															</ul>
+														</div>
+													</div>
+													<style>
+														
+													</style>
+													<div class="cart_pd_col2">
+														<div class="cart_price"> 0,00 €</div>
+														<div class="cart_free_text"> <span>GRATIS</span> <span>fur Sie!</span></div>
+													</div>
+												</div>
+											</div>
+									<?php
 										}
 									}
 									?>
@@ -569,7 +629,7 @@ include("includes/message.php");
 													<li> <?php print($row->usa_street . " " . $row->usa_house_no); ?> </li>
 													<li><?php print($row->usa_zipcode); ?></li>
 													<li> <?php print("Telefonnummer : " . $row->usa_contactno); ?> </li>
-													<li><a href="adressen" class="gerenric_btn mt_30" title="Rechnungsadresse ändern" >Rechnungsadresse ändern</a></li>
+													<li><a href="adressen" class="gerenric_btn mt_30" title="Rechnungsadresse ändern">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>
 										</div>
@@ -624,7 +684,7 @@ include("includes/message.php");
 											<div class="success_message">Kaufen Sie nur noch für <b><?php print(price_format($schipping_cost_waived)); ?> €</b> ein und die <b>Kosten der Verpackungspauschale und Versandkosten entfallen.</b></div>
 										</li>
 										<li>
-											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>" title="Zur Kasse" >Zur Kasse</a>
+											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>" title="Zur Kasse">Zur Kasse</a>
 										</li>
 										<?php if (!isset($_SESSION["UID"])) { ?>
 											<!--<li>

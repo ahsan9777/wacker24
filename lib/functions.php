@@ -1572,6 +1572,18 @@ function returnName($Field, $Table, $IDField, $ID, $AND = "")
 	}
 	return $retRes;
 }
+function returnSum($Field, $Table, $IDField, $ID, $AND = "")
+{
+	$retRes = 0;
+	$strQry = "SELECT SUM($Field) FROM $Table WHERE $IDField= '" . $ID . "' " . $AND . " LIMIT 1";
+	//print($strQry);die();
+	$nResult = mysqli_query($GLOBALS['conn'], $strQry) or die("Unable 2 Work");
+	if (mysqli_num_rows($nResult) >= 1) {
+		$row = mysqli_fetch_row($nResult);
+		$retRes = $row[0];
+	}
+	return !empty($retRes) ? $retRes : 0;
+}
 
 function returnNameArray($Field, $Table, $IDField, $ID, $AND = "")
 {
@@ -2017,7 +2029,7 @@ function createThumbnail3($imageDirectory, $imageName, $thumbDirectory, $thumbWi
 
 function createThumbnail2($imageDirectory, $imageName, $thumbDirectory, $thumbWidth, $thumbHeight)
 {
-	$success = ""; 
+	$success = "";
 	$file_path = $imageDirectory . $imageName;
 	$option['jpeg_quality'] = 75;
 	$option['png_quality'] = 9;
@@ -2999,7 +3011,8 @@ function autocorrectQueryUsingProductTerms_bk($query, $pdo)
 				$bestDistance = $lev;
 			}
 		}
-		print("bestMatch: ".$bestMatch."<br> bestScore: ".$bestScore."<br> bestDistance: ".$bestDistance);die();
+		print("bestMatch: " . $bestMatch . "<br> bestScore: " . $bestScore . "<br> bestDistance: " . $bestDistance);
+		die();
 		if ($bestMatch !== null && $bestScore > 65) {
 			// Try to restore proper case
 			if (ctype_upper($originalWord)) {
@@ -3022,90 +3035,90 @@ function autocorrectQueryUsingProductTerms_bk($query, $pdo)
 
 function autocorrectQueryUsingProductTerms($query, $pdo)
 {
-    // Get all unique short descriptions from the products
-    $stmt = $pdo->query("SELECT DISTINCT pro_udx_seo_internetbezeichung FROM products");
-    $allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+	// Get all unique short descriptions from the products
+	$stmt = $pdo->query("SELECT DISTINCT pro_udx_seo_internetbezeichung FROM products");
+	$allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    // Normalization function for words
-    function normalizeWord($word)
-    {
-        $map = ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss'];
-        $word = mb_strtolower(trim($word), 'UTF-8');
-        $word = strtr($word, $map);
-        return preg_replace('/[^a-z0-9]/', '', $word); // remove non-alphanumerics
-    }
+	// Normalization function for words
+	function normalizeWord($word)
+	{
+		$map = ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss'];
+		$word = mb_strtolower(trim($word), 'UTF-8');
+		$word = strtr($word, $map);
+		return preg_replace('/[^a-z0-9]/', '', $word); // remove non-alphanumerics
+	}
 
-    // Build dictionary: normalized word => original word
-    $dictionaryWords = [];
-    foreach ($allDescriptions as $desc) {
-        $words = preg_split('/[\s\-_,\.\'\"\/\(\)\[\]]+/', $desc);
-        foreach ($words as $word) {
-            $normalized = normalizeWord($word);
-            if (strlen($normalized) > 1 && !isset($dictionaryWords[$normalized])) {
-                $dictionaryWords[$normalized] = $word;
-            }
-        }
-    }
+	// Build dictionary: normalized word => original word
+	$dictionaryWords = [];
+	foreach ($allDescriptions as $desc) {
+		$words = preg_split('/[\s\-_,\.\'\"\/\(\)\[\]]+/', $desc);
+		foreach ($words as $word) {
+			$normalized = normalizeWord($word);
+			if (strlen($normalized) > 1 && !isset($dictionaryWords[$normalized])) {
+				$dictionaryWords[$normalized] = $word;
+			}
+		}
+	}
 
-    // Split the query into words
-    $queryWords = preg_split('/\s+/', $query);
-    $correctedWords = [];
+	// Split the query into words
+	$queryWords = preg_split('/\s+/', $query);
+	$correctedWords = [];
 
-    foreach ($queryWords as $queryWord) {
-        $originalWord = $queryWord;
-        $normalizedQueryWord = normalizeWord($queryWord);
+	foreach ($queryWords as $queryWord) {
+		$originalWord = $queryWord;
+		$normalizedQueryWord = normalizeWord($queryWord);
 
-        // ✅ Exact match
-        if (isset($dictionaryWords[$normalizedQueryWord])) {
-            $correctedWords[] = matchCase($originalWord, $dictionaryWords[$normalizedQueryWord]);
-            continue;
-        }
+		// ✅ Exact match
+		if (isset($dictionaryWords[$normalizedQueryWord])) {
+			$correctedWords[] = matchCase($originalWord, $dictionaryWords[$normalizedQueryWord]);
+			continue;
+		}
 
-        // Fallback: fuzzy match
-        $bestMatch = null;
-        $bestOriginal = null;
-        $bestScore = 0;
-        $bestDistance = PHP_INT_MAX;
+		// Fallback: fuzzy match
+		$bestMatch = null;
+		$bestOriginal = null;
+		$bestScore = 0;
+		$bestDistance = PHP_INT_MAX;
 
-        foreach ($dictionaryWords as $dictNorm => $dictOriginal) {
-            if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 4) {
-                continue;
-            }
+		foreach ($dictionaryWords as $dictNorm => $dictOriginal) {
+			if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 4) {
+				continue;
+			}
 
-            similar_text($normalizedQueryWord, $dictNorm, $similarity);
-            $lev = levenshtein($normalizedQueryWord, $dictNorm);
+			similar_text($normalizedQueryWord, $dictNorm, $similarity);
+			$lev = levenshtein($normalizedQueryWord, $dictNorm);
 
-            if (($similarity > 70 && $lev < $bestDistance) || $similarity > $bestScore) {
-                $bestMatch = $dictNorm;
-                $bestOriginal = $dictOriginal;
-                $bestScore = $similarity;
-                $bestDistance = $lev;
-            }
-        }
+			if (($similarity > 70 && $lev < $bestDistance) || $similarity > $bestScore) {
+				$bestMatch = $dictNorm;
+				$bestOriginal = $dictOriginal;
+				$bestScore = $similarity;
+				$bestDistance = $lev;
+			}
+		}
 
-        if ($bestOriginal !== null && $bestScore > 65) {
-            $correctedWords[] = matchCase($originalWord, $bestOriginal);
-        } else {
-            $correctedWords[] = $originalWord;
-        }
-    }
+		if ($bestOriginal !== null && $bestScore > 65) {
+			$correctedWords[] = matchCase($originalWord, $bestOriginal);
+		} else {
+			$correctedWords[] = $originalWord;
+		}
+	}
 
-    return [
-        'original' => $query,
-        'corrected' => implode(' ', $correctedWords)
-    ];
+	return [
+		'original' => $query,
+		'corrected' => implode(' ', $correctedWords)
+	];
 }
 
 // Helper to preserve casing style
 function matchCase($input, $reference)
 {
-    if (ctype_upper($input)) {
-        return strtoupper($reference);
-    } elseif (ucfirst($input) === $input) {
-        return ucfirst($reference);
-    } else {
-        return strtolower($reference);
-    }
+	if (ctype_upper($input)) {
+		return strtoupper($reference);
+	} elseif (ucfirst($input) === $input) {
+		return ucfirst($reference);
+	} else {
+		return strtolower($reference);
+	}
 }
 
 
@@ -3162,7 +3175,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, fp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '".$row2->fp_id."', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
 			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
 			$order_items_table_check = 1;
 		}
@@ -3172,7 +3185,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		if ($pm_id == 7) {
 			require_once("mailer.php");
 			$mailer = new Mailer();
-			$mailer->vorkasse($dinfo_email, $ord_id, $dinfo_fname.' '.$dinfo_lname);
+			$mailer->vorkasse($dinfo_email, $ord_id, $dinfo_fname . ' ' . $dinfo_lname);
 		}
 		mysqli_query($GLOBALS['conn'], "DELETE FROM cart WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
 		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
@@ -3270,22 +3283,22 @@ function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active)
 			$delivery_instruction = "<br><b>Grundstückstyp: " . $property_type[$row->usa_delivery_instructions_tab_active - 1] . "</b>" . $apartment_data;
 		} elseif ($usa_delivery_instructions_tab_active == 3) {
 			$business_data = "";
-			if($row->usa_business_mf_24h_check > 0){
+			if ($row->usa_business_mf_24h_check > 0) {
 				$business_data .= "<br><b>Montag - Freitag:</b> 24 Stunden geöffnet";
-			} else{
+			} else {
 				$business_data .= "<br><b>Montag - Freitag:</b> " . $row->usa_business_mf_status . "; <b>Gruppierung aufheben:</b> " . $row->usa_business_mf_uw_status;
 			}
-			if($row->usa_business_24h_check == 0 && $row->usa_business_close_check == 0){
+			if ($row->usa_business_24h_check == 0 && $row->usa_business_close_check == 0) {
 				$business_data .= "<br><b>Samstag - Sonntag:</b> " . $row->usa_business_ss_status . "; <b>Gruppierung aufheben:</b> " . $row->usa_business_ss_uw_status;
 			}
 
-			if($row->usa_business_24h_check > 0){
+			if ($row->usa_business_24h_check > 0) {
 				$business_data .= "<br><b>Samstag - Sonntag:</b> 24 Stunden geöffnet";
 			}
-			if($row->usa_business_close_check > 0){
+			if ($row->usa_business_close_check > 0) {
 				$business_data .= "<br><b>Samstag - Sonntag:</b> Für Lieferungen geschlossen";
 			}
-			
+
 
 			if ($row->usa_business_mf_type > 0 || $row->usa_business_ss_type > 0) {
 				$business_data = "";
@@ -3295,10 +3308,10 @@ function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active)
 				$rs = mysqli_query($GLOBALS['conn'], $Query);
 				if (mysqli_num_rows($rs) > 0) {
 					while ($rw = mysqli_fetch_object($rs)) {
-						if($rw->sbugd_24hour_open > 0){
-							$business_data .= "<br><b>".$rw->sbugd_day.":</b> 24 Stunden geöffnet";
-						} else{
-							$business_data .= "<br><b>".$rw->sbugd_day.":</b> " . $rw->sbugd_open . "; <b>Gruppierung aufheben:</b> " . $rw->sbugd_close;
+						if ($rw->sbugd_24hour_open > 0) {
+							$business_data .= "<br><b>" . $rw->sbugd_day . ":</b> 24 Stunden geöffnet";
+						} else {
+							$business_data .= "<br><b>" . $rw->sbugd_day . ":</b> " . $rw->sbugd_open . "; <b>Gruppierung aufheben:</b> " . $rw->sbugd_close;
 						}
 					}
 				}
@@ -3308,14 +3321,14 @@ function delivery_instruction($usa_id, $usa_delivery_instructions_tab_active)
 				$rs = mysqli_query($GLOBALS['conn'], $Query);
 				if (mysqli_num_rows($rs) > 0) {
 					while ($rw = mysqli_fetch_object($rs)) {
-						if($rw->sbugd_24hour_open == 0 && $rw->sbugd_close_delivery == 0){
-							$business_data .= "<br><b>".$rw->sbugd_day.":</b> " . $rw->sbugd_open . "; <b>Gruppierung aufheben:</b> " . $rw->sbugd_close;
-						} 
-						if($rw->sbugd_24hour_open > 0){
-							$business_data .= "<br><b>".$rw->sbugd_day.":</b> 24 Stunden geöffnet";
+						if ($rw->sbugd_24hour_open == 0 && $rw->sbugd_close_delivery == 0) {
+							$business_data .= "<br><b>" . $rw->sbugd_day . ":</b> " . $rw->sbugd_open . "; <b>Gruppierung aufheben:</b> " . $rw->sbugd_close;
 						}
-						if($rw->sbugd_close_delivery > 0){
-							$business_data .= "<br><b>".$rw->sbugd_day.":</b> Für Lieferungen geschlossen";
+						if ($rw->sbugd_24hour_open > 0) {
+							$business_data .= "<br><b>" . $rw->sbugd_day . ":</b> 24 Stunden geöffnet";
+						}
+						if ($rw->sbugd_close_delivery > 0) {
+							$business_data .= "<br><b>" . $rw->sbugd_day . ":</b> Für Lieferungen geschlossen";
 						}
 					}
 				}
@@ -3341,32 +3354,63 @@ function formatDateGerman($datetime, $format = 'j F, Y')
 	return str_replace($en, $de, $formatted);
 }
 
-function convertGermanChars($string) {
-    $map = [
-        'ä' => 'ae',
+function convertGermanChars($string)
+{
+	$map = [
+		'ä' => 'ae',
 		'ö' => 'oe',
 		'ü' => 'ue',
-        'Ä' => 'Ae',
+		'Ä' => 'Ae',
 		'Ö' => 'Oe',
 		'Ü' => 'Ue',
-        'ß' => 'ss'
-    ];
-    return strtr($string, $map);
+		'ß' => 'ss'
+	];
+	return strtr($string, $map);
 }
 
-function product_detail_url($supplier_id, $ci_type = 0){
+function product_detail_url($supplier_id, $ci_type = 0)
+{
 	$product_detail_url = "javascript: void();";
-	$Query = "SELECT pro_id, supplier_id, pro_udx_seo_epag_title_params_de FROM products WHERE supplier_id = '".$supplier_id."' ORDER BY pro_id ASC";
+	$Query = "SELECT pro_id, supplier_id, pro_udx_seo_epag_title_params_de FROM products WHERE supplier_id = '" . $supplier_id . "' ORDER BY pro_id ASC";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
 		//$pro_udx_seo_internetbezeichung_params_de = "product/".$row->pro_udx_seo_internetbezeichung_params_de;
-		$product_detail_url = $row->pro_udx_seo_epag_title_params_de."-".$supplier_id;
+		$product_detail_url = $row->pro_udx_seo_epag_title_params_de . "-" . $supplier_id;
 		if ($ci_type > 0) {
 			//$pro_udx_seo_internetbezeichung_params_de = "product/1/".$row->pro_udx_seo_internetbezeichung_params_de;
-			$product_detail_url = "1/".$row->pro_udx_seo_epag_title_params_de."-".$supplier_id;
+			$product_detail_url = "1/" . $row->pro_udx_seo_epag_title_params_de . "-" . $supplier_id;
 		}
-
 	}
 	return $product_detail_url;
+}
+
+function ci_max_quentity()
+{
+	$cart_amount = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+	if ($cart_amount > 0) {
+		//$fp_price = returnSum("pbp_price_amount * ci_qty", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_type = '2'");
+		//$cart_amount = $cart_amount - ((!empty($fp_price)) ? $fp_price : 0);
+		$Query = "SELECT ci_id, pbp_price_amount AS fp_price, ci_qty FROM cart_items WHERE ci_type = '2' AND cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY pbp_price_amount ASC";
+		$rs = mysqli_query($GLOBALS['conn'], $Query);
+		if (mysqli_num_rows($rs) > 0) {
+			while ($row = mysqli_fetch_object($rs)) {
+				$fp_price = $row->fp_price * $row->ci_qty;
+				if( $cart_amount > $fp_price){
+					$max_quentity = floor($cart_amount / $row->fp_price);
+					$cart_amount = $cart_amount - $fp_price;
+					mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_max_quentity = '" . $max_quentity . "' WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+				} else {
+					if($cart_amount > $row->fp_price){
+						$ci_qty = floor($cart_amount / $row->fp_price);
+						mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = '".$ci_qty."', ci_max_quentity = '0' WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					} else {
+						mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+					}
+				}
+			}
+		}
+	} else {
+		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE ci_type = '2' AND cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+	}
 }

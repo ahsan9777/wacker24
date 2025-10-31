@@ -68,7 +68,7 @@ include("includes/message.php");
 					<?php } ?>
 					<h1>Meine Bestellungen</h1>
 					<?php
-					$Query = "SELECT oi.*, ord.user_id, ord.ord_datetime, ord.ord_udate, di.dinfo_countries_id, c.countries_name, di.dinfo_fname, di.dinfo_house_no, di.dinfo_street, di.dinfo_phone, di.dinfo_usa_zipcode, di.dinfo_additional_info, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pg.pg_mime_source_url FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = oi.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ord.user_id = '" . $_SESSION['UID'] . "' ORDER BY ord.ord_datetime DESC";
+					$Query = "SELECT oi.*, ord.user_id, ord.ord_datetime, ord.ord_udate, di.dinfo_countries_id, c.countries_name, di.dinfo_fname, di.dinfo_house_no, di.dinfo_street, di.dinfo_phone, di.dinfo_usa_zipcode, di.dinfo_additional_info, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pg.pg_mime_source_url FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = oi.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ord.user_id = '" . $_SESSION['UID'] . "' ORDER BY ord.ord_datetime DESC, oi.oi_type ASC";
 					$rs = mysqli_query($GLOBALS['conn'], $Query);
 					if (mysqli_num_rows($rs) > 0) {
 						while ($row = mysqli_fetch_object($rs)) {
@@ -79,8 +79,13 @@ include("includes/message.php");
 								$gst = $row->oi_amount * $row->oi_gst_value;
 							}
 							$product_link = product_detail_url($row->supplier_id);
-							if( $row->oi_type > 0){
+							$get_image_link = get_image_link(160, $row->pg_mime_source_url);
+							$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
+							if( $row->oi_type == 1){
 								$product_link = product_detail_url($row->supplier_id, 1);
+							} elseif($row->oi_type == 2) {
+								$get_image_link = $GLOBALS['siteURL'] . "files/free_product/" .returnName("fp_file", "free_product", "fp_id", $row->fp_id);
+								$pro_udx_seo_internetbezeichung = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
 							}
 							
 					?>
@@ -130,9 +135,9 @@ include("includes/message.php");
 									</div>
 								</div>
 								<div class="my_order_box_inner">
-									<div class="order_image"><img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt=""></div>
+									<div class="order_image"><img src="<?php print($get_image_link); ?>" alt=""></div>
 									<div class="order_detail">
-										<h2><?php print($row->pro_udx_seo_internetbezeichung); ?></h2>
+										<h2><?php print($pro_udx_seo_internetbezeichung); ?></h2>
 										<h2 class="black_text"><?php print($row->pro_description_short); ?></h2>
 										<div class="order_button">
 											<a href="<?php print($product_link); ?>">

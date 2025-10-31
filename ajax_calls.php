@@ -1747,5 +1747,107 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;
+
+        case 'gratis_products_inner':
+            //print_r($_REQUEST);
+            $retValue = array();
+            $fp_price = 0;
+            $cart_amount = 0;
+            $cart_amount_total = 0;
+            if(isset($_SESSION['cart_id'])){
+            $fp_price = returnSum("pbp_price_amount * ci_qty", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_type = '2'");
+            $cart_amount = $cart_amount_total = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+            }
+            $cart_amount = $cart_amount - $fp_price;
+            $fpc_id = $_REQUEST['fpc_id'];
+            $whereclause = "WHERE 1 = 1";
+            if(!empty($fpc_id)){
+                $whereclause .= " AND fpc_id IN (".$fpc_id.")";
+            }
+            $gratis_products_inner = "";
+            $Query1 = "SELECT fp_id, fpc_id, fp_file, fp_price, fp_title_de AS fp_title FROM `free_product` ".$whereclause." ORDER BY fpc_id ASC";
+            //print($Query1);die();
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if(mysqli_num_rows($rs1) > 0){
+                while($rw1 = mysqli_fetch_object($rs1)){
+                    $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
+                    if (!empty($rw1->fp_file)) {
+                        $image_path = $GLOBALS['siteURL'] . "files/free_product/" . $rw1->fp_file;
+                    }
+                    if($cart_amount >= $rw1->fp_price ){
+                        $max_quentity = floor($cart_amount / $rw1->fp_price);
+                        mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_max_quentity = '".$max_quentity."' WHERE fp_id = '".$rw1->fp_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                        $ci_qty = returnName("ci_qty", "cart_items", "fp_id", $rw1->fp_id, " AND ci_type = '2'");
+                        $quantity_text = "";
+                        if($ci_qty > 0){
+                            $quantity_text = '<div class="pd-add-quantity-text">'.$ci_qty.'</div>';
+                        }
+                        $free_add_to_cart = '
+                                <div class="gratis-pd-add">
+									<div class="gratis-pd-add-value">
+										<div class="pd-add-plus">
+											<div class="quantity-container" data-max="'.$max_quentity.'">
+												<button class="gratis_minus">-</button>
+												<input type="text" class="gratis_quantity" id = "free_quantity_'.$rw1->fp_id.'" value="1" readonly>
+												<button class="gratis_plus">+</button>
+											</div>
+										</div>
+										<div class="pd-add-button">
+											<div class="pd-add-button-inner add_to_cart_free_product" data-id = "'.$rw1->fp_id.'" data-max-quentity="'.$max_quentity.'">In den Einkaufswagen</div>
+                                            '.$quantity_text.'
+										</div>
+									</div>
+									<div class="pd-max-text">Max: '.$max_quentity.'</div>
+								</div>
+                        ';
+                    } else {
+                        $free_add_to_cart = '<div class="gratis-prise-green">Es fehlen noch '.price_format($rw1->fp_price - $cart_amount).' €</div>';
+                    }
+                    $gratis_products_inner .= '
+                    <div class="gratis-card">
+							<div class="gratis-box">
+								<div class="gratis-prise"><span>Pro</span>'.price_format($rw1->fp_price).' €</div>
+								<div class="gratis-image"><img loading="lazy" src="'.$image_path.'" alt="'.$rw1->fp_title.'"></div>
+								<div class="gratis-title">'.$rw1->fp_title.'</div>
+								'.$free_add_to_cart.'
+							</div>
+						</div>
+                    ';
+                }
+
+                $retValue = array("status" => "1", "message" => "Record found", "gratis_products_inner" => $gratis_products_inner, "cart_amount_total" => price_format($cart_amount_total), "free_product_price" => price_format($fp_price), "cart_remaning_amount" => price_format($cart_amount));
+            } else {
+                $retValue = array("status" => "0", "message" => "Record not found!", "gratis_products_inner" => "<p class = 'txt_align_center'>Record not found!</p>");
+            }
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
+
+        case 'add_to_cart_free_product':
+            //print_r($_REQUEST);die();
+            $retValue = array();
+            $cart_id = $_SESSION['cart_id'];
+            $fp_id = $_REQUEST['fp_id'];
+            $ci_qty = $_REQUEST['free_quantity'];
+            //$ci_max_quentity = $_REQUEST['ci_max_quentity'] - $ci_qty;
+            $pbp_price_amount = returnName("fp_price", "free_product", "fp_id", $fp_id);
+            $Query = "SELECT * FROM `cart_items` WHERE cart_id = '".$cart_id."' AND fp_id = '".$fp_id."'";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if(mysqli_num_rows($rs) > 0){
+                $row = mysqli_fetch_object($rs);
+
+                mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = ci_qty + '".$ci_qty."' WHERE ci_id = '".$row->ci_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
+                $retValue = array("status" => "1", "message" => "The recorded quantity has been updated to the bucket successfully", "count" => "$count");
+            } else {
+                $ci_id = getMaximum("cart_items", "ci_id");
+                mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items (ci_id, ci_type, cart_id, fp_id, pbp_price_amount, ci_qty) VALUES ('".$ci_id."', '2', '".$cart_id."', '".$fp_id."', '".$pbp_price_amount."', '".$ci_qty."')") or die(mysqli_error($GLOBALS['conn']));
+                $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM cart_items WHERE cart_id = '" . $cart_id . "'"));
+                $retValue = array("status" => "1", "message" => "The record has been added to the bucket successfully", "count" => "$count");
+            }
+            ci_max_quentity();
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
+            break;
     }
 }

@@ -39,6 +39,13 @@ $cu = 'active';
                 </ul>
             </li>
             <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_free_product_category' || $pg == 'manage_free_products') ? $cu : ''; ?>"><span class="material-symbols-outlined icon">hand_package</span> <span class="text">Gratis</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_free_product_category' || $pg == 'manage_free_products') ? $c : ''; ?>>
+                    <li><a href="manage_free_product_category.php" title="Gratis Kategorie" ><span class="text">Gratis Kategorie</span></a></li>
+                    <li><a href="manage_free_products.php" title="Gratis Atrium" ><span class="text">Gratis Atrium</span></a></li>
+                </ul>
+            </li>
+            <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment.php' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
                 <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment.php' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $c : ''; ?>>
                     <li><a href="manage_appointment.php" title="Appointment Management"><span class="text">Appointment</span></a></li>
