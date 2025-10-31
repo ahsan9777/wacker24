@@ -1439,7 +1439,21 @@ function getRating($PhotoID)
 	}
 	return $Rating;
 }
-
+function getMinimum($Table, $Field)
+{
+	$maxID = 0;
+	$strQry = "SELECT MIN(" . $Field . ")+1 as CID FROM " . $Table . " ";
+	$nResult = mysqli_query($GLOBALS['conn'], $strQry);
+	if (mysqli_num_rows($nResult) >= 1) {
+		while ($row = mysqli_fetch_object($nResult)) {
+			if (@$row->CID)
+				$maxID = $row->CID;
+			else
+				$maxID = 1;
+		}
+	}
+	return $maxID;
+}
 function getMaximumWhere($Table, $Field, $Where)
 {
 	$maxID = 0;
@@ -1455,7 +1469,6 @@ function getMaximumWhere($Table, $Field, $Where)
 	}
 	return $maxID;
 }
-
 function getMaximum($Table, $Field)
 {
 	$maxID = 0;

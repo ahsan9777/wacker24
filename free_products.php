@@ -5,10 +5,11 @@ $free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_courier_fix_c
 if (isset($_SESSION['cart_id'])) {
 	$cart_amount = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
 	$free_shipment_txt = "";
-	if (config_courier_fix_charges >= $cart_amount) {
-		$free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_courier_fix_charges - $cart_amount) . ' €</span>';
+	if (config_condition_courier_amount >= $cart_amount) {
+		$free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_condition_courier_amount - $cart_amount) . ' €</span>';
 	}
 }
+$fp_price = price_format(getMinimum("free_product", "fp_price"));
 ?>
 
 <head>
@@ -39,7 +40,7 @@ if (isset($_SESSION['cart_id'])) {
 					<div class="gratis-calculate-total">
 						<div class="calculate-total-left">
 							<div class="calculate-gratis-text">GRATIS <span>fur Sie!</span></div>
-							<div class="calculate-gratis-subtext">Ab 23,80 € Warenwert Ihrer Bestellung (alle Warenwerte inkl. MwSt.)</div>
+							<div class="calculate-gratis-subtext">Ab <?php print($fp_price); ?> € Warenwert Ihrer Bestellung (alle Warenwerte inkl. MwSt.)</div>
 						</div>
 						<div class="calculate-total-right">
 							<div class="calculate-total-row">
@@ -57,7 +58,7 @@ if (isset($_SESSION['cart_id'])) {
 						</div>
 					</div>
 					<div class="gratis-total-prise">
-						<div class="gratis-total-prise-big">Versandkostenfrei für <?php print(price_format(config_courier_fix_charges)); ?> € <?php print($free_shipment_txt); ?></div>
+						<div class="gratis-total-prise-big">Versandkostenfrei für <?php print(price_format(config_condition_courier_amount)); ?> € <?php print($free_shipment_txt); ?></div>
 					</div>
 					<div class="gratis-checkbox-section">
 						<h3>Geschenke filtern:</h3>
