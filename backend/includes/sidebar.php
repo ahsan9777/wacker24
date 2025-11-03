@@ -54,13 +54,14 @@ $cu = 'active';
                     <li><a href="manage_appointment_holidays.php" title="Holidays Management"><span class="text">Holidays</span></a></li>
                 </ul>
             </li>
-            
-
             <li>
                 <a href="manage_users.php" title="Kunden Management" ><span class="material-icons icon">face</span> <span class="text">Kunden</span> </a>
             </li>
             <li>
                 <a href="manage_brands.php" title="Marken Management" ><span class="material-icons icon">star</span> <span class="text">Marken</span> </a>
+            </li>
+            <li>
+                <a href="manage_most_sale_articals.php" title="Most Sale Articles Management" ><span class="material-symbols-outlined icon">award_star</span> <span class="text">Most Sale Articles</span> </a>
             </li>
             <li>
                 <a href="manage_orders.php" title="Auftragsverwaltung Management" ><span class="material-icons icon">inventory</span> <span class="text">Auftragsverwaltung</span> </a>
