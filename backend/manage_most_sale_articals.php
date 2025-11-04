@@ -68,7 +68,7 @@ include("includes/messages.php");
                                                 <td><?php print($row->pro_description_short); ?></td>
                                                 <td><?php print($row->sales_count); ?></td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print(product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'].product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
                                                 </td>
                                             </tr>
                                     <?php
