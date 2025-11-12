@@ -241,6 +241,7 @@ if (isset($_REQUEST['sortby'])) {
 													<div class="pd_detail">
 														<h3 class="detail_data_show"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" style="display:block" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
 														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
+														<p>Best.-Nr.: <?php print($row->pro_manufacture_aid); ?></p>
 														<?php
 														$count = 0;
 														if ($row->pro_udx_seo_epag_id > 0) {
