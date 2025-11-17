@@ -1,9 +1,17 @@
 <?php
 include("includes/php_includes_top.php");
 $cart_amount = 0;
+$ci_total_free = 0;
 $free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_courier_fix_charges) . ' €</span>';
 if (isset($_SESSION['cart_id'])) {
-	$cart_amount = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+	//$cart_amount = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+	$cart_amount_total = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+	$ci_total_free = returnSum("ci_total", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_discount_value > 0");
+	if($ci_total_free > 0){
+		$cart_amount = $cart_amount_total - $ci_total_free;
+	} else {
+		$cart_amount = $cart_amount_total;
+	}
 	$free_shipment_txt = "";
 	if (config_condition_courier_amount >= $cart_amount) {
 		$free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_condition_courier_amount - $cart_amount) . ' €</span>';
@@ -45,11 +53,11 @@ $fp_price = price_format(getMinimum("free_product", "fp_price"));
 						<div class="calculate-total-right">
 							<div class="calculate-total-row">
 								<div class="calculate-total-label">Ihr Warenwert gesamt</div>
-								<div class="calculate-total-value" id="cart_amount_total"><?php print(price_format($cart_amount)); ?> €</div>
+								<div class="calculate-total-value" id="cart_amount_total"><?php print(price_format($cart_amount_total)); ?> €</div>
 							</div>
 							<div class="calculate-total-row">
 								<div class="calculate-total-label">Abzüglich Warenwert aus Aktionsartikeln:</div>
-								<div class="calculate-total-value" id = "free_product_price">0.00 €</div>
+								<div class="calculate-total-value" id = "ci_total_free"><?php print(( ($ci_total_free > 0) ? "-" : "" ).price_format($ci_total_free)); ?> €</div>
 							</div>
 							<div class="calculate-total-row">
 								<div class="calculate-total-label"><strong>Warenwert für Ihre Geschenkeauswahl:</strong></div>
@@ -124,7 +132,7 @@ $fp_price = price_format(getMinimum("free_product", "fp_price"));
 				//console.log(obj);
 				if (obj.status == 1) {
 					$("#cart_amount_total").text(obj.cart_amount_total + " €");
-					$("#free_product_price").text(obj.free_product_price + " €");
+					$("#ci_total_free").text(obj.ci_total_free + " €");
 					$("#cart_remaning_amount").text(obj.cart_remaning_amount + " €");
 					$("#gratis_products_inner").html(obj.gratis_products_inner);
 					genaric_script();

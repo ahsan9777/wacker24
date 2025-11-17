@@ -3188,7 +3188,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, fp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '".$row2->fp_id."', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, fp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '" . $row2->fp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
 			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
 			$order_items_table_check = 1;
 		}
@@ -3401,22 +3401,24 @@ function product_detail_url($supplier_id, $ci_type = 0)
 function ci_max_quentity()
 {
 	$cart_amount = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+	$ci_total_free = returnSum("ci_total", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_discount_value > 0");
+	if ($ci_total_free > 0) {
+		$cart_amount = $cart_amount - $ci_total_free;
+	}
 	if ($cart_amount > 0) {
-		//$fp_price = returnSum("pbp_price_amount * ci_qty", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_type = '2'");
-		//$cart_amount = $cart_amount - ((!empty($fp_price)) ? $fp_price : 0);
 		$Query = "SELECT ci_id, pbp_price_amount AS fp_price, ci_qty FROM cart_items WHERE ci_type = '2' AND cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY pbp_price_amount ASC";
 		$rs = mysqli_query($GLOBALS['conn'], $Query);
 		if (mysqli_num_rows($rs) > 0) {
 			while ($row = mysqli_fetch_object($rs)) {
 				$fp_price = $row->fp_price * $row->ci_qty;
-				if( $cart_amount > $fp_price){
+				if ($cart_amount > $fp_price) {
 					$max_quentity = floor($cart_amount / $row->fp_price);
 					$cart_amount = $cart_amount - $fp_price;
 					mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_max_quentity = '" . $max_quentity . "' WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 				} else {
-					if($cart_amount > $row->fp_price){
+					if ($cart_amount > $row->fp_price) {
 						$ci_qty = floor($cart_amount / $row->fp_price);
-						mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = '".$ci_qty."', ci_max_quentity = '0' WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+						mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = '" . $ci_qty . "', ci_max_quentity = '0' WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 					} else {
 						mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE ci_type = '2' AND ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
 					}

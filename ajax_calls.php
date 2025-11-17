@@ -239,7 +239,7 @@ if (isset($_REQUEST['action'])) {
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="' .$product_link. '" title = "'.$row->pro_udx_seo_internetbezeichung.'" ><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
+                                    <div class="side_cart_pd_image"><a href="' . $product_link . '" title = "' . $row->pro_udx_seo_internetbezeichung . '" ><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt="' . $row->pro_udx_seo_internetbezeichung . '"></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
@@ -748,11 +748,11 @@ if (isset($_REQUEST['action'])) {
             $left_filter_cat_WhereQuery = $_REQUEST['left_filter_cat_WhereQuery'];
             $input_type = "checkbox";
             if ($manf_id > 0) {
-                if($leve_id > 0){
+                if ($leve_id > 0) {
                     $input_type = "radio";
-                    $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE  cat.parent_id = '".$leve_id."'  ORDER BY cat.cat_orderby ASC";
+                    $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE  cat.parent_id = '" . $leve_id . "'  ORDER BY cat.cat_orderby ASC";
                 } else {
-                    $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE  cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY cat.cat_orderby ASC";
+                    $Query = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat_level_two.cat_params_de AS cat_level_params, cat.cat_orderby FROM category AS cat LEFT OUTER JOIN category AS cat_level_two ON cat_level_two.group_id = cat.parent_id WHERE  cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '" . $manf_id . "') GROUP BY cm.cat_id ) ORDER BY cat.cat_orderby ASC";
                 }
             } elseif ($pro_type == 20) {
                 $level_check = $leve_id;
@@ -767,13 +767,13 @@ if (isset($_REQUEST['action'])) {
                     $lf_group_id_inner .= '<li>
                         <label class="gerenric_checkbox">
                            ' . $row->cat_title . '
-                            <input type="'.$input_type.'" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '" ' . (($level_check == $row->group_id) ? "checked" : "") . '>
+                            <input type="' . $input_type . '" name="lf_group_id[]" class="lf_group_id" id="lf_group_id" value="' . $row->group_id . '" ' . (($level_check == $row->group_id) ? "checked" : "") . '>
                             <span class="checkmark"></span>
                         </label>
                     </li>';
                 }
             }
-            if ( $manf_id > 0) {
+            if ($manf_id > 0) {
                 $lf_group_id_inner .= '
                 <script>
                     $(".lf_group_id").on("click", function() {
@@ -791,7 +791,7 @@ if (isset($_REQUEST['action'])) {
                     });
                 </script>
                 ';
-            } elseif ( $lf_action_type == 1 && strlen($leve_id) > 2 ) {
+            } elseif ($lf_action_type == 1 && strlen($leve_id) > 2) {
                 $lf_group_id_inner .= '
                 <script>
                     $(".lf_group_id").on("click", function() {
@@ -922,11 +922,11 @@ if (isset($_REQUEST['action'])) {
             }
             $manf_id = isset($_REQUEST['manf_id']) ? $_REQUEST['manf_id'] : 0;
             $counter = 0;
-            if($manf_id > 0){
-                if($leve_id == 701){
+            if ($manf_id > 0) {
+                if ($leve_id == 701) {
                     $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id = '70100' ORDER BY csf.csf_orderby ASC";
                 } else {
-                    $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id ) ORDER BY csf.csf_orderby ASC";
+                    $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '" . $manf_id . "') GROUP BY cm.cat_id ) ORDER BY csf.csf_orderby ASC";
                 }
             } else {
                 $Query1 = "SELECT csf.*, sf.lov_sf_title, sf.lov_sf_params_de AS lov_sf_params FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS sf ON sf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id IN (" . $leve_id . ") ORDER BY csf.csf_orderby ASC";
@@ -937,7 +937,7 @@ if (isset($_REQUEST['action'])) {
                 while ($rw1 = mysqli_fetch_object($rs1)) {
                     $counter++;
                     //$Query2 = "";
-                    if($manf_id > 0){
+                    if ($manf_id > 0) {
                         $Query2 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fname = '" . $rw1->lov_sf_title . "' AND pf.supplier_id IN (SELECT cm.supplier_id FROM vu_category_map AS cm  WHERE cm.manf_id = '" . $manf_id . "') GROUP BY pf.pf_fvalue ORDER BY pf.pf_forder ASC";
                     } elseif ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (isset($_REQUEST['lf_manf_id']) && !empty($_REQUEST['lf_manf_id']))) {
                         $products_featureWhere = "";
@@ -1081,8 +1081,8 @@ if (isset($_REQUEST['action'])) {
                 }
             }
             $total_count = 0;
-            if($manf_id > 0){
-                $Query = "SELECT * FROM vu_category_map AS cm WHERE cm.manf_id = '".$manf_id."' ".$whereclause." " . $order_by . "";
+            if ($manf_id > 0) {
+                $Query = "SELECT * FROM vu_category_map AS cm WHERE cm.manf_id = '" . $manf_id . "' " . $whereclause . " " . $order_by . "";
             } else {
                 $Query = "SELECT * FROM vu_category_map AS cm " . $whereclause . " AND cm.cm_type = '" . $pro_type . "' " . $order_by . "";
             }
@@ -1113,9 +1113,9 @@ if (isset($_REQUEST['action'])) {
                     }
                     //print_r($special_price);die();
                     $gerenric_product_inner .= '<div class="pd_card">
-                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'"><img src="' . get_image_link(75, $row->pg_mime_source_url) . '" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
+                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "' . $row->pro_udx_seo_internetbezeichung . '"><img src="' . get_image_link(75, $row->pg_mime_source_url) . '" alt="' . $row->pro_udx_seo_internetbezeichung . '"></a></div>
                         <div class="pd_detail">
-                            <h5><a href="' . product_detail_url($row->supplier_id) . '" title = "'.$row->pro_udx_seo_internetbezeichung.'" > ' . $row->pro_udx_seo_epag_title . ' </a></h5>';
+                            <h5><a href="' . product_detail_url($row->supplier_id) . '" title = "' . $row->pro_udx_seo_internetbezeichung . '" > ' . $row->pro_udx_seo_epag_title . ' </a></h5>';
                     $count = 0;
                     if ($row->pro_udx_seo_epag_id > 0) {
                         $Query1 = "SELECT pf.*, pro.pro_description_short, pro.pro_udx_seo_epag_title, pro.pro_udx_seo_epag_title_params_de, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
@@ -1754,68 +1754,73 @@ if (isset($_REQUEST['action'])) {
             $fp_price = 0;
             $cart_amount = 0;
             $cart_amount_total = 0;
-            if(isset($_SESSION['cart_id'])){
-            $fp_price = returnSum("pbp_price_amount * ci_qty", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_type = '2'");
-            $cart_amount = $cart_amount_total = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+            $ci_total_free = 0;
+            if (isset($_SESSION['cart_id'])) {
+                $fp_price = returnSum("pbp_price_amount * ci_qty", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_type = '2'");
+                $cart_amount = $cart_amount_total = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
+                $ci_total_free = returnSum("ci_total", "cart_items", "cart_id", $_SESSION['cart_id'], " AND ci_discount_value > 0");
+                if ($ci_total_free > 0) {
+                    $cart_amount = $cart_amount - $ci_total_free;
+                }
             }
             $cart_amount = $cart_amount - $fp_price;
             $fpc_id = $_REQUEST['fpc_id'];
             $whereclause = "WHERE 1 = 1";
-            if(!empty($fpc_id)){
-                $whereclause .= " AND fpc_id IN (".$fpc_id.")";
+            if (!empty($fpc_id)) {
+                $whereclause .= " AND fpc_id IN (" . $fpc_id . ")";
             }
             $gratis_products_inner = "";
-            $Query1 = "SELECT fp_id, fpc_id, fp_file, fp_price, fp_title_de AS fp_title FROM `free_product` ".$whereclause." ORDER BY fpc_id ASC";
+            $Query1 = "SELECT fp_id, fpc_id, fp_file, fp_price, fp_title_de AS fp_title FROM `free_product` " . $whereclause . " ORDER BY fpc_id ASC";
             //print($Query1);die();
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-            if(mysqli_num_rows($rs1) > 0){
-                while($rw1 = mysqli_fetch_object($rs1)){
+            if (mysqli_num_rows($rs1) > 0) {
+                while ($rw1 = mysqli_fetch_object($rs1)) {
                     $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
                     if (!empty($rw1->fp_file)) {
                         $image_path = $GLOBALS['siteURL'] . "files/free_product/" . $rw1->fp_file;
                     }
-                    if($cart_amount >= $rw1->fp_price ){
+                    if ($cart_amount >= $rw1->fp_price) {
                         $max_quentity = floor($cart_amount / $rw1->fp_price);
-                        mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_max_quentity = '".$max_quentity."' WHERE fp_id = '".$rw1->fp_id."' ") or die(mysqli_error($GLOBALS['conn']));
-                        $ci_qty = returnName("ci_qty", "cart_items", "fp_id", $rw1->fp_id, " AND ci_type = '2'");
+                        mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_max_quentity = '" . $max_quentity . "' WHERE fp_id = '" . $rw1->fp_id . "' ") or die(mysqli_error($GLOBALS['conn']));
+                        $ci_qty = returnName("ci_qty", "cart_items", "fp_id", $rw1->fp_id, " AND cart_id = '".$_SESSION['cart_id']."' AND ci_type = '2'");
                         $quantity_text = "";
-                        if($ci_qty > 0){
-                            $quantity_text = '<div class="pd-add-quantity-text">'.$ci_qty.'</div>';
+                        if ($ci_qty > 0) {
+                            $quantity_text = '<div class="pd-add-quantity-text">' . $ci_qty . '</div>';
                         }
                         $free_add_to_cart = '
                                 <div class="gratis-pd-add">
 									<div class="gratis-pd-add-value">
 										<div class="pd-add-plus">
-											<div class="quantity-container" data-max="'.$max_quentity.'">
+											<div class="quantity-container" data-max="' . $max_quentity . '">
 												<button class="gratis_minus">-</button>
-												<input type="text" class="gratis_quantity" id = "free_quantity_'.$rw1->fp_id.'" value="1" readonly>
+												<input type="text" class="gratis_quantity" id = "free_quantity_' . $rw1->fp_id . '" value="1" readonly>
 												<button class="gratis_plus">+</button>
 											</div>
 										</div>
 										<div class="pd-add-button">
-											<div class="pd-add-button-inner add_to_cart_free_product" data-id = "'.$rw1->fp_id.'" data-max-quentity="'.$max_quentity.'">In den Einkaufswagen</div>
-                                            '.$quantity_text.'
+											<div class="pd-add-button-inner add_to_cart_free_product" data-id = "' . $rw1->fp_id . '" data-max-quentity="' . $max_quentity . '">In den Einkaufswagen</div>
+                                            ' . $quantity_text . '
 										</div>
 									</div>
-									<div class="pd-max-text">Max: '.$max_quentity.'</div>
+									<div class="pd-max-text">Max: ' . $max_quentity . '</div>
 								</div>
                         ';
                     } else {
-                        $free_add_to_cart = '<div class="gratis-prise-green">Es fehlen noch '.price_format($rw1->fp_price - $cart_amount).' €</div>';
+                        $free_add_to_cart = '<div class="gratis-prise-green">Es fehlen noch ' . price_format($rw1->fp_price - $cart_amount) . ' €</div>';
                     }
                     $gratis_products_inner .= '
                     <div class="gratis-card">
 							<div class="gratis-box">
-								<div class="gratis-prise"><span>Pro</span>'.price_format($rw1->fp_price).' €</div>
-								<div class="gratis-image"><img loading="lazy" src="'.$image_path.'" alt="'.$rw1->fp_title.'"></div>
-								<div class="gratis-title">'.$rw1->fp_title.'</div>
-								'.$free_add_to_cart.'
+								<div class="gratis-prise"><span>Pro</span>' . price_format($rw1->fp_price) . ' €</div>
+								<div class="gratis-image"><img loading="lazy" src="' . $image_path . '" alt="' . $rw1->fp_title . '"></div>
+								<div class="gratis-title">' . $rw1->fp_title . '</div>
+								' . $free_add_to_cart . '
 							</div>
 						</div>
                     ';
                 }
 
-                $retValue = array("status" => "1", "message" => "Record found", "gratis_products_inner" => $gratis_products_inner, "cart_amount_total" => price_format($cart_amount_total), "free_product_price" => price_format($fp_price), "cart_remaning_amount" => price_format($cart_amount));
+                $retValue = array("status" => "1", "message" => "Record found", "gratis_products_inner" => $gratis_products_inner, "cart_amount_total" => price_format($cart_amount_total), "ci_total_free" => ( ($ci_total_free > 0) ? "-" : "" ).price_format($ci_total_free), "cart_remaning_amount" => price_format($cart_amount_total - $ci_total_free));
             } else {
                 $retValue = array("status" => "0", "message" => "Record not found!", "gratis_products_inner" => "<p class = 'txt_align_center'>Record not found!</p>");
             }
@@ -1831,17 +1836,17 @@ if (isset($_REQUEST['action'])) {
             $ci_qty = $_REQUEST['free_quantity'];
             //$ci_max_quentity = $_REQUEST['ci_max_quentity'] - $ci_qty;
             $pbp_price_amount = returnName("fp_price", "free_product", "fp_id", $fp_id);
-            $Query = "SELECT * FROM `cart_items` WHERE cart_id = '".$cart_id."' AND fp_id = '".$fp_id."'";
+            $Query = "SELECT * FROM `cart_items` WHERE cart_id = '" . $cart_id . "' AND fp_id = '" . $fp_id . "'";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
-            if(mysqli_num_rows($rs) > 0){
+            if (mysqli_num_rows($rs) > 0) {
                 $row = mysqli_fetch_object($rs);
 
-                mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = ci_qty + '".$ci_qty."' WHERE ci_id = '".$row->ci_id."' ") or die(mysqli_error($GLOBALS['conn']));
+                mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_qty = ci_qty + '" . $ci_qty . "' WHERE ci_id = '" . $row->ci_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                 $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM `cart_items` WHERE `cart_id` = '" . $cart_id . "'"));
                 $retValue = array("status" => "1", "message" => "The recorded quantity has been updated to the bucket successfully", "count" => "$count");
             } else {
                 $ci_id = getMaximum("cart_items", "ci_id");
-                mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items (ci_id, ci_type, cart_id, fp_id, pbp_price_amount, ci_qty) VALUES ('".$ci_id."', '2', '".$cart_id."', '".$fp_id."', '".$pbp_price_amount."', '".$ci_qty."')") or die(mysqli_error($GLOBALS['conn']));
+                mysqli_query($GLOBALS['conn'], "INSERT INTO cart_items (ci_id, ci_type, cart_id, fp_id, pbp_price_amount, ci_qty) VALUES ('" . $ci_id . "', '2', '" . $cart_id . "', '" . $fp_id . "', '" . $pbp_price_amount . "', '" . $ci_qty . "')") or die(mysqli_error($GLOBALS['conn']));
                 $_SESSION['header_quantity'] = $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], "SELECT * FROM cart_items WHERE cart_id = '" . $cart_id . "'"));
                 $retValue = array("status" => "1", "message" => "The record has been added to the bucket successfully", "count" => "$count");
             }

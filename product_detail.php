@@ -559,6 +559,9 @@ include("includes/message.php");
 											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>
 									</div>
+									<?php if($discounted_price > 0) { ?>
+									<div class="best_nr">Keine Geschenke möglich</div>
+									<?php } ?>
 									<div class="best_nr">Best.-Nr.: <?php print($pro_manufacture_aid); ?></div>
 									<div class="product_shippment">
 										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
