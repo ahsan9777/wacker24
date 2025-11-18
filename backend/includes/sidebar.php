@@ -3,7 +3,7 @@ $pageName = basename($_SERVER["PHP_SELF"]);
 $posName = strpos($pageName, '.php');
 $pageName = (substr($pageName, 0, $posName));
 $pg = $pageName;
-$c = 'style="max-height: 118px;"';
+$c = 'style="max-height: 300px;"';
 $cu = 'active';
 ?>
 <aside class="sidebar">

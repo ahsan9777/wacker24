@@ -9,12 +9,12 @@ if (isset($_REQUEST['action'])) {
             $where = "";
             $sub_cat_title = 0;
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                if (isset($_REQUEST['parent_id']) ) {
+                if (isset($_REQUEST['parent_id'])) {
                     $sub_cat_title = 1;
-                    if($_REQUEST['parent_id'] == 0){
+                    if ($_REQUEST['parent_id'] == 0) {
                         $where .= " WHERE cat.parent_id > '0' AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
-                    } else{
-                        $where .= " WHERE cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['parent_id']."' ORDER BY main_cat.group_id ASC) AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
+                    } else {
+                        $where .= " WHERE cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $_REQUEST['parent_id'] . "' ORDER BY main_cat.group_id ASC) AND ( cat.cat_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR cat.cat_title_en LIKE '%" . dbStr($_REQUEST['term']) . "%')";
                     }
                     $Query = "SELECT cat.cat_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title FROM `category` AS cat LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = cat.parent_id  " . $where . " ORDER BY cat.cat_id  LIMIT 0,20";
                 } else {
@@ -27,7 +27,7 @@ if (isset($_REQUEST['action'])) {
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
                     'cat_id' => strip_tags(html_entity_decode($row->cat_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->cat_title. (($sub_cat_title > 0)? '( '.$row->sub_cat_title. ')' : ''), ENT_QUOTES, 'UTF-8'))
+                    'value' => strip_tags(html_entity_decode($row->cat_title . (($sub_cat_title > 0) ? '( ' . $row->sub_cat_title . ')' : ''), ENT_QUOTES, 'UTF-8'))
                 );
             }
             $jsonResults = json_encode($json);
@@ -53,10 +53,10 @@ if (isset($_REQUEST['action'])) {
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
                 $pro_custom_add = " pro_custom_add = '0' AND";
-                if(isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0){
+                if (isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0) {
                     $pro_custom_add = "pro_custom_add = '1' AND";
                 }
-                $where .= " WHERE ".$pro_custom_add." pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
+                $where .= " WHERE " . $pro_custom_add . " pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
             }
             $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
             //print($Query);
@@ -76,13 +76,13 @@ if (isset($_REQUEST['action'])) {
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
                 $level_ids = "";
-                if(isset($_REQUEST['level_one_id']) && $_REQUEST['level_one_id'] > 0){
-                    $level_ids .= "usp.level_one_id = '".$_REQUEST['level_one_id']."' AND ";
+                if (isset($_REQUEST['level_one_id']) && $_REQUEST['level_one_id'] > 0) {
+                    $level_ids .= "usp.level_one_id = '" . $_REQUEST['level_one_id'] . "' AND ";
                 }
-                if(isset($_REQUEST['level_two_id']) && $_REQUEST['level_two_id'] > 0){
-                    $level_ids .= "usp.level_two_id = '".$_REQUEST['level_two_id']."' AND ";
+                if (isset($_REQUEST['level_two_id']) && $_REQUEST['level_two_id'] > 0) {
+                    $level_ids .= "usp.level_two_id = '" . $_REQUEST['level_two_id'] . "' AND ";
                 }
-                $where .= " WHERE ".$level_ids." usp.supplier_id > 0  AND usp.user_id = '0' AND pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR usp.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+                $where .= " WHERE " . $level_ids . " usp.supplier_id > 0  AND usp.user_id = '0' AND pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR usp.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
             }
             $Query = "SELECT usp.supplier_id, pro.pro_description_short FROM user_special_price AS usp LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id " . $where . " ORDER BY usp.supplier_id  LIMIT 0,20";
             //print($Query);
@@ -100,7 +100,7 @@ if (isset($_REQUEST['action'])) {
         case 'pro_update_quantity':
             $retValue = array();
             //print_r($_REQUEST);die();
-            $data_update = mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "', pq_physical_quantity = '".dbStr(trim($_REQUEST['pq_physical_quantity']))."' WHERE pq_id = '" . dbStr(trim($_REQUEST['pq_id'])) . "' AND supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "' ") or die(mysqli_error($GLOBALS['conn']));
+            $data_update = mysqli_query($GLOBALS['conn'], "UPDATE products_quantity SET pq_quantity = '" . dbStr(trim($_REQUEST['pq_quantity'])) . "', pq_upcomming_quantity = '" . dbStr(trim($_REQUEST['pq_upcomming_quantity'])) . "', pq_physical_quantity = '" . dbStr(trim($_REQUEST['pq_physical_quantity'])) . "' WHERE pq_id = '" . dbStr(trim($_REQUEST['pq_id'])) . "' AND supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "' ") or die(mysqli_error($GLOBALS['conn']));
             if ($data_update == true) {
                 $retValue = array("status" => "1", "message" => "Record Updated successfully");
                 $retValue['data'][] = array(
@@ -169,7 +169,7 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($json);
             print($jsonResults);
             break;
-        
+
         case 'manf_name':
             $json = array();
             $where = "";
@@ -428,6 +428,27 @@ if (isset($_REQUEST['action'])) {
             } else {
                 echo "<option value=''>No record found!</option>";
             }
+            break;
+
+        case 'fetch_new_order_data':
+            //print_r($_REQUEST);die();
+            $ord_id = $_REQUEST['ord_id'];
+            $ord_id_new = 0;
+            $order_pending_count = 0;
+            $ord_id_new = getMaximum("orders", "ord_id");
+            if ($ord_id_new > 0) {
+                $ord_id_new = $ord_id_new - 1;
+            }
+            //print_r("ord_id_new: ".$ord_id_new." ord_id: ".$ord_id);die();
+            if($ord_id_new > $ord_id){
+                $order_pending_count = TotalRecords("ord_id", "orders", "WHERE ord_delivery_status = '0' ");
+                $total_no_of_order = TotalRecords("ord_id", "orders", "WHERE 1 = 1");
+                $retValue = array("status" => "1", "message" => "Record found", "total_no_of_order" => $total_no_of_order, "ord_id_new" => $ord_id_new, "order_pending_count" => $order_pending_count);
+            } else {
+                $retValue = array("status" => "0", "message" => "Record not found!");
+            }
+            $jsonResults = json_encode($retValue);
+            print($jsonResults);
             break;
     }
 }

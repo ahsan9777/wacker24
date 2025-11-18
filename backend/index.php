@@ -1,4 +1,11 @@
-<?php include("../lib/session_head.php"); ?>
+<?php
+include("../lib/session_head.php");
+$ord_id = 0;
+$ord_id = getMaximum("orders", "ord_id");
+if ($ord_id > 0) {
+    $ord_id = $ord_id - 1;
+}
+?>
 <!DOCTYPE html>
 <html lang="de">
 
@@ -99,6 +106,8 @@
                         </a>
                     </div>
                     <div class="col-md-2-half col-12 mt-3 cart">
+                        <audio id="bellSound" src="assets/audio/order.mp3" preload="auto"></audio>
+                        <input type="hidden" name="ord_id" id="ord_id" value="<?php print($ord_id); ?>">
                         <a class="text-decoration-none" href="manage_orders.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-success btn-style-light">
@@ -107,15 +116,17 @@
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Bestellungen</label>
-                                        <h2><?php print(TotalRecords("ord_id", "orders", "WHERE 1 = 1")); ?></h2>
+                                        <h2 id="total_no_of_order"><?php print(TotalRecords("ord_id", "orders", "WHERE 1 = 1")); ?></h2>
                                     </div>
                                     <?php $order_pending_count = TotalRecords("ord_id", "orders", "WHERE ord_delivery_status = '0' ");
                                     if ($order_pending_count > 0) {
                                     ?>
-                                        <a href="manage_orders.php" class="cart_text_right text-decoration-none">
+                                        <a href="manage_orders.php" class="cart_text_right text-decoration-none" id = "pending_order_srarus_one">
                                             <p> <?php print($order_pending_count); ?> ausstehend</p>
                                         </a>
                                     <?php } ?>
+                                    <a href="manage_orders.php" class="cart_text_right text-decoration-none" id = "pending_order_srarus_two" style="display: none;">
+                                    </a>
                                 </div>
                             </div>
                         </a>
@@ -314,16 +325,50 @@
                                         </a>
                                     <?php } ?>
                                 </div>
-                                </div>
                             </div>
-                        </a>
                     </div>
+                    </a>
                 </div>
-
-            </section>
         </div>
+
+        </section>
+    </div>
     </div>
     <?php include("includes/bottom_js.php"); ?>
 </body>
+<script>
+    function fetchData() {
+        let ord_id = $("#ord_id").val();
+        //console.log("ord_id: ", ord_id);
+        //document.getElementById("bellSound").play();
+        $.ajax({
+            url: "ajax_calls.php?action=fetch_new_order_data",
+            type: "POST", // or POST
+            data: {
+                ord_id: ord_id
+            },
+            success: function(response) {
+                //console.log("AJAX Response:", response);
+                const obj = JSON.parse(response);
+                //console.log(obj);
+                
+                if(obj.status == 1){
+                    document.getElementById("bellSound").play();
+                    $("#ord_id").val(obj.ord_id_new);
+                    $("#pending_order_srarus_one").hide();
+                    $("#pending_order_srarus_two").show();
+                    $("#total_no_of_order").text(obj.total_no_of_order);
+                    $("#pending_order_srarus_two").html("<p>"+obj.order_pending_count+" ausstehend</p>");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", error);
+            }
+        });
+    } // 300000 ms = 5 minutes
+
+    fetchData();
+    setInterval(fetchData, 6000);
+</script>
 
 </html>
