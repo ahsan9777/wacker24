@@ -128,7 +128,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$product_params_supplier_id = returnName("supplier_id", "products", "pro_udx_seo_internetbezeichung_params_de", $product_params[0]);
 	if ($pro_status > 0) {
 		$pro_udx_seo_epag_title_params_de = returnName("pro_udx_seo_epag_title_params_de", "products", "supplier_id", $product_params_supplier_id);
-		header("Location: " . $GLOBALS['siteURL'] . $pro_udx_seo_epag_title_params_de."-".$product_params_supplier_id);
+		header("Location: " . $GLOBALS['siteURL'] . $pro_udx_seo_epag_title_params_de . "-" . $product_params_supplier_id);
 	} else {
 		header("Location: " . $GLOBALS['siteURL'] . "nicht-verfuegbar");
 	}
@@ -147,10 +147,10 @@ if (!$special_price) {
 //print_r($special_price);
 //}
 $price_schema = '
-	"price": "'.$pbp_price_amount.'", 
+	"price": "' . $pbp_price_amount . '", 
     "priceValidUntil": "2099-12-31",
     "itemCondition": "https://schema.org/NewCondition",
-    "availability": "'.$quantity_status.'",
+    "availability": "' . $quantity_status . '",
 ';
 $versand_txt_color = "";
 $versand_txt = "Versand";
@@ -158,7 +158,7 @@ $discounted_price = 0;
 $shipping_price_free = 0;
 $returnShippingFeesAmount = '"returnShippingFeesAmount": {
 						"@type": "MonetaryAmount",
-						"value": "'.config_courier_fix_charges.'",
+						"value": "' . config_courier_fix_charges . '",
 						"currency": "EUR"
 					},';
 if (!empty($special_price)) {
@@ -169,15 +169,15 @@ if (!empty($special_price)) {
 		$discounted_price = discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row_special_price->pbp_special_price_amount > 0) ? $row_special_price->pbp_special_price_amount : $row_special_price->pbp_price_amount), $special_price['usp_discounted_value'], $row_special_price->pbp_tax);
 
 		$price_schema = '
-			"price": "'.$discounted_price.'", 
+			"price": "' . $discounted_price . '", 
 			"priceValidUntil": "2099-12-31",
 			"itemCondition": "https://schema.org/NewCondition",
-			"availability": "'.$quantity_status.'",
+			"availability": "' . $quantity_status . '",
 
 			"priceSpecification": {
 			"@type": "PriceSpecification",
 			"priceCurrency": "EUR",
-			"price": "'.$pbp_price_amount.'",
+			"price": "' . $pbp_price_amount . '",
 			"name": "Original price",
 			"eligibleQuantity": {
 				"@type": "QuantitativeValue",
@@ -188,17 +188,17 @@ if (!empty($special_price)) {
 	}
 }
 
-if($discounted_price > 0){
+if ($discounted_price > 0) {
 	//echo "if: ";
-	if($discounted_price >= config_condition_courier_amount){
+	if ($discounted_price >= config_condition_courier_amount) {
 		$shipping_price_free = 1;
 		$returnShippingFeesAmount = "";
 		$versand_txt_color = "green";
 		$versand_txt = "Versandkostenfrei";
 	}
-} else{
+} else {
 	//echo "else: ";
-	if($pbp_price_amount >= config_condition_courier_amount){
+	if ($pbp_price_amount >= config_condition_courier_amount) {
 		$shipping_price_free = 1;
 		$returnShippingFeesAmount = "";
 		$versand_txt_color = "green";
@@ -234,7 +234,7 @@ include("includes/message.php");
 		{
 			"@context": "https://schema.org/",
 			"@type": "Product",
-			"name": "<?php print(str_replace(array('"'), "",$pro_udx_seo_internetbezeichung)); ?>",
+			"name": "<?php print(str_replace(array('"'), "", $pro_udx_seo_internetbezeichung)); ?>",
 			"image": "<?php print($pg_mime_source_url); ?>",
 			"description": "<?php print($pro_description_long_schema); ?>",
 			"sku": "<?php print($pro_ean); ?>",
@@ -247,12 +247,10 @@ include("includes/message.php");
 				"@type": "Offer",
 				"url": "<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>",
 				"priceCurrency": "EUR",
-				<?php print($price_schema);?>
-				"shippingDetails": [{
+				<?php print($price_schema); ?> "shippingDetails": [{
 					"@type": "OfferShippingDetails",
-					<?php print( ($shipping_price_free > 0) ? '"name": "Free shipping",' : '' ) ?>
-					<?php print( ($shipping_price_free > 0) ? '"shippingLabel": "Free delivery",' : '' ) ?>
-					"shippingRate": {
+					<?php print(($shipping_price_free > 0) ? '"name": "Free shipping",' : '') ?>
+					<?php print(($shipping_price_free > 0) ? '"shippingLabel": "Free delivery",' : '') ?> "shippingRate": {
 						"@type": "MonetaryAmount",
 						"value": "<?php print(($shipping_price_free > 0) ? 0.00 : config_courier_fix_charges); ?>",
 						"currency": "EUR"
@@ -283,9 +281,8 @@ include("includes/message.php");
 					"applicableCountry": "DE",
 					"merchantReturnDays": 14,
 					"returnMethod": "ReturnByMail",
-					"returnFees": <?php print( ($shipping_price_free > 0) ? '"FreeReturn"' : '"ReturnShippingFees"' ) ?>,
-					<?php print($returnShippingFeesAmount); ?>
-					"merchantReturnLink": "<?php print($GLOBALS['siteURL'] . "widerrufsbelehrung"); ?>"
+					"returnFees": <?php print(($shipping_price_free > 0) ? '"FreeReturn"' : '"ReturnShippingFees"') ?>,
+					<?php print($returnShippingFeesAmount); ?> "merchantReturnLink": "<?php print($GLOBALS['siteURL'] . "widerrufsbelehrung"); ?>"
 				}
 			}
 		}
@@ -559,14 +556,19 @@ include("includes/message.php");
 											<div class="gerenric_btn">In den Einkaufswagen</div>
 										</a>
 									</div>
-									<?php if($discounted_price > 0) { ?>
-									<div class="best_nr">Keine Geschenke möglich</div>
+									<?php if ($discounted_price > 0) { ?>
+										<div class="manufacturer_detail margin_10">
+											<div class="popup_manufacturer_detail">
+												<p>Da wir Ihnen diesen Artikel zu einem überaus günstigen Preis anbieten, ist eine Zugabe von Gratis-Artikeln nicht möglich.</p>
+											</div>
+											<a href="javascript:void(0);" title="Keine Geschenke möglich"><i class="fa fa-info-circle"></i> Keine Geschenke möglich </a>
+										</div>
 									<?php } ?>
 									<div class="best_nr">Best.-Nr.: <?php print($pro_manufacture_aid); ?></div>
 									<div class="product_shippment">
 										<div class="shippment_text"><span>Versand</span> Wacker 24</div>
 										<div class="shippment_text">
-											<a title="Lieferung an Standort aktualisieren" href="#" role="button" onclick="return false;"><i class="fa fa-map-marker" ></i>
+											<a title="Lieferung an Standort aktualisieren" href="#" role="button" onclick="return false;"><i class="fa fa-map-marker"></i>
 												<div class="location_text location_trigger"> Lieferung an Standort aktualisieren</div>
 											</a>
 											<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) { ?>
@@ -610,7 +612,7 @@ include("includes/message.php");
 									</style>
 									<div class="info_link_detailpage">
 										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
-											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description); ?>"><i class="fa fa-info-circle" ></i> <?php print($pg_mime_description); ?></a>
+											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description); ?>"><i class="fa fa-info-circle"></i> <?php print($pg_mime_description); ?></a>
 										<?php }
 										if (!empty($pro_udx_manufacturer_address)) { ?>
 											<div class="manufacturer_detail">
@@ -618,7 +620,7 @@ include("includes/message.php");
 													<p><?php print($pro_udx_manufacturer_address); ?></p>
 													<p><?php print($pro_udx_manufacturer_mail); ?></p>
 												</div>
-												<a href="javascript:void(0);" title="Herstellerinformationen"><i class="fa fa-info-circle" ></i> Herstellerinformationen </a>
+												<a href="javascript:void(0);" title="Herstellerinformationen"><i class="fa fa-info-circle"></i> Herstellerinformationen </a>
 											</div>
 										<?php } ?>
 									</div>
@@ -828,53 +830,53 @@ include("includes/message.php");
 	</div>
 
 	<!--LOCATION_POPUP_START-->
-		<?php include("includes/popup.php"); ?>
-		<!--LOCATION_POPUP_END-->
-		<!--CREATE_LIST_POPUP_START-->
-		<div class="create_list_popup list_popup">
-			<div class="inner_popup">
-				<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
-					<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
+	<?php include("includes/popup.php"); ?>
+	<!--LOCATION_POPUP_END-->
+	<!--CREATE_LIST_POPUP_START-->
+	<div class="create_list_popup list_popup">
+		<div class="inner_popup">
+			<form class="create_list_content" name="frm" id="frmaddress" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
+				<div class="create_list_heading">Liste erstellen <div class="create_list_close"><i class="fa fa-times"></i></div>
+				</div>
+				<div class="create_list_content_inner">
+					<p>Listenname (erforderlich)</p>
+					<input type="text" class="input_list" required name="sl_title" id="sl_title">
+					<div class="create_button">
+						<button class="gerenric_btn" type="submit" name="btnAdd_to_list">hinzufügen</button>
+						<div class="gerenric_btn popup_close">Abbrechen</div>
 					</div>
-					<div class="create_list_content_inner">
-						<p>Listenname (erforderlich)</p>
-						<input type="text" class="input_list" required name="sl_title" id="sl_title">
-						<div class="create_button">
-							<button class="gerenric_btn" type="submit" name="btnAdd_to_list">hinzufügen</button>
-							<div class="gerenric_btn popup_close">Abbrechen</div>
-						</div>
-					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
-		<!--CREATE_LIST_POPUP_END-->
-		<!--CREATE_LIST_POPUP_START-->
-		<div class="popup versand_popup">
-			<div class="popup_inner wd_60">
-				<div class="popup_content">
-					<div class="popup_heading">Versand & Verpackung <div class="popup_close"><i class="fa fa-times"></i></div>
-					</div>
-					<div class="popup_content_inner">
-						<div class="popup_inner_container">
-							<p>Lieferland: <strong>Deutschland</strong></p>
-							<h2 class="green">Versandkostenfrei <span>ab 66,39 € zzgl. MwSt. (79,00 € inkl. MwSt.) Warenwert*</span></h2>
-							<p>unter 66,39 € (79,00 € inkl. MwSt.) Warenwert: 4,76 € Verpackungspauschale + 4,75 € Versandkosten (je Auftrag)</p>
-							<div class="underline"></div>
-							<p>Folgende Kosten können optional je nach Auftrag anfallen:</p>
-							<p>Maximalgewicht:</p>
-							<p>Bis zu 31 kg: Sendungen, die das maximale Gewicht oder die maximale Größe unserer Versanddienstleister überschreiten, müssen gegebenenfalls per Spedition oder als Sperrgut verschickt werden. Die Lieferzeit kann sich bei schweren oder sperrigen Sendungen verlängern.</p>
-							<p>Inselzuschlag:</p>
-							<p>Für die Lieferung auf deutsche Inseln fallen 15,70 € pro Paket (max. 31 kg) an.</p>
-							<p>Dies gilt für folgende PLZ: 18565, 25849, 25859, 25863, 25869, 25938, 25939, 25946, 25980, 25981, 25982, 25983, 25984, 25985, 25986, 25987, 25988, 25989, 25990, 25992, 25991, 25993, 25994, 25995, 25996, 25997, 25998, 25999, 26465, 26474, 26486, 26548, 26571, 26579, 26757, 27498, 27499</p>
-							<p>Versanddienstleister:</p>
-							<p>Ihre Bestellung wird im Standardversand mit DHL versendet. </p>
-							<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
-						</div>
+	</div>
+	<!--CREATE_LIST_POPUP_END-->
+	<!--CREATE_LIST_POPUP_START-->
+	<div class="popup versand_popup">
+		<div class="popup_inner wd_60">
+			<div class="popup_content">
+				<div class="popup_heading">Versand & Verpackung <div class="popup_close"><i class="fa fa-times"></i></div>
+				</div>
+				<div class="popup_content_inner">
+					<div class="popup_inner_container">
+						<p>Lieferland: <strong>Deutschland</strong></p>
+						<h2 class="green">Versandkostenfrei <span>ab 66,39 € zzgl. MwSt. (79,00 € inkl. MwSt.) Warenwert*</span></h2>
+						<p>unter 66,39 € (79,00 € inkl. MwSt.) Warenwert: 4,76 € Verpackungspauschale + 4,75 € Versandkosten (je Auftrag)</p>
+						<div class="underline"></div>
+						<p>Folgende Kosten können optional je nach Auftrag anfallen:</p>
+						<p>Maximalgewicht:</p>
+						<p>Bis zu 31 kg: Sendungen, die das maximale Gewicht oder die maximale Größe unserer Versanddienstleister überschreiten, müssen gegebenenfalls per Spedition oder als Sperrgut verschickt werden. Die Lieferzeit kann sich bei schweren oder sperrigen Sendungen verlängern.</p>
+						<p>Inselzuschlag:</p>
+						<p>Für die Lieferung auf deutsche Inseln fallen 15,70 € pro Paket (max. 31 kg) an.</p>
+						<p>Dies gilt für folgende PLZ: 18565, 25849, 25859, 25863, 25869, 25938, 25939, 25946, 25980, 25981, 25982, 25983, 25984, 25985, 25986, 25987, 25988, 25989, 25990, 25992, 25991, 25993, 25994, 25995, 25996, 25997, 25998, 25999, 26465, 26474, 26486, 26548, 26571, 26579, 26757, 27498, 27499</p>
+						<p>Versanddienstleister:</p>
+						<p>Ihre Bestellung wird im Standardversand mit DHL versendet. </p>
+						<p>* Wenn Sie über unsere Gratis Geschenke "Versandkostenfrei" in den Warenkorb legen. Gilt abzüglich Warenwert aus Aktionsartikeln.</p>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!--CREATE_LIST_POPUP_END-->
+	</div>
+	<!--CREATE_LIST_POPUP_END-->
 </body>
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">
@@ -901,14 +903,14 @@ include("includes/message.php");
 		$("#ci_type_" + $(this).attr("data-id")).val(0);
 		let supplier_id = $(this).attr("data-supplier-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
-		window.location.href = pro_udx_seo_epag_title_params_de+'-'+supplier_id;
+		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;
 	});
 	$(".cart_type_physical").on("click", function() { //ci_type
 		$("#ci_type_" + $(this).attr("data-id")).val(1);
 		let supplier_id = $(this).attr("data-supplier-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
 		//window.location.href = "product/1/" + supplier_id + "/" + pro_description;
-		window.location.href = "1/" + pro_udx_seo_epag_title_params_de+'-'+supplier_id;
+		window.location.href = "1/" + pro_udx_seo_epag_title_params_de + '-' + supplier_id;
 	});
 </script>
 <script src="js/slick.js"></script>
@@ -1172,7 +1174,7 @@ include("includes/message.php");
 		let supplier_id = $(this).attr("data-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
 		//console.log("pro_description: "+pro_udx_seo_epag_title_params_de+'-'+supplier_id);
-		window.location.href = pro_udx_seo_epag_title_params_de+'-'+supplier_id;
+		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;
 	});
 	$(".quantity").on("click", function() {
 		//let quantity = $(this).attr("data-id");

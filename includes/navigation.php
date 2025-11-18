@@ -142,7 +142,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     }
                 }
                 ?>
-                <li><a href="kostenlose-produktgeschenke">Gratis</a></li>
+                <li><a href="kostenlose-produktgeschenke" class="green"><b>Gratis</b></a></li>
                 <li><a title="verkäufe-angebote" href="verkaeufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
@@ -161,7 +161,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                         }
                     }
                     ?>
-                    <li><a href="kostenlose-produktgeschenke">Gratis</a></li>
+                    <li><a href="kostenlose-produktgeschenke" class="green"><b>Gratis</b></a></li>
                 </ul>
                 <div class="nav_overlay"></div>
             </div>
