@@ -119,6 +119,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_udx_manufacturer_address =*/
 	//print_r($parts);
 
+	$pg_mime_source_url_logo = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_purpose = 'logo'");
 	$pg_mime_source_url_pdf = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	$pg_mime_description = returnName("pg_mime_description", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
@@ -401,6 +402,11 @@ include("includes/message.php");
 									}
 								} ?>
 								<h4> <?php print($pro_description_short); ?> </h4>
+								<?php 
+								if(!empty($pg_mime_source_url_logo)){
+									print('<img src="'.get_image_link(75, $pg_mime_source_url_logo).'" alt="logo">');
+								}
+								?>
 								<ul>
 									<li style="display: none;">Bestellnummer: <?php print($supplier_id); ?> </li>
 									<li style="display: none;">Herstellernummer: <?php print($pro_manufacture_aid); ?></li>
