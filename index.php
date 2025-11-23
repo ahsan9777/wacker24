@@ -7,6 +7,10 @@ include("includes/php_includes_top.php");
 
 <head>
 	<?php include("includes/html_header.php"); ?>
+	<style>
+		.gerenric_product_category .pd_ctg_block.pd_ctg_special_sale{background-color: #111;}
+		.gerenric_product_category .pd_ctg_block.pd_ctg_special_sale .pd_ctg_heading{color: #fff;}
+	</style>
 </head>
 
 <body>
@@ -39,7 +43,7 @@ include("includes/php_includes_top.php");
 								$row1 = mysqli_fetch_object($rs1);
 							?>
 									<div class="pd_ctg_block pd_ctg_special_sale">
-										<div class="pd_ctg_heading">SALE <i class="fa fa-tag" ></i></div>
+										<a href="verkaeufe-angebote" title="verkäufe-angebote" class="pd_ctg_heading">SALE <i class="fa fa-tag" ></i></a>
 										<div class="pd_ctg_row">
 											<?php
 											$whereclause = "WHERE 1=1";
@@ -132,12 +136,13 @@ include("includes/php_includes_top.php");
 								<div class="gerenric_slider">
 									<?php
 									$special_price = "";
-									$Query = "SELECT DISTINCT oi.supplier_id, oi.ord_id, pro.pro_udx_seo_epag_title, pro.pro_udx_seo_internetbezeichung, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url FROM order_items AS oi LEFT JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT JOIN products_bundle_price AS pbp ON pbp.supplier_id = oi.supplier_id AND pbp.pbp_lower_bound = '1' LEFT JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' JOIN (SELECT supplier_id FROM order_items GROUP BY supplier_id HAVING COUNT(*) >= 1 ORDER BY RAND() LIMIT 12) AS random_suppliers ON random_suppliers.supplier_id = oi.supplier_id WHERE pg.pg_mime_source_url IS NOT NULL AND pg.pg_mime_source_url <> '' GROUP BY oi.supplier_id";
+									$Query = "SELECT oi.*, pro.pro_udx_seo_internetbezeichung, pro.pro_udx_seo_epag_title, pg.pg_mime_source_url, pro.pro_custom_add, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount,  pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, COUNT(oi.supplier_id) AS sales_count FROM order_items AS oi LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = oi.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = oi.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = oi.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE oi.supplier_id != '' GROUP BY oi.supplier_id ORDER BY sales_count DESC LIMIT 0,12";
 									//print($Query);//die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($rw = mysqli_fetch_object($rs)) {
-											$TotalRecords = TotalRecords("ord_id", "order_items", "WHERE ord_id = '".$rw->ord_id."'");
+											$special_price = user_special_price("supplier_id", $rw->supplier_id, 0, 1);
+											//$pbp_price_amount = TotalRecords("pbp_price_amount", "products_bundle_price", "WHERE ord_id = '".$rw->ord_id."'");
 									?>
 											<div>
 												<div class="pd_card">
@@ -145,7 +150,7 @@ include("includes/php_includes_top.php");
 														<a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
 															<img loading="lazy" src="<?php print(get_image_link(75, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
 															<?php
-															if($TotalRecords > 80){
+															if($rw->sales_count > 45){
 																print('<span class="pd_tag">Best Seller</span>');
 															}
 															?>

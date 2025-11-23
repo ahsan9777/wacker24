@@ -27,7 +27,8 @@
                                 <source src="<?php print($image_path); ?>" type="video/mp4">
                             </video>
                             <?php } else {?>
-                            <div class="banner_image"><img  loading="lazy" src="<?php print($image_path); ?>" alt=""></div>
+                            <!-- <div class="banner_image"><img  loading="lazy" src="<?php print($image_path); ?>" alt=""></div>-->
+                            <a href="verkaeufe-angebote" title="Black Friday Banner" class="banner_image"><img  loading="lazy" src="<?php print($image_path); ?>" alt=""></a>
                             <?php } ?>
                         </div>
                 <?php

@@ -6,8 +6,178 @@ $page = 1;
 <html>
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main']."verkäufe-angebote"); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . "verkäufe-angebote"); ?>">
 	<?php include("includes/html_header.php"); ?>
+	<style>
+		body {
+			background-color: #111;
+		}
+
+		.gerenric_breadcrumb ul li a {
+			color: #fff;
+		}
+
+		.bf-header {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 20px;
+			padding: 20px 0px;
+		}
+
+		.bf-header h1 {
+			text-align: center;
+			color: #FE4921;
+			font-size: 85px;
+			font-weight: bolder;
+			text-shadow: 0 0 18px rgba(255, 57, 33, 0.4);
+		}
+
+		.bf-header p {
+			color: #ffc107;
+			font-size: 50px;
+			font-weight: 400;
+			text-shadow: 0 0 18px rgba(255, 240, 33, 0.4);
+		}
+
+		.gerenric_white_box {
+			background-color: #111;
+		}
+		.gerenric_product h2{color: #fff !important;}
+		.pd_card {
+			background: #111;
+			border: 1px solid #222;
+			border-radius: 14px;
+			padding: 18px;
+			width: 250px;
+			transition: all 0.3s ease;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.pd_card:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 0 18px rgba(255, 57, 33, 0.4);
+			border-color: #ff3a20;
+		}
+
+		.pd_card::before {
+			content: "BLACK FRIDAY";
+			position: absolute;
+			top: 20px;
+			left: -55px;
+			width: 180px;
+			background: #ff1c0a;
+			color: #fff;
+			padding: 6px 0;
+			text-align: center;
+			font-size: 12px;
+			font-weight: 700;
+			text-transform: uppercase;
+			transform: rotate(-45deg);
+			box-shadow: 0 0 10px rgba(255, 28, 10, 0.6);
+			z-index: 9;
+		}
+
+		.pd_image {
+			position: relative;
+			width: 100%;
+			height: 180px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			overflow: hidden;
+			border-radius: 10px;
+			background: #111 !important;
+		}
+
+		.pd_image img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			mix-blend-mode: lighten !important;
+		}
+
+		.pd_tag {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			background: #ff1c0a;
+			color: #fff;
+			padding: 4px 10px;
+			font-size: 12px;
+			border-radius: 4px;
+			text-transform: uppercase;
+			font-weight: 700;
+		}
+
+		.pd_detail h5 {
+			margin-top: 15px;
+			font-size: 15px;
+			line-height: 20px;
+		}
+
+		.pd_detail h5 a {
+			color: #fff;
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.pd_detail h5 a:hover {
+			color: #ff3a20;
+		}
+
+		.pd_rating ul {
+			padding: 0;
+			margin: 6px 0;
+		}
+
+		.pd_rating ul li {
+			list-style: none;
+		}
+
+		.pd_rating .fa-star {
+			color: #ffb400;
+			font-size: 14px;
+			margin-right: 3px;
+		}
+
+		.pd_prise {
+			margin-top: 6px;
+			font-size: 15px;
+			font-weight: 600;
+			color: #fff;
+		}
+
+		.pd_prise del {
+			color: #888;
+			margin-right: 6px;
+		}
+
+		.pd_prise_discount {
+			color: #35ff94;
+			font-weight: 700;
+		}
+
+		.pd_prise_discount_value {
+			background: #ff1c0a;
+			color: #fff;
+			padding: 2px 6px;
+			border-radius: 5px;
+			font-size: 11px;
+			margin-left: 5px;
+		}
+
+		@media screen and (max-width:1024px) and (min-width:240px) {
+			.bf-header h1{
+				font-size: 45px;
+			}
+			.bf-header p{
+				font-size: 20px;
+			}
+		}
+	</style>
 </head>
 
 <body>
@@ -32,7 +202,10 @@ $page = 1;
 			</div>
 		</div>
 		<!--BREADCRUMB_SECTION_END-->
-
+		<div class="bf-header">
+			<h1>BLACK FRIDAY <br>MEGA SALE</h1>
+			<p>Bis zu  57% Angebote! Nur für kurze Zeit!</p>
+		</div>
 		<!--CONTENT_SECTION_START-->
 		<section id="content_section">
 			<div class="special_price_page gerenric_padding">
@@ -89,9 +262,9 @@ $page = 1;
 											}
 								?>
 											<div class="pd_card">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>" ><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>" > <?php print($row2->pro_udx_seo_epag_title); ?> </a></h5>
+													<h5><a href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"> <?php print($row2->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -104,20 +277,20 @@ $page = 1;
 														</ul>
 													</div>
 													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount), $special_price['usp_discounted_value'], $row2->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount), $special_price['usp_discounted_value'], $row2->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax) )); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount) )); ?>€</div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax))); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount))); ?>€</div>
 													<?php } ?>
 												</div>
 											</div>
-								<?php
+									<?php
 										}
 									} else {
 										print("Leerer Eintrag!");
 									}
-								?>
+									?>
 							</div>
 							<?php if ($counter > 0) { ?>
 								<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0px;">
@@ -133,7 +306,8 @@ $page = 1;
 										</td>
 									</tr>
 								</table>
-							<?php }  }?>
+						<?php }
+								} ?>
 						</div>
 
 					</div>

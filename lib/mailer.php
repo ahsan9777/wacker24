@@ -412,17 +412,18 @@ class Mailer
     {
         $username = "";
         $password = "";
-        $subject = "Forget Password Request";
+        $subject = "Passwort vergessen";
         $to = $user_name;
         //$to = "aqeelashraf@gmail.com";
 
         $message = "Hi " . $name . ",
-        <br><br>Your new Password Request has been received, please see the details and login with new password:
+        <br><br><b>Ihre Anfrage für ein neues Passwort wurde erfolgreich verarbeitet.</b>
+        <br>Bitte prüfen Sie die folgenden Informationen und melden Sie sich anschließend mit Ihrem neuen Passwort an.
         <br><br>Name: " . $name . "
         <br>Email: " . $user_name . "
         <br>Subject: " . $subject . "
-        <br>New Password: " . $user_passwordd . "
-        <br><br>This is an automatic generated message. Do not reply to this message.";
+        <br>Neues Passwort: " . $user_passwordd . "
+        <br><br>Dies ist eine automatisch generierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail.";
 
         $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
         //return $ret;
