@@ -28,7 +28,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 <html lang="de">
 
 <head>
-	<link rel="canonical" href="">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL']."marken/".$_REQUEST['manf_name_params']); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

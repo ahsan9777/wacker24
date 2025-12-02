@@ -6,11 +6,8 @@ include("includes/php_includes_top.php");
 <html lang="de">
 
 <head>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL']); ?>">
 	<?php include("includes/html_header.php"); ?>
-	<style>
-		.gerenric_product_category .pd_ctg_block.pd_ctg_special_sale{background-color: #111;}
-		.gerenric_product_category .pd_ctg_block.pd_ctg_special_sale .pd_ctg_heading{color: #fff;}
-	</style>
 </head>
 
 <body>

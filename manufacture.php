@@ -32,7 +32,7 @@ for ($i = 0; $i < count($manufacture_title); $i++) {
 			$manf_name_params = $row->manf_name_params;
 			$manufacture_data[$manufacture_title[$i]][] = array(
 				"manf_title" => $manf_name,
-				"manf_name_params" => $GLOBALS['siteURL']."marken/".$manf_name_params
+				"manf_name_params" => $GLOBALS['siteURL'] . "marken/" . $manf_name_params
 			);
 		}
 	} else {
@@ -51,6 +51,7 @@ print("</pre>");/*
 foreach ($manufacture_data['0 - 9'] as $item) {
 	echo $item['manf_title'] . "\n";
 }*/
+
 ?>
 <!doctype html>
 <html lang="de">
@@ -58,6 +59,13 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<?php
+	$uri = $_SERVER['REQUEST_URI'];
+	if (preg_match('#^/marke/.+#', $uri) || isset($_GET['brand_name'])) {
+		echo '<meta name="robots" content="noindex, nofollow">';
+	}
+	?>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . "marken"); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 <script>
