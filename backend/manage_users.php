@@ -90,7 +90,7 @@ if (isset($_REQUEST['btnAdd'])) {
             $user_lname = $rsMem->user_lname;
             $user_name = $rsMem->user_name;
             $user_phone = $rsMem->user_phone;
-            $countries_id = $rsMem->countries_id;
+            $countries_id = !empty($rsMem->countries_id) ? $rsMem->countries_id : 81;
             $user_password = create_password(13);
             $user_confirm_password = $user_password;
             $readonly = "readonly";

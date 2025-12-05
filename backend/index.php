@@ -187,7 +187,7 @@ if ($ord_id > 0) {
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Privatkunde</label>
-                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id = '3'")); ?></h2>
+                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id = '3' AND utype_id_as_guest = '0'")); ?></h2>
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +202,7 @@ if ($ord_id > 0) {
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Geschäftskunde</label>
-                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id = '4'")); ?></h2>
+                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id = '4' AND utype_id_as_guest = '0'")); ?></h2>
                                     </div>
                                 </div>
                             </div>
@@ -212,12 +212,12 @@ if ($ord_id > 0) {
                         <a class="text-decoration-none" href="javascript:void(0)">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-1">sell</i>
+                                    <i class="material-symbols-outlined icon fs-1">diversity_3</i>
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
-                                        <label for="">Artikeltypen</label>
-                                        <h2>0</h2>
+                                        <label for="">Gestkunde</label>
+                                        <h2><?php print(TotalRecords("user_id", "users", "WHERE utype_id_as_guest = '5'")); ?></h2>
                                     </div>
                                 </div>
                             </div>
