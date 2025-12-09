@@ -24,7 +24,7 @@ $page = 1;
 			<div class="page_width_1480">
 				<div class="not_available">
 					<div class="not_available_txt">
-						<p>👋 Hallo!</p>
+						<h1>👋 Hallo!</h1>
 						<p>🛍️ Alle unsere Produkte sind vorrätig.</p>
 						<p>⚙️ Aufgrund einiger Systemaktualisierungen werden sie momentan möglicherweise als „nicht verfügbar“ angezeigt.</p>
 						<p> <strong>🔎 Bitte suchen Sie die Artikel direkt im Shop</strong> – vielen Dank für Ihre verständnis! 💛</p>

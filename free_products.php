@@ -1,5 +1,6 @@
 <?php
 include("includes/php_includes_top.php");
+$cart_amount_total = 0;
 $cart_amount = 0;
 $ci_total_free = 0;
 $free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_courier_fix_charges) . ' €</span>';

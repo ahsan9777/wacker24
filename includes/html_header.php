@@ -14,5 +14,6 @@
 <link rel="preload" href="css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="css/styles.min.css"></noscript>
 <?php include("includes/btn_color.php"); ?>
-<script src="js/jquery-2.2.0.min.js"></script>
+<!-- <script src="js/jquery-2.2.0.min.js"></script>-->
 <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js" defer></script> -->
+ <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.0/dist/jquery.min.js"></script>

@@ -146,16 +146,16 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 		//$order_net_amount = number_format(1, "2", ".", "");
 		$klarnarequest = KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id);
 		$klarnaresponseData = json_decode($klarnarequest, true);
-		print("<pre>");
+		/*print("<pre>");
 		print_r($klarnaresponseData);
 		print("</pre>");
-		die();
+		die();*/
 		$ord_payment_transaction_id = $klarnaresponseData['id'];
 		$ord_payment_short_id = $klarnaresponseData['descriptor'];
 		$ord_payment_info_detail = $klarnarequest;
 
 		$parameters = "";
-		if ($klarnaresponseData['resultDetails']['AcquirerResponse'] == 'Success') {
+		if ($klarnaresponseData['result']['code'] === '000.200.000' && $klarnaresponseData['resultDetails']['AcquirerResponse'] === '00') {
 			foreach ($klarnaresponseData['redirect']['parameters'] as $key => $value) {
 				$parameters .=  $value['name'] . "=" . $value['value'] . "&";
 			}

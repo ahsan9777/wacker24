@@ -2516,9 +2516,19 @@ function PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 	return $responseData;
 }
 
-function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
+function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $klarnaBrand = "KLARNA_PAYMENTS_PAYLATER")
 {
-	header('Content-Type: text/plain; charset=utf-8');
+	  $paymentType = match ($klarnaBrand) {
+        'KLARNA_PAYMENTS_PAYNOW'        => 'DB', // Debit
+        'KLARNA_PAYMENTS_PAYLATER'      => 'PA', // Pre-Authorization
+        'KLARNA_PAYMENTS_SLICEIT'       => 'PA',
+        'KLARNA_PAYMENTS_ONE'           => 'PA',
+        'KLARNA_INSTALLMENTS'           => 'PA',
+        'KLARNA_CHECKOUT'               => 'PA',
+        'KLARNA_INVOICE'                => 'PA',
+        default => 'PA'
+    };
+
 	$url = "" . config_payment_url . "";
 
 	$data = http_build_query([
@@ -2526,8 +2536,8 @@ function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 		'merchantTransactionId' => $ord_id,
 		'amount' => $order_net_amount,
 		'currency' => 'EUR',
-		'paymentBrand' => 'KLARNA_PAYMENTS_PAYLATER', // or KLARNA_PAY_NOW, KLARNA_SLICE_IT
-		'paymentType' => 'PA',
+		'paymentBrand' => $klarnaBrand,//'KLARNA_PAYMENTS_PAYLATER', // or KLARNA_PAY_NOW, KLARNA_SLICE_IT
+		'paymentType' => $paymentType,//'PA',
 		'shopperResultUrl' => $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id,
 
 		// Klarna requires additional customer data
