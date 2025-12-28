@@ -44,7 +44,7 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 		$row1 = mysqli_fetch_object($rs1);
 		$ord_id = getMaximum("orders", "ord_id");
 		$ord_shipping_charges = 0;
-		if ($row1->cart_gross_total <= config_condition_courier_amount) {
+		if ($row1->cart_amount <= config_condition_courier_amount) {
 			$ord_shipping_charges = config_courier_fix_charges;
 		}
 		$order_net_amount = number_format(($row1->cart_amount + $ord_shipping_charges), "2", ".", "");

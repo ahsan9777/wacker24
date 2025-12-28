@@ -7,26 +7,29 @@ $cat_params = "";
 //print_r($_REQUEST);
 //$level_one = $_REQUEST['level_one'];
 $lf_action_type = 0;
-/*$level_one =  ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 19;
-$level_one_request = ($_REQUEST['cat_params_one'] != 'schulranzen') ? returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']) : 20;*/
-$level_one =  returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
-$level_one_request = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+$Query = "SELECT group_id, cat_keyword, cat_description FROM category WHERE cat_params_de = '".$_REQUEST['cat_params_one']."'";
+$rs = mysqli_query($GLOBALS['conn'], $Query);
+if(mysqli_num_rows($rs) > 0){
+	$row = mysqli_fetch_object($rs);
+	$level_one = $row->group_id;
+	$level_one_request = $row->group_id;
+	$meta_keywords = $row->cat_keyword;
+	$meta_description = $row->cat_description;
+}
+/*$level_one =  returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+$level_one_request = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);*/
 $cat_params = $_REQUEST['cat_params_one'];
 
 //print("level_one: ".$level_one." level_one_request: ".$level_one_request." cat_params: ".$cat_params);
 if ($level_one_request == 20) {
 	$pro_type = $level_one_request;
-	//$level_one = 19;
-	//$pro_typeURL = "pro_type=" . $level_one_request . "&";
 	$pro_typeURL = "/" . $level_one_request;
 	$qryStrURL = "pro_type=" . $level_one_request . "&";
 }
-//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
 $special_price = user_special_price("level_one", $level_one);
-//print_r($special_price);die();
-//}
-$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_one']);
-$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+
+/*$meta_keywords = returnName("cat_keyword", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+$meta_description = returnName("cat_description", "category", "cat_params_de", $_REQUEST['cat_params_one']);*/
 ?>
 <!doctype html>
 <html lang="de">

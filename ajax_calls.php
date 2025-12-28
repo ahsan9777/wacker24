@@ -688,7 +688,8 @@ if (isset($_REQUEST['action'])) {
             if ($level_one == 20) {
                 $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id = '" . $level_one . "' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = sub_cat.group_id ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
             } else {
-                $Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $level_one . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+                //$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $level_one . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+                $Query = "SELECT DISTINCT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat INNER JOIN category AS main_cat ON main_cat.group_id = sub_cat.parent_id LEFT JOIN category AS cat ON cat.group_id = sub_cat.parent_id INNER JOIN category_map AS cm ON cm.cm_type = '".$pro_type."' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) WHERE main_cat.parent_id = '".$level_one."' AND sub_cat.cat_status = 1 ORDER BY sub_cat.cat_orderby, sub_cat.group_id";
             }
             //print($Query);die();
             $counter = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
@@ -849,8 +850,9 @@ if (isset($_REQUEST['action'])) {
             }
             $Query = "SELECT * FROM manufacture AS manf WHERE manf.manf_id IN (SELECT cm.manf_id FROM vu_category_map AS cm WHERE " . $Sidefilter_brandwith . ") AND manf.manf_status = '1' ORDER BY manf.manf_id ASC";
             //print($Query);die();
-            $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
+            //$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
             $rs = mysqli_query($GLOBALS['conn'], $Query);
+            $count = mysqli_num_rows($rs);
             if (mysqli_num_rows($rs) > 0) {
                 $lf_manf_id_inner .= '<h3>Marke</h3>
                         <ul class="list_checkbox_hide ' . (($count > 4) ? 'category_show_height' : '') . ' " id="list_checkbox_hide_0">';

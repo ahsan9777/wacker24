@@ -13,7 +13,7 @@ $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
         <priority>1.00</priority>
     </url>
     <?php
-    $rsp = mysqli_query($GLOBALS['conn'], "SELECT pro_cdate, pro_udate, supplier_id, pro_udx_seo_epag_title_params_de FROM products WHERE pro_status='1' AND (pro_id >= 8000 AND pro_id < 16000) ");
+    $rsp = mysqli_query($GLOBALS['conn'], "SELECT pro_cdate, pro_udate, supplier_id, pro_ean, pro_udx_seo_epag_title_params_de FROM products WHERE pro_status='1' AND (pro_id >= 8000 AND pro_id < 16000) ");
     if (mysqli_num_rows($rsp) > 0) {
         while ($rwp = mysqli_fetch_object($rsp)) {
             $dt = $rwp->pro_udate;
@@ -22,7 +22,7 @@ $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
             }
             $date = new DateTime($dt, new DateTimeZone('Europe/Berlin'));
             //$date->format('c');
-            $pgURL = $GLOBALS['siteURL'] . $rwp->pro_udx_seo_epag_title_params_de."-".$rwp->supplier_id;;
+            $pgURL = $GLOBALS['siteURL'] . $rwp->pro_udx_seo_epag_title_params_de."-".$rwp->pro_ean;
             echo "<url>
                     <loc>" . $pgURL . "</loc>
                     <lastmod>" . $date->format('c') . "</lastmod>

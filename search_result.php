@@ -15,8 +15,9 @@ if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
 }
 $search_keyword_where = "";
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
-	$pro_description_short = returnName("pro_description_short", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
-	header("Location: " . $GLOBALS['siteURL'] . "product/" . $_REQUEST['supplier_id'] . "/" . url_clean($pro_description_short));
+	$pro_udx_seo_epag_title_params_de = returnName("pro_udx_seo_epag_title_params_de", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
+	$pro_ean = returnName("pro_ean", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
+	header("Location: " . $GLOBALS['siteURL'].$pro_udx_seo_epag_title_params_de."-".$pro_ean);
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
 

@@ -1,5 +1,7 @@
 <?php
 ob_start();
+//session_save_path('/tmp');
+session_start();
 
 include("lib/openCon.php");
 include("lib/functions.php");
@@ -9,8 +11,6 @@ if (!isset($_REQUEST['search_keyword'])) {
 }
 require_once("lib/mailer.php");
 $mailer = new Mailer();
-
-session_start();
 //$_SESSION['utype_id'] = 3;
 
 $page = 0;

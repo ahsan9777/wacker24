@@ -2,6 +2,7 @@
 ob_start();
 include("../lib/openCon.php");
 include("../lib/functions.php");
+//session_save_path('/tmp');
 session_start();
 //print(md5("admin"));
 //DIE();

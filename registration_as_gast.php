@@ -235,7 +235,7 @@ include("includes/message.php");
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
 									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;"></div>
 								</li>
-								<li class="mt_30"><input type="checkbox" required> Ich habe die Datenschutzbestimmungen zur Kenntnis genommen | <a href="privacy">Datenschutzerklärung </a></li>
+								<li class="mt_30"><input type="checkbox" required> Ich habe die Datenschutzbestimmungen zur Kenntnis genommen | <a href="datenschutz">Datenschutzerklärung </a></li>
 								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Jetzt als Gast registrieren</button></li>
 							</ul>
 						</div>
