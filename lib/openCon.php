@@ -39,8 +39,19 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 }
 
 $GLOBALS['conn'] = new mysqli($dbServer, $dbUserName, $dbPassword, $dbDatabase);
-$pdo = new PDO("mysql:host=$dbServer;dbname=$dbDatabase", $dbUserName, $dbPassword);
-mysqli_set_charset($GLOBALS['conn'], 'utf8');
+/*$pdo = new PDO("mysql:host=$dbServer;dbname=$dbDatabase", $dbUserName, $dbPassword);
+mysqli_set_charset($GLOBALS['conn'], 'utf8');*/
+$pdo = new PDO(
+    "mysql:host=$dbServer;dbname=$dbDatabase;charset=utf8mb4",
+    $dbUserName,
+    $dbPassword,
+    [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci"
+    ]
+);
+mysqli_set_charset($GLOBALS['conn'], 'utf8mb4');
 
 $Query = "SELECT * FROM site_config";
 $rs = mysqli_query($GLOBALS['conn'], $Query);

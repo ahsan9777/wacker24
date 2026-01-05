@@ -24,15 +24,15 @@ if (isset($_REQUEST['action'])) {
                 if ($_REQUEST['level_one'] > 0) {
                     $where .= " AND pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(" . dbStr(trim($_REQUEST['level_one'])) . ", cm.sub_group_ids)) ";
                 }
-                $where .= " AND ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '6' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ) )";
+                $where .= " AND ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '3' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ) )";
             }
-            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short FROM products AS pro " . $where . " AND pro.pro_status = '1' ORDER BY pro.pro_id  LIMIT 0,10";
+            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short, pro_udx_seo_internetbezeichung FROM products AS pro " . $where . " AND pro.pro_status = '1' ORDER BY pro.pro_id  LIMIT 0,10";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
                     'pro_id' => strip_tags(html_entity_decode($row->pro_id, ENT_QUOTES, 'UTF-8')),
                     'supplier_id' => strip_tags(html_entity_decode($row->supplier_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->pro_description_short, ENT_QUOTES, 'UTF-8'))
+                    'value' => strip_tags(html_entity_decode($row->pro_udx_seo_internetbezeichung, ENT_QUOTES, 'UTF-8'))
                 );
             }
             $jsonResults = json_encode($json);

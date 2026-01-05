@@ -179,7 +179,7 @@ if (isset($_REQUEST['sortby'])) {
 
 							<?php
 							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE ( (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " " . $order_by . "";
-							//print($Query_search);
+							print($Query_search);
 							$counter = 0;
 							$limit = 28;
 							$start = $p->findStart($limit);

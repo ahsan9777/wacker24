@@ -2,6 +2,33 @@
 
 include("includes/php_includes_top.php");
 //print_r($_REQUEST);die();
+$pro_id = 0;
+$supplier_id = 0;
+$cat_id_one = 0;
+$cat_id_two = 0;
+$pbp_price_amount = 0;
+$quantity_status = "";
+$pro_udx_seo_internetbezeichung = "";
+$pg_mime_source_url = "";
+$pro_description_long_schema = "";
+$pro_ean = "";
+$manf_name = "";
+$pro_type = 0;
+$cat_one_params = "";
+$cat_title_one = "";
+$cat_two_params = "";
+$cat_title_two = "";
+$cat_three_params = "";
+$cat_title_three = "";
+$pg_mime_description = "";
+$pro_udx_seo_epag_id = "";
+$pro_description_short = "";
+$pro_description_long = "";
+$pro_manufacture_aid = "";
+$pbp_price_without_tax = 0;
+$pbp_price_amount = 0;
+$pq_physical_quantity = 0;
+$cat_id_three = 0;
 $ci_type = 0;
 if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
 	$ci_type = 1;
@@ -73,7 +100,6 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_udx_manufacturer_mail = $row->pro_udx_manufacturer_mail;
 	$pro_udate = date("Y-m-d", strtotime($row->pro_udate));
 
-	$quantity_status = "";
 	$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 	//print($Query);
 	$rs = mysqli_query($GLOBALS['conn'], $Query);

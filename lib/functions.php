@@ -3066,7 +3066,7 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
 	// Normalization function for words
 	function normalizeWord($word)
 	{
-		$map = ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss'];
+		$map = ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss', 'Ä'=>'ae','Ö'=>'oe','Ü'=>'ue'];
 		$word = mb_strtolower(trim($word), 'UTF-8');
 		$word = strtr($word, $map);
 		return preg_replace('/[^a-z0-9]/', '', $word); // remove non-alphanumerics
