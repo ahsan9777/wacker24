@@ -1082,6 +1082,17 @@ if (isset($_REQUEST['action'])) {
                         $order_by = "";
                 }
             }
+            if(isset($_REQUEST['pq_quantity_selected']) && $_REQUEST['pq_quantity_selected'] > 0){
+                $pq_quantity_selected = $_REQUEST['pq_quantity_selected'];
+                switch ($pq_quantity_selected) {
+                    case 1:
+                        $whereclause .= " AND cm.pq_quantity <= '0' AND pq_status = 'true'";
+                        break;
+                    case 2:
+                        $whereclause .= " AND cm.pq_quantity > '0' AND pq_status = 'false'";
+                        break;
+                }
+            }
             $total_count = 0;
             if ($manf_id > 0) {
                 $Query = "SELECT * FROM vu_category_map AS cm WHERE cm.manf_id = '" . $manf_id . "' " . $whereclause . " " . $order_by . "";

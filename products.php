@@ -19,7 +19,7 @@ if (isset($_GET['data'])) {
 //$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 //$host = $_SERVER['HTTP_HOST'];
 //$requestUri = $_SERVER['REQUEST_URI'];
-$requestUri =rtrim( $GLOBALS['siteURL'], "/").$_SERVER['REQUEST_URI'];
+$requestUri = rtrim($GLOBALS['siteURL'], "/") . $_SERVER['REQUEST_URI'];
 //$url = $protocol . $host . $requestUri;
 //print_r($_REQUEST);die();
 $lf_action_type = 1;
@@ -56,7 +56,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 	if (strlen($lf_group_id) > 3) {
 		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND (" . $lf_group_id . ", cm.cat_id)";
 	} else {
-		if($pro_type == 20){
+		if ($pro_type == 20) {
 			//$lf_group_id = $_REQUEST['lf_group_id'][0];
 			$whereclause .= " AND cm.pro_type = '" . $pro_type . "' ";
 		} else {
@@ -147,7 +147,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 												} else {
 													$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
 													if ($pro_type == 20) {
-														$cat_link = "artikelarten/" . $row->sub_cat_params."/" . $pro_type;
+														$cat_link = "artikelarten/" . $row->sub_cat_params . "/" . $pro_type;
 													}
 												}
 
@@ -171,9 +171,24 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 									</div>
 								</div>
 							</div>
+							<style>
+								
+							</style>
 							<div class="pd_row_heading">
 								<div class="list_type_row">
 									<h1> <?php print($heading_title) ?> </h1>
+									<div class="availability_product_check">
+										<input type="hidden" name="pq_quantity_selected" id="pq_quantity_selected" value="0">
+										<div class="availability_inner_check">
+											<input type="radio" name="pq_quantity" id="pq_quantity_1" value="1">
+											<label for="pq_quantity_1">Stück kurfristig lieferbar</label>
+										</div>
+										<div class="availability_inner_check">
+											<input type="radio" name="pq_quantity" id="pq_quantity_2" value="2">
+											<label for="pq_quantity_2">Stück sofort verfügbar</label>
+										</div>
+										<button id="resetRadio" class="gerenric_btn wd_15" style="display: none;">Reset</button>
+									</div>
 									<ul>
 										<li>Ansicht </li>
 										<li class="click_th"><i class="fa fa-th"></i></li>
@@ -182,13 +197,13 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 											<div class="drop-down_2">
 												<div class="selected">
 													<input type="hidden" name="sort_by_selected" id="sort_by_selected" value="<?php print($sortby); ?>">
-													<a title = "<?php print($sortby_array[$sortby]); ?>" href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
+													<a title="<?php print($sortby_array[$sortby]); ?>" href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
 												</div>
 												<div class="options">
 													<ul>
 														<?php for ($i = 0; $i < count($sortby_array); $i++) {
 															if ($i != $sortby) { ?>
-																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>" title="<?php print($sortby_array[$i]); ?>" ><?php print($sortby_array[$i]); ?></a></li>
+																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>" title="<?php print($sortby_array[$i]); ?>"><?php print($sortby_array[$i]); ?></a></li>
 														<?php }
 														} ?>
 													</ul>
@@ -220,8 +235,8 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 									</div>
 									<div class="txt_align_center" id="btn_load" style="display: none;">
 										<input type="hidden" name="gerenric_product_inner_page" id="gerenric_product_inner_page" value="0">
-										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" ></i></div>
-										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" ></i></div>
+										<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down"></i></div>
+										<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up"></i></div>
 									</div>
 									<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
 										<div></div>
@@ -287,6 +302,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		$("#btn_load_spinner").show();
 		let start = $("#gerenric_product_inner_page").val();
 		let sortby = $("#sort_by_selected").val();
+		let pq_quantity_selected = $("#pq_quantity_selected").val();
 		let lf_parent_id = "<?php print($lf_parent_id); ?>";
 		let pro_type = "<?php print($pro_type); ?>";
 		let level_two = "<?php print($level_two); ?>";
@@ -302,7 +318,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_group_id = lf_group_id_data;
-		} else if(pro_type > 0){
+		} else if (pro_type > 0) {
 			lf_group_id = <?php print($lf_group_id); ?>
 		}
 		let lf_manf_id = "";
@@ -331,6 +347,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			data: {
 				start: start,
 				sortby: sortby,
+				pq_quantity_selected: pq_quantity_selected,
 				lf_parent_id: lf_parent_id,
 				pro_type: pro_type,
 				level_two: level_two,
@@ -442,6 +459,59 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		//console.log("Selected values: " + lf_pf_fvalue_data.join(", "));
 		gerenric_product_inner(lf_group_id_data.join(", "), lf_manf_id_data.join(", "), lf_pf_fvalue_data.join(", "));
 		//console.log("sort_by: "+sort_by);
+	});
+
+	$('input[name="pq_quantity"]').on('change', function() {
+		$('#resetRadio').show();
+		var value = $('input[name="pq_quantity"]:checked').val();
+		$("#pq_quantity_selected").val(value);
+
+		$("#gerenric_product_inner").html("");
+		$("#gerenric_product_inner_page").val(0);
+		var lf_group_id_data = [];
+		$(".lf_group_id:checked").each(function() {
+			lf_group_id_data.push($(this).val());
+		});
+
+		var lf_manf_id_data = [];
+		$(".lf_manf_id:checked").each(function() {
+			lf_manf_id_data.push($(this).val());
+		});
+
+		var lf_pf_fvalue_data = [];
+		$(".lf_pf_fvalue:checked").each(function() {
+			lf_pf_fvalue_data.push($(this).val());
+		});
+		//console.log("Selected values: " + lf_group_id_data.join(", "));
+		//console.log("Selected values: " + lf_manf_id_data.join(", "));
+		//console.log("Selected values: " + lf_pf_fvalue_data.join(", "));
+		gerenric_product_inner(lf_group_id_data.join(", "), lf_manf_id_data.join(", "), lf_pf_fvalue_data.join(", "));
+	});
+	$('#resetRadio').on('click', function() {
+		$('input[name="pq_quantity"]').prop('checked', false);
+		$('#resetRadio').hide();
+		$("#pq_quantity_selected").val(0);
+
+		$("#gerenric_product_inner").html("");
+		$("#gerenric_product_inner_page").val(0);
+		var lf_group_id_data = [];
+		$(".lf_group_id:checked").each(function() {
+			lf_group_id_data.push($(this).val());
+		});
+
+		var lf_manf_id_data = [];
+		$(".lf_manf_id:checked").each(function() {
+			lf_manf_id_data.push($(this).val());
+		});
+
+		var lf_pf_fvalue_data = [];
+		$(".lf_pf_fvalue:checked").each(function() {
+			lf_pf_fvalue_data.push($(this).val());
+		});
+		//console.log("Selected values: " + lf_group_id_data.join(", "));
+		//console.log("Selected values: " + lf_manf_id_data.join(", "));
+		//console.log("Selected values: " + lf_pf_fvalue_data.join(", "));
+		gerenric_product_inner(lf_group_id_data.join(", "), lf_manf_id_data.join(", "), lf_pf_fvalue_data.join(", "));
 	});
 
 	function genaric_script() {
