@@ -58,7 +58,7 @@ if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
 
 //--------------Button delivery status update --------------------
 if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "array") {
-    //print_r($_REQUEST);die();
+    //print("1: ");print_r($_REQUEST);die();
     if (isset($_REQUEST['d_status_id'])) {
         for ($i = 0; $i < count($_REQUEST['d_status_id']); $i++) {
             if ($_REQUEST['d_status_id'][$i] == 1) {
@@ -103,7 +103,7 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
         $strMSG = "Please Select Alteast One Checkbox";
     }
 } elseif (isset($_REQUEST['d_status_id'])) {
-    //print_r($_REQUEST);die();
+    //print("2: ");print_r($_REQUEST);die();
     if ($_REQUEST['d_status_id'] == 1) {
         $orders_table_data = returnMultiName("ord_payment_entity_id, ord_payment_transaction_id, ord_amount, ord_shipping_charges, ord_capture_status, ord_payment_method", "orders", "ord_id", $_REQUEST['ord_id'], 6);
         $ord_amount = number_format(($orders_table_data['data_3'] + $orders_table_data['data_4']), "2", ".", "");
@@ -115,11 +115,11 @@ if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "arr
         print("</pre>");die();*/
             if ($payment_status_responseData['result']['code'] == '000.100.110' || $payment_status_responseData['result']['code'] == '000.000.000' || $payment_status_responseData['result']['description'] == 'Transaction succeeded') {
                 mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_status = '1', ord_capture_status = '1', ord_capture_id = '" . dbStr(trim($payment_status_responseData['id'])) . "', ord_capture_request_detail = '" . dbStr(trim($payment_status_request)) . "', ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
-                $mailer->order($_REQUEST['ord_id'][$i]);
+                $mailer->order($_REQUEST['ord_id']);
             }
         } elseif (in_array($orders_table_data['data_6'], array(1, 7))) {
             mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status='" . $_REQUEST['d_status_id'] . "', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
-            $mailer->order($_REQUEST['ord_id'][$i]);
+            $mailer->order($_REQUEST['ord_id']);
         }
     } elseif ($_REQUEST['d_status_id'] == 2) {
         mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_delivery_status = '2', ord_conform_status = '1' WHERE ord_id = " . $_REQUEST['ord_id']);
