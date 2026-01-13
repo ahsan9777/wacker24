@@ -444,7 +444,7 @@ include("includes/message.php");
 																$pq_quantity = $pq_physical_quantity - $row->ci_qty;
 															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
 																$pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
-																$quantity_txt = "Stück kurfristig lieferbar";
+																$quantity_txt = "Stück Kurzfristig lieferbar";
 																$quantity_txt_color = "style = 'color: green;'";
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$pq_quantity = $pq_quantity - $row->ci_qty;

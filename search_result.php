@@ -300,7 +300,7 @@ if (isset($_REQUEST['sortby'])) {
 															}*/
 															if ($pq_quantity == 0 && $pq_status == 'true') {
 																$quantity_lenght = $pq_upcomming_quantity;
-																print('<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' Stück kurfristig lieferbar</div>');
+																print('<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>');
 															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
 																$quantity_lenght = $pq_quantity;
 																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');

@@ -180,14 +180,14 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 									<div class="availability_product_check">
 										<input type="hidden" name="pq_quantity_selected" id="pq_quantity_selected" value="0">
 										<div class="availability_inner_check">
-											<input type="radio" name="pq_quantity" id="pq_quantity_1" value="1">
-											<label for="pq_quantity_1">Stück kurfristig lieferbar</label>
+											<input type="radio" name="pq_quantity" id="pq_quantity_2" value="2">
+											<label for="pq_quantity_2">Sofort verfügbar</label>
 										</div>
 										<div class="availability_inner_check">
-											<input type="radio" name="pq_quantity" id="pq_quantity_2" value="2">
-											<label for="pq_quantity_2">Stück sofort verfügbar</label>
+											<input type="radio" name="pq_quantity" id="pq_quantity_1" value="1">
+											<label for="pq_quantity_1">Kurzfristig lieferbar</label>
 										</div>
-										<button id="resetRadio" class="gerenric_btn wd_15" style="display: none;">Reset</button>
+										<button id="resetRadio" class="gerenric_btn wd_15" style="display: none;"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp; Aktualisieren</button>
 									</div>
 									<ul>
 										<li>Ansicht </li>

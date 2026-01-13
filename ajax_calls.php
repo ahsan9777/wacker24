@@ -1180,7 +1180,7 @@ if (isset($_REQUEST['action'])) {
 															}*/
                         if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
                             $quantity_lenght = $pq_upcomming_quantity;
-                            $gerenric_product_inner .= '<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' Stück kurfristig lieferbar</div>';
+                            $gerenric_product_inner .= '<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>';
                         } elseif ($pq_quantity > 0 && $pq_status == 'false') {
                             $quantity_lenght = $pq_quantity;
                             $gerenric_product_inner .= '<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>';
