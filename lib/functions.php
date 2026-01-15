@@ -258,7 +258,7 @@ function url_clean($string)
 	$string = str_replace(array(',','’'), "", $string);*/
 	$string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
 	$string = str_replace(" ", "-", strtolower(trim($string)));
-	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":", '"', "<", ">", "(", ")", "!", "*", "@", "~", "+", "×", "³", "²", "¹", "®", "™", "©"), "", $string);
+	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":", '"', "<", ">", "(", ")", "!", "*", "@", "~", "+", "×", "³", "²", "¹", "®", "™", "©", "|"), "", $string);
 	$string = str_replace(array("/", "+", "--"), "-", $string);
 	return $string;
 }

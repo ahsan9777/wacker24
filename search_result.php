@@ -2,7 +2,11 @@
 include("includes/php_includes_top.php");
 require_once("lib/class.pager1.php");
 $p = new Pager1;
-//print_r($_REQUEST);die();
+$requestUri = rtrim($GLOBALS['siteURL'], "/") . $_SERVER['REQUEST_URI'];
+//$requestUri = $GLOBALS['siteURL'] . ltrim($_SERVER['REQUEST_URI'], "/demo");
+//print(ltrim($_SERVER['REQUEST_URI'], "/wacker24")."<br>".$requestUri);
+//print($requestUri);
+//print_r($_SERVER['PHP_SELF']);die();
 $heading_title = "";
 $search_whereclause = "";
 $Sidefilter_where = "";
