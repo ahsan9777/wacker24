@@ -106,12 +106,18 @@ if ($rs->rowCount() > 0) {
         $gst = ($oi_amount * $oi_gst_value);
         $price_amount = number_format( ($oi_amount + $gst), "2", ".", "" );
         $price_amount = sprintf("%08.2f", $price_amount);
+        $supplier_id = $row->supplier_id;
+         $pro_description_short = $row->pro_description_short;
+         if($row->oi_type == 2) {
+            $supplier_id = "GRATIS fur Sie!";
+            $pro_description_short = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
+         }
 print('<ORDER_ITEM>
          <LINE_ITEM_ID>'.$count.'</LINE_ITEM_ID>
          <ARTICLE_ID>
-            <SUPPLIER_AID>'.$row->supplier_id.'</SUPPLIER_AID>
+            <SUPPLIER_AID>'.$supplier_id.'</SUPPLIER_AID>
             <BUYER_AID type="BZRNR"/>
-            <DESCRIPTION_SHORT>'.$row->pro_description_short.'/</DESCRIPTION_SHORT>
+            <DESCRIPTION_SHORT>'.$pro_description_short.'/</DESCRIPTION_SHORT>
          </ARTICLE_ID>
          <QUANTITY>'.$row->oi_qty.'</QUANTITY>
          <ORDER_UNIT>'.$row->pro_order_unit.'</ORDER_UNIT>

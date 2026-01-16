@@ -117,18 +117,26 @@ class Mailer
                 $ord_gst = $row->ord_gst;
                 $ord_shipping_charges = $row->ord_shipping_charges;
                 $ord_amount = number_format(($row->ord_amount + $ord_shipping_charges), "2", ",", "");
+                $get_image_link = get_image_link(160, $row->pg_mime_source_url);
+                $supplier_id = $row->supplier_id;
+                $pro_description_short = $row->pro_description_short;
+                if($row->oi_type == 2) {
+                    $supplier_id = "GRATIS fur Sie!";
+                    $get_image_link = $GLOBALS['siteURL'] . "files/free_product/" .returnName("fp_file", "free_product", "fp_id", $row->fp_id);
+                    $pro_description_short = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
+                }
                 //echo $row->pro_image;die();
 
                 $order_detail .= '<tr>
-                    <td style="width: 200px; display: inline-block; margin-right: 20px;"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt="" style="max-width: 100%; display: block; margin: auto; margin-bottom: 10px;"></td>
+                    <td style="width: 200px; display: inline-block; margin-right: 20px;"><img src="' . $get_image_link . '" alt="" style="max-width: 100%; display: block; margin: auto; margin-bottom: 10px;"></td>
                     <td style="width: 370px; display: inline-block;">
                         <table width="100%" cellpadding="0" cellspacing="0">
-                            <tr><td colspan="3" style="font-size: 16px; color: #000; font-weight: bold; line-height: 130%;">' . $row->pro_description_short . '</td></tr>
+                            <tr><td colspan="3" style="font-size: 16px; color: #000; font-weight: bold; line-height: 130%;">' . $pro_description_short . '</td></tr>
                             <tr><td height="20"></td></tr>
                             <tr>
                                 <td style="width: 120px; font-size: 14px; color: #000; line-height: 130%; vertical-align: text-top;">Artikenummer:</td>
                                 <td style="width: 10px;"></td>
-                                <td style="width: 170px;font-size: 14px; color: #000; line-height: 130%; vertical-align: text-top;">' . $row->supplier_id . '</td>
+                                <td style="width: 170px;font-size: 14px; color: #000; line-height: 130%; vertical-align: text-top;">' . $supplier_id . '</td>
                             </tr>
                             <tr><td height="5"></td></tr>
                             <tr>
@@ -238,18 +246,25 @@ class Mailer
                 $ord_gst = $row->ord_gst;
                 $ord_shipping_charges = $row->ord_shipping_charges;
                 $ord_amount = number_format(($row->ord_amount + $ord_shipping_charges), "2", ",", "");
-                //echo $row->pro_image;die();
+                $get_image_link = get_image_link(160, $row->pg_mime_source_url);
+                $supplier_id = $row->supplier_id;
+                $pro_description_short = $row->pro_description_short;
+                if($row->oi_type == 2) {
+                    $supplier_id = "GRATIS fur Sie!";
+                    $get_image_link = $GLOBALS['siteURL'] . "files/free_product/" .returnName("fp_file", "free_product", "fp_id", $row->fp_id);
+                    $pro_description_short = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
+                }
 
                 $order_detail .= '<tr>
-                    <td style="width: 200px; display: inline-block; margin-right: 20px;"><img src="' . get_image_link(160, $row->pg_mime_source_url) . '" alt="" style="max-width: 100%; display: block; margin: auto; margin-bottom: 10px;"></td>
+                    <td style="width: 200px; display: inline-block; margin-right: 20px;"><img src="' .$get_image_link. '" alt="" style="max-width: 100%; display: block; margin: auto; margin-bottom: 10px;"></td>
                     <td style="width: 370px; display: inline-block;">
                         <table width="100%" cellpadding="0" cellspacing="0">
-                            <tr><td colspan="3" style="font-size: 16px; color: #000; font-weight: bold; line-height: 130%;">' . $row->pro_description_short . '</td></tr>
+                            <tr><td colspan="3" style="font-size: 16px; color: #000; font-weight: bold; line-height: 130%;">' . $pro_description_short . '</td></tr>
                             <tr><td height="20"></td></tr>
                             <tr>
                                 <td style="width: 120px; font-size: 14px; color: #000; line-height: 130%; vertical-align: text-top;">Artikenummer:</td>
                                 <td style="width: 10px;"></td>
-                                <td style="width: 170px;font-size: 14px; color: #000; line-height: 130%; vertical-align: text-top;">' . $row->supplier_id . '</td>
+                                <td style="width: 170px;font-size: 14px; color: #000; line-height: 130%; vertical-align: text-top;">' . $supplier_id . '</td>
                             </tr>
                             <tr><td height="5"></td></tr>
                             <tr>

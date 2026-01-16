@@ -2972,6 +2972,7 @@ function calculateDeliveryDate($order_date, $order_day_num, $order_time, $delive
 
 function price_format($price)
 {
+	
 	return number_format($price, "2", ",", ".");
 }
 

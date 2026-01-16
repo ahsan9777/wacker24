@@ -64,12 +64,9 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 <input type="text" class="search_input search_keyword" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" placeholder="Suchhbegriff" autocomplete="off">
                 <button class="search_icon" title="search button"></button>
             </form>
-            <style>
-                
-            </style>
             <a class="header_tint_toner_logo" href="tint-toner">
                 <div class="tint_toner_logo"><img src="images/tint_toner_logo.png" alt=""></div>
-                <div class="tint_toner_txt">Tinte / Toner</div>
+                <div class="tint_toner_txt">Suche<br>Tinte / Toner</div>
             </a>
             <div class="header_account">
                 <ul>

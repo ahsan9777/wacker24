@@ -47,6 +47,7 @@ if (isset($_REQUEST['btnAdd'])) {
         $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM free_product WHERE fp_id = " . $_REQUEST['fp_id']);
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
+            $fpc_id = $rsMem->fpc_id;
             $fp_title_de = $rsMem->fp_title_de;
             $fp_price = $rsMem->fp_price;
             $mfileName = $rsMem->fp_file;
@@ -173,7 +174,7 @@ include("includes/messages.php");
                             if (!empty($_REQUEST['fp_title_de'])) {
                                 $fp_id = $_REQUEST['fp_id'];
                                 $fp_title_de = $_REQUEST['fp_title_de'];
-                                $searchQuery .= " AND fp_id = '" . $_REQUEST['fp_id'] . "'";
+                                $searchQuery .= " AND fp.fp_id = '" . $_REQUEST['fp_id'] . "'";
                             }
                         }
                         ?>
@@ -190,6 +191,7 @@ include("includes/messages.php");
                                     <tr>
                                         <th width="50"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th width="100">Logo</th>
+                                        <th>Category</th>
                                         <th>Title</th>
                                         <th width="100">Price</th>
                                         <th width="50">Status</th>
@@ -198,7 +200,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT * FROM free_product " . $searchQuery . " ";
+                                    $Query = "SELECT fp.*, fpc.fpc_title_de AS fpc_title FROM free_product AS fp LEFT OUTER JOIN free_product_category AS fpc ON fpc.fpc_id = fp.fpc_id " . $searchQuery . " ";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 25;
@@ -224,6 +226,7 @@ include("includes/messages.php");
                                                         </div>
                                                     </div>
                                                 </td>
+                                                <td><?php print($row->fpc_title); ?></td>
                                                 <td><?php print($row->fp_title_de); ?></td>
                                                 <td><?php print($row->fp_price); ?></td>
                                                 <td>
@@ -301,7 +304,7 @@ include("includes/messages.php");
             var fp_title_de = $("#fp_title_de");
             $(fp_id).val(ui.item.fp_id);
             $(fp_title_de).val(ui.item.value);
-            frm_search.submit();
+            //frm_search.submit();
             //return false;
             //console.log( "Selected: " + ui.item.value + " fp_id " + ui.item.fp_id );
         }

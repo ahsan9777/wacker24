@@ -139,7 +139,7 @@ include("includes/message.php");
 								</li>
 								<li>
 									<div class="form_label">Passwort</div>
-									<div class="form_field"><input type="password" class="gerenric_input" name="user_password" id="user_password"></div>
+									<div class="form_field password_field"><input type="password" class="gerenric_input" name="user_password" id="user_password"> <i class="fa fa-eye toggle-password" data-target="#user_password"></i></div>
 								</li>
 								<li><button type="submit" name="btn_login" class="gerenric_btn full_btn">Einloggen</button></li>
 								<li>
@@ -228,5 +228,19 @@ include("includes/message.php");
 	</div>
 
 </body>
+<script>
+	$(document).ready(function() {
+		$('.toggle-password').on('click', function() {
+			let input = $($(this).data('target'));
 
+			if (input.attr('type') === 'password') {
+				input.attr('type', 'text');
+				$(this).removeClass('fa-eye').addClass('fa-eye-slash');
+			} else {
+				input.attr('type', 'password');
+				$(this).removeClass('fa-eye-slash').addClass('fa-eye');
+			}
+		});
+	});
+</script>
 </html>

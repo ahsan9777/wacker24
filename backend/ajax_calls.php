@@ -450,5 +450,23 @@ if (isset($_REQUEST['action'])) {
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;
+
+    case 'fp_title_de':
+        $json = array();
+        $where = "";
+        if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+            $where .= " WHERE fp_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+        }
+        $Query = "SELECT fp_id, fp_title_de FROM free_product " . $where . " ORDER BY fp_id  LIMIT 0,20";
+        $rs = mysqli_query($GLOBALS['conn'], $Query);
+        while ($row = mysqli_fetch_object($rs)) {
+            $json[] = array(
+                'fp_id' => strip_tags(html_entity_decode($row->fp_id, ENT_QUOTES, 'UTF-8')),
+                'value' => strip_tags(html_entity_decode($row->fp_title_de, ENT_QUOTES, 'UTF-8'))
+            );
+        }
+        $jsonResults = json_encode($json);
+        print($jsonResults);
+        break;
     }
 }

@@ -112,12 +112,12 @@ include("includes/message.php");
 	<meta charset="utf-8">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main']."registrierung"); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . "registrierung"); ?>">
 	<base href="<?php print($GLOBALS['siteURL']); ?>">
 	<title>Registrierung</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts));?>" />
+	<link rel="stylesheet" type="text/css" href="<?php print(get_font_link(config_fonts)); ?>" />
 	<link href="css/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
 	<script src="js/jquery-2.2.0.min.js"></script>
 	<?php include("includes/btn_color.php"); ?>
@@ -188,11 +188,11 @@ include("includes/message.php");
 									<div class="form_row">
 										<div class="form_left">
 											<div class="form_label">Passwort *</div>
-											<div class="form_field"><input type="password" name="user_password" id="user_password" value="<?php print($user_password); ?>" class="gerenric_input" required></div>
+											<div class="form_field password_field"><input type="password" name="user_password" id="user_password" value="<?php print($user_password); ?>" class="gerenric_input" required> <i class="fa fa-eye toggle-password" data-target="#user_password"></i></div>
 										</div>
 										<div class="form_right">
 											<div class="form_label">Wiederholen Sie Ihr Passwort *</div>
-											<div class="form_field"><input type="password" name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" class="gerenric_input" required></div>
+											<div class="form_field password_field"><input type="password" name="user_confirm_password" id="user_confirm_password" value="<?php print($user_confirm_password); ?>" class="gerenric_input" required> <i class="fa fa-eye toggle-password" data-target="#user_confirm_password"></i></div>
 										</div>
 									</div>
 								</li>
@@ -227,7 +227,7 @@ include("includes/message.php");
 									?>
 									<div class="form_label">Bitte Bestätigungscode eingeben: <span class="code_text"><?php print($confirm_code); ?></span></div>
 									<input type="hidden" name="confirm_code" id="confirm_code" value="<?php print($confirm_code); ?>">
-									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;" ></div>
+									<div class="form_field"><input type="text" class="gerenric_input" name="reconfirm_code" id="reconfirm_code" maxlength="4" required autocomplete="off" onKeyPress="if(this.value.length==4) return false;"></div>
 								</li>
 								<li class="mt_30"><input type="checkbox" required> Ich habe die Datenschutzbestimmungen zur Kenntnis genommen | <a href="datenschutz">Datenschutzerklärung </a></li>
 								<li><button type="submit" name="btn_registration" class="gerenric_btn full_btn">Jetzt registrieren</button></li>
@@ -275,6 +275,20 @@ include("includes/message.php");
 			$("#user_tax_no").attr("required", false);
 			$('#user_company_input').hide();
 		}
+	});
+
+	$(document).ready(function() {
+		$('.toggle-password').on('click', function() {
+			let input = $($(this).data('target'));
+
+			if (input.attr('type') === 'password') {
+				input.attr('type', 'text');
+				$(this).removeClass('fa-eye').addClass('fa-eye-slash');
+			} else {
+				input.attr('type', 'password');
+				$(this).removeClass('fa-eye-slash').addClass('fa-eye');
+			}
+		});
 	});
 </script>
 

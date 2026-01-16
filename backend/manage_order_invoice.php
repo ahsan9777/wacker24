@@ -151,14 +151,20 @@ if (mysqli_num_rows($rs) > 0) {
 					if (mysqli_num_rows($rs) > 0) {
 						while ($row = mysqli_fetch_object($rs)) {
 							$counter++;
+							$supplier_id = $row->supplier_id;
+							$pro_description_short = $row->pro_description_short;
+							if($row->oi_type == 2) {
+								$supplier_id = "GRATIS fur Sie!";
+								$pro_description_short = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
+							}
 					?>
 							<tr>
 								<td colspan="7" height="15"></td>
 							</tr>
 							<tr>
 								<td style="width: 7%; font-size: 12px; font-weight: 400;color: #000;"> <?php print($counter); ?> </td>
-								<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"> <?php print($row->supplier_id); ?> </td>
-								<td style="width: 35%; font-size: 12px; font-weight: 400;color: #000; padding-right: 5px"> <?php print($row->pro_description_short); ?> </td>
+								<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"> <?php print($supplier_id); ?> </td>
+								<td style="width: 35%; font-size: 12px; font-weight: 400;color: #000; padding-right: 5px"> <?php print($pro_description_short); ?> </td>
 								<td style="width: 10%; font-size: 12px; font-weight: 400;color: #000;"> <?php print(str_replace(".", ",", $row->oi_amount)); ?> </td>
 								<td style="width: 14%; font-size: 12px; font-weight: 400;color: #000;"> <?php print($row->oi_qty); ?> </td>
 								<td style="width: 12%; font-size: 12px; font-weight: 400;color: #000;">0</td>
