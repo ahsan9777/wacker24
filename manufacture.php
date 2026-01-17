@@ -138,7 +138,7 @@ foreach ($manufacture_data['0 - 9'] as $item) {
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Zurück zum Seitenanfang</div>
+		
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 	</div>

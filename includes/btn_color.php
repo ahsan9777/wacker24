@@ -11,6 +11,9 @@
     #header_section .header_bottom{
         background-color: <?php print(config_private_color_b); ?>;
     }
+    #scroll_top{
+        background-color: <?php print(config_private_color_b); ?>;
+    }
     #header_section .header_bottom .header_search .search_icon{
         background-color: <?php print(config_btn_color); ?>;
     }

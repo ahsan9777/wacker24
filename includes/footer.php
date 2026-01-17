@@ -1,3 +1,4 @@
+<div id="scroll_top" <?php print($background_color_two); ?> >Zurück zum Seitenanfang</div>
 <footer id="footer_section" <?php print($background_color_one); ?>>
     <div class="page_width">
         <div class="footer_top">

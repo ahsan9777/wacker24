@@ -377,7 +377,7 @@ $special_price = user_special_price("level_one", $level_one);
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Zurück zum Seitenanfang</div>
+		
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

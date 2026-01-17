@@ -40,6 +40,7 @@
                 $("#header_section .header_top").css('background-color', '<?php print(config_company_color_a); ?>');
                 $("#header_section .header_bottom").css('background-color', '<?php print(config_company_color_b); ?>');
                 $("#navigation_section").css('background-color', '<?php print(config_company_color_a); ?>');
+                $("#scroll_top").css('background-color', '<?php print(config_company_color_b); ?>');
                 $("#footer_section").css('background-color', '<?php print(config_company_color_a); ?>');
                 $("#switch_click_text").text("Angebote gelten nur für Industrie, Handel, Handwerk und Gewerbe. Preise zzgl. gesetzl. MwSt.");
                 $(".pbp_price_with_tex").hide();
@@ -50,6 +51,7 @@
                 $("#header_section .header_top").css('background-color', '<?php print(config_private_color_a); ?>');
                 $("#header_section .header_bottom").css('background-color', '<?php print(config_private_color_b); ?>');
                 $("#navigation_section").css('background-color', '<?php print(config_private_color_a); ?>');
+                $("#scroll_top").css('background-color', '<?php print(config_private_color_b); ?>');
                 $("#footer_section").css('background-color', '<?php print(config_private_color_a); ?>');
                 $("#switch_click_text").text("Angebote gelten für Privatkunden. Preise inkl. gesetzl. MwSt.");
                 $(".pbp_price_with_tex").show();

@@ -1,7 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
-$page_title = "Toner, Tinte, Bänder - ".$GLOBALS['siteName'];
-$Query = "SELECT manf_id, manf_name, manf_name_params FROM `manufacture` WHERE manf_id IN (SELECT DISTINCT(manf_id) FROM vu_category_map WHERE cat_id = '70100') ORDER BY manf_name ASC";
+$page_title = "Toner, Tinte, Bänder - " . $GLOBALS['siteName'];
+$Query = "SELECT manf_id, manf_name, manf_name_params, manf_file, manf_showhome FROM `manufacture` WHERE manf_id IN (SELECT DISTINCT(manf_id) FROM vu_category_map WHERE cat_id = '70100') ORDER BY manf_name ASC";
 //print($Query . "<br>");
 $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
 $data_break_check = ceil($count / 5);
@@ -11,17 +11,26 @@ $j = 0;
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
 	while ($row = mysqli_fetch_object($rs)) {
-		if($data_break_check == $j){
+		if ($data_break_check == $j) {
 			$i++;
 			$j = 0;
 		}
 		$j++;
 		$manf_name = $row->manf_name;
 		$manf_name_params = $row->manf_name_params;
+		$manf_file = $row->manf_file;
+		$manf_showhome = $row->manf_showhome;
 		$manufacture_data[$i][] = array(
 			"manf_title" => $manf_name,
 			"manf_name_params" => $GLOBALS['siteURL'] . "tint-toner/" . $manf_name_params
 		);
+		if ($manf_showhome > 0) {
+			$manufacture_image_url[] = array(
+				"manf_title" => $manf_name,
+				"manf_img_url" => $GLOBALS['siteURL'] . "files/manufacture/" . $manf_file,
+				"manf_name_params" => $GLOBALS['siteURL'] . "marken/" . $manf_name_params
+			);
+		}
 	}
 }
 /*print("<pre>");
@@ -49,7 +58,7 @@ print("</pre>");
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
 		<style>
-			
+
 		</style>
 		<section id="content_section">
 			<div class="marken-page">
@@ -58,28 +67,21 @@ print("</pre>");
 						<div class="marken-content-left" style="width: 100%;">
 							<div class="marken-heading">Toner, Tinte, Bänder</div>
 							<div class="marken-logos">
-								<div class="marken-img"><img src="images/tint-toner/brother.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/canon.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/edding.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/epson.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/hp.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/kyocera.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/lexmark.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/logo_ok.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/soennecken.png" alt=""></div>
-								<div class="marken-img"><img src="images/tint-toner/ufp_deutschland.png" alt=""></div>
+								<?php foreach ($manufacture_image_url as $item_img_url) { ?>
+									<a class="marken-img" href="<?php print($item_img_url['manf_name_params']); ?>"> <img src="<?php print($item_img_url['manf_img_url']); ?>" alt="<?php print($item_img_url['manf_title']); ?>"></a>
+								<?php } ?>
 							</div>
 							<div class="marken-listing-content">
 								<div class="marken-listing-block">
 									<div class="marken-list-data">
-										<?php for($i = 0; $i < 5; $i++){?>
-										<div class="marken-list-col">
-											<ul>
-												<?php foreach ($manufacture_data[$i] as $item) { ?>
-												<li><a href="<?php print($item['manf_name_params']); ?>"><?php print($item['manf_title']); ?></a></li>
-												<?php } ?>
-											</ul>
-										</div>
+										<?php for ($i = 0; $i < 5; $i++) { ?>
+											<div class="marken-list-col">
+												<ul>
+													<?php foreach ($manufacture_data[$i] as $item) { ?>
+														<li><a href="<?php print($item['manf_name_params']); ?>"><?php print($item['manf_title']); ?></a></li>
+													<?php } ?>
+												</ul>
+											</div>
 										<?php } ?>
 									</div>
 								</div>
@@ -112,7 +114,7 @@ print("</pre>");
 			</div>
 		</section>
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Zurück zum Seitenanfang</div>
+		
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 	</div>

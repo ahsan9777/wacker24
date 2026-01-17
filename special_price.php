@@ -143,7 +143,7 @@ $page = 1;
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="scroll_top">Zurück zum Seitenanfang</div>
+		
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
