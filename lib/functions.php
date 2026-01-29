@@ -258,7 +258,7 @@ function url_clean($string)
 	$string = str_replace(array(',','’'), "", $string);*/
 	$string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
 	$string = str_replace(" ", "-", strtolower(trim($string)));
-	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":", '"', "<", ">", "(", ")", "!", "*", "@", "~", "+", "×", "³", "²", "¹", "®", "™", "©", "|"), "", $string);
+	$string = str_replace(array(",", "’", "'", "&", ".", "%", ":", '"', "<", ">", "(", ")", "!", "*", "@", "~", "+", "×", "³", "²", "¹", "®", "™", "©", "|", "`"), "", $string);
 	$string = str_replace(array("/", "+", "--"), "-", $string);
 	return $string;
 }
@@ -3058,7 +3058,7 @@ function autocorrectQueryUsingProductTerms_bk($query, $pdo)
 	];
 }
 
-function autocorrectQueryUsingProductTerms($query, $pdo)
+function autocorrectQueryUsingProductTerms_bk1($query, $pdo)
 {
 	// Get all unique short descriptions from the products
 	$stmt = $pdo->query("SELECT DISTINCT pro_udx_seo_internetbezeichung FROM products");
@@ -3133,6 +3133,213 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
 		'corrected' => implode(' ', $correctedWords)
 	];
 }
+
+function autocorrectQueryUsingProductTerms_bk2($query, $pdo)
+{
+	// Fetch product descriptions (order stabilized)
+	$stmt = $pdo->query("
+		SELECT DISTINCT pro_udx_seo_epag_title
+		FROM products
+		WHERE pro_udx_seo_epag_title IS NOT NULL
+		AND pro_udx_seo_epag_title != ''
+		ORDER BY pro_udx_seo_epag_title ASC
+			");
+	$allDescriptions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+	// Normalize words (German-safe)
+	function normalizeWord($word)
+	{
+		$map = [
+			'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss',
+			'Ä' => 'ae', 'Ö' => 'oe', 'Ü' => 'ue'
+		];
+
+		$word = mb_strtolower(trim($word), 'UTF-8');
+		$word = strtr($word, $map);
+
+		return preg_replace('/[^a-z0-9]/', '', $word);
+	}
+
+	// Build dictionary: normalized => [originals]
+	$dictionaryWords = [];
+
+	foreach ($allDescriptions as $desc) {
+		$words = preg_split('/[\s\-_,\.\'\"\/\(\)\[\]]+/', $desc);
+
+		foreach ($words as $word) {
+			$normalized = normalizeWord($word);
+
+			if (strlen($normalized) > 1) {
+				$dictionaryWords[$normalized][] = $word;
+			}
+		}
+	}
+
+	// Split search query
+	$queryWords = preg_split('/\s+/', trim($query));
+	$correctedWords = [];
+
+	foreach ($queryWords as $queryWord) {
+		$normalizedQueryWord = normalizeWord($queryWord);
+
+		// 🔒 1. If exact normalized word exists → NEVER autocorrect
+		if (isset($dictionaryWords[$normalizedQueryWord])) {
+			$correctedWords[] = $queryWord;
+			continue;
+		}
+
+		// 🔍 Fuzzy matching
+		$bestWord = null;
+		$bestScore = 0;
+		$bestDistance = PHP_INT_MAX;
+
+		foreach ($dictionaryWords as $dictNorm => $dictOriginals) {
+
+			// Length sanity check
+			if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 2) {
+				continue;
+			}
+
+			similar_text($normalizedQueryWord, $dictNorm, $similarity);
+			$lev = levenshtein($normalizedQueryWord, $dictNorm);
+
+			if (
+				$similarity > $bestScore ||
+				($similarity == $bestScore && $lev < $bestDistance)
+			) {
+				$bestScore = $similarity;
+				$bestDistance = $lev;
+				$bestWord = $dictOriginals[0]; // safest original
+			}
+		}
+
+		// 🎯 Confidence threshold (stricter for short words)
+		$minSimilarity = strlen($normalizedQueryWord) <= 6 ? 85 : 70;
+
+		if ($bestWord !== null && $bestScore >= $minSimilarity) {
+			$correctedWords[] = $bestWord;
+		} else {
+			$correctedWords[] = $queryWord;
+		}
+	}
+
+	return [
+		'original'  => $query,
+		'corrected' => implode(' ', $correctedWords)
+	];
+}
+
+function autocorrectQueryUsingProductTerms($query, $pdo)
+{
+    // Fetch both SEO title and keywords
+    $stmt = $pdo->query("
+        SELECT DISTINCT pro_udx_seo_epag_title, pro_manufacture_aid
+        FROM products
+        WHERE 
+            (pro_udx_seo_epag_title IS NOT NULL AND pro_udx_seo_epag_title != '')
+			OR
+			(pro_manufacture_aid IS NOT NULL AND pro_manufacture_aid != '')
+    ");
+
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Normalize words (German-safe)
+    function normalizeWord($word)
+    {
+        $map = [
+            'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss',
+            'Ä' => 'ae', 'Ö' => 'oe', 'Ü' => 'ue'
+        ];
+
+        $word = mb_strtolower(trim($word), 'UTF-8');
+        $word = strtr($word, $map);
+
+        return preg_replace('/[^a-z0-9]/', '', $word);
+    }
+
+    // Build dictionary: normalized => [originals]
+    $dictionaryWords = [];
+
+    foreach ($rows as $row) {
+
+        // Merge both fields into one string
+        $combinedText = trim(
+            ($row['pro_udx_seo_epag_title'] ?? '') . ' ' .
+            ($row['pro_manufacture_aid'] ?? '')
+        );
+
+        if ($combinedText === '') {
+            continue;
+        }
+
+        // Split words (supports spaces + commas)
+        $words = preg_split('/[\s,\-_\.\'\"\/\(\)\[\]]+/', $combinedText);
+
+        foreach ($words as $word) {
+            $normalized = normalizeWord($word);
+
+            if (strlen($normalized) > 1) {
+                // prevent duplicate originals
+                $dictionaryWords[$normalized][$word] = true;
+            }
+        }
+    }
+
+    // Split search query
+    $queryWords = preg_split('/\s+/', trim($query));
+    $correctedWords = [];
+
+    foreach ($queryWords as $queryWord) {
+        $normalizedQueryWord = normalizeWord($queryWord);
+
+        // 🔒 Exact normalized word → never autocorrect
+        if (isset($dictionaryWords[$normalizedQueryWord])) {
+            $correctedWords[] = $queryWord;
+            continue;
+        }
+
+        // 🔍 Fuzzy matching
+        $bestWord = null;
+        $bestScore = 0;
+        $bestDistance = PHP_INT_MAX;
+
+        foreach ($dictionaryWords as $dictNorm => $dictOriginals) {
+
+            // Length sanity check
+            if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 2) {
+                continue;
+            }
+
+            similar_text($normalizedQueryWord, $dictNorm, $similarity);
+            $lev = levenshtein($normalizedQueryWord, $dictNorm);
+
+            if (
+                $similarity > $bestScore ||
+                ($similarity == $bestScore && $lev < $bestDistance)
+            ) {
+                $bestScore = $similarity;
+                $bestDistance = $lev;
+                // safest original
+                $bestWord = array_key_first($dictOriginals);
+            }
+        }
+
+        // 🎯 Confidence threshold
+        $minSimilarity = strlen($normalizedQueryWord) <= 6 ? 85 : 70;
+
+        if ($bestWord !== null && $bestScore >= $minSimilarity) {
+            $correctedWords[] = $bestWord;
+        } else {
+            $correctedWords[] = $queryWord;
+        }
+    }
+
+    return [
+        'original'  => $query,
+        'corrected' => implode(' ', $correctedWords)
+    ];
+}
+
 
 // Helper to preserve casing style
 function matchCase($input, $reference)

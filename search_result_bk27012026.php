@@ -29,29 +29,27 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 	$result = autocorrectQueryUsingProductTerms($_REQUEST['search_keyword'], $pdo);
 	//$search_keyword_array = explode(" ", trim(str_replace("-", " ", $_REQUEST['search_keyword'])));
 	$search_keyword_array = explode(" ", trim(str_replace("-", " ", $result['corrected'])));
-	//$search_keyword_array = explode(" ", trim(str_replace("-", " ", "Papier 80g weiß a4 kopierpapier")));
 	//print_r($pro_description_short_keyword);
 	$search_keyword_where = "";
-	$search_keyword_pk_title_where = "";
 	if (count($search_keyword_array) > 1) {
-		$search_keyword_case = "(CASE WHEN  pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.supplier_id = pro.supplier_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND pf.pf_fvalue LIKE '" . dbStr(trim($result['corrected'])) . "%') THEN 1 ELSE 0 END) + ";
+		$search_keyword_case = "(CASE WHEN  pro.pro_description_short_new LIKE '" . dbStr(trim($result['corrected'])) . "%' THEN 1 ELSE 0 END) + ";
 		for ($i = 0; $i < count($search_keyword_array); $i++) {
 			$search_keyword_array_data = "";
 			if (!empty($search_keyword_array[$i])) {
-				$search_keyword_case .= "(CASE WHEN pro.supplier_id = '" . dbStr(trim($search_keyword_array[$i])) . "' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR pro.pro_ean = '" . dbStr(trim($search_keyword_array[$i])) . "' OR pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.supplier_id = pro.supplier_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND pf.pf_fvalue LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%')  THEN 1 ELSE 0 END) + ";
-				$search_keyword_where .= " OR pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%'";
-				$search_keyword_pk_title_where .= "pf.pf_fvalue LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
+				$search_keyword_array_data = "pro.pro_description_short_new LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
+				$search_keyword_case .= "(CASE WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END) + ";
+				$search_keyword_where .= $search_keyword_array_data;
 			}
 		}
 	} else {
-		$search_keyword_case = "(CASE WHEN  pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.supplier_id = pro.supplier_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND pf.pf_fvalue LIKE '" . dbStr(trim($result['corrected'])) . "%') THEN 1 ELSE 0 END) + ";
-		$search_keyword_case .= " ( CASE WHEN pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.supplier_id = pro.supplier_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND pf.pf_fvalue LIKE '" . dbStr(trim($result['corrected'])) . "%') THEN 1 ELSE 0 END) ";
-		$search_keyword_where = " OR pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($result['corrected'])) . "%' ";
-		$search_keyword_pk_title_where = "pf.pf_fvalue LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR ";
+		$search_keyword_array_data = "pro.pro_description_short_new LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR ";
+		$search_keyword_case = "CASE WHEN  pro.pro_description_short_new LIKE '" . dbStr(trim($result['corrected'])) . "%' THEN 10 ";
+		$search_keyword_case .= " WHEN (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_array_data, " OR ") . " THEN 1 ELSE 0 END";
+		$search_keyword_where .= $search_keyword_array_data;
 	}
 
 
-	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . ltrim($search_keyword_where, " OR ") . ")";
+	$Sidefilter_where = $Sidefilter_brandwith = $Sidefilter_featurewhere = "IN (SELECT pro.supplier_id FROM vu_products AS pro WHERE " . rtrim($search_keyword_where, " OR ") . ")";
 
 	$heading_title .= "Schlagwort : " . $_REQUEST['search_keyword'];
 	$qryStrURL .= "search_keyword=" . $_REQUEST['search_keyword'] . "&";
@@ -184,7 +182,7 @@ if (isset($_REQUEST['sortby'])) {
 						<div class="pd_right">
 
 							<?php
-							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' " .$search_keyword_where. " OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.pro_id = pro.pro_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND ( ".rtrim($search_keyword_pk_title_where, " OR ")." ) ) " . $search_whereclause . " " . $order_by . "";
+							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE ( (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "') OR " . rtrim($search_keyword_where, " OR ") . ") " . $search_whereclause . " " . $order_by . "";
 							//print($Query_search);
 							$counter = 0;
 							$limit = 28;
