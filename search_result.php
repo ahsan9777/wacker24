@@ -7,6 +7,12 @@ $requestUri = rtrim($GLOBALS['siteURL'], "/") . $_SERVER['REQUEST_URI'];
 //print(ltrim($_SERVER['REQUEST_URI'], "/wacker24")."<br>".$requestUri);
 //print($requestUri);
 //print_r($_SERVER['PHP_SELF']);die();
+$user_ip = $_SERVER['REMOTE_ADDR'];
+$user_id = 0;
+if(isset($_SESSION["UID"])){
+	$user_id = $_SESSION["UID"];
+}
+mysqli_query($GLOBALS['conn'], "INSERT INTO search_keyword (user_id, sk_user_ip, sk_data, sk_cdate) VALUES ('".$user_id."', '".$user_ip."', '".dbStr(trim($_REQUEST['search_keyword']))."', '".date_time."')") or die(mysqli_error($GLOBALS['conn']));
 $heading_title = "";
 $search_whereclause = "";
 $Sidefilter_where = "";
@@ -27,7 +33,6 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$result = autocorrectQueryUsingProductTerms($_REQUEST['search_keyword'], $pdo);
-	//$search_keyword_array = explode(" ", trim(str_replace("-", " ", $_REQUEST['search_keyword'])));
 	$search_keyword_array = explode(" ", trim(str_replace("-", " ", $result['corrected'])));
 	//$search_keyword_array = explode(" ", trim(str_replace("-", " ", "Papier 80g weiß a4 kopierpapier")));
 	//print_r($pro_description_short_keyword);
@@ -184,7 +189,7 @@ if (isset($_REQUEST['sortby'])) {
 						<div class="pd_right">
 
 							<?php
-							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' " .$search_keyword_where. " OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.pro_id = pro.pro_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND ( ".rtrim($search_keyword_pk_title_where, " OR ")." ) ) " . $search_whereclause . " " . $order_by . "";
+							$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' " .$search_keyword_where. " OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.pro_id = pro.pro_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND ( ".rtrim($search_keyword_pk_title_where, " OR ")." ) ) " . $search_whereclause . " " . $order_by . "";
 							//print($Query_search);
 							$counter = 0;
 							$limit = 28;

@@ -1,19 +1,14 @@
 <?php
-//session_save_path('/tmp');
-session_start();
-if(!isset($_SESSION['UserID'])) {
-    header("Location: login.php");
-    exit;
-}
-include '../lib/openCon.php';
-include '../lib/functions.php';
+//include '../lib/openCon.php';
+//include '../lib/functions.php';
+include("../lib/session_head.php");
 $address_tag_data = "";
 $ord_id = $_REQUEST['ord_id'];
 $Query = "SELECT ord.*, u.user_id, u.customer_id, u.user_company_name, CONCAT(u.user_fname, ' ', u.user_fname) AS user_full_name, di.dinfo_email, CONCAT(di.dinfo_street, ' ', di.dinfo_house_no) AS user_street_house, di.dinfo_usa_zipcode, c.countries_iso_code_2 FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id WHERE ord.ord_id = '".$ord_id."'";
 //print($Query);die();
-$rs = mysqli_query($GLOBALS['conn'], $Query);
-if (mysqli_num_rows($rs) > 0) {
-    $row = mysqli_fetch_object($rs);
+$rs = $pdo->query($Query);
+if ($rs->rowCount() > 0) {
+    $row = $rs->fetch(PDO::FETCH_OBJ);
     $party_id = ( (empty($row->customer_id)) ? '600000' : $row->customer_id );
     $name = ( (empty($row->user_company_name)) ? $row->user_full_name : $row->user_company_name );
     $ord_id = $row->ord_id;
@@ -103,9 +98,9 @@ print('<ORDER_ITEM_LIST>');
 
 $count = 0;
 $Query = "SELECT oi.*, pro.pro_description_short, pro.pro_order_unit FROM order_items AS oi LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id WHERE oi.ord_id = '".$ord_id."'";
-$rs = mysqli_query($GLOBALS['conn'], $Query);
-if (mysqli_num_rows($rs) > 0) {
-	while ($row = mysqli_fetch_object($rs)) {
+$rs = $pdo->query($Query);
+if ($rs->rowCount() > 0) {
+    while ($row = $rs->fetch(PDO::FETCH_OBJ)){
         $count++;
         $oi_amount = $row->oi_amount;
         $oi_gst_value = $row->oi_gst_value;
@@ -145,4 +140,3 @@ print('<ORDER_SUMMARY>
 print('</ORDER_ITEM_LIST>');
 
 print('</ORDER>');
-?>

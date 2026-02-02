@@ -1789,7 +1789,7 @@ if (isset($_REQUEST['action'])) {
                 $whereclause .= " AND fpc_id IN (" . $fpc_id . ")";
             }
             $gratis_products_inner = "";
-            $Query1 = "SELECT fp_id, fpc_id, fp_file, fp_price, fp_title_de AS fp_title FROM `free_product` WHERE fp_status = '1' AND fp_price > 0 " . $whereclause . " ORDER BY fpc_id ASC";
+            $Query1 = "SELECT fp_id, fpc_id, fp_file, fp_price, fp_title_de AS fp_title FROM `free_product` WHERE fp_status = '1' AND fp_price > 0 " . $whereclause . " ORDER BY fp_price ASC";
             //print($Query1);die();
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
             if (mysqli_num_rows($rs1) > 0) {

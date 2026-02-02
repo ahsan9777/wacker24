@@ -3,7 +3,7 @@ include("includes/php_includes_top.php");
 $cart_amount_total = 0;
 $cart_amount = 0;
 $ci_total_free = 0;
-$free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_courier_fix_charges) . ' €</span>';
+$free_shipment_txt = '<span>Es fehlen noch ' . price_format(config_condition_courier_amount) . ' €</span>';
 if (isset($_SESSION['cart_id'])) {
 	//$cart_amount = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);
 	$cart_amount_total = returnName("cart_amount", "cart", "cart_id", $_SESSION['cart_id']);

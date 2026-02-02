@@ -3229,7 +3229,7 @@ function autocorrectQueryUsingProductTerms_bk2($query, $pdo)
 	];
 }
 
-function autocorrectQueryUsingProductTerms($query, $pdo)
+function autocorrectQueryUsingProductTerms_bk3_best($query, $pdo)
 {
     // Fetch both SEO title and keywords
     $stmt = $pdo->query("
@@ -3339,6 +3339,145 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
         'corrected' => implode(' ', $correctedWords)
     ];
 }
+
+function autocorrectQueryUsingProductTerms($query, $pdo)
+{
+    $stmt = $pdo->query("
+        SELECT DISTINCT pro_udx_seo_epag_title, pro_manufacture_aid
+        FROM products
+        WHERE 
+            (pro_udx_seo_epag_title IS NOT NULL AND pro_udx_seo_epag_title != '')
+            OR
+            (pro_manufacture_aid IS NOT NULL AND pro_manufacture_aid != '')
+    ");
+
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    /* ---------------- Normalization ---------------- */
+
+    function normalizeWord($word)
+    {
+        $map = [
+            'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss',
+            'Ä' => 'ae', 'Ö' => 'oe', 'Ü' => 'ue'
+        ];
+
+        $word = mb_strtolower(trim($word), 'UTF-8');
+        $word = strtr($word, $map);
+
+        return preg_replace('/[^a-z0-9]/', '', $word);
+    }
+
+    function isProductCode($word)
+    {
+        // any digit → treat as manufacturer code
+        return preg_match('/\d/', $word);
+    }
+
+    /* ---------------- Dictionaries ---------------- */
+
+    $seoDictionary = [];
+    $manufacturerDictionary = [];
+
+    foreach ($rows as $row) {
+
+        if (!empty($row['pro_udx_seo_epag_title'])) {
+            $words = preg_split('/[\s,\-_\.\'\"\/\(\)\[\]]+/', $row['pro_udx_seo_epag_title']);
+            foreach ($words as $word) {
+                $n = normalizeWord($word);
+                if (strlen($n) > 1) {
+                    $seoDictionary[$n][$word] = true;
+                }
+            }
+        }
+
+        if (!empty($row['pro_manufacture_aid'])) {
+            $words = preg_split('/[\s,\-_\.\'\"\/\(\)\[\]]+/', $row['pro_manufacture_aid']);
+            foreach ($words as $word) {
+                $n = normalizeWord($word);
+                if (strlen($n) > 1) {
+                    $manufacturerDictionary[$n][$word] = true;
+                }
+            }
+        }
+    }
+
+    /* ---------------- Matcher ---------------- */
+
+    function findBestMatch($queryWord, $dictionary)
+    {
+        $normalizedQueryWord = normalizeWord($queryWord);
+
+        // ✅ Exact normalized match → return canonical DB value
+        if (isset($dictionary[$normalizedQueryWord])) {
+            return array_key_first($dictionary[$normalizedQueryWord]);
+        }
+
+        $bestWord = null;
+        $bestScore = 0;
+        $bestDistance = PHP_INT_MAX;
+
+        foreach ($dictionary as $dictNorm => $dictOriginals) {
+
+            if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 2) {
+                continue;
+            }
+
+            similar_text($normalizedQueryWord, $dictNorm, $similarity);
+            $lev = levenshtein($normalizedQueryWord, $dictNorm);
+
+            if (
+                $similarity > $bestScore ||
+                ($similarity == $bestScore && $lev < $bestDistance)
+            ) {
+                $bestScore = $similarity;
+                $bestDistance = $lev;
+                $bestWord = array_key_first($dictOriginals);
+            }
+        }
+
+        $minSimilarity = strlen($normalizedQueryWord) <= 6 ? 85 : 70;
+
+        return ($bestWord !== null && $bestScore >= $minSimilarity)
+            ? $bestWord
+            : null;
+    }
+
+    /* ---------------- Query Processing ---------------- */
+
+    // 🔥 FIX: break lc-121 → lc 121
+    $queryWords = preg_split('/[\s\-_\.\'\"\/\(\)\[\]]+/', trim($query));
+    $correctedWords = [];
+
+    foreach ($queryWords as $queryWord) {
+
+        if ($queryWord === '') {
+            continue;
+        }
+
+        // 🔢 Codes → manufacturer FIRST
+        if (isProductCode($queryWord)) {
+
+            $match = findBestMatch($queryWord, $manufacturerDictionary)
+                  ?? findBestMatch($queryWord, $seoDictionary);
+
+        }
+        // 🔤 Text → SEO FIRST
+        else {
+
+            $match = findBestMatch($queryWord, $seoDictionary)
+                  ?? findBestMatch($queryWord, $manufacturerDictionary);
+        }
+
+        $correctedWords[] = $match ?? $queryWord;
+    }
+
+    return [
+        'original'  => $query,
+        'corrected' => implode(' ', $correctedWords)
+    ];
+}
+
 
 
 // Helper to preserve casing style
