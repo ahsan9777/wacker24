@@ -33,8 +33,8 @@ $cu = 'active';
                 <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_manufacture' || $pg == 'manage_products' || $pg == 'manage_sales_system' || $pg == 'manage_custom_products' || $pg == 'manage_products_bundle_price' || $pg == 'manage_products_feature' || $pg == 'manage_products_keyword' || $pg == 'manage_products_quantity' || $pg == 'manage_products_gallery') ? $cu : ''; ?>"><span class="material-icons icon">add</span> <span class="text">Artikel</span></a>
                 <ul class="sub-menu panel" <?php echo ( $pg == 'manage_manufacture' || $pg == 'manage_products' || $pg == 'manage_sales_system' || $pg == 'manage_custom_products' || $pg == 'manage_products_bundle_price' || $pg == 'manage_products_feature' || $pg == 'manage_products_keyword' || $pg == 'manage_products_quantity' || $pg == 'manage_products_gallery') ? $c : ''; ?>>
                     <li><a href="manage_manufacture.php" title="Manufacture Management"><span class="text">Manufacture</span></a></li>
-                    <li><a href="manage_products.php" title="Artical Management"><span class="text">View All Artical</span></a></li>
-                    <li><a href="manage_custom_products.php" title="Add Custom Artical Management"><span class="text">Add Custome Artical</span></a></li>
+                    <li><a href="manage_products.php" title="Article Management"><span class="text">View All Article</span></a></li>
+                    <li><a href="manage_custom_products.php" title="Add Custom Article Management"><span class="text">Add Custom Article</span></a></li>
                     <li><a href="manage_sales_system.php" title="Sales System Management"><span class="text">Sales System</span></a></li>
                 </ul>
             </li>
@@ -61,7 +61,7 @@ $cu = 'active';
                 <a href="manage_brands.php" title="Marken Management" ><span class="material-icons icon">star</span> <span class="text">Marken</span> </a>
             </li>
             <li>
-                <a href="manage_most_sale_articals.php" title="Most Sale Articles Management" ><span class="material-symbols-outlined icon">award_star</span> <span class="text">Most Sale Articles</span> </a>
+                <a href="manage_most_sale_articles.php" title="Meistverkaufte Artikel" ><span class="material-symbols-outlined icon">award_star</span> <span class="text">Meistverkaufte Artikel</span> </a>
             </li>
             <li>
                 <a href="manage_orders.php" title="Auftragsverwaltung Management" ><span class="material-icons icon">inventory</span> <span class="text">Auftragsverwaltung</span> </a>

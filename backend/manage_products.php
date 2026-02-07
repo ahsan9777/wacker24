@@ -445,9 +445,9 @@ include("includes/messages.php");
                                             $counter++;
                                     ?>
                                             <div class="col-md-3 col-12 mt-3">
-                                                <label for="">Keywowd <?php print($counter); ?> </label>
+                                                <label for="">Keyword <?php print($counter); ?> </label>
                                                 <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
-                                                <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
+                                                <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keyword">
                                             </div>
                                     <?php
                                         }
@@ -501,11 +501,11 @@ include("includes/messages.php");
                 <?php } else { ?>
                     <div class="row">
                         <div class="table-controls">
-                            <h1 class="text-white">Artical Management</h1>
+                            <h1 class="text-white">Artikelverwaltung</h1>
                             <div class="d-flex gap-1">
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=5"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Special Price</span></a>
-                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Artical</span></a>
+                                <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Article</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=4"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Upload New Schulranzen</span></a>
                                 <a href="<?php print("google_merchant_xml.php"); ?>" class="add-new"><span class="material-icons icon">download</span> <span class="text">Export Google Merchent Data</span></a>
                             </div>
@@ -556,7 +556,7 @@ include("includes/messages.php");
                                     <tr>
                                         <th width="10"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
                                         <th width="100">Image</th>
-                                        <th width="100">Artical Id</th>
+                                        <th width="100">Article Id</th>
                                         <th>Title </th>
                                         <th style="text-align: right; width: 256px">Stock</th>
                                         <th style="text-align: right; width: 185px">Normal Price</th>

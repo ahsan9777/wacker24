@@ -23,7 +23,7 @@ include("includes/messages.php");
             <!-- Content -->
             <section class="content" id="main-content">
                 <div class="table-controls">
-                        <h1 class="text-white">Most Sale Articles</h1>
+                        <h1 class="text-white">Meistverkaufte Artikel</h1>
                     </div>
                     <div class="main_table_container">
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
