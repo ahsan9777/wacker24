@@ -56,6 +56,15 @@ if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {
 }*/
 
 
+//--------------Button Order Deleted -----------------------------
+
+if (isset($_REQUEST['OrderDeleted'])) {
+    //print_r($_REQUEST);die();
+    mysqli_query($GLOBALS['conn'], "DELETE FROM delivery_info WHERE ord_id = '".$_REQUEST['ord_id']."'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "DELETE FROM order_items WHERE ord_id = '".$_REQUEST['ord_id']."'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "DELETE FROM orders WHERE ord_id = '".$_REQUEST['ord_id']."'") or die(mysqli_error($GLOBALS['conn']));
+    header("Location: " . $_SERVER['PHP_SELF'] . "?op=5");
+}
 //--------------Button delivery status update --------------------
 if (isset($_REQUEST['d_status_id']) && gettype($_REQUEST['d_status_id']) == "array") {
     //print("1: ");print_r($_REQUEST);die();
@@ -536,7 +545,7 @@ include("includes/messages.php");
                                         <th>Zahlungsstatus</th>
                                         <th width="170">Lieferstatus</th>
                                         <th>Auftragsstatus</th>
-                                        <th width="90">Action</th>
+                                        <th width="140">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -664,7 +673,10 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="View Order" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto mb-2" title="View Order" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <?php if($_SESSION["UserDeletedOrder"] == 1){ ?>
+                                                    <button type="button" class="btn btn-xs btn-danger btn-style-light w-auto" title="Order Deleted" onClick="if(confirm('Are you sure you want to delete selected item(s)?')) { javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?OrderDeleted&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';}" ><span class="material-icons icon material-xs">delete</span></button>
+                                                    <?php } ?>
                                                     <?php /* if (!in_array($row->ord_delivery_status, array(0, 2)) && $row->ord_payment_method != 1) { ?>
                                                         <button type="button" class="btn btn-xs btn-danger btn-style-light w-auto mt-1" title="Order Reject" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?btnRejected&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">close</span></button>
                                                     <?php } */ ?>

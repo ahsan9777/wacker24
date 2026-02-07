@@ -336,6 +336,8 @@ include("includes/messages.php");
                                         <th width="180">Created</th>
                                         <?php if ($utype_id > 0) { ?>
                                             <th class="text-end" width="190">Payment Methods</th>
+                                        <?php } else { ?>
+                                        <th width="115">Order is Deleted</th>
                                         <?php } ?>
                                         <th width="70">Email Send</th>
                                         <th width="50">Status</th>
@@ -398,6 +400,7 @@ include("includes/messages.php");
                                                         </div>
                                                     </td>
                                                 <?php } ?>
+                                                <td> <input type="checkbox" class="user_isdeleted_order" id="user_isdeleted_order" data-id="<?php print($row->user_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->user_isdeleted_order == 1) ? 'checked' : ''); ?>> </td>
                                                 <td>
                                                     <?php
                                                     if ($row->user_email_confirmation == 0) {
@@ -645,6 +648,50 @@ include("includes/messages.php");
     });
     $('#show_confirm_password').click(function() {
         $(this).is(':checked') ? $('#user_confirm_password').attr('type', 'text') : $('#user_confirm_password').attr('type', 'password');
+    });
+
+    $(document).ready(function() {
+        // Listen for toggle changes
+        $('.user_isdeleted_order').change(function() {
+            let id = $(this).attr('data-id');
+            let set_field_data = 0;
+            //console.log("cat_id: "+cat_id)
+            if ($(this).prop('checked')) {
+                set_field_data = 1;
+            }
+            //console.log("set_field_data: "+set_field_data);
+            $.ajax({
+                url: 'ajax_calls.php?action=btn_toggle',
+                method: 'POST',
+                data: {
+                    table: "users",
+                    set_field: "user_isdeleted_order",
+                    set_field_data: set_field_data,
+                    where_field: "user_id",
+                    id: id
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    console.log(obj);
+                    if (obj.status == 1 && set_field_data == 1) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Toggle is ON',
+                            icon: 'success',
+                            position: 'top-right'
+                        });
+                    } else if (obj.status == 1 && set_field_data == 0) {
+                        $.toast({
+                            heading: 'Warning',
+                            text: 'Toggle is OFF',
+                            icon: 'warning',
+                            position: 'top-right'
+                        });
+                    }
+                }
+            });
+        });
     });
 </script>
 
