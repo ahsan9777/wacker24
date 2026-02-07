@@ -181,7 +181,7 @@ class Mailer
         //print_r($message);die();
 
         $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
-        $this->order_attachment_file("webshop-edi@wacker24.de", "Sayed Kamal Hussaini", $ord_id);
+        $this->order_attachment_file("webshop-edi@wacker-buerocenter.de", "Sayed Kamal Hussaini", $ord_id);
         //print($ret);
     }
 
@@ -330,11 +330,11 @@ class Mailer
 				<br>Bank: <b>VR-Bank Südpfalz</b>
 				<br>IBAN: <b>DE95 5486 2500 0006 7025 70</b>
 				<br>BIC: <b>GENODE61SUW</b>
-				<br><br>Verwendungszweck: '.$ord_id.'
+				<br><br>Bestellung: '.$ord_id.'
 				<br><br>Nach Zahlungseingang erhalten Sie eine Bestätigung per E-Mail. Anschließend wird Ihre Bestellung schnellstmöglich versendet.
 				<br><br><b><img style="width: 20px;" data-emoji="📞" class="an1" alt="📞" aria-label="📞" draggable="false" src="'.$GLOBALS['siteURL'].'images/phone.png" loading="lazy" data-emailtracker-detector="1"> Bei Fragen sind wir gerne für Sie da:</b>
                 <br><br>Hotline: <b>06321 9124-80</b>
-                <br>E-Mail: <a href="mailto:'.$GLOBALS['vorkasse_email'].'" style="color:rgb(70,120,134)" target="_blank"><b>'.$GLOBALS['vorkasse_email'].'</b></a>
+                <br>E-Mail:bestellung@wacker-buerocenter.de <a href="mailto:'.$GLOBALS['vorkasse_email'].'" style="color:rgb(70,120,134)" target="_blank"><b>'.$GLOBALS['vorkasse_email'].'</b></a>
 				<br><br>Vielen Dank für Ihr Vertrauen!
 				<br><br>Mit freundlichen Grüßen
 				<br><br>Ihr Team vom <b>Wacker Bürocenter</b>';
@@ -466,7 +466,7 @@ class Mailer
         } else {
             /*$mail_username = "noreply@wackersystems.com";
             $mail_password = "A^tXZxQCCDM4";*/
-            $mail_username = "noreply@wacker24.de";
+            $mail_username = "noreply@wacker-buerocenter.de";
             $mail_password = "86@TS-AXn}7J";
         }
         //require_once($dir . "lib/class.phpmailer.php");
@@ -492,7 +492,7 @@ class Mailer
             //$mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             //$mail->Host       = "mail.gmx.com";
-            $mail->Host       = "mail.wacker24.de";
+            $mail->Host       = "mail.wacker-buerocenter.de";
             //$mail->Host       = "wackersystems.com";
             $mail->Username   = $mail_username;
             $mail->Password   = $mail_password;
