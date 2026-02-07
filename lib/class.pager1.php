@@ -84,7 +84,8 @@ class Pager1 {
 
         if (($curpage != 1) && ($curpage)) {
 
-            $page_list .= " <li><a href=\"".$_SERVER['PHP_SELF']. "?page=1".$qryString."\" title=\"First Page\" class=\"numbr selected\"><<</a></li>";
+            //$page_list .= " <li><a href=\"".$_SERVER['PHP_SELF']. "?page=1".$qryString."\" title=\"First Page\" class=\"numbr selected\"><<</a></li>";
+            $page_list .= " <li><a href=\"".$_SERVER['PHP_SELF']. "?page=1".$qryString."\" title=\"Erste Seite\" class=\"numbr selected\"><<</a></li>";
 
         }
 
@@ -92,7 +93,8 @@ class Pager1 {
 
         if (($curpage-1) > 0) {
 
-            $page_list .= "<li><a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1).$qryString."\" title=\" Previous Page ".($curpage-1)."\">". "<i class=\"fa fa-caret-left\"></i> Previous"."</a></li>";
+            //$page_list .= "<li><a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1).$qryString."\" title=\" Previous Page ".($curpage-1)."\">". "<i class=\"fa fa-caret-left\"></i> Previous"."</a></li>";
+            $page_list .= "<li><a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1).$qryString."\" title=\" Vorherige Seite  ".($curpage-1)."\">". "<i class=\"fa fa-caret-left\"></i> Letzte"."</a></li>";
 
             //$page_list .= " <a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1)."\" title=\"Previous Page\"> < </a> ";
 
@@ -129,7 +131,8 @@ class Pager1 {
 
                 } else {
 
-                    $page_list .= "<li><a href=\"" . $_SERVER['PHP_SELF'] . "?page=" . $i . $qryString . "\" title=\"Page " . $i . "\">" . $i . "</a></li>";
+                    //$page_list .= "<li><a href=\"" . $_SERVER['PHP_SELF'] . "?page=" . $i . $qryString . "\" title=\"Page " . $i . "\">" . $i . "</a></li>";
+                    $page_list .= "<li><a href=\"" . $_SERVER['PHP_SELF'] . "?page=" . $i . $qryString . "\" title=\"Seite " . $i . "\">" . $i . "</a></li>";
 
                 }
 
@@ -153,7 +156,8 @@ class Pager1 {
 
         if (($curpage+1) <= $pages) {
 
-            $page_list .= "<li class=\"arrowright\"><a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1).$qryString."\" title=\" Next Page ".$i."\">"."Next <i class=\"fa fa-caret-right\"></i>"."</a></li>";
+            //$page_list .= "<li class=\"arrowright\"><a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1).$qryString."\" title=\" Next Page ".$i."\">"."Next <i class=\"fa fa-caret-right\"></i>"."</a></li>";
+            $page_list .= "<li class=\"arrowright\"><a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1).$qryString."\" title=\" Nächste Seite ".$i."\">"."Nächste <i class=\"fa fa-caret-right\"></i>"."</a></li>";
 
             //$page_list .= "<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1)."\" title=\"Next Page\"> > </a> ";
 
@@ -163,7 +167,8 @@ class Pager1 {
 
         if (($curpage != $pages) && ($pages != 0)) {
 
-            $page_list .= "<li><a href=\"".$_SERVER['PHP_SELF']."?page=".$pages.$qryString. "\" title=\"Last Page\">>></a></li>";
+            //$page_list .= "<li><a href=\"".$_SERVER['PHP_SELF']."?page=".$pages.$qryString. "\" title=\"Last Page\">>></a></li>";
+            $page_list .= "<li><a href=\"".$_SERVER['PHP_SELF']."?page=".$pages.$qryString. "\" title=\"Letzte Seite\">>></a></li>";
 
         }
 
@@ -193,7 +198,8 @@ class Pager1 {
 
         {
 
-            $next_prev .= "&nbsp;Previous&nbsp;&nbsp;|";
+            //$next_prev .= "&nbsp;Previous&nbsp;&nbsp;|";
+            $next_prev .= "&nbsp;Letzte&nbsp;&nbsp;|";
 
         }
 
@@ -201,7 +207,8 @@ class Pager1 {
 
         {
 
-            $next_prev .= "<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1).$qryString."\">Previous</a>&nbsp;&nbsp;|";
+            //$next_prev .= "<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1).$qryString."\">Previous</a>&nbsp;&nbsp;|";
+            $next_prev .= "<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage-1).$qryString."\">Letzte</a>&nbsp;&nbsp;|";
 
         }
 
@@ -239,7 +246,8 @@ class Pager1 {
 
         {
 
-            $next_prev .= "&nbsp;&nbsp;Next&nbsp;&nbsp;";
+            //$next_prev .= "&nbsp;&nbsp;Next&nbsp;&nbsp;";
+            $next_prev .= "&nbsp;&nbsp;Nächste&nbsp;&nbsp;";
 
         }
 
@@ -247,7 +255,8 @@ class Pager1 {
 
         {
 
-            $next_prev .= "&nbsp;&nbsp;<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1).$qryString."\">Next</a>&nbsp;&nbsp;";
+            //$next_prev .= "&nbsp;&nbsp;<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1).$qryString."\">Next</a>&nbsp;&nbsp;";
+            $next_prev .= "&nbsp;&nbsp;<a href=\"".$_SERVER['PHP_SELF']."?page=".($curpage+1).$qryString."\">Nächste</a>&nbsp;&nbsp;";
 
         }
 
