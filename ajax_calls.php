@@ -1132,7 +1132,7 @@ if (isset($_REQUEST['action'])) {
                     }
                     //print_r($special_price);die();
                     $gerenric_product_inner .= '<div class="pd_card">
-                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "' . $row->pro_udx_seo_internetbezeichung . '"><img src="' . get_image_link(75, $row->pg_mime_source_url) . '" alt="' . $row->pro_udx_seo_internetbezeichung . '"></a></div>
+                        <div class="pd_image"><a href="' . product_detail_url($row->supplier_id) . '" title = "' . $row->pro_udx_seo_internetbezeichung . '"><img src="' . get_image_link(427, $row->pg_mime_source_url) . '" alt="' . $row->pro_udx_seo_internetbezeichung . '"></a></div>
                         <div class="pd_detail">
                             <h5><a href="' . product_detail_url($row->supplier_id) . '" title = "' . $row->pro_udx_seo_internetbezeichung . '" > ' . $row->pro_udx_seo_epag_title . ' </a></h5>';
                     $count = 0;

@@ -204,7 +204,8 @@ class Mailer
 
         //$fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php'; // Your file URL
         $fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php?ord_id='.$ord_id; // Your file URL
-        $tempFilePath = 'tempfile_' . uniqid() . '.xml'; // Temporary file to save
+        //$tempFilePath = 'tempfile_' . uniqid() . '.xml'; // Temporary file to save
+		$tempFilePath = 'edimail.xml'; // Temporary file to save
 
         // Download the file
         file_put_contents($tempFilePath, file_get_contents($fileUrl));
@@ -500,7 +501,7 @@ class Mailer
             $mail->CharSet = "UTF-8";
             $mail->Priority = 1;
             $mail->From       = $mail_username;
-            $mail->FromName   = "Wacker24";
+            $mail->FromName   = "Wacker Bürocenter";
             //$mail->AddReplyTo('wackersystems@wackersystems.com', 'Wacker24');
             if ($sendToCC == 1) {
                 //$mail->AddCC('wackersystems@wackersystems.com', 'Wacker24');
@@ -530,7 +531,7 @@ class Mailer
             //$str = 'Mailer Exception';
             $str = $e->getMessage();
         }
-        //echo $str; die;
+        echo $str; die;
         return $str;
     }
 }

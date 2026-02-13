@@ -346,6 +346,7 @@ include("includes/messages.php");
                     <div class="table-controls mt-3">
                         <h1 class="text-white">Order Detail</h1>
                         <!--<a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>-->
+                        <a target="_blank" href="manage_order_invoice_print.php?ord_id=<?php print($_REQUEST['ord_id']); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">Print Invoice</span></a>
                         <a target="_blank" href="manage_order_invoice.php?ord_id=<?php print($_REQUEST['ord_id']); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">visibility</span> <span class="text">View Invoice</span></a>
 
                     </div>
@@ -673,7 +674,7 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto mb-2" title="View Order" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" title="View Order" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?show&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';"><span class="material-icons icon material-xs">visibility</span></button>
                                                     <?php if($_SESSION["UserDeletedOrder"] == 1){ ?>
                                                     <button type="button" class="btn btn-xs btn-danger btn-style-light w-auto" title="Order Deleted" onClick="if(confirm('Are you sure you want to delete selected item(s)?')) { javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?OrderDeleted&" . $qryStrURL . "ord_id=" . $row->ord_id); ?>';}" ><span class="material-icons icon material-xs">delete</span></button>
                                                     <?php } ?>

@@ -2531,7 +2531,8 @@ function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $
     };
 
 	$url = "" . config_payment_url . "";
-
+	//$url = "https://test.vr-pay-ecommerce.de/v1/payments";
+	//$entityId = "8a8294174e735d0c014e78beb6b9154b";
 	$data = http_build_query([
 		'entityId' => $entityId,
 		'merchantTransactionId' => $ord_id,
@@ -2539,23 +2540,46 @@ function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $
 		'currency' => 'EUR',
 		'paymentBrand' => $klarnaBrand,//'KLARNA_PAYMENTS_PAYLATER', // or KLARNA_PAY_NOW, KLARNA_SLICE_IT
 		'paymentType' => $paymentType,//'PA',
+		'merchant.country' => 'DE',
 		'shopperResultUrl' => $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id,
+		// CUSTOMER
+        'customer.givenName' => 'John',
+        'customer.surname' => 'Doe',
+        'customer.birthDate' => '1970-02-17',
+        'customer.email' => 'john@doe.com',
 
-		// Klarna requires additional customer data
-		'billing.country' => 'DE',
-		'billing.city' => 'Berlin',
-		'billing.postcode' => '10115',
-		'billing.street1' => 'Teststrasse 1',
-		'customer.givenName' => 'Max',
-		'customer.surname' => 'Mustermann',
-		'customer.email' => 'max@example.com',
-		'customer.ip' => $_SERVER['REMOTE_ADDR']
+        // BILLING
+        'billing.city' => 'Berlin',
+        'billing.country' => 'DE',
+        'billing.postcode' => '10115',
+        'billing.state' => 'Berlin',
+        'billing.street1' => 'Teststrasse 1',
+
+        // SHIPPING
+        'shipping.city' => 'Berlin',
+        'shipping.country' => 'DE',
+        'shipping.customer.email' => 'john@doe.com',
+        'shipping.givenName' => 'John',
+        'shipping.postcode' => '10115',
+        'shipping.state' => 'Berlin',
+        'shipping.street1' => 'Teststrasse 1',
+        'shipping.surname' => 'Doe',
+
+		'cart.items[0].currency' => 'EUR',
+		'cart.items[0].merchantItemId' => '120098650',
+		'cart.items[0].name' => 'Leitz Ordner DIN A4 80mm PP bl',
+		'cart.items[0].price' => '15.69',
+		'cart.items[0].quantity' => '1',
+		'cart.items[0].totalAmount' => '15.69',
+		'cart.items[0].tax' => '0.00',
+        'cart.items[0].totalTaxAmount' => '0.00',
+		'cart.items[0].type' => 'basic'
 	]);
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, [
-		'Authorization:Bearer ' . config_authorization_bearer
+		'Authorization:Bearer ' .config_authorization_bearer
 	]);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
