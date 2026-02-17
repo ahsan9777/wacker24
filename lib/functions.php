@@ -2519,80 +2519,157 @@ function PaypalRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id)
 
 function KlarnaRequest($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $klarnaBrand = "KLARNA_PAYMENTS_PAYLATER")
 {
-	  $paymentType = match ($klarnaBrand) {
-        'KLARNA_PAYMENTS_PAYNOW'        => 'DB', // Debit
-        'KLARNA_PAYMENTS_PAYLATER'      => 'PA', // Pre-Authorization
-        'KLARNA_PAYMENTS_SLICEIT'       => 'PA',
-        'KLARNA_PAYMENTS_ONE'           => 'PA',
-        'KLARNA_INSTALLMENTS'           => 'PA',
-        'KLARNA_CHECKOUT'               => 'PA',
-        'KLARNA_INVOICE'                => 'PA',
+    $paymentType = match ($klarnaBrand) {
+        'KLARNA_PAYMENTS_PAYNOW'   => 'DB',
+        'KLARNA_PAYMENTS_PAYLATER' => 'PA',
+        'KLARNA_PAYMENTS_SLICEIT'  => 'PA',
+        'KLARNA_PAYMENTS_ONE'      => 'PA',
+        'KLARNA_INSTALLMENTS'      => 'PA',
+        'KLARNA_CHECKOUT'          => 'PA',
+        'KLARNA_INVOICE'           => 'PA',
         default => 'PA'
     };
 
-	$url = "" . config_payment_url . "";
-	//$url = "https://test.vr-pay-ecommerce.de/v1/payments";
-	//$entityId = "8a8294174e735d0c014e78beb6b9154b";
-	$data = http_build_query([
-		'entityId' => $entityId,
-		'merchantTransactionId' => $ord_id,
-		'amount' => $order_net_amount,
-		'currency' => 'EUR',
-		'paymentBrand' => $klarnaBrand,//'KLARNA_PAYMENTS_PAYLATER', // or KLARNA_PAY_NOW, KLARNA_SLICE_IT
-		'paymentType' => $paymentType,//'PA',
-		'merchant.country' => 'DE',
-		'shopperResultUrl' => $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id,
-		// CUSTOMER
-        'customer.givenName' => 'John',
-        'customer.surname' => 'Doe',
-        'customer.birthDate' => '1970-02-17',
-        'customer.email' => 'john@doe.com',
+    $url = "" . config_payment_url . "";
+
+    $data =
+        "entityId=" . $entityId .
+        "&merchantTransactionId=" . $ord_id .
+        "&amount=" . $order_net_amount .
+        "&currency=EUR" .
+        "&paymentBrand=" . $klarnaBrand .
+        "&paymentType=" . $paymentType .
+        "&merchant.country=DE" .
+        "&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id;
+		$count = 0;
+		$Query = "SELECT ci.*, pro.pro_udx_seo_epag_title, fp.fp_title_de AS fp_title FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN free_product AS fp ON fp.fp_id = ci.fp_id WHERE ci.cart_id = '".$_SESSION['cart_id']."' ORDER BY ci.ci_type ASC";
+		$rs = mysqli_query($GLOBALS['conn'], $Query);
+		if(mysqli_num_rows($rs) > 0){
+			while($rw = mysqli_fetch_object($rs)){
+				$pro_title = $rw->pro_udx_seo_epag_title;
+				if($rw->ci_type == 2){
+					$pro_title = $rw->fp_title;
+				}
+				$ci_amount = $rw->ci_amount;
+				$gst = $ci_amount * $rw->ci_gst_value;
+				$ci_qty = $rw->ci_qty;
+				$ci_total = $rw->ci_total;
+				$data .= 
+				"&cart.items[".$count."].currency=EUR" .
+				"&cart.items[".$count."].name=".urlencode($pro_title)."" .
+				"&cart.items[".$count."].price=".number_format(($ci_amount + $gst), "2", ".", "")."" .
+				"&cart.items[".$count."].quantity=".$ci_qty."".
+				"&cart.items[".$count."].totalAmount=".$ci_total."";
+				$count++;
+			}
+		}
+        // CART ITEM
+        /*"&cart.items[0].currency=EUR" .
+        "&cart.items[0].name=Leitz Ordner DIN A4 80mm PP bl" .
+        "&cart.items[0].price=15.69" .
+        "&cart.items[0].quantity=1";*/
+		//print($data);die();
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization:Bearer ' . config_authorization_bearer
+    ]);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // true in production
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $responseData = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        return curl_error($ch);
+    }
+
+    curl_close($ch);
+    return $responseData;
+}
+
+function KlarnaRequest_bk($entityId, $ord_id, $order_net_amount, $usa_id, $pm_id, $klarnaBrand = "KLARNA_PAYMENTS_PAYLATER")
+{
+    $paymentType = match ($klarnaBrand) {
+        'KLARNA_PAYMENTS_PAYNOW'   => 'DB',
+        'KLARNA_PAYMENTS_PAYLATER' => 'PA',
+        'KLARNA_PAYMENTS_SLICEIT'  => 'PA',
+        'KLARNA_PAYMENTS_ONE'      => 'PA',
+        'KLARNA_INSTALLMENTS'      => 'PA',
+        'KLARNA_CHECKOUT'          => 'PA',
+        'KLARNA_INVOICE'           => 'PA',
+        default => 'PA'
+    };
+
+    $url = "" . config_payment_url . "";
+
+    $data =
+        "entityId=" . $entityId .                         // ✅ REQUIRED (gateway routing id)
+        "&merchantTransactionId=" . $ord_id .             // ✅ REQUIRED (unique order reference)
+        "&amount=" . $order_net_amount .                  // ✅ REQUIRED (transaction amount)
+        "&currency=EUR" .                                 // ✅ REQUIRED (ISO currency)
+        "&paymentBrand=" . $klarnaBrand .                 // ✅ REQUIRED (method selection)
+        "&paymentType=" . $paymentType .                  // ✅ REQUIRED (PA/DB etc)
+        "&merchant.country=DE" .                          // ✅ REQUIRED (purchase country context)
+        "&shopperResultUrl=" . $GLOBALS['siteURL'] . "bestellungen/" . $entityId . "/" . $usa_id . "/" . $pm_id .  // ⚪ OPTIONAL (redirect after flow)
+
+        // CUSTOMER
+        "&customer.givenName=John" .                      // 🟡 TYPICALLY REQUIRED (identity)
+        "&customer.surname=Doe" .                         // 🟡 TYPICALLY REQUIRED
+        "&customer.birthDate=1970-02-17" .                // ⚪ OPTIONAL (risk scoring / country rules)
+        "&customer.email=john@doe.com" .                  // 🟡 TYPICALLY REQUIRED
 
         // BILLING
-        'billing.city' => 'Berlin',
-        'billing.country' => 'DE',
-        'billing.postcode' => '10115',
-        'billing.state' => 'Berlin',
-        'billing.street1' => 'Teststrasse 1',
+        "&billing.city=Berlin" .                          // 🟡 TYPICALLY REQUIRED
+        "&billing.country=DE" .                           // 🟡 TYPICALLY REQUIRED
+        "&billing.postcode=10115" .                       // 🟡 TYPICALLY REQUIRED
+        "&billing.state=Berlin" .                         // ⚪ OPTIONAL
+        "&billing.street1=Teststrasse 1" .                // 🟡 TYPICALLY REQUIRED
 
         // SHIPPING
-        'shipping.city' => 'Berlin',
-        'shipping.country' => 'DE',
-        'shipping.customer.email' => 'john@doe.com',
-        'shipping.givenName' => 'John',
-        'shipping.postcode' => '10115',
-        'shipping.state' => 'Berlin',
-        'shipping.street1' => 'Teststrasse 1',
-        'shipping.surname' => 'Doe',
+        "&shipping.city=Berlin" .                         // ⚪ OPTIONAL (required if physical goods & different)
+        "&shipping.country=DE" .                          // ⚪ OPTIONAL
+        "&shipping.customer.email=john@doe.com" .         // ⚪ OPTIONAL
+        "&shipping.givenName=John" .                      // ⚪ OPTIONAL
+        "&shipping.postcode=10115" .                      // ⚪ OPTIONAL
+        "&shipping.state=Berlin" .                        // ⚪ OPTIONAL
+        "&shipping.street1=Teststrasse 1" .               // ⚪ OPTIONAL
+        "&shipping.surname=Doe" .                         // ⚪ OPTIONAL
 
-		'cart.items[0].currency' => 'EUR',
-		'cart.items[0].merchantItemId' => '120098650',
-		'cart.items[0].name' => 'Leitz Ordner DIN A4 80mm PP bl',
-		'cart.items[0].price' => '15.69',
-		'cart.items[0].quantity' => '1',
-		'cart.items[0].totalAmount' => '15.69',
-		'cart.items[0].tax' => '0.00',
-        'cart.items[0].totalTaxAmount' => '0.00',
-		'cart.items[0].type' => 'basic'
-	]);
+        // CART ITEM (at least one item required)
+        "&cart.items[0].currency=EUR" .                   // ✅ REQUIRED
+        "&cart.items[0].merchantItemId=120098650" .       // ⚪ OPTIONAL
+        "&cart.items[0].name=Leitz Ordner DIN A4 80mm PP bl" . // ✅ REQUIRED
+        "&cart.items[0].price=15.69" .                    // ✅ REQUIRED
+        "&cart.items[0].quantity=1" .                     // ✅ REQUIRED
+        "&cart.items[0].totalAmount=15.69" .              // ✅ REQUIRED
+        "&cart.items[0].tax=0.00" .                       // ⚪ OPTIONAL
+        "&cart.items[0].totalTaxAmount=0.00" .            // ⚪ OPTIONAL
+        "&cart.items[0].type=basic";                      // ⚪ OPTIONAL
 
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, [
-		'Authorization:Bearer ' .config_authorization_bearer
-	]);
-	curl_setopt($ch, CURLOPT_POST, 1);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // should be true in production
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	$responseData = curl_exec($ch);
 
-	if (curl_errno($ch)) {
-		return curl_error($ch);
-	}
-	curl_close($ch);
-	return $responseData;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization:Bearer ' . config_authorization_bearer
+    ]);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $responseData = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        return curl_error($ch);
+    }
+
+    curl_close($ch);
+    return $responseData;
 }
+
+
 
 
 function check_payment_status($id, $entityId)

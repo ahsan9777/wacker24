@@ -155,15 +155,15 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 		$ord_payment_info_detail = $klarnarequest;
 
 		$parameters = "";
-		if ($klarnaresponseData['result']['code'] === '000.200.000' && $klarnaresponseData['resultDetails']['AcquirerResponse'] === '00') {
-			foreach ($klarnaresponseData['redirect']['parameters'] as $key => $value) {
+		if ($klarnaresponseData['result']['code'] === '000.200.000' && $klarnaresponseData['resultDetails']['AcquirerResponse'] === 'PENDING') {
+			/*foreach ($klarnaresponseData['redirect']['parameters'] as $key => $value) {
 				$parameters .=  $value['name'] . "=" . $value['value'] . "&";
-			}
+			}*/
 			//$payment_status_request = check_payment_status($paypalresponseData['id'], $entityId);
 			//$payment_status_responseData = json_decode($payment_status_request, true);
 			//cart_to_order($user_id, $usa_id, $pm_id);
 			//mysqli_query($GLOBALS['conn'], "UPDATE orders SET ord_payment_transaction_id = '" . dbStr(trim($ord_payment_transaction_id)) . "', ord_payment_short_id = '" . dbStr(trim($ord_payment_short_id)) . "', ord_payment_info_detail = '" . dbStr(trim($ord_payment_info_detail)) . "' WHERE ord_id= '" . $ord_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-			header('Location: ' . $klarnaresponseData['redirect']['url'] . '?' . $parameters);
+			header('Location: ' . $klarnaresponseData['redirect']['url']);
 		}
 	}
 } elseif (isset($_REQUEST['ci_qty']) && !empty($_REQUEST['ci_qty'])) {
