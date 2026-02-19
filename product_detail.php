@@ -401,7 +401,7 @@ include("includes/message.php");
 									$count = mysqli_num_rows($rs);
 									if ($count > 1) {
 										if (mysqli_num_rows($rs) > 0) {
-											$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe');
+											$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe', 'Schreibfarbe des Stempels', 'Farbe des Griffes', 'Farbe der Sitzfläche', 'Farbe des Fußkreuzes', 'Farbe des Korpus', 'Farbe des Gestells', 'Farbe der Front', 'Farbe des Deckels');
 								?>
 											<div class="pd_detail_shirt">
 												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = '" . $pro_udx_seo_selection_feature . "'")); ?></span> </h2>
