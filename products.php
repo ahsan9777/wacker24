@@ -93,6 +93,42 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 <head>
 	<link rel="canonical" href="<?php print($requestUri); ?>">
 	<?php include("includes/html_header.php"); ?>
+	<style>
+		.category_type_product .ctg_type_col {
+			padding: 5px;
+		}
+
+		.category_type_product .ctg_type_image {
+			background-color: #D6EFD9;
+			display: flex;
+			height: 200px;
+			border-radius: 5px;
+			padding: 10px;
+		}
+
+		.category_type_product .ctg_type_image img {
+			mix-blend-mode: darken;
+		}
+
+		.product_page_heading {
+			background-color: #FFE0E6;
+			padding: 25px;
+			text-align: center;
+			font-size: 50px;
+			font-weight: 700;
+		}
+
+		.list_type_row {
+			border: none;
+		}
+		.product_page .pd_left{
+			border: none;
+		}
+		.categroy_list .categroy_block{
+			border: none;
+			margin-bottom: 0px;
+		}
+	</style>
 </head>
 
 <body style="background-color: #fff;">
@@ -111,51 +147,47 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		<section id="content_section">
 			<div class="product_page gerenric_padding">
 				<div class="page_width">
-					<div class="product_inner">
-						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
-						<?php include("includes/left_filter.php"); ?>
-						<div class="pd_right">
-							<div class="category_type_product">
-								<div class="category_type_inner full_column">
-									<div class="category-slider">
-										<?php
-										//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-										$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  " . $whereclause_top_category . "  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-										//print($Query);die();
-										$rs = mysqli_query($GLOBALS['conn'], $Query);
-										if (mysqli_num_rows($rs) > 0) {
-											while ($row = mysqli_fetch_object($rs)) {
-												$pg_mime_source_url_href = "files/no_img_1.jpg";
-												if (strlen($row->group_id) < 4) {
-													if ($pro_type == 20) {
-														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
-													} else {
-														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY sub_group_ids");
-													}
-												} else {
-													$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
-												}
-												//print_r($category_data);die();
-												if (empty($category_data)) {
-													continue;
-												}
-												$pg_mime_source_url_href = $category_data['data_1'];
-												$pbp_price_without_tax = $category_data['data_2'];
-												$pbp_price_amount = $category_data['data_3'];
-												if ($level_two_link > 0) {
-													$cat_link = "products.php?lf_parent_id=" . $row->parent_id . "&pro_type=" . $pro_type . "&lf_group_id[]=" . $row->group_id;
-												} else {
-													$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
-													if ($pro_type == 20) {
-														$cat_link = "artikelarten/" . $row->sub_cat_params . "/" . $pro_type;
-													}
-												}
+					<div class="category_type_product">
+						<div class="category_type_inner full_column">
+							<div class="category-slider">
+								<?php
+								//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+								$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  " . $whereclause_top_category . "  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+								//print($Query);die();
+								$rs = mysqli_query($GLOBALS['conn'], $Query);
+								if (mysqli_num_rows($rs) > 0) {
+									while ($row = mysqli_fetch_object($rs)) {
+										$pg_mime_source_url_href = "files/no_img_1.jpg";
+										if (strlen($row->group_id) < 4) {
+											if ($pro_type == 20) {
+												$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
+											} else {
+												$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY sub_group_ids");
+											}
+										} else {
+											$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
+										}
+										//print_r($category_data);die();
+										if (empty($category_data)) {
+											continue;
+										}
+										$pg_mime_source_url_href = $category_data['data_1'];
+										$pbp_price_without_tax = $category_data['data_2'];
+										$pbp_price_amount = $category_data['data_3'];
+										if ($level_two_link > 0) {
+											$cat_link = "products.php?lf_parent_id=" . $row->parent_id . "&pro_type=" . $pro_type . "&lf_group_id[]=" . $row->group_id;
+										} else {
+											$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+											if ($pro_type == 20) {
+												$cat_link = "artikelarten/" . $row->sub_cat_params . "/" . $pro_type;
+											}
+										}
 
-												print('<div>
+										print('<div>
 													<div class="ctg_type_col">
 													<a href="' . $cat_link . '" title = "' . $row->sub_cat_title . '">
 														<div class="ctg_type_card">
-															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(75, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
+															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(427, $pg_mime_source_url_href) . '" alt="' . $row->sub_cat_title . '"></div>
 															<div class="ctg_type_detail">
 																<div class="ctg_type_title">' . $row->sub_cat_title . '</div>
 																<div class="ctg_type_price price_without_tex" ' . $price_without_tex_display . ' > ab ' . price_format(($pbp_price_without_tax > 0) ? $pbp_price_without_tax : 0.00) . ' €</div>
@@ -165,54 +197,57 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 													</a>
 												</div>
 											</div>');
-											}
-										}
-										?>
-									</div>
-								</div>
+									}
+								}
+								?>
 							</div>
-							<style>
-								
-							</style>
-							<div class="pd_row_heading">
-								<div class="list_type_row">
-									<h1> <?php print($heading_title) ?> </h1>
-									<div class="availability_product_check">
-										<input type="hidden" name="pq_quantity_selected" id="pq_quantity_selected" value="0">
-										<div class="availability_inner_check">
-											<input type="radio" name="pq_quantity" id="pq_quantity_2" value="2">
-											<label for="pq_quantity_2">Sofort verfügbar</label>
-										</div>
-										<div class="availability_inner_check">
-											<input type="radio" name="pq_quantity" id="pq_quantity_1" value="1">
-											<label for="pq_quantity_1">Kurzfristig lieferbar</label>
-										</div>
-										<button id="resetRadio" class="gerenric_btn wd_15" style="display: none;"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp; Aktualisieren</button>
-									</div>
-									<ul>
-										<li>Ansicht </li>
-										<li class="click_th"><i class="fa fa-th"></i></li>
-										<li class="click_list"><i class="fa fa-list"></i></li>
-										<li style="margin-right: 0px">
-											<div class="drop-down_2">
-												<div class="selected">
-													<input type="hidden" name="sort_by_selected" id="sort_by_selected" value="<?php print($sortby); ?>">
-													<a title="<?php print($sortby_array[$sortby]); ?>" href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
-												</div>
-												<div class="options">
-													<ul>
-														<?php for ($i = 0; $i < count($sortby_array); $i++) {
-															if ($i != $sortby) { ?>
-																<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>" title="<?php print($sortby_array[$i]); ?>"><?php print($sortby_array[$i]); ?></a></li>
-														<?php }
-														} ?>
-													</ul>
-												</div>
-											</div>
-										</li>
-									</ul>
+						</div>
+					</div>
+					<h1 class="product_page_heading"><?php print($heading_title) ?></h1>
+					<div class="pd_row_heading">
+						<div class="list_type_row">
+							<h1> Kategorie</h1>
+							<div class="availability_product_check">
+								<input type="hidden" name="pq_quantity_selected" id="pq_quantity_selected" value="0">
+								<div class="availability_inner_check">
+									<input type="radio" name="pq_quantity" id="pq_quantity_2" value="2">
+									<label for="pq_quantity_2">Sofort verfügbar</label>
 								</div>
+								<div class="availability_inner_check">
+									<input type="radio" name="pq_quantity" id="pq_quantity_1" value="1">
+									<label for="pq_quantity_1">Kurzfristig lieferbar</label>
+								</div>
+								<button id="resetRadio" class="gerenric_btn wd_15" style="display: none;"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp; Aktualisieren</button>
 							</div>
+							<ul>
+								<li>Ansicht </li>
+								<li class="click_th"><i class="fa fa-th"></i></li>
+								<li class="click_list"><i class="fa fa-list"></i></li>
+								<li style="margin-right: 0px">
+									<div class="drop-down_2">
+										<div class="selected">
+											<input type="hidden" name="sort_by_selected" id="sort_by_selected" value="<?php print($sortby); ?>">
+											<a title="<?php print($sortby_array[$sortby]); ?>" href="javascript:void(0)"><span> <?php print($sortby_array[$sortby]); ?> </span></a>
+										</div>
+										<div class="options">
+											<ul>
+												<?php for ($i = 0; $i < count($sortby_array); $i++) {
+													if ($i != $sortby) { ?>
+														<li><a href="javascript:void(0)" class="sort_by" id="sort_by" data-id="<?php print($i); ?>" title="<?php print($sortby_array[$i]); ?>"><?php print($sortby_array[$i]); ?></a></li>
+												<?php }
+												} ?>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="product_inner">
+						<div class="filter_mobile">Filter <i class="fa fa-angle-down"></i></div>
+						<?php include("includes/left_filter.php"); ?>
+						<div class="pd_right">
+
 							<!--<div class="list_porduct list_class">-->
 							<div class="list_porduct" id="list_porduct">
 								<div class="gerenric_product">
@@ -263,7 +298,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		
+
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
