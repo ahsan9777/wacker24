@@ -1,12 +1,20 @@
 <?php
 include("includes/php_includes_top.php");
 $page = 1;
+$whereclause_page = "";
+$pageHeading = "Verkäufe & Angebote";
+if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
+	$category_data = returnMultiName("cat_title_de AS cat_title, group_id", "category", "cat_params_de", $_REQUEST['cat_params'], 2);
+	//print_r($category_data);die();
+	$pageHeading = $category_data['data_1'];
+	$whereclause_page = " AND level_one_id = '" . $category_data['data_2'] . "'";
+}
 ?>
 <!doctype html>
 <html>
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main']."verkäufe-angebote"); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . "verkäufe-angebote"); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 
@@ -22,7 +30,7 @@ $page = 1;
 
 		<!--BREADCRUMB_SECTION_START-->
 		<div class="gerenric_breadcrumb">
-			<div class="page_width_1480">
+			<div class="page_width">
 				<div class="breadcrumb_inner">
 					<ul>
 						<li><a href="<?php print($GLOBALS['siteURL']); ?>">Wacker24</a></li>
@@ -36,104 +44,78 @@ $page = 1;
 		<!--CONTENT_SECTION_START-->
 		<section id="content_section">
 			<div class="special_price_page gerenric_padding">
-				<div class="page_width_1480">
+				<div class="page_width">
 					<div class="gerenric_white_box">
-						<div class="gerenric_product">
-							<h2>Verkäufe & Angebote</h2>
-							<div class="gerenric_product_inner">
-								<?php
-								$supplier_id = array();
-								$level_two_id = 0;
-								$level_one_id = 0;
-								$whereclause = "";
-								$Query1 = "SELECT * FROM user_special_price WHERE user_id = '0' AND usp_status = '1'  ORDER BY supplier_id DESC";
-								//print($Query1);
-								$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-								if (mysqli_num_rows($rs1) > 0) {
-									while ($row1 = mysqli_fetch_object($rs1)) {
-										if ($row1->supplier_id > 0) {
-											$supplier_id[] = $row1->supplier_id;
-											$whereclause .= " OR supplier_id = '" . $row1->supplier_id . "'";
-										} elseif ($row1->level_two_id > 0) {
-											$level_two_id = $row1->level_two_id;
-											$whereclause .= " OR FIND_IN_SET(" . $row1->level_two_id . ", pro.sub_group_ids)";
-										} elseif ($row1->level_one_id > 0) {
-											$level_one_id = $row1->level_one_id;
-											$whereclause .= " OR FIND_IN_SET(" . $row1->level_one_id . ", pro.sub_group_ids)";
-										}
-									}
-								}
-								if (!empty($whereclause)) {
-									$Query2 = "SELECT * FROM vu_products AS pro WHERE 1=1 AND ( " . ltrim($whereclause, ' OR ') . " ) ";
-									//print($Query2);
-									$counter = 0;
-									$limit = 30;
-									$start = $p->findStart($limit);
-									$count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query2));
-									$pages = $p->findPages($count, $limit);
-									$rs2 = mysqli_query($GLOBALS['conn'], $Query2 . " LIMIT " . $start . ", " . $limit);
-									if (mysqli_num_rows($rs2) > 0) {
-										while ($row2 = mysqli_fetch_object($rs2)) {
-											$counter++;
-											$special_price = array();
-											$sub_group_ids = explode(",", $row2->sub_group_ids);
-											//print_r($sub_group_ids);//die();
-											//print($level_two_id);die();
-											if (!empty($supplier_id) > 0 && in_array($row2->supplier_id, $supplier_id)) {
-												$special_price = user_special_price("supplier_id", $row2->supplier_id, 0, 1);
-												//print_r($special_price);
-											} elseif ($level_two_id > 0 && ($level_two_id == $sub_group_ids[0])) {
-												$special_price = user_special_price("level_two", $level_two_id, 0, 1);
-											} elseif ($level_one_id > 0 && ($level_one_id == $sub_group_ids[1])) {
-												$special_price = user_special_price("level_one", $level_one_id, 0, 1);
-											}
-								?>
-											<div class="pd_card">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>" ><img loading="lazy" src="<?php print(get_image_link(160, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
-												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>" > <?php print($row2->pro_udx_seo_epag_title); ?> </a></h5>
-													<div class="pd_rating">
-														<ul>
-															<li>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-																<div class="fa fa-star"></div>
-															</li>
-														</ul>
-													</div>
-													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount), $special_price['usp_discounted_value'], $row2->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax) )); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount) )); ?>€</div>
-													<?php } ?>
+						<div class="category_type_product">
+							<div class="category_type_inner full_column">
+								<div class="category-slider">
+									<?php
+									//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+									$Query = "SELECT usp.*, c.cat_title_de AS cat_title, c.cat_params_de AS cat_params FROM user_special_price AS usp LEFT OUTER JOIN category AS c ON c.group_id = usp.level_one_id AND c.parent_id = '0' WHERE usp.user_id = '0' GROUP BY usp.level_one_id ORDER BY usp.level_one_id ASC";
+									//print($Query);die();
+									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									if (mysqli_num_rows($rs) > 0) {
+										while ($row = mysqli_fetch_object($rs)) {
+											$pg_mime_source_url_href = "files/no_img_1.jpg";
+											$pg_mime_source_url_href = returnName("pg_mime_source_url", "vu_category_map", "cat_id_level_one",  $row->level_one_id, "AND cm_type = '0' GROUP BY cat_id_level_one");
+
+
+											print('<div>
+													<div class="ctg_type_col">
+													<a href="' . $GLOBALS['siteURL'] . 'verkaeufe-angebote/' . $row->cat_params . '" title = "' . $row->cat_title . '">
+														<div class="ctg_type_card">
+															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(427, $pg_mime_source_url_href) . '" alt="' . $row->cat_title . '"></div>
+															<div class="ctg_type_detail">
+																<div class="ctg_type_title">' . $row->cat_title . '</div>
+															</div>
+														</div>
+													</a>
 												</div>
-											</div>
-								<?php
+											</div>');
 										}
-									} else {
-										print("Leerer Eintrag!");
 									}
-								?>
+									?>
+								</div>
 							</div>
-							<?php if ($counter > 0) { ?>
-								<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin: 30px 0px;">
-									<tr>
-										<td align="center">
-											<ul class="pagination" style="margin: 0px;">
-												<?php
-												//$pageList = $p->pageList($_GET['page'], $pages, '&' . $qryStrURL);
-												$pageList = $p->pageList($_GET['page'], "verkaeufe-angebote", $pages, '');
-												print($pageList);
-												?>
-											</ul>
-										</td>
-									</tr>
-								</table>
-							<?php }  }?>
+						</div>
+						<div class="gerenric_product">
+							<h2><?php print($pageHeading); ?></h2>
+							<div class="gerenric_product_inner" id="site_special_price_product_inner">
+								<div class="txt_align_center spinner" id="site_special_price_product_inner_spinner">
+									<!--<input type="hidden" name="site_special_price_product_inner_page" id="site_special_price_product_inner_page" value="0">-->
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+								</div>
+							</div>
+							<div class="txt_align_center" id="btn_load" style="display: none;">
+								<input type="hidden" name="site_special_price_product_inner_page" id="site_special_price_product_inner_page" value="0">
+								<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down"></i></div>
+								<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up"></i></div>
+							</div>
+							<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
 						</div>
 
 					</div>
@@ -143,7 +125,7 @@ $page = 1;
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		
+
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
@@ -153,10 +135,10 @@ $page = 1;
 <?php include("includes/bottom_js.php"); ?>
 <script src="js/slick.js"></script>
 <script>
-	$(".gerenric_slider").slick({
-		slidesToShow: 6,
+	$(".category-slider").slick({
+		slidesToShow: 5,
 		slidesToScroll: 1,
-		autoplay: false,
+		autoplay: true,
 		dots: false,
 		autoplaySpeed: 2000,
 		infinite: true,
@@ -184,6 +166,66 @@ $page = 1;
 				}
 			}
 		]
+	});
+
+	$(window).on('load', function() {
+		$("#site_special_price_product_inner").trigger("click");
+	});
+	$("#site_special_price_product_inner").on("click", function() {
+		$("#btn_load").hide();
+		$("#btn_load_spinner").show();
+		let start = $("#site_special_price_product_inner_page").val();
+		let sortby = $("#sort_by_selected").val();
+		let whereclause_page = "<?php print($whereclause_page); ?>";
+		let price_without_tex_display = '<?php print($price_without_tex_display); ?>';
+		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display); ?>';
+		
+		$.ajax({
+			url: 'ajax_calls.php?action=site_special_price_product_inner',
+			method: 'POST',
+			data: {
+				start: start,
+				sortby: sortby,
+				whereclause_page: whereclause_page,
+				price_without_tex_display: price_without_tex_display,
+				pbp_price_with_tex_display: pbp_price_with_tex_display
+			},
+			success: function(response) {
+				//console.log("raw response = "+response);
+				const obj = JSON.parse(response);
+				console.log(obj);
+				$("#site_special_price_product_inner_spinner").hide();
+				$("#btn_load_spinner").hide();
+				if (obj.counter == obj.last_record) {
+					$(".load-more-button").hide();
+					$(".load-less-button").show();
+				} else {
+					$(".load-more-button").show();
+					$(".load-less-button").hide();
+				}
+				if (obj.status == 1) {
+					$("#site_special_price_product_inner_spinner").hide();
+					if (obj.counter > 30) {
+						$("#btn_load").show();
+					}
+					$("#site_special_price_product_inner_page").val(obj.site_special_price_product_inner_page);
+					$("#site_special_price_product_inner").append(obj.site_special_price_product_inner);
+				}
+
+			}
+			//}, 5000);
+		});
+	});
+
+	$(".load-more-button").on("click", function() {
+
+		$("#site_special_price_product_inner").trigger("click");
+	});
+	$(".load-less-button").on("click", function() {
+		$("#site_special_price_product_inner").html("");
+		$("#site_special_price_product_inner_page").val(0);
+
+		$("#site_special_price_product_inner").trigger("click");
 	});
 </script>
 

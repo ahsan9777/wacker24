@@ -236,7 +236,7 @@ if (isset($_REQUEST['action'])) {
                             $cart_price_data .= '<div class="side_cart_pd_prise pbp_price_with_tex" ' . $display_two . ' >' . price_format($row->ci_amount + $gst) . ' €</div>';
                         }
                         $product_link = product_detail_url($row->supplier_id);
-                        $get_image_link = get_image_link(160, $row->pg_mime_source_url); 
+                        $get_image_link = get_image_link(160, $row->pg_mime_source_url);
                         if ($row->ci_type == 1) {
                             $product_link = product_detail_url($row->supplier_id, 1);
                         } elseif ($row->ci_type == 2) {
@@ -245,7 +245,7 @@ if (isset($_REQUEST['action'])) {
                         }
                         $show_card_body .= '
                                 <div class="side_cart_pd_row">
-                                    <div class="side_cart_pd_image"><a href="' . $product_link . '" title = "' . $row->pro_udx_seo_internetbezeichung . '" ><img src="' .$get_image_link. '" alt="' . $row->pro_udx_seo_internetbezeichung . '"></a></div>
+                                    <div class="side_cart_pd_image"><a href="' . $product_link . '" title = "' . $row->pro_udx_seo_internetbezeichung . '" ><img src="' . $get_image_link . '" alt="' . $row->pro_udx_seo_internetbezeichung . '"></a></div>
                                     ' . $cart_price_data . '
                                     <div class="side_cart_pd_qty">
                                         <div class="side_pd_qty">
@@ -1872,6 +1872,115 @@ if (isset($_REQUEST['action'])) {
             ci_max_quentity();
             $jsonResults = json_encode($retValue);
             print($jsonResults);
+            break;
+
+        case 'site_special_price_product_inner':
+
+            $retValue = array();
+            $supplier_id = array();
+            $level_two_id = 0;
+            $level_one_id = 0;
+            $whereclause = "";
+            $whereclause_page = $_REQUEST['whereclause_page'];
+            $price_without_tex_display = $_REQUEST['price_without_tex_display'];
+            $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
+            $limit = 30;
+            $start = $_REQUEST['start'] * $limit;
+            $last_record = $start;
+            $site_special_price_product_inner = "";
+
+            $Query1 = "SELECT * FROM user_special_price WHERE user_id = '0' AND usp_status = '1' ".$whereclause_page." ORDER BY supplier_id DESC";
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if (mysqli_num_rows($rs1) > 0) {
+                while ($row1 = mysqli_fetch_object($rs1)) {
+                    if ($row1->supplier_id > 0) {
+                        $supplier_id[] = $row1->supplier_id;
+                        $whereclause .= " OR pro.supplier_id = '" . $row1->supplier_id . "'";
+                    } elseif ($row1->level_two_id > 0) {
+                        $level_two_id = $row1->level_two_id;
+                        $whereclause .= " OR FIND_IN_SET(" . $row1->level_two_id . ", pro.sub_group_ids)";
+                    } elseif ($row1->level_one_id > 0) {
+                        $level_one_id = $row1->level_one_id;
+                        $whereclause .= " OR FIND_IN_SET(" . $row1->level_one_id . ", pro.sub_group_ids)";
+                    }
+                }
+            }
+            if (!empty($whereclause)) {
+                $Query2 = "SELECT *  FROM vu_products AS pro WHERE (" . ltrim($whereclause, ' OR ') . ")";
+                //$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                $counter = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query2));
+                $rs2 = mysqli_query($GLOBALS['conn'], $Query2 . " LIMIT " . $start . ", " . $limit);
+                if (mysqli_num_rows($rs2) > 0) {
+                    while ($row2 = mysqli_fetch_object($rs2)) {
+                        $last_record++;
+                        $special_price = array();
+                        $sub_group_ids = explode(",", $row2->sub_group_ids);
+                        if (!empty($supplier_id) && in_array($row2->supplier_id, $supplier_id)) {
+                            $special_price = user_special_price("supplier_id", $row2->supplier_id, 0, 1);
+                        } elseif ($level_two_id > 0 && $level_two_id == $sub_group_ids[0]) {
+                            $special_price = user_special_price("level_two", $level_two_id, 0, 1);
+                        } elseif ($level_one_id > 0 && $level_one_id == $sub_group_ids[1]) {
+                            $special_price = user_special_price("level_one", $level_one_id, 0, 1);
+                        }
+                        
+                        $price_html = "";
+
+
+                        if (!empty($special_price)) {
+                            $price_html = '<div class="pd_prise price_without_tex" '.$price_without_tex_display.'> '."<del>" . price_format(((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>".' </div>
+                            <div class="pd_prise pbp_price_with_tex" '.$pbp_price_with_tex_display.'> '."<del>" . price_format(((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount), $special_price['usp_discounted_value'], $row2->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>".' </div>';
+                        } else {
+                            $price_html = '<div class="pd_prise price_without_tex" '.$price_without_tex_display.'>'.price_format(((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax)).'€</div>
+                            <div class="pd_prise pbp_price_with_tex" '.$pbp_price_with_tex_display.'>'.price_format(((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount)).'€</div>';
+                        }
+
+                        $site_special_price_product_inner .= '
+                <div class="pd_card">
+                    <div class="pd_image">
+                        <a href="' . product_detail_url($row2->supplier_id) . '">
+                            <img loading="lazy" src="' . get_image_link(160, $row2->pg_mime_source_url) . '" alt="' . $row2->pro_udx_seo_internetbezeichung . '">
+                        </a>
+                    </div>
+                    <div class="pd_detail">
+                        <h5>
+                            <a href="' . product_detail_url($row2->supplier_id) . '">
+                                ' . $row2->pro_udx_seo_epag_title . '
+                            </a>
+                        </h5>
+                        <div class="pd_rating">
+                            <ul>
+                                <li>
+                                    <div class="fa fa-star"></div>
+                                    <div class="fa fa-star"></div>
+                                    <div class="fa fa-star"></div>
+                                    <div class="fa fa-star"></div>
+                                    <div class="fa fa-star"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        ' . $price_html . '
+                    </div>
+                </div>';
+                    }
+
+                    $retValue = array("status" => "1", "message" => "Record found", "site_special_price_product_inner" => $site_special_price_product_inner, "counter" => $counter, "last_record" => $last_record, "site_special_price_product_inner_page" => ($_REQUEST['start'] + 1) );
+                } else {
+                    $retValue = array(
+                        "status" => "0",
+                        "message" => "No products found!",
+                        "site_special_price_product_inner" => "<p class='txt_align_center'>Leerer Eintrag!</p>"
+                    );
+                }
+            } else {
+
+                $retValue = array(
+                    "status" => "0",
+                    "message" => "No special rules found!",
+                    "site_special_price_product_inner" => "<p class='txt_align_center'>No special products available!</p>"
+                );
+            }
+
+            echo json_encode($retValue);
             break;
     }
 }
