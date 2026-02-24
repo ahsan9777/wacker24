@@ -73,7 +73,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (is
     <form class="categroy_list sticky" name="frm_left_search_cat" id="frm_left_search_cat" method="GET" action="products.php" role="form" enctype="multipart/form-data">
         <input type="hidden" name="lf_parent_id" value="<?php print($leve_id); ?>">
         <input type="hidden" name="pro_type" value="<?php print($pro_type); ?>">
-        <h2>Kategorie <div class="categroy_close_mb">X</div>
+        <!--<h2>Kategorie <div class="categroy_close_mb">X</div>-->
         </h2>
         <div class="categroy_block ">
             <ul class="list_checkbox_hide lf_group_id_inner" id="lf_group_id_inner">
