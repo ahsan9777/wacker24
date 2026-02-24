@@ -3843,15 +3843,17 @@ function convertGermanChars($string)
 function product_detail_url($supplier_id, $ci_type = 0)
 {
 	$product_detail_url = "javascript: void();";
-	$Query = "SELECT pro_id, supplier_id, pro_ean, pro_udx_seo_epag_title_params_de FROM products WHERE supplier_id = '" . $supplier_id . "' ORDER BY pro_id ASC";
+	$Query = "SELECT pro_id, supplier_id, pro_ean, pro_udx_seo_epag_title_params_de, pro_url FROM products WHERE supplier_id = '" . $supplier_id . "' ORDER BY pro_id ASC";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
 		//$pro_udx_seo_internetbezeichung_params_de = "product/".$row->pro_udx_seo_internetbezeichung_params_de;
-		$product_detail_url = $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
+		//$product_detail_url = $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
+		$product_detail_url = $row->pro_url;
 		if ($ci_type > 0) {
 			//$pro_udx_seo_internetbezeichung_params_de = "product/1/".$row->pro_udx_seo_internetbezeichung_params_de;
-			$product_detail_url = "1/" . $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
+			//$product_detail_url = "1/" . $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
+			$product_detail_url = "1/" . $row->pro_url;
 		}
 	}
 	return $product_detail_url;

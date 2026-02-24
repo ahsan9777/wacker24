@@ -498,5 +498,27 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record added: " . $counter);
             }
             break;
+
+        case 'pro_url':
+            print("pro_url");die();
+            $counter = 0;
+            $Query = "SELECT pro.*, pf.pf_fvalue_params_de FROM products AS pro LEFT OUTER JOIN products_feature AS pf ON pf.supplier_id = pro.supplier_id AND pf.pf_fname = pro.pro_udx_seo_selection_feature WHERE pro.pro_id != '20841' ORDER BY pro.pro_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $pro_id = $row->pro_id;
+                    if(!empty($row->pf_fvalue_params_de)){
+                        $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$row->pf_fvalue_params_de;
+                    } else{
+                        $pro_url = $row->pro_udx_seo_epag_title_params_de;
+                    }
+                    $update_query = "UPDATE products SET pro_url = '" . dbStr($pro_url) . "' WHERE pro_id = '" . $pro_id . "' ";
+                    //print($update_query."<br>");
+                    mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
+                    $counter++;
+                }
+                print("Total no of record updated: " . $counter);
+            }
+            break;
     }
 }
