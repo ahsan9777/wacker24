@@ -51,13 +51,13 @@ if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
 								<div class="category-slider">
 									<?php
 									//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-									$Query = "SELECT usp.*, c.cat_title_de AS cat_title, c.cat_params_de AS cat_params FROM user_special_price AS usp LEFT OUTER JOIN category AS c ON c.group_id = usp.level_one_id AND c.parent_id = '0' WHERE usp.user_id = '0' GROUP BY usp.level_one_id ORDER BY usp.level_one_id ASC";
+									$Query = "SELECT usp.*, c.cat_title_de AS cat_title, c.cat_params_de AS cat_params FROM user_special_price AS usp LEFT OUTER JOIN category AS c ON c.group_id = usp.level_one_id AND c.parent_id = '0' WHERE usp.user_id = '0' AND usp.level_two_id > 0 GROUP BY usp.level_one_id ORDER BY usp.level_one_id ASC";
 									//print($Query);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 											$pg_mime_source_url_href = "files/no_img_1.jpg";
-											$pg_mime_source_url_href = returnName("pg_mime_source_url", "vu_category_map", "cat_id_level_one",  $row->level_one_id, "AND cm_type = '0' GROUP BY cat_id_level_one");
+											$pg_mime_source_url_href = returnName("pg_mime_source_url", "vu_category_map", "cat_id_level_two",  $row->level_two_id, "AND cm_type = '0' GROUP BY cat_id_level_two");
 
 
 											print('<div>
