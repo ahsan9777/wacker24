@@ -1884,7 +1884,7 @@ if (isset($_REQUEST['action'])) {
             $whereclause_page = $_REQUEST['whereclause_page'];
             $price_without_tex_display = $_REQUEST['price_without_tex_display'];
             $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
-            $limit = 30;
+            $limit = 18;
             $start = $_REQUEST['start'] * $limit;
             $last_record = $start;
             $site_special_price_product_inner = "";
@@ -1935,7 +1935,7 @@ if (isset($_REQUEST['action'])) {
                         }
 
                         $site_special_price_product_inner .= '
-                <div class="pd_card">
+                <div class="pd_card position_relative" data-label="'.$special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%').'">
                     <div class="pd_image">
                         <a href="' . product_detail_url($row2->supplier_id) . '">
                             <img loading="lazy" src="' . get_image_link(160, $row2->pg_mime_source_url) . '" alt="' . $row2->pro_udx_seo_internetbezeichung . '">

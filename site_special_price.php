@@ -16,6 +16,34 @@ if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
 <head>
 	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . "verkäufe-angebote"); ?>">
 	<?php include("includes/html_header.php"); ?>
+	<style>
+		.pd_card{
+			overflow: hidden;
+		}
+		.pd_card::before {
+			content: attr(data-label);
+			position: absolute;
+			top: 20px;
+			left: -55px;
+			width: 180px;
+			background: #ff1c0a;
+			color: #fff;
+			padding: 6px 0;
+			text-align: center;
+			font-size: 18px;
+			font-weight: 700;
+			text-transform: uppercase;
+			transform: rotate(-45deg);
+			box-shadow: 0 0 10px rgba(255, 28, 10, 0.6);
+			z-index: 9;
+		}
+
+		.pd_card:hover {
+			transform: translateY(-6px);
+			box-shadow: 0 0 18px rgba(144, 255, 33, 0.4);
+			border-color: #20ff20d1;
+		}
+	</style>
 </head>
 
 <body>
@@ -51,13 +79,13 @@ if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
 								<div class="category-slider">
 									<?php
 									//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
-									$Query = "SELECT usp.*, c.cat_title_de AS cat_title, c.cat_params_de AS cat_params FROM user_special_price AS usp LEFT OUTER JOIN category AS c ON c.group_id = usp.level_one_id AND c.parent_id = '0' WHERE usp.user_id = '0' AND usp.level_two_id > 0 GROUP BY usp.level_one_id ORDER BY usp.level_one_id ASC";
+									$Query = "SELECT usp.*, c.cat_title_de AS cat_title, c.cat_params_de AS cat_params FROM user_special_price AS usp LEFT OUTER JOIN category AS c ON c.group_id = usp.level_one_id AND c.parent_id = '0' WHERE usp.user_id = '0' AND usp.level_two_id > 0 AND usp.supplier_id > 0 GROUP BY usp.level_one_id ORDER BY usp.level_one_id ASC";
 									//print($Query);die();
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
 										while ($row = mysqli_fetch_object($rs)) {
 											$pg_mime_source_url_href = "files/no_img_1.jpg";
-											$pg_mime_source_url_href = returnName("pg_mime_source_url", "vu_category_map", "cat_id_level_two",  $row->level_two_id, "AND cm_type = '0' GROUP BY cat_id_level_two");
+											$pg_mime_source_url_href = returnName("pg_mime_source_url", "vu_category_map", "supplier_id",  $row->supplier_id, "AND cm_type = '0' GROUP BY cat_id_level_two");
 
 
 											print('<div>
@@ -179,7 +207,7 @@ if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
 		let whereclause_page = "<?php print($whereclause_page); ?>";
 		let price_without_tex_display = '<?php print($price_without_tex_display); ?>';
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display); ?>';
-		
+
 		$.ajax({
 			url: 'ajax_calls.php?action=site_special_price_product_inner',
 			method: 'POST',

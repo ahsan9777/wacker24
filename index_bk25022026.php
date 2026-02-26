@@ -8,10 +8,8 @@ include("includes/php_includes_top.php");
 <head>
 	<link rel="canonical" href="<?php print($GLOBALS['siteURL']); ?>">
 	<?php include("includes/html_header.php"); ?>
-	<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
 </head>
-</head>
+
 <body>
 	<div id="container" align="center">
 
@@ -26,53 +24,102 @@ include("includes/php_includes_top.php");
 		<!--BANNER_SECTION_START-->
 		<?php include("includes/banner.php"); ?>
 		<!--BANNER_SECTION_END-->
-		<style>
-			.product_category{padding: 0px 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;}
-			.product_category_inner{padding: 15px; display: flex; flex-direction: column; gap: 10px; border-radius: 3px; background-color: #fff; box-shadow: 0 0 5px rgba(0, 0, 0, .05); border-radius: 20px; border: 1px solid rgba(0, 0, 0, .04);}
-			.product_category_inner.pd_ctg_special_sale{border: 5px solid transparent; border-image: linear-gradient(to right, #ff0000bf, #ffc106d4); border-image-slice: 1;}
-			.product_category_heading{font-size: 21px; color: #232f3e;font-weight: 700;}
-			.icon_bg_red{background-color: #CC0F19;}
-			.icon_bg_yellow{background-color: #FEC509;}
-			.product_category_heading i{color: #fff; padding: 10px; border-radius: 5px;}
-			.product_category_inner:hover {
-			transform: translateY(-6px);
-			box-shadow: 0 0 18px rgba(144, 255, 33, 0.4);
-			border-color: #20ff20d1;
-		}
-		</style>
+
 		<!--CONTENT_SECTION_START-->
 		<section id="content_section">
 			<div class="home_page">
 				<div class="page_width_1480">
 					<div class="hm_section_1">
-						<div class="product_category">
-							<?php 
-							$Query = "SELECT * FROM user_special_price WHERE user_id = '0' GROUP BY user_id";
-							$rs = mysqli_query($GLOBALS['conn'], $Query);
-							if(mysqli_num_rows($rs) > 0){
-							?>
-							<a href="verkaeufe-angebote" title="verkäufe-angebote" class="product_category_inner pd_ctg_special_sale">
-								<div class="product_category_heading"><i class="fa fa-tag icon_bg_red"></i> SALE</div>
-								<div class="product_category_image"><img src="images/homepage_category/sale.png" alt="" srcset=""></div>
-								<div class="bottom_heading">
-									<h2>SALE</h2>
-								</div>
-							</a>
+						<div class="gerenric_product_category">
 							<?php
-							}
-
-							$Query = "SELECT group_id, cat_title_de AS cat_title, cat_params_de AS cat_params, cat_image, cat_icon, cat_icon_color FROM category WHERE parent_id = '0' AND cat_showhome = '1' ORDER BY group_id ASC";
-							$rs = mysqli_query($GLOBALS['conn'], $Query);
-							if(mysqli_num_rows($rs) > 0){
-								while($row = mysqli_fetch_object($rs)){
+							//$Query1 = "SELECT * FROM user_special_price WHERE user_id = 0 AND usp_status = '1'  ORDER BY CASE WHEN supplier_id IS NOT NULL THEN 1 WHEN level_two_id IS NOT NULL AND supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							$Query1 = "SELECT usp.*, pro.pro_status FROM user_special_price AS usp LEFT OUTER JOIN products AS pro ON pro.supplier_id = usp.supplier_id WHERE usp.user_id = 0 AND usp.usp_status = '1'   ORDER BY CASE WHEN usp.supplier_id IS NOT NULL AND pro.pro_status = '1' THEN 1 WHEN usp.level_two_id IS NOT NULL AND usp.supplier_id = 0 THEN 2 ELSE 3 END, RAND() LIMIT 1";
+							//print($Query1);
+							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+							if (mysqli_num_rows($rs1) > 0) {
+								$row1 = mysqli_fetch_object($rs1);
 							?>
-							<a href="<?php print($GLOBALS['siteURL']."unterkategorien/".$row->cat_params); ?>" title="<?php print($row->cat_params); ?>" class="product_category_inner">
-								<div class="product_category_heading"><i class="<?php print($row->cat_icon); ?>" style="background-color: <?php print($row->cat_icon_color); ?>;"></i> <?php print($row->cat_title); ?></div>
-								<div class="product_category_image"><img src="<?php print($GLOBALS['siteURL']."files/category/".$row->cat_image); ?>" title="<?php print($row->cat_title); ?>" alt="<?php print($row->cat_title); ?>" srcset=""></div>
-								<div class="bottom_heading">
-									<h2><?php print($row->cat_title); ?></h2>
-								</div>
-							</a>
+									<div class="pd_ctg_block pd_ctg_special_sale">
+										<a href="verkaeufe-angebote" title="verkäufe-angebote" class="pd_ctg_heading">SALE <i class="fa fa-tag" ></i></a>
+										<div class="pd_ctg_row">
+											<?php
+											$whereclause = "WHERE 1=1";
+											if($row1->supplier_id > 0){
+												$retArray = retArray("SELECT supplier_id FROM user_special_price WHERE user_id = 0 AND usp_status = '1' AND supplier_id > 0");
+												//print_r($retArray);
+												$supplier_id_data = "";
+												for($i = 0; $i < count($retArray); $i++){
+													$supplier_id_data .= "'".$retArray[$i]."',";
+												}
+												//$special_price = user_special_price("supplier_id", $row1->supplier_id);
+												$whereclause .= " AND supplier_id IN (".rtrim($supplier_id_data, ',').")";
+											} elseif($row1->level_two_id > 0){
+												$special_price = user_special_price("level_two", $row1->level_two_id, 0, 1);
+												$whereclause .= " AND FIND_IN_SET(".$row1->level_two_id.", pro.sub_group_ids)";
+											} elseif($row1->level_one_id > 0){
+												$special_price = user_special_price("level_one", $row1->level_one_id, 0, 1);
+												$whereclause .= " AND FIND_IN_SET(".$row1->level_one_id.", pro.sub_group_ids)";
+											}
+											$Query2 = "SELECT * FROM vu_products AS pro ".$whereclause."  ORDER BY  RAND() LIMIT 0,4";
+											//print($Query2);
+											$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+											if (mysqli_num_rows($rs2) > 0) {
+												while ($row2 = mysqli_fetch_object($rs2)) {
+													if($row1->supplier_id > 0){
+														//$special_price = array();
+														$special_price = user_special_price("supplier_id", $row2->supplier_id, 0, 1);
+														//print_r($special_price);
+													}
+											?>
+													<div class="pd_ctg_card">
+														<a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>">
+															<div class="pd_ctg_image">
+																<img src="<?php print(get_image_link(75, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>">
+																<span class="pd_tag"><b>-</b> <?php print((($special_price['usp_price_type'] > 0) ? price_format($special_price['usp_discounted_value']).'€' : $special_price['usp_discounted_value'].'%')); ?></span>
+															</div>
+															<div class="pd_ctg_title price_without_tex" <?php print($price_without_tex_display); ?>>
+																<del><?php print(price_format($row2->pbp_price_without_tax)); ?>€</del> | <span class="pd_ctg_discount_price"><?php print(price_format(discounted_price($special_price['usp_price_type'], $row2->pbp_price_without_tax, $special_price['usp_discounted_value']))); ?>€ </span>
+															</div>
+															<div class="pd_ctg_title pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>
+																<del><?php print(price_format($row2->pbp_price_amount)); ?>€</del> | <span class="pd_ctg_discount_price"><?php print(price_format(discounted_price($special_price['usp_price_type'], $row2->pbp_price_amount, $special_price['usp_discounted_value'], $row2->pbp_tax))); ?>€</span>
+															</div>
+														</a>
+													</div>
+											<?php
+												}
+											}
+											?>
+										</div>
+									</div>
+								<?php
+								}
+							$Query1 = "SELECT cat_id, group_id, parent_id, cat_title_de AS cat_title, cat_params_de AS cat_params FROM category WHERE cat_status = '1' AND cat_showhome = '1'";
+							$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+							if (mysqli_num_rows($rs1) > 0) {
+								while ($row1 = mysqli_fetch_object($rs1)) {
+								?>
+									<div class="pd_ctg_block">
+										<div class="pd_ctg_heading"> <?php print($row1->cat_title); ?> </div>
+										<div class="pd_ctg_row">
+											<?php
+											//$Query2 = "SELECT cm.cat_id, cm.supplier_id, c.group_id, c.cat_title_de AS cat_title, pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN category AS c ON c.group_id = SUBSTRING(cm.cat_id, 1, 3) LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE FIND_IN_SET(".$row1->group_id.", cm.sub_group_ids) GROUP BY c.group_id ORDER BY  RAND() LIMIT 0,4";
+											$Query2 = "SELECT * FROM ( SELECT MIN(cm.cat_id) AS cat_id, MIN(cm.supplier_id) AS supplier_id, c.group_id, MAX(c.cat_title_de) AS cat_title, MAX(c.cat_params_de) AS cat_params, MIN(pg.pg_mime_source_url) AS pg_mime_source, RAND() AS rand_col FROM category_map AS cm LEFT OUTER JOIN category AS c ON c.group_id = SUBSTRING(cm.cat_id, 1, 3) LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE FIND_IN_SET(" . $row1->group_id . ", cm.sub_group_ids) GROUP BY c.group_id) AS subquery ORDER BY rand_col LIMIT 0,4";
+											$rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+											if (mysqli_num_rows($rs2) > 0) {
+												while ($row2 = mysqli_fetch_object($rs2)) {
+											?>
+													<div class="pd_ctg_card">
+														<a href="artikelarten/<?php print($row2->cat_params); ?>" title="artikelarten/<?php print($row2->cat_params); ?>">
+															<div class="pd_ctg_image"><img loading="lazy" src="<?php print(get_image_link(75, $row2->pg_mime_source)); ?>" alt="artikelarten/<?php print($row2->cat_params); ?>"></div>
+															<div class="pd_ctg_title"> <?php print($row2->cat_title); ?> </div>
+														</a>
+													</div>
+											<?php
+												}
+											}
+											?>
+										</div>
+									</div>
 							<?php
 								}
 							}
@@ -97,17 +144,17 @@ include("includes/php_includes_top.php");
 											<div>
 												<div class="pd_card">
 													<div class="pd_image">
-														<a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
+														<a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
 															<img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>">
 															<?php
-															if ($rw->sales_count > 45) {
+															if($rw->sales_count > 45){
 																print('<span class="pd_tag">Best Seller</span>');
 															}
 															?>
 														</a>
 													</div>
 													<div class="pd_detail">
-														<h5><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
+														<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -151,9 +198,9 @@ include("includes/php_includes_top.php");
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
+													<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
-														<h5><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
+														<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -180,7 +227,7 @@ include("includes/php_includes_top.php");
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a tabindex="-1" href="unterkategorien/schulranzen" title="Schulranzen">Mehr anzeigen</a></div>
+								<div class="gerenric_show_All"><a  tabindex="-1" href="unterkategorien/schulranzen" title="Schulranzen">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<?php
@@ -189,7 +236,7 @@ include("includes/php_includes_top.php");
 						if (mysqli_num_rows($rs1) > 0) {
 							while ($row1 = mysqli_fetch_object($rs1)) {
 								$special_price = user_special_price("level_one", $row1->group_id);
-
+								
 						?>
 								<div class="gerenric_white_box">
 									<div class="gerenric_product full_column">
@@ -205,9 +252,9 @@ include("includes/php_includes_top.php");
 											?>
 													<div>
 														<div class="pd_card">
-															<div class="pd_image"><a tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
+															<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $row2->pg_mime_source_url)); ?>" alt="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"></a></div>
 															<div class="pd_detail">
-																<h5><a tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"> <?php print($row2->pro_udx_seo_epag_title); ?> </a></h5>
+																<h5><a  tabindex="-1" href="<?php print(product_detail_url($row2->supplier_id)); ?>" title="<?php print($row2->pro_udx_seo_internetbezeichung); ?>"> <?php print($row2->pro_udx_seo_epag_title); ?> </a></h5>
 																<div class="pd_rating">
 																	<ul>
 																		<li>
@@ -220,11 +267,11 @@ include("includes/php_includes_top.php");
 																	</ul>
 																</div>
 																<?php if (!empty($special_price)) { ?>
-																	<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-																	<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount), $special_price['usp_discounted_value'], $row2->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+																	<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+																	<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount), $special_price['usp_discounted_value'], $row2->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 																<?php } else { ?>
-																	<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax))); ?>€</div>
-																	<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount))); ?>€</div>
+																	<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_without_tax > 0) ? $row2->pbp_special_price_without_tax : $row2->pbp_price_without_tax) )); ?>€</div>
+																	<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $row2->pbp_special_price_amount > 0) ? $row2->pbp_special_price_amount : $row2->pbp_price_amount) )); ?>€</div>
 																<?php } ?>
 															</div>
 														</div>
@@ -235,7 +282,7 @@ include("includes/php_includes_top.php");
 											?>
 										</div>
 									</div>
-									<div class="gerenric_show_All"><a tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params", "category", "group_id", $row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
+									<div class="gerenric_show_All"><a  tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
 								</div>
 						<?php
 							}
@@ -260,9 +307,9 @@ include("includes/php_includes_top.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
-													<h5><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
+													<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>" title="<?php print($rw->pro_udx_seo_internetbezeichung); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -275,11 +322,11 @@ include("includes/php_includes_top.php");
 														</ul>
 													</div>
 													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount), $special_price['usp_discounted_value'], $rw->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) , $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount) , $special_price['usp_discounted_value'], $rw->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax))); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount))); ?>€</div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) )); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount) )); ?>€</div>
 													<?php } ?>
 												</div>
 											</div>
@@ -306,9 +353,9 @@ include("includes/php_includes_top.php");
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
+												<div class="pd_image"><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $rw->pg_mime_source_url)); ?>" alt=""></a></div>
 												<div class="pd_detail">
-													<h5><a tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
+													<h5><a  tabindex="-1" href="<?php print(product_detail_url($rw->supplier_id)); ?>"> <?php print($rw->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -321,11 +368,11 @@ include("includes/php_includes_top.php");
 														</ul>
 													</div>
 													<?php if (!empty($special_price)) { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format(((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount), $special_price['usp_discounted_value'], $rw->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) , $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>> <?php print("<del>" . price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount) ) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount) , $special_price['usp_discounted_value'], $rw->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>"); ?> </div>
 													<?php } else { ?>
-														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax))); ?>€</div>
-														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format(((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount))); ?>€</div>
+														<div class="pd_prise price_without_tex" <?php print($price_without_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_without_tax > 0) ? $rw->pbp_special_price_without_tax : $rw->pbp_price_without_tax) )); ?>€</div>
+														<div class="pd_prise pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>><?php print(price_format( ((config_site_special_price > 0 && $rw->pbp_special_price_amount > 0) ? $rw->pbp_special_price_amount : $rw->pbp_price_amount) )); ?>€</div>
 													<?php } ?>
 												</div>
 											</div>
@@ -339,10 +386,10 @@ include("includes/php_includes_top.php");
 					</div>
 					<div class="gerenric_white_box">
 						<div class="hm_register">
-							<div class="full_width txt_align_center"><a tabindex="-1" href="anmelden" title="Anmelden">
+							<div class="full_width txt_align_center"><a  tabindex="-1" href="anmelden" title="Anmelden">
 									<div class="gerenric_btn">Anmelden</div>
 								</a></div>
-							<p>Neues Konto? <a tabindex="-1" href="registrierung" title="Erstellen Sie hier">Erstellen Sie hier.</a></p>
+							<p>Neues Konto? <a  tabindex="-1"  href="registrierung" title="Erstellen Sie hier">Erstellen Sie hier.</a></p>
 						</div>
 					</div>
 				</div>
@@ -363,7 +410,7 @@ include("includes/php_includes_top.php");
 										}
 									?>
 										<div>
-											<div class="brand_col"><a tabindex="-1" href="<?php print($GLOBALS['siteURL'] . "marken/" . $row->manf_name_params) ?>" title="<?php print($row->manf_name) ?>">
+											<div class="brand_col"><a  tabindex="-1"  href="<?php print($GLOBALS['siteURL'] . "marken/".$row->manf_name_params) ?>" title="<?php print($row->manf_name) ?>">
 													<div class="brand_item"><img loading="lazy" src="<?php print($brand_image_href) ?>" alt="<?php print($row->manf_name) ?>">
 													</div>
 												</a></div>
@@ -371,7 +418,7 @@ include("includes/php_includes_top.php");
 									<?php } ?>
 								</div>
 							</div>
-							<div class="brand_btn"><a tabindex="-1" href="marken" title="Alle anzeigen">
+							<div class="brand_btn"><a  tabindex="-1" href="marken" title="Alle anzeigen">
 									<div class="gerenric_btn">Alle anzeigen</div>
 								</a></div>
 						</div>
