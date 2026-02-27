@@ -177,9 +177,11 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 										if ($level_two_link > 0) {
 											$cat_link = "products.php?lf_parent_id=" . $row->parent_id . "&pro_type=" . $pro_type . "&lf_group_id[]=" . $row->group_id;
 										} else {
-											$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+											//$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+											$cat_link = $_REQUEST['level_one']."/" . $row->cat_params . "/" . $row->sub_cat_params;
 											if ($pro_type == 20) {
-												$cat_link = "artikelarten/" . $row->sub_cat_params . "/" . $pro_type;
+												//$cat_link = "artikelarten/" . $row->sub_cat_params . "/" . $pro_type;
+												$cat_link = $_REQUEST['level_one']."/" . $row->sub_cat_params . "/" . $pro_type;
 											}
 										}
 

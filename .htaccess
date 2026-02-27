@@ -73,10 +73,14 @@ RewriteRule ^kostenlose-produktgeschenke? free_products.php [L]
 RewriteRule ^unterkategorien/([0-9]+)/(.*)?$ product_category.php?page=$1&cat_params_one=$2 [L]
 RewriteRule ^unterkategorien/(.*)?$ product_category.php?cat_params_one=$1 [L]
 
-RewriteRule ^artikelarten/(.*)/([0-9]+)?$ products.php?level_two=$1&pro_type=$2 [L]
-RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?level_two=$1&level_three=$2 [L]
-RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?level_two=$1&level_three=$2 [L]
-RewriteRule ^artikelarten/(.*)?$ products.php?level_two=$1 [L]
+#RewriteRule ^artikelarten/(.*)/([0-9]+)?$ products.php?level_two=$1&pro_type=$2 [L]
+#RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?level_two=$1&level_three=$2 [L]
+#RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?level_two=$1&level_three=$2 [L]
+#RewriteRule ^artikelarten/(.*)?$ products.php?level_two=$1 [L]
+
+RewriteRule ^(.*)/(.*)/([0-9]+)?$ products.php?level_one=$1&level_two=$2&pro_type=$3 [L]
+RewriteRule ^(.*)/(.*)/(.*)?$ products.php?level_one=$1&level_two=$2&level_three=$3 [L]
+RewriteRule ^(.*)/(.*)?$ products.php?level_one=$1&level_two=$2 [L]
 
 RewriteRule ^marken/(.*)?$ manufacture_products.php?manf_name_params=$1 [L]
 RewriteRule ^marken? manufacture.php [L]

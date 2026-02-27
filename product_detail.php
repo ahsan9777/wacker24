@@ -99,7 +99,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_three_params = $row->cat_three_params;
 	$pro_udx_manufacturer_address = $row->pro_udx_manufacturer_address;
 	$pro_udx_manufacturer_mail = $row->pro_udx_manufacturer_mail;
-	$pro_udate = date("Y-m-d", strtotime($row->pro_udate));
+	//$pro_udate = date("Y-m-d", strtotime($row->pro_udate));
 
 	$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 	//print($Query);
