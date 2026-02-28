@@ -22,6 +22,7 @@ if (isset($_GET['data'])) {
 $requestUri = rtrim($GLOBALS['siteURL'], "/") . $_SERVER['REQUEST_URI'];
 //$url = $protocol . $host . $requestUri;
 //print_r($_REQUEST);die();
+$heading_title = "";
 $lf_action_type = 1;
 $lf_group_id = 0;
 $pro_type = (isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0);

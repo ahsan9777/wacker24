@@ -55,7 +55,7 @@ function siteMapCat($parent_id)
     if (mysqli_num_rows($rs) > 0) {
         while ($rw = mysqli_fetch_object($rs)) {
             if ($rw->parent_id == 0) {
-                $pgURL = $GLOBALS['siteURL'] . "unterkategorien/" . $rw->cat_params;
+                $pgURL = $GLOBALS['siteURL'] . "kategorie/" . $rw->cat_params;
             } elseif (strlen($rw->parent_id) == 2) {
                 $pgURL = $GLOBALS['siteURL'] . "artikelarten/" . $rw->cat_params;
             } elseif (strlen($rw->parent_id) == 3) {

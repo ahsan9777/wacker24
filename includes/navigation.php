@@ -134,7 +134,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
                 ?>
-                        <li><a title="<?php print($row->cat_title); ?>" href="unterkategorien/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
+                        <li><a title="<?php print($row->cat_title); ?>" href="kategorie/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
                 <?php
                     }
                 }
@@ -153,7 +153,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     if (mysqli_num_rows($rs) > 0) {
                         while ($row = mysqli_fetch_object($rs)) {
                     ?>
-                            <li><a title="<?php print($row->cat_title); ?>" href="unterkategorien/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
+                            <li><a title="<?php print($row->cat_title); ?>" href="kategorie/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
                     <?php
                         }
                     }

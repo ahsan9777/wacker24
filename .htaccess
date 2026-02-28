@@ -70,8 +70,8 @@ RewriteRule ^abmelden? logout.php [L]
 RewriteRule ^kostenlose-produktgeschenke? free_products.php [L]
 
 
-RewriteRule ^unterkategorien/([0-9]+)/(.*)?$ product_category.php?page=$1&cat_params_one=$2 [L]
-RewriteRule ^unterkategorien/(.*)?$ product_category.php?cat_params_one=$1 [L]
+RewriteRule ^kategorie/([0-9]+)/(.*)?$ product_category.php?page=$1&cat_params_one=$2 [L]
+RewriteRule ^kategorie/(.*)?$ product_category.php?cat_params_one=$1 [L]
 
 #RewriteRule ^artikelarten/(.*)/([0-9]+)?$ products.php?level_two=$1&pro_type=$2 [L]
 #RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?level_two=$1&level_three=$2 [L]

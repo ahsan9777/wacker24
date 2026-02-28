@@ -66,7 +66,7 @@ include("includes/php_includes_top.php");
 							if(mysqli_num_rows($rs) > 0){
 								while($row = mysqli_fetch_object($rs)){
 							?>
-							<a href="<?php print($GLOBALS['siteURL']."unterkategorien/".$row->cat_params); ?>" title="<?php print($row->cat_params); ?>" class="product_category_inner">
+							<a href="<?php print($GLOBALS['siteURL']."kategorie/".$row->cat_params); ?>" title="<?php print($row->cat_params); ?>" class="product_category_inner">
 								<div class="product_category_heading"><i class="<?php print($row->cat_icon); ?>" style="background-color: <?php print($row->cat_icon_color); ?>;"></i> <?php print($row->cat_title); ?></div>
 								<div class="product_category_image"><img src="<?php print($GLOBALS['siteURL']."files/category/".$row->cat_image); ?>" title="<?php print($row->cat_title); ?>" alt="<?php print($row->cat_title); ?>" srcset=""></div>
 								<div class="bottom_heading">
@@ -180,7 +180,7 @@ include("includes/php_includes_top.php");
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a tabindex="-1" href="unterkategorien/schulranzen" title="Schulranzen">Mehr anzeigen</a></div>
+								<div class="gerenric_show_All"><a tabindex="-1" href="kategorie/schulranzen" title="Schulranzen">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<?php
@@ -235,7 +235,7 @@ include("includes/php_includes_top.php");
 											?>
 										</div>
 									</div>
-									<div class="gerenric_show_All"><a tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params", "category", "group_id", $row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
+									<div class="gerenric_show_All"><a tabindex="-1" href="kategorie/<?php print(returnName("cat_params_de AS cat_params", "category", "group_id", $row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
 								</div>
 						<?php
 							}
