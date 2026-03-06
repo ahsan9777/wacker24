@@ -3,7 +3,7 @@ include("../lib/session_head.php");
 
 if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
 
-    $qryStrURL .= "group_id=".$_REQUEST['group_id']."&";
+    $qryStrURL .= "group_id=" . $_REQUEST['group_id'] . "&";
 }
 if (isset($_REQUEST['btnUpdate'])) {
 
@@ -22,7 +22,11 @@ if (isset($_REQUEST['btnUpdate'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_image='" . $mfileName . "' WHERE cat_id=" . $_REQUEST['cat_id']) or die(mysqli_error($GLOBALS['conn']));
+
+    $cat_params_en = url_clean(convertGermanChars(trim($_REQUEST['cat_title_en']))); 
+    $cat_params_de = url_clean(convertGermanChars(trim($_REQUEST['cat_title_de'])));
+
+    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_params_en = '".$cat_params_en."', cat_params_de = '".$cat_params_de."', cat_image='" . $mfileName . "' WHERE cat_id=" . $_REQUEST['cat_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -181,7 +185,7 @@ include("includes/messages.php");
 
                         if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
                             $group_id = $_REQUEST['group_id'];
-                            $searchQuery = " sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '".$_REQUEST['group_id']."' ORDER BY main_cat.group_id ASC)";
+                            $searchQuery = " sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $_REQUEST['group_id'] . "' ORDER BY main_cat.group_id ASC)";
                         }
                         if (isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] > 0) {
                             if (!empty($_REQUEST['cat_title'])) {
@@ -213,6 +217,7 @@ include("includes/messages.php");
                                         <th width="100">Banner</th>
                                         <th>Main Title</th>
                                         <th>Title </th>
+                                        <th>Show in Nav</th>
                                         <th width="100">Order By</th>
                                         <th width="50">Status</th>
                                         <th width="90">Action</th>
@@ -220,7 +225,7 @@ include("includes/messages.php");
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.group_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  " . $searchQuery . " ORDER BY sub_cat.parent_id,sub_cat.cat_orderby ASC";
+                                    $Query = "SELECT sub_cat.cat_id, sub_cat.parent_id, sub_cat.group_id, sub_cat.cat_image, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, sub_cat.cat_image_show, sub_cat.cat_showhome, sub_cat.cat_showhome_feature, sub_cat.cat_orderby, sub_cat.cat_showInNav, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id WHERE  " . $searchQuery . " ORDER BY sub_cat.parent_id,sub_cat.cat_orderby ASC";
                                     //print($Query);
                                     $counter = 0;
                                     $limit = 50;
@@ -248,6 +253,7 @@ include("includes/messages.php");
                                                 </td>
                                                 <td><?php print($row->cat_title); ?></td>
                                                 <td><?php print($row->sub_cat_title); ?></td>
+                                                <td> <input type="checkbox" class="cat_showInNav" id="cat_showInNav" data-id="<?php print($row->cat_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->cat_showInNav == 1) ? 'checked' : ''); ?>> </td>
                                                 <td>
                                                     <input type="hidden" name="cat_id[]" id="cat_id" value="<?php print($row->cat_id); ?>">
                                                     <input type="number" class="input_style" name="cat_orderby[]" id="cat_orderby" value="<?php print($row->cat_orderby); ?>">
@@ -311,6 +317,46 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
+    $('.cat_showInNav').change(function() {
+        let id = $(this).attr('data-id');
+        let set_field_data = 0;
+        //console.log("cat_id: "+cat_id)
+        if ($(this).prop('checked')) {
+            set_field_data = 1;
+        }
+        //console.log("set_field_data: "+set_field_data);
+        $.ajax({
+            url: 'ajax_calls.php?action=btn_toggle',
+            method: 'POST',
+            data: {
+                table: "category",
+                set_field: "cat_showInNav",
+                set_field_data: set_field_data,
+                where_field: "cat_id",
+                id: id
+            },
+            success: function(response) {
+                //console.log("response = "+response);
+                const obj = JSON.parse(response);
+                console.log(obj);
+                if (obj.status == 1 && set_field_data == 1) {
+                    $.toast({
+                        heading: 'Success',
+                        text: 'Toggle is ON',
+                        icon: 'success',
+                        position: 'top-right'
+                    });
+                } else if (obj.status == 1 && set_field_data == 0) {
+                    $.toast({
+                        heading: 'Warning',
+                        text: 'Toggle is OFF',
+                        icon: 'warning',
+                        position: 'top-right'
+                    });
+                }
+            }
+        });
+    });
     $('input.cat_title').autocomplete({
         source: function(request, response) {
             $.ajax({
