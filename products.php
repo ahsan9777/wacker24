@@ -81,6 +81,10 @@ if ($pro_type == 20) {
 	$whereclause_top_category = " WHERE sub_cat.parent_id = '20' AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND cm.cat_id_level_two = sub_cat.group_id )";
 }
 
+if ($level_three > 0) {
+	$heading_title = returnName("cat_title_de AS cat_title", "category", "group_id", $level_three);
+}
+
 $sortby = 0;
 $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend", "Name A-Z", "Name Z-A");
 
@@ -179,10 +183,12 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 											$cat_link = "products.php?lf_parent_id=" . $row->parent_id . "&pro_type=" . $pro_type . "&lf_group_id[]=" . $row->group_id;
 										} else {
 											//$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
-											$cat_link = $_REQUEST['level_one']."/" . $row->cat_params . "/" . $row->sub_cat_params;
+											//$cat_link = $_REQUEST['level_one']."/" . $row->cat_params . "/" . $row->sub_cat_params;
+											$cat_link = "produkte/".$_REQUEST['level_one']."/" . $row->cat_params . "/" . $row->sub_cat_params;
 											if ($pro_type == 20) {
 												//$cat_link = "artikelarten/" . $row->sub_cat_params . "/" . $pro_type;
-												$cat_link = $_REQUEST['level_one']."/" . $row->sub_cat_params . "/" . $pro_type;
+												//$cat_link = $_REQUEST['level_one']."/" . $row->sub_cat_params . "/" . $pro_type;
+												$cat_link = "produkte/" .$_REQUEST['level_one']."/" . $row->sub_cat_params . "/" . $pro_type;
 											}
 										}
 

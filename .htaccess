@@ -78,9 +78,9 @@ RewriteRule ^kategorie/(.*)?$ product_category.php?cat_params_one=$1 [L]
 #RewriteRule ^artikelarten/(.*)/(.*)?$ products.php?level_two=$1&level_three=$2 [L]
 #RewriteRule ^artikelarten/(.*)?$ products.php?level_two=$1 [L]
 
-RewriteRule ^(.*)/(.*)/([0-9]+)?$ products.php?level_one=$1&level_two=$2&pro_type=$3 [L]
-RewriteRule ^(.*)/(.*)/(.*)?$ products.php?level_one=$1&level_two=$2&level_three=$3 [L]
-RewriteRule ^(.*)/(.*)?$ products.php?level_one=$1&level_two=$2 [L]
+RewriteRule ^produkte/(.*)/(.*)/([0-9]+)?$ products.php?level_one=$1&level_two=$2&pro_type=$3 [L]
+RewriteRule ^produkte/(.*)/(.*)/(.*)?$ products.php?level_one=$1&level_two=$2&level_three=$3 [L]
+RewriteRule ^produkte/(.*)/(.*)?$ products.php?level_one=$1&level_two=$2 [L]
 
 RewriteRule ^marken/(.*)?$ manufacture_products.php?manf_name_params=$1 [L]
 RewriteRule ^marken? manufacture.php [L]
