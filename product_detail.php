@@ -405,17 +405,23 @@ include("includes/message.php");
 			text-align: right;
 		}
 
+		.price strong:first-child, .price p:nth-of-type(1){
+			display: none;
+		}
+
 		.price strong {
 			font-size: 16px;
 			font-weight: 700;
 			color: #212529;
 		}
 
-		.price span {
+		.price p {
 			display: block;
 			font-size: 11px;
 			color: #666;
+			margin: 0;
 		}
+		
 
 		/* coupon */
 		.text-green {
@@ -469,7 +475,7 @@ include("includes/message.php");
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
 		<?php
-		$Query_special = "SELECT usp.*, pro.pro_udx_seo_epag_title, pro.pro_description_long, pro.pg_mime_source_url, pro.pbp_price_amount, pro.pbp_price_without_tax, pro.pbp_tax, pro.manf_id, m.manf_name, m.manf_name_params FROM user_special_price AS usp LEFT OUTER JOIN vu_products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN manufacture AS m ON m.manf_id = pro.manf_id WHERE usp.usp_featured = '1' AND usp.supplier_id != '".$supplier_id."' ORDER BY  RAND() LIMIT 0,1";
+		$Query_special = "SELECT usp.*, pro.pro_type, pro.pro_udx_seo_epag_title, pro.pro_description_long, pro.pg_mime_source_url, pro.pbp_price_amount, pro.pbp_price_without_tax, pro.pbp_tax, pro.manf_id, m.manf_name, m.manf_name_params FROM user_special_price AS usp INNER JOIN vu_products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN manufacture AS m ON m.manf_id = pro.manf_id WHERE usp.usp_featured = '1' AND usp.supplier_id != '".$supplier_id."' ORDER BY  RAND() LIMIT 0,1";
 		$rs_special = mysqli_query($GLOBALS['conn'], $Query_special);
 		if(mysqli_num_rows($rs_special) > 0){
 			$rws = mysqli_fetch_object($rs_special);
@@ -491,9 +497,10 @@ include("includes/message.php");
 					</div>
 					<div class="special-price-ad-inner-right">
 						<div class="price">
-							<strong class="price_without_tex" style="display: none;"><?php print(price_format(discounted_price($rws->usp_price_type, $rws->pbp_price_without_tax, $rws->usp_discounted_value))); ?>€</strong>
-							<strong class="pbp_price_with_tex" ><?php print(price_format(discounted_price($rws->usp_price_type, $rws->pbp_price_amount, $rws->usp_discounted_value, $rws->pbp_tax)) ); ?>€</strong>
-							<span>inkl. MwSt.</span>
+							<strong class="special_price_tag price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(price_format(discounted_price($rws->usp_price_type, $rws->pbp_price_without_tax, $rws->usp_discounted_value))); ?>€</strong>
+							<strong class="special_price_tag pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(price_format(discounted_price($rws->usp_price_type, $rws->pbp_price_amount, $rws->usp_discounted_value, $rws->pbp_tax)) ); ?>€</strong>
+							<p class="price_without_tex" <?php print($price_without_tex_display); ?> >exkl. MwSt.</p>
+							<p class="pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> >inkl. MwSt.</p>
 						</div>
 						<div class="coupon">
 							<span class="text-green">Sparen <?php print($rws->usp_discounted_value.(($rws->usp_price_type > 0) ? '€' : '%')) ?></span>

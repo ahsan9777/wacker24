@@ -3,7 +3,7 @@
 <!-- <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">-->
 <link rel="stylesheet" href="css/jquery-ui.min.css">
-<link href="css/responsive.min.css" rel="stylesheet" type="text/css" />
+<link href="css/responsive.min.css?dt=06032026" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./backend/assets/style/jquery-ui-1.10.3.custom.min.css" />
 <!--<script defer src="js/jquery-ui.min.js"></script>

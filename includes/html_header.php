@@ -11,8 +11,8 @@
 <?php } ?>
 <link rel="preload" href="<?php print(get_font_link(config_fonts));?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>"></noscript>
-<link rel="preload" href="css/styles.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="css/styles.min.css"></noscript>
+<link rel="preload" href="css/styles.min.css?dt=06032026" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="css/styles.min.css?dt=06032026"></noscript>
 <?php include("includes/btn_color.php"); ?>
 <!-- <script src="js/jquery-2.2.0.min.js"></script>-->
 <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js" defer></script> -->
