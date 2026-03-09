@@ -121,7 +121,7 @@ include("includes/message.php");
 		<section class="login_page">
 			<div class="page_width">
 				<div class="login_inner">
-					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
+					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
 					<div class="login_box">
 						<h2>Anmelden</h2>
 						<?php if ($class != "") { ?>

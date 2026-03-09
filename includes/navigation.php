@@ -261,7 +261,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     while ($row1 = mysqli_fetch_object($rs1)) {
                     ?>
                         <li>
-                            <a title="<?php print($row1->cat_title); ?>" href="<?php print($GLOBALS['siteURL']."produkte/".$row1->one_cat_params."/".$row1->sub_cat_params."/".$row1->cat_params); ?>" role="button" onclick="return false;"><span><?php print($row1->cat_title); ?></span></a>
+                            <a title="<?php print($row1->cat_title); ?>" href="<?php print($GLOBALS['siteURL']."produkte/".$row1->one_cat_params."/".$row1->sub_cat_params."/".$row1->cat_params); ?>" role="button"><span><?php print($row1->cat_title); ?></span></a>
                         </li>
                     <?php
                     }

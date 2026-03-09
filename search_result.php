@@ -1,7 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
-//require_once("lib/class.pager1.php");
-//$p = new Pager1;
+require_once("lib/class.pager1.php");
+$p = new Pager1;
 $requestUri = rtrim($GLOBALS['siteURL'], "/") . $_SERVER['REQUEST_URI'];
 //$requestUri = $GLOBALS['siteURL'] . ltrim($_SERVER['REQUEST_URI'], "/demo");
 //print(ltrim($_SERVER['REQUEST_URI'], "/wacker24")."<br>".$requestUri);
@@ -162,11 +162,11 @@ if (isset($_REQUEST['sortby'])) {
 				$(".pd_image").css("height", "");
 			});
 		});
-		$(document).ready(function() {
+		/*$(document).ready(function() {
 			if (window.innerWidth >= 1024) {
 				$(".click_list").trigger('click');
 			}
-		});
+		});*/
 	</script>
 </head>
 
@@ -251,7 +251,7 @@ if (isset($_REQUEST['sortby'])) {
 												//}
 										?>
 												<div class="pd_card">
-													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
 														<h3 class="detail_data_show"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" style="display:block" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_internetbezeichung); ?> </a></h3>
 														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>" > <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>

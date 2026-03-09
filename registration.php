@@ -130,7 +130,7 @@ include("includes/message.php");
 		<section class="login_page register_page">
 			<div class="page_width">
 				<div class="login_inner">
-					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
+					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
 					<form class="login_box" name="frm" id="frm" method="post" action="registrierung" role="form" enctype="multipart/form-data">
 						<h2>Registrierung</h2>
 						<?php if ($class != "") { ?>

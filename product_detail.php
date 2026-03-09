@@ -342,7 +342,7 @@ include("includes/message.php");
 
 		/* centered content */
 		.special-price-ad-inner {
-			max-width: 80%;
+			max-width: 75%;
 			margin: auto;
 			display: flex;
 			align-items: center;
