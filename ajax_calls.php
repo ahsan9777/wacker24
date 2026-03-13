@@ -617,8 +617,8 @@ if (isset($_REQUEST['action'])) {
             $retValue = array();
             $feature_show = "";
             $count = 3;
-            //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname NOT IN ('Made in Germany','Material der Sitzfläche', 'Packungsmenge', 'Material der Schreibfläche', 'Farbe des Rückens', 'Oberflächenbeschaffenheit', 'Fadenverstärkung vorhanden', 'Ausführung der Oberflächenbeschaffenheit', 'Farbe der Vorderseite', 'Material der Rückseite', 'Gehäusefarbe', 'Material des Rahmens', 'Trägermaterial', 'Deckel vorhanden', 'Material', 'Ausführung der Oberseite', 'Material des Papierhandtuches', 'Material des Tisches', 'Ablageschale vorhanden', 'max. Anzahl der Erweiterungshüllen', 'Motiv', 'Werkstoff', 'Zertifikat/Zulassung', 'Verwendung für Druck- oder Schreibgerät', '3 Klappen (Jurisklappen) am Unterdeckel vorhanden', 'feucht abwischbar', 'Anordnung der Lage (Öffnungsseite)', 'Ausführung der Tür', 'Material des Hygienebeutels', 'stapelbar', 'selbstklebend', 'Verschluss', 'Ausführung der Höhenverstellung', 'Boden vorhanden', 'max. Auflösung', 'Tafel beschreibbar', 'beidseitig beschreibbar', 'Weißgrad (ISO)', 'Verschlusstechnik', 'Weißgrad (CIE)', 'Lichtleistung', 'Breite des Sitzes', 'Kalenderaufteilung', 'Fenster vorhanden', 'Haftungsintensität', 'Volumen', 'Körnung', 'Heftleistung', 'Art des Auftragungshilfsmittels', 'Ausführung der vorderseitigen Lineatur', 'Rückenbreite', 'Typbezeichnung des Duftes', 'Fassungsvermögen', 'Taben', 'Grammatur', 'Dicke der Folie', 'Heftungsart', 'Auffangvolumen', 'Ausführung der Landkarte', 'Sterilität', 'Lochung', 'Arbeitsbreite', 'Kerndurchmesser', 'Anzahl der Teile', 'max. Aufbewahrungsmenge', 'Format der Folie', 'Maße der Oberfläche', 'Art des Laminierverfahrens', 'Innenmaße', 'Heftklammertyp', 'Einsatzbereich', 'max. Tragfähigkeit', 'Abmessung des Rahmens', 'Typbezeichnung') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
-            $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname IN ('Papierformat', 'Verwendung für Produkt', 'max. Gewicht des Nutzers', 'Farbe der Rückenlehne', 'Farbe der Sitzfläche') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
+            //$Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname IN ('Papierformat', 'Verwendung für Produkt', 'max. Gewicht des Nutzers', 'Farbe der Rückenlehne', 'Farbe der Sitzfläche') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
+            $Query1 = "SELECT * FROM products_feature AS pf WHERE pf.pf_fvalue_details = 'FILTER' AND pf.pf_fname IN ('Farbe', 'Rückenbreite', 'Maße', 'Made in Germany', 'Werkstoff', 'Für Papierformat', 'Zertifikat/Zulassung', 'max. Anzahl der Blätter', 'Rückenschild', 'Papierformat', 'Verwendung für Produkt', 'max. Gewicht des Nutzers', 'Farbe der Rückenlehne', 'Farbe der Sitzfläche') AND pf.supplier_id " . $Sidefilter_featurewhere . " GROUP BY pf.pf_fname ORDER BY pf.pf_forder ASC";
             //print($Query1);die();
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
             if (mysqli_num_rows($rs) > 0) {
@@ -1986,6 +1986,228 @@ if (isset($_REQUEST['action'])) {
             }
 
             echo json_encode($retValue);
+            break;
+
+        case 'search_product_inner':
+            //print_r($_REQUEST);die();
+            $retValue = array();
+            $search_product_inner = "";
+            $search_keyword_case = $_REQUEST['search_keyword_case'];
+            $search_keyword_where = $_REQUEST['search_keyword_where'];
+            $search_keyword_pk_title_where = $_REQUEST['search_keyword_pk_title_where'];
+            $search_whereclause = $_REQUEST['search_whereclause'];
+            $price_without_tex_display = $_REQUEST['price_without_tex_display'];
+            $pbp_price_with_tex_display = $_REQUEST['pbp_price_with_tex_display'];
+
+            $limit = 15;
+            $start = $_REQUEST['start'] * $limit;
+            $last_record = $start;
+            $sortby = 0;
+            if (isset($_REQUEST['sortby'])) {
+                $sortby = $_REQUEST['sortby'];
+                switch ($sortby) {
+                    case 1:
+                        $order_by = "ORDER BY match_count, pro.pbp_price_amount DESC";
+                        break;
+                    case 2:
+                        $order_by = "ORDER BY match_count DESC, pro.pbp_price_amount ASC";
+                        break;
+                    case 3:
+                        $order_by = "ORDER BY match_count DESC, pro.pro_description_short ASC";
+                        break;
+                    case 4:
+                        $order_by = "ORDER BY match_count, pro.pro_description_short DESC";
+                        break;
+                    default:
+                        $order_by = "ORDER BY match_count DESC";
+                }
+            }
+            $Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' " .$search_keyword_where. " OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.pro_id = pro.pro_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND ( ".rtrim($search_keyword_pk_title_where, " OR ")." ) ) ) " . $search_whereclause . " " . $order_by . "";
+            //print($Query_search);
+            $counter = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query_search));
+            $rs = mysqli_query($GLOBALS['conn'], $Query_search. " LIMIT " . $start . ", " . $limit);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $last_record++;
+                    $sub_group_ids = explode(",", $row->sub_group_ids);
+                    $cat_id_one = $sub_group_ids[1];
+                    $cat_id_two = $sub_group_ids[0];
+                    //if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
+                    $special_price = user_special_price("supplier_id", $row->supplier_id);
+
+                    if (!$special_price) {
+                        $special_price = user_special_price("level_two", $cat_id_two);
+                    }
+
+                    if (!$special_price) {
+                        $special_price = user_special_price("level_one", $cat_id_one);
+                    }
+                    //print_r($special_price);
+                    $search_product_inner .= '<div class="pd_card">
+                        <div class="pd_image"><a href="'.product_detail_url($row->supplier_id).'" title="'.$row->pro_udx_seo_internetbezeichung.'"><img loading="lazy" src="'.get_image_link(427, $row->pg_mime_source_url).'" alt="'.$row->pro_udx_seo_internetbezeichung.'"></a></div>
+                        <div class="pd_detail">
+                            <h3 class="detail_data_show"><a href="'.product_detail_url($row->supplier_id).'" style="display:block" title="'.$row->pro_udx_seo_internetbezeichung.'" > '.$row->pro_udx_seo_internetbezeichung.' </a></h3>
+                            <h5><a href="'.product_detail_url($row->supplier_id).'" title="'.$row->pro_udx_seo_internetbezeichung.'" > '.$row->pro_udx_seo_epag_title.' </a></h5>
+                            <p>Best.-Nr.: '.$row->pro_manufacture_aid.'</p>';
+                            $count = 0;
+                            if ($row->pro_udx_seo_epag_id > 0) {
+                                $Query1 = "SELECT pf.*, pro.pro_description_short, pro.pro_udx_seo_epag_title, pro.pro_udx_seo_epag_title_params_de, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pf.pro_udx_seo_epag_id = '" . $row->pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $row->pro_udx_seo_selection_feature . "'";
+                                $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                                $count = mysqli_num_rows($rs1);
+                                if ($count > 1) {
+                                    if (mysqli_num_rows($rs1) > 0) {
+                                        $pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe');
+                $search_product_inner .= '<div class="pd_detail_shirt detail_data_show">
+                                            <h2>'.$row->pro_udx_seo_selection_feature.': <span id="color_title_'.$counter.'"> '.returnName("pf_fvalue", "products_feature", "supplier_id", $row->supplier_id, "AND pf_fname = '" . $row->pro_udx_seo_selection_feature . "'").' </span> </h2>
+                                            <ul>';
+                                                while ($row1 = mysqli_fetch_object($rs1)) {
+                            $search_product_inner .= '<li>
+                                                        <input type="radio" class="color" id="color_'.$counter.'" name="color_radio_'.$counter.'" data-id="'.$counter.'" value="'.$row1->supplier_id.'" '.($row1->supplier_id == $row->supplier_id) ? 'checked' : ''.'>
+                                                        <label for="color_'.$counter.'">
+                                                            <span style="'.((in_array($row->pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? "height: 60px;" : "height: 30px;").'">';
+                                                                if (in_array($row->pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { 
+                                        $search_product_inner .= '<img class="color_tab" id="color_tab_'.$row1->supplier_id.'" data-id="'.$counter.'" data-supplier-id="'.$row1->supplier_id.'" data-pro-description="'.$row1->pro_udx_seo_epag_title_params_de.'" src="'.get_image_link(160, $row1->pg_mime_source_url).'" title="'.$row1->pf_fvalue.'" alt="'.$row1->pf_fvalue.'">';
+                                                               } else {
+                                        $search_product_inner .= '<label for="" class="color_tab" id="color_tab_'.$row1->supplier_id.'" data-id="'.$counter.'" data-supplier-id="'.$row1->supplier_id.'" data-pro-description="'.$row1->pro_udx_seo_epag_title_params_de.'" title="'.$row1->pf_fvalue.'">'.$row1->pf_fvalue.'</label>';
+                                                                } 
+                                    $search_product_inner .= '</span>
+                                                        </label>
+                                                    </li>';
+                                                 }
+                        $search_product_inner .= '</ul>
+                                        </div>';
+                                    }
+                                }
+                            }
+                            $quantity_lenght = 0;
+                            $Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+                            //print();
+                            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                            if (mysqli_num_rows($rs1) > 0) {
+                                $row1 = mysqli_fetch_object($rs1);
+                                $pq_quantity = $row1->pq_quantity;
+                                $pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+                                $pq_status = $row1->pq_status;
+                                $ci_qty_type = 0;
+                                if($pq_status == 'true'){
+                                    $ci_qty_type = 1;
+                                }
+                                if ($pq_quantity == 0 && $pq_status == 'true') {
+                                    $quantity_lenght = $pq_upcomming_quantity;
+                                    $search_product_inner .= '<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>';
+                                } elseif ($pq_quantity > 0 && $pq_status == 'false') {
+                                    $quantity_lenght = $pq_quantity;
+                                    $search_product_inner .='<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>';
+                                } elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
+                                    $search_product_inner .='<div class="product_order_title">Auf Anfrage</div>';
+                                }
+                            } else {
+                                if ($row->pro_type > 0) {
+                                    $ci_qty_type = 0;
+                                    $quantity_lenght = 1;
+                                } else {
+                                    $search_product_inner .='<div class="product_order_title">Auf Anfrage</div>';
+                                }
+                            }
+    $search_product_inner .= '<div class="pd_rating">
+                                <ul>
+                                    <li>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                        <div class="fa fa-star"></div>
+                                    </li>
+                                </ul>
+                            </div>';
+                            if (!empty($special_price)) { 
+        $search_product_inner .= '<div class="pd_prise price_without_tex" '.$price_without_tex_display.'> '."<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>".' </div>
+                                <div class="pd_prise pbp_price_with_tex" '.$pbp_price_with_tex_display.'> '."<del>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $special_price['usp_discounted_value'], $row->pbp_tax)) . "€ <span class='pd_prise_discount_value'>" . $special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%') . "</span> </span>".' </div>';
+                                } else {
+        $search_product_inner .= '<div class="pd_prise price_without_tex" '.$price_without_tex_display.'>'.price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)).'€</div>
+                                <div class="pd_prise pbp_price_with_tex" '.$pbp_price_with_tex_display.'>'.price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount)).'€</div>';
+                             } 
+$search_product_inner .= '<div class="pd_btn">
+                            <a title="In den Warenkorb" class="'.(($quantity_lenght > 0) ? 'add_to_card' : '').'" href="javascript:void(0)" data-id="'.$row->pro_id.'">
+                                <input type="hidden" id="pro_id_'.$row->pro_id.'" name="pro_id" value="'.$row->pro_id.'">
+                                <input type="hidden" id="pro_type_'.$row->pro_id.'" name="pro_type" value="'.$row->pro_type.'">
+                                <input type="hidden" id="supplier_id_'.$row->pro_id.'" name="supplier_id" value="'.$row->supplier_id.'">
+                                <input type="hidden" id="ci_type_'.$row->pro_id.'" name="ci_type" value="0">
+                                <input type="hidden" id="ci_qty_'.$row->pro_id.'" name="ci_qty" value="1">
+                                <input type="hidden" id="ci_qty_type_'.$row->pro_id.'" name="ci_qty_type" value="'.$ci_qty_type.'">
+                                <input type="hidden" id="ci_discount_type_'.$row->pro_id.'" name="ci_discount_type" value="'.(!empty($special_price) ? $special_price['usp_price_type'] : '0').'">
+                                <input type="hidden" id="ci_discount_value_'.$row->pro_id.'" name="ci_discount_value" value="'.(!empty($special_price) ? $special_price['usp_discounted_value'] : '0').'">
+                                <div class="gerenric_btn">In den Warenkorb</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>';
+            }
+            $search_product_inner .= '
+                <script>
+                    $(document).ready(function() {
+                        $(".click_list").click(function() {
+                            $(".list_porduct").addClass("list_class");
+                            $(".detail_data_show").show();
+                            $(".pd_image").css("height", "100%");
+                        });
+                        $(".click_th").click(function() {
+                            $(".list_porduct").removeClass("list_class");
+                            $(".detail_data_show").hide();
+                            $(".pd_image").css("height", "");
+                        });
+                    });
+                    $(".add_to_card").on("click", function(){
+                        //console.log("add_to_card");
+                        let pro_id = $("#pro_id_"+$(this).attr("data-id")).val();
+                        let pro_type = $("#pro_type_"+$(this).attr("data-id")).val();
+                        let supplier_id = $("#supplier_id_"+$(this).attr("data-id")).val();
+                        let ci_type = $("#ci_type_"+$(this).attr("data-id")).val();
+                        let ci_discount_type = $("#ci_discount_type_"+$(this).attr("data-id")).val();
+                        let ci_discount_value = $("#ci_discount_value_"+$(this).attr("data-id")).val();
+                        let ci_qty = $("#ci_qty_"+$(this).attr("data-id")).val();
+                        let ci_qty_type = $("#ci_qty_type_"+$(this).attr("data-id")).val();
+
+                        /*console.log("pro_type: "+pro_type);
+                        console.log("supplier_id: "+supplier_id);
+                        console.log("ci_qty: "+ci_qty);*/
+
+                        $.ajax({
+                            url: "ajax_calls.php?action=add_to_card",
+                            method: "POST",
+                            data: {
+                                pro_id: pro_id,
+                                pro_type: pro_type,
+                                supplier_id: supplier_id,
+                                ci_type: ci_type,
+                                ci_discount_type: ci_discount_type,
+                                ci_discount_value: ci_discount_value,
+                                ci_qty: ci_qty,
+                                ci_qty_type: ci_qty_type
+                            },
+                            success: function(response) {
+                                //console.log("response = "+response);
+                                const obj = JSON.parse(response);
+                                //console.log(obj);
+                                if(obj.status == 1){
+                                    $("#header_quantity").text(obj.count+" items");
+                                    $(".side_cart_click").trigger("click");
+                                }
+                            }
+                        });
+                    });
+                    
+                </script>';
+            $retValue = array("status" => "1", "message" => "Record found", "search_product_inner" => $search_product_inner, "counter" => $counter, "last_record" => $last_record, "search_product_inner_page" => ($_REQUEST['start'] + 1) );
+            } else {
+                //print("Leerer Eintrag!");
+                $retValue = array(
+                    "status" => "0",
+                    "message" => "Record nor found!",
+                    "search_product_inner" => "<p class='txt_align_center'>Leerer Eintrag!</p>"
+                );
+            }
+             echo json_encode($retValue);
             break;
     }
 }

@@ -35,7 +35,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li id="switch_click_text"><?php print($switch_click_text); ?></li>
         </ul>
         <ul>
-            <li><a href="über-uns" title="Über uns">Über Wacker 24</a></li>
+            <li><a href="über-uns" title="Über uns">Über Deskup</a></li>
             <li><a href="kontakt" title="Kontaktformular">Kontakt</a></li>
             <li>
                 <div class="header_language">
@@ -143,7 +143,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 <li><a title="verkäufe-angebote" href="verkaeufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
-                <div class="nav_submenu_logo"><a title="logo" href="index.php"><img src="images/logo.png" alt="logo"></a>
+                <div class="nav_submenu_logo" <?php print($background_color_two); ?> ><a title="logo" href="index.php"><img src="<?php print(config_site_logo) ?>" alt="logo"></a>
                     <div class="submenu_close"><i class="fa fa-close"></i> </div>
                 </div>
                 <ul>

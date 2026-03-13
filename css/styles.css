@@ -539,7 +539,6 @@ body.body-white {
 .tab_radio_button,
 .tab_radio_button .tab_radio_col label {
     display: flex;
-    flex-direction: column;
     gap: 10px;
     border-radius: 5px;
     width: 100%;
@@ -567,11 +566,13 @@ body.body-white {
 }
 
 .tab_radio_button .tab_radio_col {
-    margin-right: 20px
+    width: 120px;
+    margin-right: 20px;
 }
 
 .tab_radio_button .tab_radio_col label {
     justify-content: center;
+    align-items: center;
     position: relative;
     padding: 0 5px;
     border: 1px solid #ccc;
@@ -1372,7 +1373,7 @@ body.body-white {
 }
 
 #header_section .header_bottom .tint_toner_logo {
-    width: 75px
+    width: 25px
 }
 
 #header_section .header_bottom .tint_toner_txt {
@@ -1469,7 +1470,6 @@ body.body-white {
     font-weight: 500
 }
 
-.availability_inner_check,
 .popup_inner_container p {
     font-size: 14px;
     color: #000
@@ -4673,7 +4673,7 @@ body.body-white {
 .category_type_product .ctg_type_image {
     width: 100%;
     text-align: center;
-    height: 175px;
+    height: 130px;
     margin-bottom: 10px
 }
 
@@ -5381,4 +5381,30 @@ body.body-white {
     justify-content: center;
     gap: 10px;
     cursor: pointer
+}
+
+.availability_inner_check {
+    font-size: 14px;
+    color: #000
+}
+
+.password_field {
+    position: relative;
+}
+
+.password_field input{padding: 6px 35px 6px 15px;}
+
+.password_field i {
+    font-size: 20px;
+    position: absolute;
+    top: 10px;
+    right: 5px;
+    color: #000 !important;
+    cursor: pointer;
+}
+
+.login_logo:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 18px rgba(144, 255, 33, 0.4);
+    border-color: #20ff20d1;
 }
