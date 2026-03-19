@@ -268,11 +268,9 @@ include("includes/message.php");
 		//console.log("utype_id: "+utype_id);
 		if (utype_id == 4) {
 			$("#user_company_name").attr("required", true);
-			$("#user_tax_no").attr("required", true);
 			$('#user_company_input').show();
 		} else {
 			$("#user_company_name").attr("required", false);
-			$("#user_tax_no").attr("required", false);
 			$('#user_company_input').hide();
 		}
 	});

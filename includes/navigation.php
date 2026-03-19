@@ -70,9 +70,9 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             </a>
             <div class="header_account">
                 <ul>
-                    <li><a href="termine" title="termine">
+                    <!--<li><a href="termine" title="termine">
                             <div class="appointment_booking"><i class="fa fa-check-square-o"></i> Terminbuchung</div>
-                        </a></li>
+                        </a></li>-->
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user"></i> </div>
                         <div class="hdr_text">
