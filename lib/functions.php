@@ -1767,6 +1767,36 @@ function DeleteFile2($Field, $Table, $IDField, $ID, $path)
 		@unlink($tPath);
 	}
 }
+
+function deleteDirectory($dir) {
+    // Check if directory exists
+    if (!file_exists($dir)) {
+        return false;
+    }
+
+    // If it's a file, delete it directly
+    if (!is_dir($dir)) {
+        return unlink($dir);
+    }
+
+    // Scan directory
+    $files = scandir($dir);
+
+    foreach ($files as $file) {
+        if ($file != '.' && $file != '..') {
+            $fullPath = $dir . '/' . $file;
+
+            if (is_dir($fullPath)) {
+                deleteDirectory($fullPath); // recursive
+            } else {
+                unlink($fullPath); // delete file
+            }
+        }
+    }
+
+    // Remove the empty directory
+    return rmdir($dir);
+}
 function Fill($Table, $IDField, $TextField, $chkSelected)
 {
 	$strQuery = "SELECT $IDField, $TextField FROM $Table ORDER BY $IDField";

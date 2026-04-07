@@ -11,20 +11,20 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $pro_id = getMaximum("products", "pro_id");
         mysqli_query($GLOBALS['conn'], "INSERT INTO category_map (cat_id, supplier_id, sub_group_ids) VALUES ('" . dbStr(trim($_REQUEST['level_three_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "')") or die(mysqli_error($GLOBALS['conn']));
-        mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_custom_add, pro_status, manf_id, supplier_id, pro_ean, pro_manufacture_aid, pro_description_short, pro_description_long, pro_udx_seo_internetbezeichung, pro_udx_seo_internetbezeichung_params_de, pro_udx_seo_epag_title, pro_udx_seo_epag_title_params_de, pro_udx_manufacturer_address, pro_udx_manufacturer_mail, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '1', '0', '" . dbStr(trim($_REQUEST['manf_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['pro_ean'])) . "', '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '".dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung']))))."', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '".dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung']))))."', '".dbStr(trim($_REQUEST['pro_udx_manufacturer_address']))."', '".dbStr(trim($_REQUEST['pro_udx_manufacturer_mail']))."', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_custom_add, pro_status, manf_id, supplier_id, pro_ean, pro_manufacture_aid, pro_description_short, pro_description_long, pro_udx_seo_internetbezeichung, pro_udx_seo_internetbezeichung_params_de, pro_udx_seo_epag_title, pro_udx_seo_epag_title_params_de, pro_udx_manufacturer_address, pro_udx_manufacturer_mail, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '1', '0', '" . dbStr(trim($_REQUEST['manf_id'])) . "', '" . dbStr(trim($_REQUEST['supplier_id'])) . "', '" . dbStr(trim($_REQUEST['pro_ean'])) . "', '" . dbStr(trim($_REQUEST['pro_manufacture_aid'])) . "', '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '" . dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung'])))) . "', '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', '" . dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung'])))) . "', '" . dbStr(trim($_REQUEST['pro_udx_manufacturer_address'])) . "', '" . dbStr(trim($_REQUEST['pro_udx_manufacturer_mail'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
     //print_r($_REQUEST);die();
-    $Query = "SELECT * FROM `products` WHERE supplier_id ='" . dbStr(trim($_REQUEST['supplier_id'])) . "' AND pro_id != '".$_REQUEST['pro_id']."' ";
+    $Query = "SELECT * FROM `products` WHERE supplier_id ='" . dbStr(trim($_REQUEST['supplier_id'])) . "' AND pro_id != '" . $_REQUEST['pro_id'] . "' ";
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {
 
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=4");
     } else {
         $old_supplier_id = returnName("supplier_id", "products", "pro_id", $_REQUEST['pro_id']);
-        mysqli_query($GLOBALS['conn'], "UPDATE category_map SET cat_id = '" . dbStr(trim($_REQUEST['level_three_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', sub_group_ids = '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "'  WHERE supplier_id='" . $old_supplier_id."'") or die(mysqli_error($GLOBALS['conn']));
-        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '" . dbStr(trim($_REQUEST['manf_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', pro_ean = '" . dbStr(trim($_REQUEST['pro_ean'])) . "', pro_manufacture_aid = '".dbStr(trim($_REQUEST['pro_manufacture_aid']))."', pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', pro_description_long = '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_udx_seo_internetbezeichung_params_de = '".dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung']))))."', pro_udx_seo_epag_title = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_udx_seo_epag_title_params_de = '".dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung']))))."', pro_udx_manufacturer_address = '".dbStr(trim($_REQUEST['pro_udx_manufacturer_address']))."', pro_udx_manufacturer_mail = '".dbStr(trim($_REQUEST['pro_udx_manufacturer_mail']))."', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE category_map SET cat_id = '" . dbStr(trim($_REQUEST['level_three_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', sub_group_ids = '" . dbStr(trim($_REQUEST['level_two_id'] . "," . $_REQUEST['level_one_id'])) . "'  WHERE supplier_id='" . $old_supplier_id . "'") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE products SET manf_id = '" . dbStr(trim($_REQUEST['manf_id'])) . "', supplier_id = '" . dbStr(trim($_REQUEST['supplier_id'])) . "', pro_ean = '" . dbStr(trim($_REQUEST['pro_ean'])) . "', pro_manufacture_aid = '" . dbStr(trim($_REQUEST['pro_manufacture_aid'])) . "', pro_description_short = '" . dbStr(trim($_REQUEST['pro_description_short'])) . "', pro_description_long = '" . dbStr(trim($_REQUEST['pro_description_long'])) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_udx_seo_internetbezeichung_params_de = '" . dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung'])))) . "', pro_udx_seo_epag_title = '" . dbStr(trim($_REQUEST['pro_udx_seo_internetbezeichung'])) . "', pro_udx_seo_epag_title_params_de = '" . dbStr(url_clean(trim(preg_replace('/\s+/', ' ', $_REQUEST['pro_udx_seo_internetbezeichung'])))) . "', pro_udx_manufacturer_address = '" . dbStr(trim($_REQUEST['pro_udx_manufacturer_address'])) . "', pro_udx_manufacturer_mail = '" . dbStr(trim($_REQUEST['pro_udx_manufacturer_mail'])) . "', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id=" . $_REQUEST['pro_id']) or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
     }
 } elseif (isset($_REQUEST['action'])) {
@@ -48,6 +48,22 @@ if (isset($_REQUEST['btnAdd'])) {
             $readonly = "readonly";
             $formHead = "Update Info";
         }
+    } elseif ($_REQUEST['action'] == 'btnDeleteProduct') {
+        //print_r($_REQUEST);die();
+        $pg_id = returnName("pg_id", "products_gallery", "supplier_id", $_REQUEST['supplier_id']);
+        if(!empty($pg_id) || $pg_id > 0){
+            $dirName = "../files/products_gallery/" . $_REQUEST['supplier_id'] . "/";
+            deleteDirectory($dirName);
+        }
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `category_map_subgroups` WHERE supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `category_map` WHERE supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `products_quantity` WHERE supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `products_keyword` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `products_gallery` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `products_feature` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `products_bundle_price` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        mysqli_query($GLOBALS['conn'], "DELETE FROM `products` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'");
+        header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=5");
     } else {
         $supplier_id = "";
         $manf_id = "";
@@ -92,6 +108,8 @@ if (isset($_REQUEST['btnInactive'])) {
         $strMSG = "Please Select Alteast One Checkbox";
     }
 }
+//--------------Button InActive--------------------
+
 
 
 include("includes/messages.php");
@@ -258,6 +276,7 @@ include("includes/messages.php");
                                             if (!empty($row->pg_mime_source_url)) {
                                                 $image_path = $GLOBALS['siteURL'] . $row->pg_mime_source_url;
                                             }
+                                            $oi_id = returnName("oi_id", "order_items", "supplier_id", $row->supplier_id);
                                     ?>
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pro_id); ?>"></td>
@@ -325,13 +344,16 @@ include("includes/messages.php");
                                                     ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'].product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'] . product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                     <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto" title="Add Product Bundle Price" onClick="javascript: window.location = '<?php print("manage_products_bundle_price.php?action=1&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">payments</span></button>
                                                     <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto mt-2" title="Add Product Feature" onClick="javascript: window.location = '<?php print("manage_products_feature.php?action=1&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">featured_play_list</span></button>
                                                     <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto mt-2" title="Add Product Keyword" onClick="javascript: window.location = '<?php print("manage_products_keyword.php?action=1&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">tag</span></button>
                                                     <button type="button" class="btn btn-xs btn-success btn-style-light w-auto mt-2" title="Add Product Quantity" onClick="javascript: window.location = '<?php print("manage_products_quantity.php?action=1&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">production_quantity_limits</span></button>
                                                     <button type="button" class="btn btn-xs btn-warning btn-style-light w-auto mt-2" title="Add Product Gallery" onClick="javascript: window.location = '<?php print("manage_products_gallery.php?action=1&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">image</span></button>
+                                                    <?php if (empty($oi_id) || $oi_id == 0) { ?>
+                                                        <button type="button" class="btn btn-xs btn-danger btn-style-light w-auto mt-2" title="Delete Product" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=btnDeleteProduct&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">delete</span></button>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                     <?php

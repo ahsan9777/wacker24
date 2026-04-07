@@ -1,4 +1,4 @@
-<div id="scroll_top" <?php print($background_color_two); ?> >Zurück zum Seitenanfang</div>
+<div id="scroll_top" <?php print($background_color_two); ?>>Zurück zum Seitenanfang</div>
 <footer id="footer_section" <?php print($background_color_one); ?>>
     <div class="page_width">
         <div class="footer_top">
@@ -12,7 +12,7 @@
                         <h2><?php print($row1->footer_title); ?></h2>
                         <ul>
                             <?php
-                            $Query2 = "SELECT cnt_id, cnt_slug, cnt_title_de AS cnt_title FROM contents WHERE cnt_status = '1' AND footer_id = '".$row1->footer_id."' ORDER BY cnt_orderby ASC";
+                            $Query2 = "SELECT cnt_id, cnt_slug, cnt_title_de AS cnt_title FROM contents WHERE cnt_status = '1' AND footer_id = '" . $row1->footer_id . "' ORDER BY cnt_orderby ASC";
                             $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                             if (mysqli_num_rows($rs2) > 0) {
                                 while ($row2 = mysqli_fetch_object($rs2)) {
@@ -65,10 +65,21 @@
             <div class="footer_btm_left">
                 <div class="social_medial">
                     <ul>
-                        <li><a title="Youtube" href="#" role="button" onclick="return false;" aria-label="Youtube"><img src="images/youtube_icon.webp" alt=""></a></li>
-                        <li><a title="Facebook" href="#" role="button" onclick="return false;" aria-label="Facebook"><img src="images/facebook_icon.webp" alt=""></a></li>
-                        <li><a title="Twitter" href="#" role="button" onclick="return false;" aria-label="Twitter" ><img src="images/twitter_icon.webp" alt=""></a></li>
-                        <li><a title="Instagram" href="#" role="button" onclick="return false;" aria-label="Instagram" ><img src="images/instagram_icon.webp" alt=""></a></li>
+                        <?php
+                        $Query = "SELECT * FROM social_links WHERE sl_status = '1' ORDER BY sl_orderby ASC";
+                        $rs = mysqli_query($GLOBALS['conn'], $Query);
+                        if (mysqli_num_rows($rs) > 0) {
+                            while ($row = mysqli_fetch_object($rs)) {
+                                $image_path = "files/no_img_1.jpg";
+                                if (!empty($row->sl_icon)) {
+                                    $image_path = $GLOBALS['siteURL'] . "files/social_media_icons/" . $row->sl_icon;
+                                }
+                        ?>
+                                <li><a target="_blank" title="<?php print($row->sl_title); ?>" href="<?php print($row->sl_url); ?>" aria-label="<?php print($row->sl_title); ?>"><img src="<?php print($image_path); ?>" alt=""></a></li>
+                        <?php
+                            }
+                        }
+                        ?>
                     </ul>
                 </div>
             </div>
