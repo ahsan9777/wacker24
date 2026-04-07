@@ -163,7 +163,7 @@ include("includes/message.php");
 											<div class="form_field"><input type="text" name="user_company_name" id="user_company_name" value="<?php print($user_company_name); ?>" class="gerenric_input"></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">USt-IdNr *</div>
+											<div class="form_label">USt-IdNr </div>
 											<div class="form_field"><input type="text" name="user_tax_no" id="user_tax_no" value="<?php print($user_tax_no); ?>" class="gerenric_input"></div>
 										</div>
 									</div>
@@ -274,11 +274,11 @@ include("includes/message.php");
 		//console.log("utype_id: "+utype_id);
 		if (utype_id == 4) {
 			$("#user_company_name").attr("required", true);
-			$("#user_tax_no").attr("required", true);
+			//$("#user_tax_no").attr("required", true);
 			$('#user_company_input').show();
 		} else {
 			$("#user_company_name").attr("required", false);
-			$("#user_tax_no").attr("required", false);
+			//$("#user_tax_no").attr("required", false);
 			$('#user_company_input').hide();
 		}
 	});

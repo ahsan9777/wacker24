@@ -157,7 +157,7 @@ include("includes/message.php");
 											<div class="form_field"><input type="text" name="user_company_name" id="user_company_name" value="<?php print($user_company_name); ?>" class="gerenric_input"></div>
 										</div>
 										<div class="form_right">
-											<div class="form_label">USt-IdNr *</div>
+											<div class="form_label">USt-IdNr </div>
 											<div class="form_field"><input type="text" name="user_tax_no" id="user_tax_no" value="<?php print($user_tax_no); ?>" class="gerenric_input"></div>
 										</div>
 									</div>
