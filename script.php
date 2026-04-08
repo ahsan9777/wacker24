@@ -371,7 +371,8 @@ if (isset($_REQUEST['action'])) {
             if (mysqli_num_rows($rs) > 0) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $lov_sf_id = $row->lov_sf_id;
-                    $lov_sf_params_de = url_clean($row->lov_sf_title);
+                    $lov_sf_params_de = convertGermanChars($row->lov_sf_title);
+                    $lov_sf_params_de = url_clean($lov_sf_params_de);
 
                     mysqli_query($GLOBALS['conn'], "UPDATE lov_side_filter SET lov_sf_params_de = '" . dbStr(trim($lov_sf_params_de)) . "' WHERE lov_sf_id = '" . $lov_sf_id . "' ") or die(mysqli_error($GLOBALS['conn']));
                     $counter++;

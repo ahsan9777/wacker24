@@ -9,11 +9,11 @@ if (isset($_REQUEST['group_id']) && $_REQUEST['group_id'] > 0) {
     $cat_title = ": ".returnName("cat_title_de AS cat_title", "category", "group_id", $group_id);
     $qryStrURL = "group_id=" . $group_id . "&";
     if(strlen($group_id) == 2){
-        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE cm.cat_id_level_one = '".$group_id."' ) )";
+        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('".$group_id."', cm.sub_group_ids) ) )";
     } elseif(strlen($group_id) == 3){
-        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE cm.cat_id_level_two = '".$group_id."' ) )";
+        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('".$group_id."', cm.sub_group_ids) ) )";
     } elseif(strlen($group_id) > 3){
-        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE cm.cat_id = '".$group_id."' ) )";
+        $side_filer_dropdown_query = "AND lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE FIND_IN_SET('".$group_id."', cm.cat_id) ) )";
     }
 }
 if (isset($_REQUEST['btnAdd'])) {
@@ -242,16 +242,16 @@ include("includes/messages.php");
 
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnDelete" value="Delete" class="btn btn-danger btn-style-light w-100" onclick="return confirm('Are you sure you want to delete selected item(s)?');">
+                                    <input type="submit" name="btnDelete" value="Delete" class="btn btn-danger btn-style-light w-auto" onclick="return confirm('Are you sure you want to delete selected item(s)?');">
                                 </div>
                                 <div class=" col-md-2 col-12 mt-2">
-                                    <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-autÜ">
+                                    <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
                                 </div>
                             </div>
                         </form>
