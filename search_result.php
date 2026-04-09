@@ -213,6 +213,20 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 											<div></div>
 										</div>
 									</div>
+									<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -307,7 +321,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 	});
 
 	function search_product_inner() {
-		//$("#search_product_inner_spinner").show();
+		$("#btn_load_spinner").show();
 		let start = $("#search_product_inner_page").val();
 		let sortby = $("#sort_by_selected").val();
 		let search_keyword = "<?php print($_REQUEST['search_keyword']); ?>";
@@ -334,8 +348,9 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			success: function(response) {
 				//console.log("response = "+response);
 				const obj = JSON.parse(response);
-				console.log(obj);
+				//console.log(obj);
 				if (obj.status == 1) {
+					$("#btn_load_spinner").hide();
 					$("#search_product_inner_spinner").hide();
 				    $("#search_product_counter").text(obj.counter);
 				    $("#search_product_inner_page").val(obj.search_product_inner_page);
