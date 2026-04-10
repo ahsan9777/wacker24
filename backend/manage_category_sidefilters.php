@@ -201,7 +201,7 @@ include("includes/messages.php");
                                                 <td><?php print($row->lov_sf_title); ?></td>
                                                 <td>
                                                     <input type="hidden" name="csf_id[]" id="csf_id" value="<?php print($row->csf_id); ?>">
-                                                    <input type="number" class="input_style" name="csf_orderby[]" id="csf_orderby" value="<?php print($row->csf_orderby); ?>">
+                                                    <input type="number" class="input_style" name="csf_orderby[]" id="csf_orderby" value="<?php print($row->csf_orderby); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;}" onclick="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;}" min="0" >
                                                 </td>
                                                 <td>
                                                     <?php

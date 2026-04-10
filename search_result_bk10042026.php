@@ -47,31 +47,16 @@ if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) 
 		for ($i = 0; $i < count($search_keyword_array); $i++) {
 			$search_keyword_array_data = "";
 			if (!empty($search_keyword_array[$i])) {
-				//$value = $search_keyword_array[$i];
-				if (is_numeric($search_keyword_array[$i])) {
-					$search_keyword_case .= "(CASE WHEN pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($search_keyword_array[$i])) . "([^0-9]|$)' THEN 3 ELSE 0 END) + ";
-					$search_keyword_bonus_case .= (!empty($search_keyword_bonus_case) ? " AND " : "")."(pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR pro.pro_manufacture_aid  LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' ) ";
-				} else {
-					$search_keyword_case .= "(CASE WHEN pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($search_keyword_array[$i])) . "([^a-zA-Z]|$)' THEN 3 ELSE 0 END) + ";
-					$search_keyword_bonus_case .= (!empty($search_keyword_bonus_case) ? " AND " : "")."(pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($search_keyword_array[$i])) . "([^a-zA-Z]|$)' OR pro.pro_manufacture_aid  REGEXP '(^|[^a-zA-Z])" . dbStr(trim($search_keyword_array[$i])) . "([^a-zA-Z]|$)' ) ";
-				}
-				//$search_keyword_case .= "(CASE WHEN pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' THEN 3 ELSE 0 END) + ";
-				//$search_keyword_bonus_case .= (!empty($search_keyword_bonus_case) ? " AND " : "")."(pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR pro.pro_manufacture_aid  LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' ) ";
+				$search_keyword_case .= "(CASE WHEN pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' THEN 3 ELSE 0 END) + ";
+				$search_keyword_bonus_case .= (!empty($search_keyword_bonus_case) ? " AND " : "")."(pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR pro.pro_manufacture_aid  LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' ) ";
 				$search_keyword_where .= (!empty($search_keyword_where) ? "OR" : ""). " pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%'";
 				$search_keyword_pk_title_where .= "pf.pf_fvalue LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
 			}
 		}
 		$search_keyword_case .= "(CASE WHEN ".$search_keyword_bonus_case." THEN 5 ELSE 0 END)";
 	} else {
-		if (is_numeric($result['corrected'])) {
-			$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($result['corrected'])) . "([^0-9]|$)' THEN 3 ELSE 0 END) + ";
-			$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($result['corrected'])) . "([^0-9]|$)' OR pro.pro_manufacture_aid REGEXP '(^|[^0-9])" . dbStr(trim($result['corrected'])) . "([^0-9]|$)' THEN 5 ELSE 0 END) ";
-		} else {
-			$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($result['corrected'])) . "([^a-zA-Z]|$)' THEN 3 ELSE 0 END) + ";
-			$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($result['corrected'])) . "([^a-zA-Z]|$)' OR pro.pro_manufacture_aid REGEXP '(^|[^a-zA-Z])" . dbStr(trim($result['corrected'])) . "([^a-zA-Z]|$)' THEN 5 ELSE 0 END) ";
-		}
-		//$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' THEN 3 ELSE 0 END) + ";
-		//$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' OR pro.pro_manufacture_aid LIKE '" . dbStr(trim($result['corrected'])) . "%' THEN 5 ELSE 0 END) ";
+		$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' THEN 3 ELSE 0 END) + ";
+		$search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title LIKE '" . dbStr(trim($result['corrected'])) . "%' OR pro.pro_manufacture_aid LIKE '" . dbStr(trim($result['corrected'])) . "%' THEN 5 ELSE 0 END) ";
 		$search_keyword_where = " pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($result['corrected'])) . "%' ";
 		$search_keyword_pk_title_where = "pf.pf_fvalue LIKE '%" . dbStr(trim($result['corrected'])) . "%' OR ";
 	}

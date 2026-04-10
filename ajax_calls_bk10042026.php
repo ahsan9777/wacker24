@@ -24,49 +24,15 @@ if (isset($_REQUEST['action'])) {
                 if ($_REQUEST['level_one'] > 0) {
                     $where .= " AND pro.supplier_id IN (SELECT cm.supplier_id FROM category_map AS cm WHERE FIND_IN_SET(" . dbStr(trim($_REQUEST['level_one'])) . ", cm.sub_group_ids)) ";
                 }
-                $search_keyword_case = "";
-                $search_keyword_bonus_case = "";
-                $search_keyword_array = explode(" ", trim(str_replace("-", " ", $_REQUEST['term'])));
-                $where .= " AND ( ";
-                if (count($search_keyword_array) > 1) {
-                    for ($i = 0; $i < count($search_keyword_array); $i++) {
-                        if (!empty($search_keyword_array[$i])) {
-                            if (is_numeric($search_keyword_array[$i])) {
-                                
-                                $search_keyword_case .= "(CASE WHEN pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($search_keyword_array[$i])) . "([^0-9]|$)' THEN 3 ELSE 0 END) + ";
-                                $search_keyword_bonus_case .= (!empty($search_keyword_bonus_case) ? " AND " : "")."(pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($search_keyword_array[$i])) . "([^0-9]|$)' OR pro.pro_manufacture_aid REGEXP '(^|[^0-9])" . dbStr(trim($search_keyword_array[$i])) . "([^0-9]|$)' ) ";
-                            } else {
-                                
-                            $search_keyword_case .= "(CASE WHEN pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($search_keyword_array[$i])) . "([^a-zA-Z]|$)' THEN 3 ELSE 0 END) + ";
-					        $search_keyword_bonus_case .= (!empty($search_keyword_bonus_case) ? " AND " : "")."(pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($search_keyword_array[$i])) . "([^a-zA-Z]|$)' ) ";
-                            }
-                            $where .= " pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($search_keyword_array[$i])) . "%' OR ";
-                        }
-                    }
-                    $search_keyword_case .= "(CASE WHEN ".$search_keyword_bonus_case." THEN 5 ELSE 0 END)";
-                } else {
-                    if(is_numeric($_REQUEST['term'])) {
-                        
-                        $search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($_REQUEST['term'])) . "([^0-9]|$)' THEN 3 ELSE 0 END) + ";
-                        $search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^0-9])" . dbStr(trim($_REQUEST['term'])) . "([^0-9]|$)' THEN 5 ELSE 0 END) ";
-                    } else {
-                        
-                    $search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($_REQUEST['term'])) . "([^a-zA-Z]|$)' THEN 3 ELSE 0 END) + ";
-			        $search_keyword_case .= "(CASE WHEN  pro.pro_udx_seo_epag_title REGEXP '(^|[^a-zA-Z])" . dbStr(trim($_REQUEST['term'])) . "([^a-zA-Z]|$)' THEN 5 ELSE 0 END) ";
-                    } 
-                    $where .= " pro.pro_udx_seo_epag_title LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR ";
-                }
-                $where = rtrim($where, " OR ");
-                //$where .= " OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '3' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ) )";
-                $where .= " OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  )";
+                $where .= " AND ( pro.pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'  OR pro.pro_ean LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro.supplier_id IN (SELECT pf.supplier_id FROM products_feature AS pf WHERE pf.pf_forder = '3' AND pf.pf_fvalue LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ) )";
             }
-            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short, pro_udx_seo_epag_title, (".$search_keyword_case.") AS match_count FROM products AS pro " . $where . " AND pro.pro_status = '1' ORDER BY match_count DESC  LIMIT 0,10";
+            $Query = "SELECT pro.pro_id, pro.supplier_id, pro.pro_description_short, pro_udx_seo_internetbezeichung FROM products AS pro " . $where . " AND pro.pro_status = '1' ORDER BY pro.pro_id  LIMIT 0,10";
             $rs = mysqli_query($GLOBALS['conn'], $Query);
             while ($row = mysqli_fetch_object($rs)) {
                 $json[] = array(
                     'pro_id' => strip_tags(html_entity_decode($row->pro_id, ENT_QUOTES, 'UTF-8')),
                     'supplier_id' => strip_tags(html_entity_decode($row->supplier_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->pro_udx_seo_epag_title, ENT_QUOTES, 'UTF-8'))
+                    'value' => strip_tags(html_entity_decode($row->pro_udx_seo_internetbezeichung, ENT_QUOTES, 'UTF-8'))
                 );
             }
             $jsonResults = json_encode($json);
@@ -2058,7 +2024,7 @@ if (isset($_REQUEST['action'])) {
             }
             //$Query_search = "SELECT pro.*, (" . rtrim($search_keyword_case, " + ") . ") AS match_count FROM vu_products AS pro WHERE (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' " .$search_keyword_where. " OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.pro_id = pro.pro_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND ( ".rtrim($search_keyword_pk_title_where, " OR ")." ) ) ) " . $search_whereclause . " " . $order_by . "";
             $Query_search = "SELECT pro.*, (" .$search_keyword_case. ") AS match_count FROM vu_products AS pro WHERE (pro.supplier_id = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR pro.pro_manufacture_aid LIKE '%" . dbStr(trim($_REQUEST['search_keyword'])) . "%' OR pro.pro_ean = '" . dbStr(trim($_REQUEST['search_keyword'])) . "' OR " .$search_keyword_where. " OR EXISTS ( SELECT 1 FROM products_feature AS pf WHERE pf.pro_id = pro.pro_id AND pf.pf_fname = 'Verwendung für Druckertyp' AND ( ".rtrim($search_keyword_pk_title_where, " OR ")." ) ) ) " . $search_whereclause . " " . $order_by . "";
-            //print($Query_search);
+            print($Query_search);
             $counter = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query_search));
             $rs = mysqli_query($GLOBALS['conn'], $Query_search. " LIMIT " . $start . ", " . $limit);
             if (mysqli_num_rows($rs) > 0) {

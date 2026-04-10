@@ -521,5 +521,81 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record updated: " . $counter);
             }
             break;
+
+        case 'category_side_filter_level_two':
+            print("category_side_filter_level_two");die();
+            
+            $array = range(11, 20);
+            //$index = 2;
+            //print_r($array);die();
+            for ($index = 0; $index < count($array); $index++) {
+                $counter = 0;
+                $Query = "SELECT * FROM category AS c WHERE c.parent_id = '".$array[$index]."'";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $group_id = $row->group_id;
+                        $parent_id = $row->parent_id;
+                        $insert_counter = 0;
+                        $Query1 = "SELECT * FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS lsf ON lsf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id = '".$parent_id."' AND lsf.lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE cm.cat_id_level_two = '".$group_id."' ) ) ";
+                        //print($Query1);die();
+                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                        if (mysqli_num_rows($rs1) > 0) {
+                            while ($row1 = mysqli_fetch_object($rs1)) {
+        
+                            $lov_sf_id = $row1->lov_sf_id;
+                            //print("<br>lov_sf_id: ".$lov_sf_id." ");
+                            $csf_id = getMaximum("category_side_filter", "csf_id");
+                            $insert_query = "INSERT INTO category_side_filter (csf_id, group_id, lov_sf_id, csf_level) VALUES ('".$csf_id."', '".$group_id ."', '".$lov_sf_id."', '".$parent_id."')";
+                            //print($parent_id.": ".$group_id."<br>");
+                            mysqli_query($GLOBALS['conn'], $insert_query) or die(mysqli_error($GLOBALS['conn']).$insert_query);
+                            $insert_counter++;
+                            }
+                        }
+                        print("<br>".$group_id.": Total no of record insert: " . $insert_counter);
+                        $counter++;
+                    }
+                    print("<br><br>".$array[$index].": Total no of record: " . $counter."<br>");
+                }
+            }
+            break;
+
+        case 'category_side_filter_level_three':
+            print("category_side_filter_level_three");die();
+            
+            $array = range(11, 20);
+            //$index = 2;
+            //print_r($array);die();
+            for ($index = 0; $index < count($array); $index++) {
+                $counter = 0;
+                $Query = "SELECT c.parent_id, sub_cat.parent_id AS sub_parent_id, sub_cat.group_id AS sub_group_id FROM category AS c INNER JOIN category AS sub_cat ON sub_cat.parent_id = c.group_id WHERE c.parent_id = '".$array[$index]."'";
+                $rs = mysqli_query($GLOBALS['conn'], $Query);
+                if (mysqli_num_rows($rs) > 0) {
+                    while ($row = mysqli_fetch_object($rs)) {
+                        $group_id = $row->sub_group_id;
+                        $parent_id = $row->sub_parent_id;
+                        $insert_counter = 0;
+                        $Query1 = "SELECT * FROM category_side_filter AS csf LEFT OUTER JOIN lov_side_filter AS lsf ON lsf.lov_sf_id = csf.lov_sf_id WHERE csf.group_id = '".$parent_id."' AND lsf.lov_sf_params_de IN (SELECT pf.pf_fname_params_de FROM products_feature AS pf WHERE pf.supplier_id IN ( SELECT cm.supplier_id FROM vu_category_map AS cm WHERE cm.cat_id = '".$group_id."' ) ) ";
+                        //print($Query1);die();
+                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                        if (mysqli_num_rows($rs1) > 0) {
+                            while ($row1 = mysqli_fetch_object($rs1)) {
+        
+                            $lov_sf_id = $row1->lov_sf_id;
+                            //print("<br>lov_sf_id: ".$lov_sf_id." ");
+                            $csf_id = getMaximum("category_side_filter", "csf_id");
+                            $insert_query = "INSERT INTO category_side_filter (csf_id, group_id, lov_sf_id, csf_level) VALUES ('".$csf_id."', '".$group_id ."', '".$lov_sf_id."', '".$parent_id."')";
+                            //print($parent_id.": ".$group_id."<br>");
+                            mysqli_query($GLOBALS['conn'], $insert_query) or die(mysqli_error($GLOBALS['conn']).$insert_query);
+                            $insert_counter++;
+                            }
+                        }
+                        print("<br>".$group_id.": Total no of record insert: " . $insert_counter);
+                        $counter++;
+                    }
+                    print("<br><br>".$array[$index].": Total no of record: " . $counter."<br>");
+                }
+            }
+            break;
     }
 }
