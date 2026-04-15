@@ -55,7 +55,7 @@ if (isset($_POST['btnLogin'])) {
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="./assets/images/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wacker 24 Backend Control Panel</title>
+    <title>Deskup Backend Control Panel</title>
     <link rel="stylesheet" href="./assets/style/styles.css">
     <link rel="stylesheet" href="./assets/style/scrollbar.css">
     <link rel="stylesheet" href="./assets/style/responsive.css">
@@ -66,7 +66,7 @@ if (isset($_POST['btnLogin'])) {
 
     <div class="login-container">
         <div class="">
-            <img src="./assets/images/logo.png" class="logo" style="padding: 15px 100px;"></img>
+            <img src="<?php print(config_site_logo) ?>" class="logo" style="padding: 15px 100px;"></img>
             <div class="login-box">
                 <h2>Admin Login Area</h2>
                 <?php print($strMSG); ?>
