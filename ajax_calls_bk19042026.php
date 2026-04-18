@@ -228,7 +228,7 @@ if (isset($_REQUEST['action'])) {
                 $count = 0;
                 $cart_amount = 0;
                 //$Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
-                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_custom_add, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
                 //print($Query);die();
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
@@ -237,23 +237,17 @@ if (isset($_REQUEST['action'])) {
 
                         $pq_quantity = 0;
                         if (!empty($row->supplier_id)) {
-                            $getQuantity = array();
-                            $getQuantity = getQuantity($row->supplier_id, $row->pro_custom_add);
-                            if (!empty($getQuantity)) {
-                                $pq_quantity = $getQuantity['pq_quantity'];
-                                $pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
-                                $pq_physical_quantity = $getQuantity['pq_physical_quantity'];
-                                $pq_status = $getQuantity['pq_status'];
-                                /*if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
+                            $Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+                            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                            if (mysqli_num_rows($rs1) > 0) {
+                                $row1 = mysqli_fetch_object($rs1);
+                                $pq_quantity = $row1->pq_quantity;
+                                $pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+                                $pq_status = $row1->pq_status;
+                                if ($pq_quantity == 0 && ($pq_status == 'true' || $pq_status == 'false')) {
                                     $pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
                                 } elseif ($pq_quantity > 0 && $pq_status == 'false') {
                                     $pq_quantity = $pq_quantity + $pq_upcomming_quantity - $row->ci_qty;
-                                }*/
-
-                                if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
-                                    $pq_quantity = $pq_upcomming_quantity - $row->ci_qty;
-                                } elseif ($pq_quantity > 0 && $pq_status == 'false') {
-                                    $pq_quantity = $pq_quantity - $row->ci_qty;
                                 }
                             }
                         }
@@ -1210,18 +1204,25 @@ if (isset($_REQUEST['action'])) {
                         }
                     }
                     $quantity_lenght = 0;
-                    $getQuantity = array();
-                    $pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row->supplier_id);
-                    $getQuantity = getQuantity($row->supplier_id, $pro_custom_add);
-                    if (!empty($getQuantity)) {
-                        $pq_quantity = $getQuantity['pq_quantity'];
-                        $pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
-                        $pq_physical_quantity = $getQuantity['pq_physical_quantity'];
-                        $pq_status = $getQuantity['pq_status'];
+                    $Query2 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+                    //print();
+                    $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                    if (mysqli_num_rows($rs2) > 0) {
+                        $row2 = mysqli_fetch_object($rs2);
+                        $pq_quantity = $row2->pq_quantity;
+                        $pq_upcomming_quantity = $row2->pq_upcomming_quantity;
+                        $pq_status = $row2->pq_status;
                         $ci_qty_type = 0;
                         if ($pq_status == 'true') {
                             $ci_qty_type = 1;
                         }
+                        /*if ($pq_quantity == 0 && $pq_status == 'true') {
+																$quantity_lenght = $pq_upcomming_quantity;
+																print('<div class="product_order_title"> ' . $pq_upcomming_quantity . ' Stück bestellt</div>');
+															} elseif ($pq_quantity > 0 && $pq_status == 'false') {
+																$quantity_lenght = $pq_quantity + $pq_upcomming_quantity;
+																print('<div class="product_order_title green"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+															}*/
                         if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
                             $quantity_lenght = $pq_upcomming_quantity;
                             $gerenric_product_inner .= '<div class="product_order_title green"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>';
@@ -2114,13 +2115,14 @@ if (isset($_REQUEST['action'])) {
                                 }
                             }
                             $quantity_lenght = 0;
-                            $getQuantity = array();
-                            $getQuantity = getQuantity($row->supplier_id, $row->pro_custom_add);
-                            if (!empty($getQuantity)) {
-                                $pq_quantity = $getQuantity['pq_quantity'];
-                                $pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
-                                $pq_physical_quantity = $getQuantity['pq_physical_quantity'];
-                                $pq_status = $getQuantity['pq_status'];
+                            $Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+                            //print();
+                            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                            if (mysqli_num_rows($rs1) > 0) {
+                                $row1 = mysqli_fetch_object($rs1);
+                                $pq_quantity = $row1->pq_quantity;
+                                $pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+                                $pq_status = $row1->pq_status;
                                 $ci_qty_type = 0;
                                 if($pq_status == 'true'){
                                     $ci_qty_type = 1;

@@ -2777,8 +2777,6 @@ function RefundPayment($entityId, $paymentId, $amount)
 
 	return $responseData;
 }
-
-
 function cardrequest($ord_id, $order_net_amount, $request, $usa_id, $pm_id)
 {
 	header('Content-Type: text/plain; charset=utf-8');
@@ -3677,8 +3675,13 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		while ($row2 = mysqli_fetch_object($rs2)) {
 			$ci_id = $row2->ci_id;
 			$oi_id = getMaximum("order_items", "oi_id");
-			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, fp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '" . $row2->fp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "')") or die(mysqli_error($GLOBALS['conn']));
-			quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
+			mysqli_query($GLOBALS['conn'], "INSERT INTO order_items (oi_id, ord_id, supplier_id, pro_id, pbp_id, oi_type, fp_id, pbp_price_amount, oi_amount, oi_discounted_amount, oi_qty, oi_qty_type, oi_gross_total, oi_gst_value, oi_gst, oi_discount_type, oi_discount_value, oi_discount, oi_net_total, oi_site_quantity_source) VALUES ('" . $oi_id . "', '" . $ord_id . "', '" . $row2->supplier_id . "', '" . $row2->pro_id . "', '" . $row2->pbp_id . "', '" . $row2->ci_type . "', '" . $row2->fp_id . "', '" . $row2->pbp_price_amount . "', '" . $row2->ci_amount . "', '" . $row2->ci_discounted_amount . "','" . $row2->ci_qty . "', '" . $row2->ci_qty_type . "', '" . $row2->ci_gross_total . "','" . $row2->ci_gst_value . "', '" . $row2->ci_gst . "', '" . $row2->ci_discount_type . "', '" . $row2->ci_discount_value . "', '" . $row2->ci_discount . "', '" . $row2->ci_total . "', '".config_site_quantity_source."')") or die(mysqli_error($GLOBALS['conn']));
+			$pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row2->supplier_id);
+			if(config_site_quantity_source == 1 && $pro_custom_add == 1){
+				quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
+			} elseif(config_site_quantity_source == 0){
+				quantityUpdate("-", $row2->supplier_id, $row2->ci_qty, $row2->ci_qty_type, $row2->ci_type);
+			}
 			$order_items_table_check = 1;
 		}
 	}
@@ -3708,7 +3711,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 
 function orderquantityUpdate($ord_id)
 {
-	$Query = "SELECT * FROM `order_items` WHERE ord_id = '" . $ord_id . "'";
+	$Query = "SELECT * FROM `order_items` WHERE ord_id = '" . $ord_id . "' AND oi_site_quantity_source = '0'";
 	$rs = mysqli_query($GLOBALS['conn'], $Query);
 	if (mysqli_num_rows($rs) > 0) {
 		while ($rw = mysqli_fetch_object($rs)) {
@@ -3731,7 +3734,7 @@ function quantityUpdate($opration, $supplier_id, $quantity, $quantity_type, $ci_
 	}
 }
 
-function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type)
+function checkquantity_bk($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type)
 {
 	$return_quantity = 0;
 	$cart_quantity_total = $ci_qty + $cart_quantity;
@@ -3749,6 +3752,40 @@ function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_
 			$return_quantity = $rw->$field;
 		} else {
 			$return_quantity = $cart_quantity_total;
+		}
+	}
+	return $return_quantity;
+}
+function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type)
+{
+	$return_quantity = 0;
+	$cart_quantity_total = $ci_qty + $cart_quantity;
+	$field = "pq_quantity";
+	if ($ci_qty_type > 0 && $ci_type == 0) {
+		$field = "pq_upcomming_quantity";
+	} elseif ($ci_type > 0) {
+		$field = "pq_physical_quantity";
+	}
+	if(config_site_quantity_source > 0){
+		$getQuantity = array();
+		$pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $supplier_id);
+		$getQuantity = getQuantity($supplier_id, $pro_custom_add);
+
+		if ($cart_quantity_total >= $getQuantity[$field]) {
+			$return_quantity = $getQuantity[$field];
+		} else {
+			$return_quantity = $cart_quantity_total;
+		}
+	} else {
+		$Query = "SELECT * FROM `products_quantity` WHERE supplier_id = '" . $supplier_id . "'";
+		$rs = mysqli_query($GLOBALS['conn'], $Query);
+		if (mysqli_num_rows($rs) > 0) {
+			$rw = mysqli_fetch_object($rs);
+			if ($cart_quantity_total >= $rw->$field) {
+				$return_quantity = $rw->$field;
+			} else {
+				$return_quantity = $cart_quantity_total;
+			}
 		}
 	}
 	return $return_quantity;
@@ -3919,4 +3956,88 @@ function ci_max_quentity()
 	} else {
 		mysqli_query($GLOBALS['conn'], "DELETE FROM cart_items WHERE ci_type = '2' AND cart_id = '" . $_SESSION['cart_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
 	}
+}
+
+function getStockData($supplier_id, $quantity = 1)
+{
+    $url = "https://api.soennecken.de/api/wacker/logistics/v1/stocks/" . $supplier_id . "?quantity=" . $quantity;
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Add headers (adjust if needed)
+    $headers = [
+        "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbWFudCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsInN1YiI6IkxvZ2lzdGlrIEFQSXMiLCJuYW1lIjoid2Fja2VyIiwianRpIjoiZTMxNzg0ZjktOWRlOC00OWUzLWE4YTYtN2YxODUzMDcwNDRjIiwiaWF0IjoiMTc3NjIzMTk0OSIsInBhdGgiOiIvd2Fja2VyL2xvZ2lzdGljcyIsInRlbmFudCI6IndhY2tlciIsIm5iZiI6MTc3NjIzMTk0OSwiZXhwIjoyMDkxODUxMTQ5LCJpc3MiOiJzb2VubmVja2VuIn0.V03y5-Q8rqU8PAJbIWYTrbvNUIP4kq3RO0RfN6FF81I", // replace with your token
+        "Content-Type: application/json"
+    ];
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        $error = curl_error($ch);
+        curl_close($ch);
+        return ['error' => $error];
+    }
+
+    curl_close($ch);
+
+    // Convert JSON to array
+    return json_decode($response, true);
+}
+
+
+function getQuantity($supplier_id, $pro_custom_add){
+	$quantity_data = array();
+	if(config_site_quantity_source > 0){
+		if($pro_custom_add > 0)	{
+			$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
+			//print($Query);
+			$rs = mysqli_query($GLOBALS['conn'], $Query);
+			$ci_qty_type = 0;
+			if (mysqli_num_rows($rs) > 0) {
+				$row = mysqli_fetch_object($rs);
+				$quantity_data = array(
+					'pq_quantity' => $row->pq_quantity,
+					'pq_upcomming_quantity' => $row->pq_upcomming_quantity,
+					'pq_physical_quantity' => $row->pq_physical_quantity,
+					'pq_status' => $row->pq_status
+				);
+
+			}
+		} else {
+				$getStockData = getStockData($supplier_id);
+				$state = $getStockData['availability']['state'];
+				$pq_status = 'false';
+				if($state == 'yellow'){
+					$pq_status = 'true';
+				}
+				$quantity_data = array(
+					'pq_quantity' => $getStockData['availability']['quantity'],
+					'pq_upcomming_quantity' => $getStockData['state']['state'],
+					'pq_physical_quantity' => 0,
+					'pq_status' => $pq_status
+				);
+		}
+	} else {
+			$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
+			//print($Query);
+			$rs = mysqli_query($GLOBALS['conn'], $Query);
+			$ci_qty_type = 0;
+			if (mysqli_num_rows($rs) > 0) {
+				$row = mysqli_fetch_object($rs);
+				$quantity_data = array(
+					'pq_quantity' => $row->pq_quantity,
+					'pq_upcomming_quantity' => $row->pq_upcomming_quantity,
+					'pq_physical_quantity' => $row->pq_physical_quantity,
+					'pq_status' => $row->pq_status
+				);
+
+			}
+	}
+
+	return $quantity_data;
 }
