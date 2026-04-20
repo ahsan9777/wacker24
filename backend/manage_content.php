@@ -27,7 +27,7 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mFile_bannerName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "INSERT INTO contents (cnt_id, footer_id, cnt_section, cnt_slug, cnt_heading_de, cnt_title_de, cnt_details_de, cnt_keywords, cnt_meta_description, cnt_addedby, cnt_cdate, cnt_image, cnt_banner_image) VALUES ('" . $cnt_id . "', '" . dbStr(trim($_REQUEST['footer_id'])) . "', '" . dbStr(trim($_REQUEST['cnt_section'])) . "', '" . dbStr(trim($_REQUEST['cnt_slug'])) . "', '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "', '" . $mfileName . "', '".$mFile_bannerName."')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO contents (cnt_id, footer_id, cnt_section, cnt_slug, cnt_heading_de, cnt_title_de, cnt_details_de, cnt_keywords, cnt_meta_description, cnt_addedby, cnt_cdate, cnt_image, cnt_banner_image) VALUES ('" . $cnt_id . "', '" . dbStr(trim($_REQUEST['footer_id'])) . "', '" . dbStr(trim($_REQUEST['cnt_section'])) . "', '" . dbStr(trim(url_clean(convertGermanChars($_REQUEST['cnt_slug'])))) . "', '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "', '" . $mfileName . "', '".$mFile_bannerName."')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -59,7 +59,7 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mFile_bannerName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "UPDATE contents SET footer_id = '" . dbStr(trim($_REQUEST['footer_id'])) . "',  cnt_section = '" . dbStr(trim($_REQUEST['cnt_section'])) . "', cnt_slug = '" . dbStr(trim($_REQUEST['cnt_slug'])) . "', cnt_heading_de = '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', cnt_title_de = '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', cnt_details_de = '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', cnt_keywords = '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', cnt_meta_description = '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', cnt_updatedby = '" . $_SESSION["UserID"] . "', cnt_udate = '" . date_time . "', cnt_image = '" . $mfileName . "', cnt_banner_image = '".$mFile_bannerName."' WHERE cnt_id= '" . $_REQUEST['cnt_id'] . "' ") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE contents SET footer_id = '" . dbStr(trim($_REQUEST['footer_id'])) . "',  cnt_section = '" . dbStr(trim($_REQUEST['cnt_section'])) . "', cnt_slug = '" . dbStr(trim(url_clean(convertGermanChars($_REQUEST['cnt_slug'])))) . "', cnt_heading_de = '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', cnt_title_de = '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', cnt_details_de = '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', cnt_keywords = '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', cnt_meta_description = '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', cnt_updatedby = '" . $_SESSION["UserID"] . "', cnt_udate = '" . date_time . "', cnt_image = '" . $mfileName . "', cnt_banner_image = '".$mFile_bannerName."' WHERE cnt_id= '" . $_REQUEST['cnt_id'] . "' ") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
     }
 } elseif (isset($_REQUEST['action'])) {
@@ -230,7 +230,7 @@ include("includes/messages.php");
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Slug (Like: abc or abc_abc)</label>
+                                    <label for="">URL Slug</label>
                                     <input type="text" required class="input_style" name="cnt_slug" id="cnt_slug" value="<?php print($cnt_slug); ?>" placeholder="Slug (Like: abc or abc_abc)">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
