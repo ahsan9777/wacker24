@@ -1,6 +1,13 @@
 <?php
 
 include("includes/php_includes_top.php");
+$Query1 = "SELECT cnt.cnt_id, cnt.cnt_slug, cnt.cnt_section, cnt.cnt_title_de AS cnt_title, cnt.cnt_heading_de AS cnt_heading, cnt.cnt_details_de AS cnt_details, cnt.cnt_image, cnt.cnt_banner_image  FROM contents AS cnt WHERE cnt.cnt_slug = '" .$_REQUEST['product_params']. "'";
+//print($Query1);
+$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+if (mysqli_num_rows($rs1) > 0) {
+    require_once 'page.php';
+    exit;
+}
 //print_r($_REQUEST);die();
 $pro_id = 0;
 $supplier_id = 0;
