@@ -1,6 +1,6 @@
 <?php
-//include("includes/php_includes_top.php");
-$Query1 = "SELECT cnt.cnt_id, cnt.cnt_slug, cnt.cnt_section, cnt.cnt_title_de AS cnt_title, cnt.cnt_heading_de AS cnt_heading, cnt.cnt_details_de AS cnt_details, cnt.cnt_image, cnt.cnt_banner_image  FROM contents AS cnt WHERE cnt.cnt_slug = '" . $_REQUEST['product_params'] . "'";
+include("includes/php_includes_top.php");
+$Query1 = "SELECT cnt.cnt_id, cnt.cnt_slug, cnt.cnt_section, cnt.cnt_title_de AS cnt_title, cnt.cnt_heading_de AS cnt_heading, cnt.cnt_details_de AS cnt_details, cnt.cnt_image, cnt.cnt_banner_image  FROM contents AS cnt WHERE cnt.cnt_slug = '" . $_REQUEST['cnt_slug'] . "'";
 //print($Query1);
 $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 if (mysqli_num_rows($rs1) > 0) {
@@ -86,7 +86,6 @@ if (mysqli_num_rows($rs1) > 0) {
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-		
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 

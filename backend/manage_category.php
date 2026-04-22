@@ -1,24 +1,7 @@
 <?php
 include("../lib/session_head.php");
-if (isset($_REQUEST['btnAdd'])) {
-    $cat_id = getMaximum("category", "cat_id");
-    $group_id = getMaximumWhere("category", "group_id", "WHERE parent_id = '0'");
 
-    $mfileName = "";
-    //$dirName = "images/banners/";
-    $dirName = "../files/category/";
-    if (!empty($_FILES["mFile"]["name"])) {
-        $mfileName = $cat_id . "_" . $_FILES["mFile"]["name"];
-        $mfileName = str_replace(" ", "_", strtolower($mfileName));
-        if (move_uploaded_file($_FILES['mFile']['tmp_name'], $dirName . $mfileName)) {
-            createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
-        }
-    }
-
-    mysqli_query($GLOBALS['conn'], "INSERT INTO category (cat_id, group_id, parent_id, cat_title_de, cat_params_de, cat_title_en, cat_params_en, cat_keyword, cat_description, cat_image, cat_icon, cat_icon_color) VALUES ('" . $cat_id . "', '" . $group_id . "', '0', '" . dbStr(trim($_REQUEST['cat_title_de'])) . "', '" . dbStr(url_clean(trim($_REQUEST['cat_title_de']))) . "', '".dbStr(trim($_REQUEST['cat_title_en']))."','" . dbStr(url_clean(trim($_REQUEST['cat_title_en']))) . "', '".dbStr(trim($_REQUEST['cat_keyword']))."', '".dbStr(trim($_REQUEST['cat_description']))."', '".$mfileName."', '".dbStr(trim($_REQUEST['cat_icon']))."', '".dbStr(trim($_REQUEST['cat_icon_color']))."')") or die(mysqli_error($GLOBALS['conn']));
-    header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
-
-} elseif (isset($_REQUEST['btnImport'])) {
+if (isset($_REQUEST['btnImport'])) {
     //print_r($_REQUEST);die();
     $xml = simplexml_load_file("lagersortiment_standard.xml") or die("Error: Cannot create object");
     /*print('<pre>');
@@ -46,7 +29,7 @@ if (isset($_REQUEST['btnAdd'])) {
             $cat_id = $row->cat_id;
             mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($group_name)) . "', cat_params_de = '" . url_clean($group_name) . "' WHERE cat_id = '" . $cat_id . "'") or die(mysqli_error($GLOBALS['conn']));
         } else {
-            mysqli_query($GLOBALS['conn'], "INSERT INTO category (cat_id, group_id, parent_id, cat_title_de, cat_params_de) VALUES ('" . $cat_id . "', '" . $group_id . "', '" . $parent_id . "', '" . dbStr(trim($group_name)) . "', '" . dbStr(url_clean(trim($group_name))) . "')") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO category (cat_id, group_id, parent_id, cat_title_de, cat_params_de) VALUES ('" . $cat_id . "', '" . $group_id . "', '" . $parent_id . "', '" . dbStr(trim($group_name)) . "', '" . url_clean($group_name) . "')") or die(mysqli_error($GLOBALS['conn']));
         }
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
@@ -62,7 +45,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_params_de = '".dbStr(url_clean(trim($_REQUEST['cat_title_de'])))."', cat_params_en = '".dbStr(url_clean(trim($_REQUEST['cat_title_en'])))."', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_image='" . $mfileName . "', cat_icon = '".dbStr(trim($_REQUEST['cat_icon']))."', cat_icon_color = '".dbStr(trim($_REQUEST['cat_icon_color']))."' WHERE cat_id=" . $_REQUEST['cat_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_params_de = '".dbStr(url_clean(trim($_REQUEST['cat_title_de'])))."', cat_params_en = '".dbStr(url_clean(trim($_REQUEST['cat_title_en'])))."', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_image='" . $mfileName . "' WHERE cat_id=" . $_REQUEST['cat_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -75,8 +58,6 @@ if (isset($_REQUEST['btnAdd'])) {
             $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/" . $rsMem->cat_image : "";
             $cat_keyword = $rsMem->cat_keyword;
             $cat_description = $rsMem->cat_description;
-            $cat_icon = $rsMem->cat_icon;
-            $cat_icon_color = $rsMem->cat_icon_color;
             $formHead = "Update Info";
         }
     } elseif ($_REQUEST['action'] == 3) {
@@ -95,11 +76,8 @@ if (isset($_REQUEST['btnAdd'])) {
         $cat_title_en = "";
         $cat_title_de = "";
         $mfileName = "";
-        $mfile_path = "";
         $cat_keyword = "";
         $cat_description = "";
-        $cat_icon = "";
-        $cat_icon_color = "";
         $formHead = "Add New";
     }
 }
@@ -163,9 +141,9 @@ include("includes/messages.php");
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
-                                <?php if ($_REQUEST['action'] == 2 || $_REQUEST['action'] == 4) { ?>
+                                <?php if ($_REQUEST['action'] == 2) { ?>
                                     <div class="col-md-12 col-12 mt-3">
-                                        <img src="<?php print($mfile_path); ?>" width="30%" alt="">
+                                        <img src="<?php print($mfile_path); ?>" width="100%" alt="">
                                     </div>
                                     <div class="col-md-6 col-12 mt-3">
                                         <label for="">Title DE</label>
@@ -185,15 +163,7 @@ include("includes/messages.php");
                                         <input type="text" class="input_style" name="cat_description" id="cat_description" value="<?php print($cat_description); ?>" placeholder="Meta Description">
                                     </div>
                                     <div class="col-md-6 col-12 mt-3">
-                                        <label for="">Icon ( Like: fa fa-pencil )</label>
-                                        <input type="text" class="input_style" name="cat_icon" id="cat_icon" value="<?php print($cat_icon); ?>" placeholder="Icon">
-                                    </div>
-                                    <div class="col-md-6 col-12 mt-3">
-                                        <label for="">Icon Color ( Hex color like: #000 )</label>
-                                        <input type="text" class="input_style" name="cat_icon_color" id="cat_icon_color" value="<?php print($cat_icon_color); ?>" placeholder="Icon Color">
-                                    </div>
-                                    <div class="col-md-6 col-12 mt-3">
-                                        <label for="">Image ( <span class="label_span">Size must be 500px x 500x</span> )</label>
+                                        <label for="">Image ( <span class="label_span">Banner Size must be 1200px x 300x</span> )</label>
                                         <div class="">
                                             <label for="file-upload" class="upload-btn">
                                                 <span class="material-icons">cloud_upload</span>
@@ -210,7 +180,7 @@ include("includes/messages.php");
                                         <input type="hidden" name="mfileName" value="<?php print($mfileName); ?>" />
                                     <?php } else { ?>
                                         <div class="text_align_center padding_top_bottom">
-                                            <button class="btn btn-primary" type="submit" name="<?php print( ($_REQUEST['action'] == 4) ? 'btnAdd' : 'btnImport'); ?>" id="btnImport">Upload</button>
+                                            <button class="btn btn-primary" type="submit" name="btnImport" id="btnImport">Upload</button>
                                         <?php } ?>
                                         <button type="button" name="btnBack" class="btn btn-light" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>';">Cancel</button>
                                         </div>
@@ -223,8 +193,7 @@ include("includes/messages.php");
                         <h1 class="text-white">Category Management</h1>
                         <div class="d-flex gap-1">
                             <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">update</span> <span class="text">Update Category Map</span></a>
-                            <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">upload</span> <span class="text">Import Add New</span></a>
-                            <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=4"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
+                            <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=1"); ?>" class="btn btn-primary d-flex gap-2"><span class="material-icons icon">add</span> <span class="text">Add New</span></a>
                         </div>
                     </div>
                     <div class="main_table_container">
@@ -285,7 +254,7 @@ include("includes/messages.php");
                                             <tr>
                                                 <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->cat_id); ?>"></td>
                                                 <td>
-                                                    <div class="popup_container" style="width: <?php print(!empty($row->cat_image) ? '150px' : '100px'); ?>">
+                                                    <div class="popup_container" style="width: <?php print(!empty($row->cat_image) ? '300px' : '100px'); ?>">
                                                         <div class="container__img-holder">
                                                             <img src="<?php print($image_path); ?>" >
                                                         </div>
@@ -334,10 +303,10 @@ include("includes/messages.php");
                             <?php } ?>
                             <div class="row">
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-auto">
+                                    <input type="submit" name="btnActive" value="Active" class="btn btn-primary btn-style-light w-100">
                                 </div>
                                 <div class=" col-md-1 col-12 mt-2">
-                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-auto">
+                                    <input type="submit" name="btnInactive" value="In Active" class="btn btn-warning btn-style-light w-100">
                                 </div>
                             </div>
                             <!--<input type="submit" name="btnDelete" onclick="return confirm('Are you sure you want to delete selected item(s)?');" value="Delete" class="btn btn-danger btn-style-light">-->

@@ -37,7 +37,6 @@ if (isset($_REQUEST['btnUpdate'])) {
     config_btn_color = '" . dbStr(trim($_REQUEST['config_btn_color'])) . "', 
     config_fonts = '" . dbStr(trim($_REQUEST['config_fonts'])) . "', 
     config_site_special_price = '" . dbStr(trim($_REQUEST['config_site_special_price'])) . "', 
-    config_site_quantity_source = '" . dbStr(trim($_REQUEST['config_site_quantity_source'])) . "', 
     config_site_logo = '" . $mfileName . "'")
         or die(mysqli_error($GLOBALS['conn']));
 
@@ -80,7 +79,6 @@ if (mysqli_num_rows($rsM) > 0) {
     $config_btn_color = $rsMem->config_btn_color;
     $config_fonts = $rsMem->config_fonts;
     $config_site_special_price = $rsMem->config_site_special_price;
-    $config_site_quantity_source = $rsMem->config_site_quantity_source;
     $mfileName = $rsMem->config_site_logo;
     $mfile_path = !empty($rsMem->config_site_logo) ? $GLOBALS['siteURL'] . "files/" . $rsMem->config_site_logo : "";
     $formHead = "Update Info";
@@ -160,7 +158,7 @@ include("includes/messages.php");
 
                             <div class="col-md-6 col-12 mt-3">
                                 <label for="config_courier_fix_charges">Courier Fixed Charges</label>
-                                <input type="number" class="input_style" name="config_courier_fix_charges" id="config_courier_fix_charges" step="any" value="<?php print($config_courier_fix_charges); ?>" placeholder="Courier Fixed Charges">
+                                <input type="number" step="any" class="input_style" name="config_courier_fix_charges" id="config_courier_fix_charges" value="<?php print($config_courier_fix_charges); ?>" placeholder="Courier Fixed Charges">
                             </div>
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="config_authorization_bearer">Authorization Bearer</label>
@@ -319,13 +317,6 @@ include("includes/messages.php");
                                 <select class="input_style" name="config_site_special_price" id="config_site_special_price">
                                     <option value="0" <?php print( (($config_site_special_price == 0) ? 'selected' : '') ); ?> >Source One</option>
                                     <option value="1" <?php print( (($config_site_special_price == 1) ? 'selected' : '') ); ?> >Source Two</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 col-12 mt-3">
-                                <label for="config_ftp_img">Quantity Sources</label>
-                                <select class="input_style" name="config_site_quantity_source" id="config_site_quantity_source">
-                                    <option value="0" <?php print( (($config_site_quantity_source == 0) ? 'selected' : '') ); ?> >Database Quantity</option>
-                                    <option value="1" <?php print( (($config_site_quantity_source == 1) ? 'selected' : '') ); ?> >Live API Quantity</option>
                                 </select>
                             </div>
                             <div class="col-md-12 col-12 mt-3"><!--  -->

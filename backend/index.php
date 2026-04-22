@@ -5,6 +5,7 @@ $ord_id = getMaximum("orders", "ord_id");
 if ($ord_id > 0) {
     $ord_id = $ord_id - 1;
 }
+//$mailer->order_attachment_file("sayedkamalhussaini6@gmail.com", "test mail", 1717);
 ?>
 <!DOCTYPE html>
 <html lang="de">

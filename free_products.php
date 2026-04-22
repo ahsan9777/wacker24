@@ -48,7 +48,7 @@ $fp_price = price_format(getMinimum("free_product", "fp_price"));
 				<div class="page_width_1480">
 					<div class="gratis-calculate-total">
 						<div class="calculate-total-left">
-							<div class="calculate-gratis-text">GRATIS <span>fur Sie!</span></div>
+							<div class="calculate-gratis-text">GRATIS <span>für Sie!</span></div>
 							<div class="calculate-gratis-subtext">Ab <?php print($fp_price); ?> € Warenwert Ihrer Bestellung (alle Warenwerte inkl. MwSt.)</div>
 						</div>
 						<div class="calculate-total-right">

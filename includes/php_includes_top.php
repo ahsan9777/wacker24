@@ -1,7 +1,8 @@
 <?php
 ob_start();
-//session_save_path('/tmp');
+session_save_path('/tmp');
 session_start();
+
 
 include("lib/openCon.php");
 include("lib/functions.php");
@@ -11,6 +12,7 @@ if (!isset($_REQUEST['search_keyword'])) {
 }
 require_once("lib/mailer.php");
 $mailer = new Mailer();
+
 //$_SESSION['utype_id'] = 3;
 
 $page = 0;
@@ -22,15 +24,15 @@ $search_keyword = "";
 $cat_id = "";
 $special_price = array();
 $page_title = "";
-$page_bottom_js = 1;
 $meta_keywords = "";
 $meta_description = "";
+$page_bottom_js = "";
 
 //if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4)))) {
 if ((isset($_SESSION["cart_id"]) && $_SESSION["cart_id"] > 0) && (isset($_SESSION["cart_check"]) && $_SESSION["cart_check"] == true)) {
     $cart_id = $_SESSION['cart_id'];
     mysqli_query($GLOBALS['conn'], "UPDATE cart_items SET ci_discounted_price_see = '0' WHERE cart_id = '" . $cart_id . "'") or die(mysqli_error($GLOBALS['conn']));
-    $Query = "SELECT ci.*, cm.sub_group_ids FROM cart_items AS ci LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = ci.supplier_id WHERE ci_type IN (0,1) AND cart_id = '" . $cart_id . "' AND ci_discounted_price_see = '0' ";
+    $Query = "SELECT ci.*, cm.sub_group_ids FROM cart_items AS ci LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = ci.supplier_id WHERE cart_id = '" . $cart_id . "' AND ci_discounted_price_see = '0' ";
     //print($Query);die();
     $rs = mysqli_query($GLOBALS['conn'], $Query);
     if (mysqli_num_rows($rs) > 0) {

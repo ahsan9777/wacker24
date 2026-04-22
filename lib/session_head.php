@@ -1,5 +1,6 @@
 <?php
 ob_start();
+session_save_path('/tmp');
 session_start();
 include("../lib/openCon.php");
 include("../lib/functions.php");

@@ -181,7 +181,7 @@ class Mailer
         //print_r($message);die();
 
         $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
-        //$this->order_attachment_file("webshop-edi@wacker-buerocenter.de", "Sayed Kamal Hussaini", $ord_id);
+        $this->order_attachment_file("webshop-edi@wacker-buerocenter.de", "Sayed Kamal Hussaini", $ord_id);
         //print($ret);
     }
 
@@ -467,8 +467,8 @@ class Mailer
         } else {
             /*$mail_username = "noreply@wackersystems.com";
             $mail_password = "A^tXZxQCCDM4";*/
-            $mail_username = "noreply@deskup.de";
-            $mail_password = "3Ao_0p39o";
+            $mail_username = "noreply@wacker-buerocenter.de";
+            $mail_password = "86@TS-AXn}7J";
         }
         //require_once($dir . "lib/class.phpmailer.php");
 
@@ -493,7 +493,7 @@ class Mailer
             //$mail->SMTPSecure = 'tls';
             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             //$mail->Host       = "mail.gmx.com";
-            $mail->Host       = "mail.deskup.de";
+            $mail->Host       = "mail.wacker-buerocenter.de";
             //$mail->Host       = "wackersystems.com";
             $mail->Username   = $mail_username;
             $mail->Password   = $mail_password;
@@ -501,13 +501,13 @@ class Mailer
             $mail->CharSet = "UTF-8";
             $mail->Priority = 1;
             $mail->From       = $mail_username;
-            $mail->FromName   = "Deskup";
+            $mail->FromName   = "Wacker Bürocenter";
             //$mail->AddReplyTo('wackersystems@wackersystems.com', 'Wacker24');
             if ($sendToCC == 1) {
                 //$mail->AddCC('wackersystems@wackersystems.com', 'Wacker24');
             }
             if ($sendToBcc == 1) {
-                $mail->AddBCC($bccEmail, 'Deskup');
+                $mail->AddBCC($bccEmail, 'Wacker Systems');
             }
 
             $mail->AddAddress($to);

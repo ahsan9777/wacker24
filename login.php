@@ -121,7 +121,7 @@ include("includes/message.php");
 		<section class="login_page">
 			<div class="page_width">
 				<div class="login_inner">
-					<div class="login_logo position_relative"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="<?php print(config_site_logo) ?>" alt=""></a></div>
+					<div class="login_logo"><a href="<?php print($GLOBALS['siteURL']); ?>"><img src="images/register_logo.png" alt=""></a></div>
 					<div class="login_box">
 						<h2>Anmelden</h2>
 						<?php if ($class != "") { ?>
@@ -188,7 +188,7 @@ include("includes/message.php");
 								</li>
 								<li>
 									<div class="new_account_btn"><a href="registrierung">
-											<div class="gerenric_btn">Erstellen Sie hier Ihr Deskup Konto</div>
+											<div class="gerenric_btn">Erstellen Sie hier Ihr Wacker24 Konto</div>
 										</a>
 									</div>
 								</li>

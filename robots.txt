@@ -1,2 +1,40 @@
 User-agent: *
-Disallow: /
+Allow: /
+
+# Block non-public system folders
+Disallow: /cssbk/
+Disallow: /includes/
+Disallow: /lib/
+Disallow: /template/
+Disallow: /vendor/
+
+# Allow important assets (recommended for SEO)
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /*.svg$
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+
+Sitemap: https://www.wacker-buerocenter.de/sitemap.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-category.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-product1.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-product2.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-product3.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-product4.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-product5.xml
+Sitemap: https://www.wacker-buerocenter.de/sitemap-product6.xml

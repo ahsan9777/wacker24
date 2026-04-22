@@ -300,9 +300,6 @@ include("includes/messages.php");
                                         <th>Value</th>
                                         <th>Actual Price</th>
                                         <th>After Discount Price</th>
-                                        <?php if (isset($user_id) && $user_id == 0) { ?>
-                                        <th>Featured</th>
-                                        <?php } ?>
                                         <th width="50">Status</th>
                                         <th width="50">Action</th>
                                     </tr>
@@ -357,9 +354,6 @@ include("includes/messages.php");
                                                 <td><?php print($row->usp_discounted_value); ?></td>
                                                 <td><?php print($pro_price); ?></td>
                                                 <td><?php print($pro_price_after_discount); ?></td>
-                                                <?php if (isset($user_id) && $user_id == 0 && $row->supplier_id > 0) { ?>
-                                                <td> <input type="checkbox" class="usp_featured" id="usp_featured" data-id="<?php print($row->usp_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->usp_featured == 1) ? 'checked' : ''); ?>> </td>
-                                               <?php } ?>
                                                 <td>
                                                     <?php
                                                     if ($row->usp_status == 0) {
@@ -418,50 +412,6 @@ include("includes/messages.php");
     <?php include("includes/bottom_js.php"); ?>
 </body>
 <script>
-    $(document).ready(function() {
-        // Listen for toggle changes
-        $('.usp_featured').change(function() {
-            let id = $(this).attr('data-id');
-            let set_field_data = 0;
-            //console.log("usp_id: "+usp_id)
-            if ($(this).prop('checked')) {
-                set_field_data = 1;
-            }
-            //console.log("set_field_data: "+set_field_data);
-            $.ajax({
-                url: 'ajax_calls.php?action=btn_toggle',
-                method: 'POST',
-                data: {
-                    table: "user_special_price",
-                    set_field: "usp_featured",
-                    set_field_data: set_field_data,
-                    where_field: "usp_id",
-                    id: id
-                },
-                success: function(response) {
-                    //console.log("response = "+response);
-                    const obj = JSON.parse(response);
-                    console.log(obj);
-                    if (obj.status == 1 && set_field_data == 1) {
-                        $.toast({
-                            heading: 'Success',
-                            text: 'Toggle is ON',
-                            icon: 'success',
-                            position: 'top-right'
-                        });
-                    } else if (obj.status == 1 && set_field_data == 0) {
-                        $.toast({
-                            heading: 'Warning',
-                            text: 'Toggle is OFF',
-                            icon: 'warning',
-                            position: 'top-right'
-                        });
-                    }
-                }
-            });
-        });
-        
-    });
     $('input.usp_pro_description_short').autocomplete({
         source: function(request, response) {
             $.ajax({

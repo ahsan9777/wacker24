@@ -26,15 +26,15 @@ session_destroy();
 		<section id="content_section">
 			<div class="appointment_booking gerenric_padding">
 				<div class="page_width">
-					<h2 class="txt_align_center">Gastbestellung</h2>
+					<h2 class="txt_align_center">Guest Order</h2>
 
 					<div class="txt_align_center">
-						<div class="alert alert-success">Ihre Gastbestellung wurde erfolgreich bestellt</div>
+						<div class="alert alert-success">Your guest order has been ordered successfully</div>
 						<dotlottie-player src="https://lottie.host/c255556c-8b33-4000-a5e3-69a68271fbdc/5lxOCkhCdm.json" background="transparent" speed="0.5" style="width: 300px; height: 300px; margin: auto;" autoplay></dotlottie-player>
 						<script>
 							setTimeout(
 								function() {
-									window.location.href = "<?php print($GLOBALS['siteURL']); ?>";
+									window.location.href = "index.php";
 								}, 10000);
 						</script>
 					</div>

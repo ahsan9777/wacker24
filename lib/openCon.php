@@ -1,41 +1,40 @@
 <?php
 
-//$sessTime = 24*60*60;
-//ini_set('session.gc_maxlifetime', $sessTime);
-//ini_set('session.gc_probability', 1);
-//ini_set('session.gc_divisor', 1);
+
+/*ini_set('session.save_path', '/var/cpanel/php/sessions/ea-php83');
+//ini_set('session.gc_maxlifetime', 1440);
+ini_set('session.cookie_lifetime', 0);
+
+session_start();*/
+
 //ini_set('display_errors', 1);
 //error_reporting(E_ALL);
 if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbServer   = "localhost";
-	$dbDatabase = "gac_2024_wacker24";
+	$dbDatabase = "gac_2024_wacker_buerocenter";
 	$dbUserName = "root";
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "wacker24";
-	$GLOBALS['siteURL_main'] = "http://localhost/";
 	$GLOBALS['siteURL'] = "http://localhost:82/wacker24/";
-	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
 } elseif ($_SERVER['HTTP_HOST'] == 'localhost') {
 	$dbServer   = "localhost";
-	$dbDatabase = "gac_2024_wacker24";
+	$dbDatabase = "gac_2024_wacker_buerocenter";
 	$dbUserName = "root";
 	$dbPassword = "";
-	$GLOBALS['siteName'] = "wacker24";
-	$GLOBALS['siteURL_main'] = "http://localhost/";
+	$GLOBALS['siteName'] = "Wacker Buerocenter";
 	$GLOBALS['siteURL'] = "http://localhost/wacker24/";
+	$GLOBALS['siteURL_main'] = "http://localhost/";
 	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
+
 } else {
 	$dbServer   = "localhost";
-	$dbDatabase = "wackersystems_wacker24demo";
-	$dbUserName = "wackersystems_wacker24demo";
-	/*$dbDatabase = "esoltech_wacker24";
-	$dbUserName = "esoltech_wacker24";*/
-	$dbPassword = "MU8s)gKIeQyD";
-	$GLOBALS['siteName'] = "Wacker24";
-	//$GLOBALS['siteURL'] = "https://esol-tech.com/wacker24/";
-	$GLOBALS['siteURL_main'] = "https://www.wacker-buerocenter.de/";
-	$GLOBALS['siteURL'] = "https://www.wackersystems.com/";
-	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
+	$dbDatabase = "wackerbuero_2026";
+	$dbUserName = "wackerbuero_2026";
+
+	$dbPassword = "T!1yNxP=gd!T";
+	$GLOBALS['siteName'] = "Wacker Buerocenter";
+
+	$GLOBALS['siteURL'] = "https://www.wacker-buerocenter.de/";
 }
 
 $GLOBALS['conn'] = new mysqli($dbServer, $dbUserName, $dbPassword, $dbDatabase);
@@ -53,7 +52,7 @@ $pdo = new PDO(
 );
 mysqli_set_charset($GLOBALS['conn'], 'utf8mb4');
 
-$Query = "SELECT * FROM site_config";
+$Query = "SELECT * FROM site_config WHERE config_id=1";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
 	while ($row = mysqli_fetch_object($rs)) {
@@ -84,7 +83,6 @@ if (mysqli_num_rows($rs) > 0) {
 		define('config_btn_color', $row->config_btn_color);
 		define('config_fonts', $row->config_fonts);
 		define('config_site_special_price', $row->config_site_special_price);
-		define('config_site_quantity_source', $row->config_site_quantity_source);
 		define('config_site_logo', $GLOBALS['siteURL'] . "files/" . $row->config_site_logo);
 	}
 }

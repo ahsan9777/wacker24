@@ -52,6 +52,12 @@
 				<div class="page_width">
 					<div class="contact_inner">
 						<div class="contact_col">
+							<div class="contact_map">
+								<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10397.416599793687!2d8.1595303!3d49.3454452!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf891f6d9c1b2e882!2sWacker%20Office%20Center%20GmbH!5e0!3m2!1sen!2s!4v1654254885248!5m2!1sen!2s" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+								<div class="map_link"><a href="https://www.google.com/maps/place/Wacker+Office+Center+GmbH/@49.3454452,8.1595303,15z/data=!4m5!3m4!1s0x0:0xf891f6d9c1b2e882!8m2!3d49.3454539!4d8.1594747">Wacker Bürocenter GmbH, Chemnitzer Str. 1, 67433 Neustadt/Weinstraße</a></div>
+							</div>
+						</div>
+						<div class="contact_col">
 							<h2>Kontaktformular</h2>
 							<?php if ($class != "") { ?>
 								<div class="<?php print($class); ?>"><?php print($strMSG); ?><a href="javascript:void(0);" class="close" data-dismiss="alert">×</a></div>
@@ -113,14 +119,6 @@
 						</div>
 						<div class="contact_col">
 							<div class="contact_block">
-								<h3>Kundenservice</h3>
-								<p>Wir helfen Ihnen persönlich weiter und stehen Ihnen während unserer Servicezeiten gerne zur Verfügung:</p>
-							</div>
-							<div class="contact_block">
-								<h3>Telefon</h3>
-								<p>06321 - 9124 -</p>
-							</div>
-							<div class="contact_block">
 								<h3>Öffnungszeiten Fachmarkt</h3>
 								<p>Mo.-Fr.: 09:00 - 18:00 Uhr</p>
 								<p>Sa.: 09:00 - 13:00 Uhr</p>
@@ -129,6 +127,78 @@
 								<h3>Telefonisch erreichbar</h3>
 								<p>Mo.-Fr.: 08:00 - 18:00 Uhr</p>
 								<p>Sa.: 09:00 - 13:00 Uhr</p>
+							</div>
+						</div>
+						<div class="contact_col">
+							<div class="contact_block">
+								<h3>Kundenservice</h3>
+								<p>Wir helfen Ihnen persönlich weiter und stehen Ihnen während unserer Servicezeiten gerne zur Verfügung:</p>
+							</div>
+							<div class="contact_block">
+								<h3>Telefon</h3>
+								<p>06321 - 9124 -</p>
+							</div>
+							<div class="contact_table">
+								<ul>
+									<li>Abteilung</li>
+									<li>Email</li>
+									<li>Telefon</li>
+								</ul>
+								<ul>
+									<li>Zentrale</li>
+									<li>mail@wacker24.de</li>
+									<li>-0</li>
+								</ul>
+								<ul>
+									<li>Buchhaltung</li>
+									<li>buchhaltung@wacker24.de</li>
+									<li>-10</li>
+								</ul>
+								<ul>
+									<li>Technik Drucker/Scanner</li>
+									<li>technik@wacker24.de</li>
+									<li>-22</li>
+								</ul>
+								<ul>
+									<li>Technik Kassensysteme</li>
+									<li>kassen@wacker24.de</li>
+									<li>-23</li>
+								</ul>
+								<ul>
+									<li>Technik IT</li>
+									<li>support@wacker24.de</li>
+									<li>-24</li>
+								</ul>
+								<ul>
+									<li>Vertrieb Bürobedarf</li>
+									<li>vertrieb@wacker24.de</li>
+									<li>-30</li>
+								</ul>
+								<ul>
+									<li>Vertrieb Möbel</li>
+									<li>vertrieb@wacker24.de</li>
+									<li>-40</li>
+								</ul>
+								<ul>
+									<li>Vertrieb Technik</li>
+									<li>vertrieb@wacker24.de</li>
+									<li>-50</li>
+								</ul>
+								<ul>
+									<li>Copyshop</li>
+									<li>copyshop@wacker24.de</li>
+									<li>-60</li>
+								</ul>
+								<ul>
+									<li>Fachmarkt</li>
+									<li>fachmarkt@wacker24.de</li>
+									<li>-70</li>
+								</ul>
+								<ul>
+									<li>Bestellung/Logistik</li>
+									<li>bestellung@wacker24.de</li>
+									<li>-80</li>
+								</ul>
 							</div>
 						</div>
 					</div>

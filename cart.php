@@ -430,15 +430,14 @@ include("includes/message.php");
 														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
-														$getQuantity = array();
-														$pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row->supplier_id);
-														$getQuantity = getQuantity($row->supplier_id, $pro_custom_add);
+														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
+														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 														if (mysqli_num_rows($rs1) > 0) {
 															$row1 = mysqli_fetch_object($rs1);
-															$pq_quantity = $getQuantity['pq_quantity'];
-															$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
-															$pq_physical_quantity = $getQuantity['pq_physical_quantity'];
-															$pq_status = $getQuantity['pq_status'];
+															$pq_quantity = $row1->pq_quantity;
+															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
+															$pq_physical_quantity = $row1->pq_physical_quantity;
+															$pq_status = $row1->pq_status;
 															$quantity_txt = "Stück sofort verfügbar";
 															$quantity_txt_color = "";
 															if ($row->ci_type > 0) {

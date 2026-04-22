@@ -66,14 +66,14 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 		<!--LOGIN_PAGE_END-->
 
 		<!--FOOTER_SECTION_START-->
-		<div id="footer_register">
+	<div id="footer_register">
 			<div class="page_width">
 				<ul>
 					<li><a href="javascript:void(0)">Cookie-Einstellungen </a></li>
 					<li><a href="impressum">Impressum</a></li>
-					<li><a href="privacy">Datenschutzerklärung</a></li>
-					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
-					<li><a href="contact_us">Kontakt</a></li>
+					<li><a href="datenschutz">Datenschutzerklärung</a></li>
+					<li><a href="agb">Allgemeinen Geschäftsbedingungen</a></li>
+					<li><a href="kontakt">Kontakt</a></li>
 				</ul>
 			</div>
 		</div>

@@ -29,36 +29,40 @@
                 }
             }
             ?>
-        </div>
-        <style>
-            .payment_card_img{width: 60px;}
-            .payment_card_img img{width: 100% !important;}
-        </style>
-        <div class="footer_bottom">
-            <div class="footer_btm_left">
-                <div class="social_medial">
-                    <ul>
-                        <?php
-                        $Query = "SELECT pm.pm_id, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
-                        $rs = mysqli_query($GLOBALS['conn'], $Query);
-                        if (mysqli_num_rows($rs) > 0) {
-                            while ($row = mysqli_fetch_object($rs)) {
-                                $pm_image_href = "files/no_img_1.jpg";
-                                if (!empty($row->pm_image)) {
-                                    $pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
-                                }
-                        ?>
-                                <li>
-                                    <div class="payment_card_img"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
-                                </li>
-                        <?php
+            <div class="footer-col">
+                <h2>Kontakt & Anfahrt</h2>
+                <ul>
+                    <li><a title="Kontaktformular" href="kontakt">Kontaktformular</a></li>
+                    <li><a title="Kontaktformular" href="kontakt">Öffnungszeiten</a></li>
+                    <li><a title="Kontaktformular" href="kontakt">Anfahrt</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h2>Zahlungsarten</h2>
+                <div class="footer_payment_method">
+                    <?php
+                    $Query = "SELECT pm.pm_id, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
+                    $rs = mysqli_query($GLOBALS['conn'], $Query);
+                    if (mysqli_num_rows($rs) > 0) {
+                        while ($row = mysqli_fetch_object($rs)) {
+                            $pm_image_href = "files/no_img_1.jpg";
+                            if (!empty($row->pm_image)) {
+                                $pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
                             }
+                    ?>
+                            <div class="payment_card">
+                                <div class="payment_card_image"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
+                                <div class="payment_card_title"><?php print($row->pm_title) ?></div>
+                            </div>
+                    <?php
                         }
-                        ?>
-                    </ul>
+                    }
+                    ?>
                 </div>
             </div>
-            <div class="footer_btm_right">
+        </div>
+        <div class="footer_bottom">
+            <div class="footer_btm_left">
                 <div class="social_medial">
                     <ul>
                         <?php
@@ -79,6 +83,9 @@
                     </ul>
                 </div>
             </div>
+            <!--<div class="footer_btm_right">
+                <button class="subscribe_newsletter_btn">Newsletter abonnieren</button>
+            </div>-->
 
         </div>
         <div class="footer_logo"><a title="logo" href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>

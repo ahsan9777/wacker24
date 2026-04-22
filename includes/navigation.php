@@ -35,7 +35,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li id="switch_click_text"><?php print($switch_click_text); ?></li>
         </ul>
         <ul>
-            <li><a href="über-uns" title="Über uns">Über Deskup</a></li>
+            <li><a href="über-uns" title="Über uns">Über Wacker 24</a></li>
             <li><a href="kontakt" title="Kontaktformular">Kontakt</a></li>
             <li>
                 <div class="header_language">
@@ -52,7 +52,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
     <div class="header_sticky">
         <div class="header_bottom" <?php print($background_color_two); ?>>
             <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>" title="logo" aria-label="logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>
-            <div class="header_location location_trigger"><i class="fa fa-map-marker"></i> <span> <?php print((isset($_SESSION['ort']) && !empty($_SESSION['ort'])) ? $_SESSION['ort'] : 'Versand Germany'); ?> </span></div>
+            <div class="header_location location_trigger"><i class="fa fa-map-marker" ></i> <span> <?php print((isset($_SESSION['ort']) && !empty($_SESSION['ort']))? $_SESSION['ort'] : 'Versand Germany'); ?> </span></div>
             <form class="header_search" name="frm_search" id="frm_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
                     <select class="header_select_slt" name="level_one" id="level_one" aria-label="Category">
@@ -70,46 +70,46 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             </a>
             <div class="header_account">
                 <ul>
-                    <!--<li><a href="termine" title="termine">
-                            <div class="appointment_booking"><i class="fa fa-check-square-o"></i> Terminbuchung</div>
-                        </a></li>-->
+                    <li><a href="termine" title="termine">
+                            <div class="appointment_booking"><i class="fa fa-check-square-o" ></i> Terminbuchung</div>
+                        </a></li>
                     <li>
-                        <div class="hdr_icon"><i class="fa fa-user"></i> </div>
+                        <div class="hdr_icon"><i class="fa fa-user" ></i> </div>
                         <div class="hdr_text">
-                            <a href="#" role="button" onclick="return false;"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if ((isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3, 4))) || !isset($_SESSION["FullName"])) { ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
-                            <?php if ((isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3, 4))) || !isset($_SESSION["FullName"])) { ?>
-                                <div class="account_nav">
-                                    <ul>
-                                        <li>
-                                            <?php if (!isset($_SESSION["FullName"])) { ?>
-                                                <div class="full_width txt_align_center mb-10"><a class="href_login" href="anmelden" title="anmelden">
-                                                        <div class="gerenric_btn">Anmelden</div>
-                                                    </a></div>
-                                                <div class="full_width txt_align_center">Neues Konto? <a href="registrierung"><b>Erstellen Sie hier.</b></a></div>
-                                            <?php } ?>
-                                        </li>
-                                        <li><span>Meine Listen</span></li>
-                                        <li> <a title="sonderpreise" href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "#"); ?>"> Sonderpreise </a></li>
-                                        <li> <a title="einkaufslisten" href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "#"); ?>"> Einkaufslisten </a></li>
-                                        <li><span>Mein Konto</span></li>
-                                        <li> <a title="benutzerprofile" href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "#"); ?>"> Persönliche Daten <a href=""></a></li>
-                                        <li> <a title="bestellungen" href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "#"); ?>"> Bestellungen </a></li>
-                                        <li> <a title="adressen" href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "#"); ?>"> Adressen </a></li>
-                                        <li>Zahlungsarten</li>
-                                        <?php if (isset($_SESSION["FullName"])) { ?>
-                                            <li><a title="abmelden" href="abmelden">Abmelden</a></li>
+                            <a href="#" role="button" onclick="return false;"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
+                            <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
+                            <div class="account_nav">
+                                <ul>
+                                    <li>
+                                        <?php if (!isset($_SESSION["FullName"])) { ?>
+                                            <div class="full_width txt_align_center mb-10"><a class="href_login" href="anmelden" title="anmelden">
+                                                    <div class="gerenric_btn">Anmelden</div>
+                                                </a></div>
+                                            <div class="full_width txt_align_center">Neues Konto? <a href="registrierung"><b>Erstellen Sie hier.</b></a></div>
                                         <?php } ?>
-                                    </ul>
-                                </div>
+                                    </li>
+                                    <li><span>Meine Listen</span></li>
+                                    <li> <a title="sonderpreise" href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "#"); ?>"> Sonderpreise </a></li>
+                                    <li> <a title="einkaufslisten" href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "#"); ?>"> Einkaufslisten </a></li>
+                                    <li><span>Mein Konto</span></li>
+                                    <li> <a title="benutzerprofile" href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "#"); ?>"> Persönliche Daten <a href=""></a></li>
+                                    <li> <a title="bestellungen" href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "#"); ?>"> Bestellungen </a></li>
+                                    <li> <a title="adressen" href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "#"); ?>"> Adressen </a></li>
+                                    <li>Zahlungsarten</li>
+                                    <?php if (isset($_SESSION["FullName"])) { ?>
+                                        <li><a title="abmelden" href="abmelden">Abmelden</a></li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
                             <?php } ?>
                         </div>
                     </li>
                     <li>
-                        <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart"></i> </div>
+                        <div class="hdr_icon side_cart_click"><i class="fa fa-shopping-cart" ></i> </div>
                         <!--<div class="hdr_text side_cart_click"><a href="javascript:void(0)"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>-->
                         <div class="hdr_text"><a title="einkaufswagen" href="<?php print(isset($_SESSION['header_quantity']) ? 'einkaufswagen' : '#'); ?>" id="cart_click_href"><span id="header_quantity"> <?php print(isset($_SESSION['header_quantity']) ? $_SESSION['header_quantity'] : 0); ?> Artikel</span>Einkaufswagen</a></div>
                         <div class="hdr_side_cart">
-                            <div class="side_bar_close"><i class="fa fa-times"></i></div>
+                            <div class="side_bar_close"><i class="fa fa-times" ></i></div>
                             <div class="side_cart_subtotal">
                                 <div class="subtotal_title">Zwischensumme</div>
                                 <div class="subtotal_prise" id="cart_amount">0,00 €</div>
@@ -134,7 +134,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
                 ?>
-                        <li><a title="<?php print($row->cat_title); ?>" href="kategorie/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
+                        <li><a title="<?php print($row->cat_title); ?>" href="unterkategorien/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
                 <?php
                     }
                 }
@@ -143,7 +143,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 <li><a title="verkäufe-angebote" href="verkaeufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
             </ul>
             <div class="nav_submenu">
-                <div class="nav_submenu_logo" <?php print($background_color_two); ?> ><a title="logo" href="index.php"><img src="<?php print(config_site_logo) ?>" alt="logo"></a>
+                <div class="nav_submenu_logo"><a title="logo" href="index.php"><img src="images/logo.png" alt="logo"></a>
                     <div class="submenu_close"><i class="fa fa-close"></i> </div>
                 </div>
                 <ul>
@@ -153,7 +153,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     if (mysqli_num_rows($rs) > 0) {
                         while ($row = mysqli_fetch_object($rs)) {
                     ?>
-                            <li><a title="<?php print($row->cat_title); ?>" href="kategorie/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
+                            <li><a title="<?php print($row->cat_title); ?>" href="unterkategorien/<?php print($row->cat_params); ?>"> <?php print($row->cat_title); ?> </a></li>
                     <?php
                         }
                     }
@@ -164,7 +164,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             </div>
 
         </nav>
-        <?php /*if ($page == 0) {
+        <?php if ($page == 0) {
             $Query1 = "SELECT sc.scat_id, sc.group_id, sc.scat_title_de AS scat_title, sc.scat_params_de AS scat_params FROM special_category AS sc WHERE sc.scat_status = '1' AND sc.group_id != '' ORDER BY sc.scat_orderby ASC";
             $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
             if (mysqli_num_rows($rs1)) {
@@ -249,27 +249,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     </ul>
                 </div>
         <?php  }
-        } */ ?>
-        <?php
-        $Query1 = "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.parent_id AS sub_parent_id, one_cat.cat_params_de AS one_cat_params FROM category AS cat LEFT OUTER JOIN category AS sub_cat ON sub_cat.group_id = cat.parent_id LEFT OUTER JOIN category AS one_cat ON one_cat.group_id = sub_cat.parent_id AND one_cat.parent_id = '0' WHERE cat.cat_status = '1' AND cat.cat_showInNav = '1'";
-        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-        if (mysqli_num_rows($rs1)) {
-        ?>
-            <div class="header_nav_2">
-                <ul>
-                    <?php
-                    while ($row1 = mysqli_fetch_object($rs1)) {
-                    ?>
-                        <li>
-                            <a title="<?php print($row1->cat_title); ?>" href="<?php print($GLOBALS['siteURL']."produkte/".$row1->one_cat_params."/".$row1->sub_cat_params."/".$row1->cat_params); ?>" role="button"><span><?php print($row1->cat_title); ?></span></a>
-                        </li>
-                    <?php
-                    }
-                    ?>
-                    <!--<li><a href="javascript:void(0)"><span>LIGHTING</span></a></li>-->
-                </ul>
-            </div>
-        <?php  } ?>
+        } ?>
     </div>
 </header>
 <div class="header_overlay"></div>
