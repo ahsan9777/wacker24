@@ -1,6 +1,6 @@
 <?php
 ob_start();
-session_save_path('/tmp');
+//session_save_path('/tmp');
 session_start();
 
 
