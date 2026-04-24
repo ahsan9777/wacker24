@@ -4,6 +4,7 @@ include("includes/php_includes_top.php");
 //print_r($_REQUEST);die();
 $pro_id = 0;
 $supplier_id = 0;
+$pro_custom_add = 0;
 $cat_id_one = 0;
 $cat_id_two = 0;
 $pbp_price_amount = 0;
@@ -49,6 +50,7 @@ if (mysqli_num_rows($rs) > 0) {
 		$qryStrURL = "/" . $pro_type;
 	}
 	$supplier_id = $row->supplier_id;
+	$pro_custom_add = $row->pro_custom_add;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
 	$page_title = $pro_udx_seo_internetbezeichung;
 	$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
@@ -250,6 +252,18 @@ if (isset($_REQUEST['btnAdd_to_list'])) {
 		header("Location: " . product_detail_url($supplier_id) . "/1");
 	}
 }
+
+
+/*$result = getStockData($supplier_id, 1);
+echo "<pre>";
+print_r($result);
+echo "</pre>";
+$getQuantity = getQuantity($supplier_id, $pro_custom_add);//820123781
+
+echo "<pre>";
+print_r($getQuantity);
+echo "</pre>";*/
+//print('quantity: '.$result['availability']['quantity']);
 
 include("includes/message.php");
 ?>
@@ -524,16 +538,24 @@ include("includes/message.php");
 										}
 									}
 									$quantity_lenght = 0;
-									$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
+									//$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 									//print($Query);
-									$rs = mysqli_query($GLOBALS['conn'], $Query);
+									//$rs = mysqli_query($GLOBALS['conn'], $Query);
+									$getQuantity = array();
+									$getQuantity = getQuantity($supplier_id, $pro_custom_add);
 									$ci_qty_type = 0;
-									if (mysqli_num_rows($rs) > 0) {
-										$row = mysqli_fetch_object($rs);
+									//$rs = mysqli_query($GLOBALS['conn'], $Query);
+									$ci_qty_type = 0;
+									if (!empty($getQuantity)) {
+										/*$row = mysqli_fetch_object($rs);
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
 										$pq_physical_quantity = $row->pq_physical_quantity;
-										$pq_status = $row->pq_status;
+										$pq_status = $row->pq_status;*/
+										$pq_quantity = $getQuantity['pq_quantity'];
+										$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
+										$pq_physical_quantity = $getQuantity['pq_physical_quantity'];
+										$pq_status = $getQuantity['pq_status'];
 										if ($pq_status == 'true') {
 											$ci_qty_type = 1;
 										}

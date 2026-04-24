@@ -83,6 +83,7 @@ if (mysqli_num_rows($rs) > 0) {
 		define('config_btn_color', $row->config_btn_color);
 		define('config_fonts', $row->config_fonts);
 		define('config_site_special_price', $row->config_site_special_price);
+		define('config_site_quantity_source', $row->config_site_quantity_source);
 		define('config_site_logo', $GLOBALS['siteURL'] . "files/" . $row->config_site_logo);
 	}
 }

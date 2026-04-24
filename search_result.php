@@ -25,6 +25,9 @@ if (isset($_REQUEST['level_one']) && $_REQUEST['level_one'] > 0) {
 	$cat_id = $_REQUEST['level_one'];
 }
 $search_keyword_where = "";
+$search_keyword_case = "";
+$search_keyword_bonus_case = "";
+$search_keyword_pk_title_where = "";
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
 	$pro_udx_seo_epag_title_params_de = returnName("pro_udx_seo_epag_title_params_de", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
 	$pro_ean = returnName("pro_ean", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
@@ -310,14 +313,13 @@ if (isset($_REQUEST['sortby'])) {
 														?>
 														<?php
 														$quantity_lenght = 0;
-														$Query1 = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($row->supplier_id)) . "'";
-														//print();
-														$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-														if (mysqli_num_rows($rs1) > 0) {
-															$row1 = mysqli_fetch_object($rs1);
-															$pq_quantity = $row1->pq_quantity;
-															$pq_upcomming_quantity = $row1->pq_upcomming_quantity;
-															$pq_status = $row1->pq_status;
+														$getQuantity = array();
+														$getQuantity = getQuantity($row->supplier_id, $row->pro_custom_add);
+														if (!empty($getQuantity)) {
+															$pq_quantity = $getQuantity['pq_quantity'];
+															$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
+															$pq_physical_quantity = $getQuantity['pq_physical_quantity'];
+															$pq_status = $getQuantity['pq_status'];
 															$ci_qty_type = 0;
 															if($pq_status == 'true'){
 																$ci_qty_type = 1;
