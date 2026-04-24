@@ -27,7 +27,7 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mFile_bannerName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "INSERT INTO contents (cnt_id, footer_id, cnt_section, cnt_slug, cnt_heading_de, cnt_title_de, cnt_details_de, cnt_keywords, cnt_meta_description, cnt_addedby, cnt_cdate, cnt_image, cnt_banner_image) VALUES ('" . $cnt_id . "', '" . dbStr(trim($_REQUEST['footer_id'])) . "', '" . dbStr(trim($_REQUEST['cnt_section'])) . "', '" . dbStr(trim($_REQUEST['cnt_slug'])) . "', '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "', '" . $mfileName . "', '".$mFile_bannerName."')") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "INSERT INTO contents (cnt_id, footer_id, cnt_section, cnt_slug, cnt_heading_de, cnt_title_de, cnt_details_de, cnt_keywords, cnt_meta_description, cnt_addedby, cnt_cdate, cnt_image, cnt_banner_image) VALUES ('" . $cnt_id . "', '" . dbStr(trim($_REQUEST['footer_id'])) . "', '" . dbStr(trim($_REQUEST['cnt_section'])) . "', '" . dbStr(trim(url_clean(convertGermanChars($_REQUEST['cnt_slug'])))) . "', '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', '" . $_SESSION["UserID"] . "', '" . date_time . "', '" . $mfileName . "', '".$mFile_bannerName."')") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
     }
 } elseif (isset($_REQUEST['btnUpdate'])) {
@@ -59,7 +59,7 @@ if (isset($_REQUEST['btnAdd'])) {
                 createThumbnail2($dirName, $mFile_bannerName, $dirName . "th/", "138", "80");
             }
         }
-        mysqli_query($GLOBALS['conn'], "UPDATE contents SET footer_id = '" . dbStr(trim($_REQUEST['footer_id'])) . "',  cnt_section = '" . dbStr(trim($_REQUEST['cnt_section'])) . "', cnt_slug = '" . dbStr(trim($_REQUEST['cnt_slug'])) . "', cnt_heading_de = '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', cnt_title_de = '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', cnt_details_de = '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', cnt_keywords = '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', cnt_meta_description = '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', cnt_updatedby = '" . $_SESSION["UserID"] . "', cnt_udate = '" . date_time . "', cnt_image = '" . $mfileName . "', cnt_banner_image = '".$mFile_bannerName."' WHERE cnt_id= '" . $_REQUEST['cnt_id'] . "' ") or die(mysqli_error($GLOBALS['conn']));
+        mysqli_query($GLOBALS['conn'], "UPDATE contents SET footer_id = '" . dbStr(trim($_REQUEST['footer_id'])) . "',  cnt_section = '" . dbStr(trim($_REQUEST['cnt_section'])) . "', cnt_slug = '" . dbStr(trim(url_clean(convertGermanChars($_REQUEST['cnt_slug'])))) . "', cnt_heading_de = '" . dbStr(trim($_REQUEST['cnt_heading_de'])) . "', cnt_title_de = '" . dbStr(trim($_REQUEST['cnt_title_de'])) . "', cnt_details_de = '" . dbStr(trim($_REQUEST['cnt_details_de'])) . "', cnt_keywords = '" . dbStr(trim($_REQUEST['cnt_keywords'])) . "', cnt_meta_description = '" . dbStr(trim($_REQUEST['cnt_meta_description'])) . "', cnt_updatedby = '" . $_SESSION["UserID"] . "', cnt_udate = '" . date_time . "', cnt_image = '" . $mfileName . "', cnt_banner_image = '".$mFile_bannerName."' WHERE cnt_id= '" . $_REQUEST['cnt_id'] . "' ") or die(mysqli_error($GLOBALS['conn']));
         header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
     }
 } elseif (isset($_REQUEST['action'])) {
@@ -144,6 +144,23 @@ if (isset($_REQUEST['btnDelete'])) {
     if (isset($_REQUEST['chkstatus'])) {
         for ($i = 0; $i < count($_REQUEST['chkstatus']); $i++) {
 
+        $Query = "SELECT * FROM contents WHERE cnt_id = '".$_REQUEST['chkstatus'][$i]."'";
+        $rs = mysqli_query($GLOBALS['conn'], $Query);
+        if (mysqli_num_rows($rs) > 0) {
+            while ($row = mysqli_fetch_object($rs)) {
+                if(!empty($row->cnt_image)){
+                    @unlink("../files/contents/" . $row->cnt_image);
+                    @unlink("../files/contents/th/" . $row->cnt_image);
+                }
+                if(!empty($row->cnt_banner_image)){
+                    @unlink("../files/contents/" . $row->cnt_banner_image);
+                    @unlink("../files/contents/th/" . $row->cnt_banner_image);
+                }
+                deleteDirectory("../files/contents/".$_REQUEST['chkstatus'][$i]);
+            }
+        }
+
+            mysqli_query($GLOBALS['conn'], "DELETE FROM content_sections WHERE cnt_id = " . $_REQUEST['chkstatus'][$i]) or die(mysqli_error($_REQUEST['conn']));
             mysqli_query($GLOBALS['conn'], "DELETE FROM contents WHERE cnt_id = " . $_REQUEST['chkstatus'][$i]) or die(mysqli_error($_REQUEST['conn']));
         }
         $class = "alert alert-success";
@@ -213,7 +230,7 @@ include("includes/messages.php");
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
-                                    <label for="">Slug (Like: abc or abc_abc)</label>
+                                    <label for="">URL Slug</label>
                                     <input type="text" required class="input_style" name="cnt_slug" id="cnt_slug" value="<?php print($cnt_slug); ?>" placeholder="Slug (Like: abc or abc_abc)">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
@@ -239,11 +256,11 @@ include("includes/messages.php");
                                 <div class="col-md-12 col-12 mt-3">
                                     <label for="">Banner</label>
                                     <div class="">
-                                        <label for="file-upload" class="upload-btn">
+                                        <label for="file-banner-upload" class="upload-btn">
                                             <span class="material-icons">cloud_upload</span>
                                             <span>Upload Files</span>
                                         </label>
-                                        <input id="file-upload" type="file" class="file-input" name="mFile_banner">
+                                        <input id="file-banner-upload" type="file" class="file-input" name="mFile_banner">
                                     </div>
                                 </div>
                                 <div class="col-md-12 col-12 mt-3">
@@ -366,9 +383,9 @@ include("includes/messages.php");
                                 <div class=" col-md-1 col-12 mt-2">
                                     <input type="submit" name="btnOrderby" value="Order Update" class="btn btn-success btn-style-light w-auto">
                                 </div>
-                                <!--<div class=" col-md-1 col-12 mt-2">
+                                <div class=" col-md-1 col-12 mt-2">
                                     <input type="submit" name="btnDelete" value="Delete" class="btn btn-danger btn-style-light w-100" onclick="return confirm('Are you sure you want to delete selected item(s)?');">
-                                </div>-->
+                                </div>
                             </div>
                         </form>
 

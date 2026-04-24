@@ -223,10 +223,11 @@ if (isset($_REQUEST['btnAdd'])) {
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
-        $rsM = mysqli_query($GLOBALS['conn'], "SELECT * FROM content_sections WHERE csec_id = " . $_REQUEST['csec_id']);
+        $rsM = mysqli_query($GLOBALS['conn'], "SELECT cs.*, cst.cst_title FROM content_sections AS cs LEFT OUTER JOIN content_section_template AS cst ON cst.cst_id = cs.cst_id WHERE cs.csec_id = " . $_REQUEST['csec_id']);
         if (mysqli_num_rows($rsM) > 0) {
             $rsMem = mysqli_fetch_object($rsM);
             $cnt_id = $rsMem->cnt_id;
+            $cst_title = $rsMem->cst_title;
             $cst_id = $rsMem->cst_id;
             $csec_year = $rsMem->csec_year;
             $csec_heading_one_de = $rsMem->csec_heading_one_de;
@@ -362,6 +363,11 @@ include("includes/messages.php");
                         <h2 class="text-white">
                             <?php print($formHead); ?> Content Section
                         </h2>
+                        <?php if ($_REQUEST['action']  == 2) { ?>
+                        <div class="col-md-12 col-12 mt-4">
+                            <h5 class="text-white text-center"><?php print($cst_title); ?> </h5>
+                        </div>
+                        <?php } ?>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <div class="row">
                                 <?php if (!empty($mfile_bannerpath)) { ?>
@@ -373,13 +379,15 @@ include("includes/messages.php");
                                 if (!empty($mfile_onepath)) { ?>
                                     <div class="col-md-12 col-12 mt-3">
                                         <label for="">Right Image</label><br>
-                                        <img src="<?php print($mfile_onepath); ?>" width="30%" alt="">
+                                        <img class="me-4" src="<?php print($mfile_onepath); ?>" width="30%" alt="">
                                         <?php if (!empty($mfile_twopath)) { ?>
                                         <img src="<?php print($mfile_twopath); ?>" width="30%" alt="">
                                         <?php } ?>
                                     </div>
                                 <?php }
-                                if ($_REQUEST['action']  == 2) {
+
+                                    if ($_REQUEST['action']  == 2) { 
+
                                     if ($cst_id == 1) {
                                         include("includes/cst_one.php");
                                     } elseif ($cst_id == 2) {
