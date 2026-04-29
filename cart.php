@@ -433,9 +433,9 @@ include("includes/message.php");
 														$quantity_txt_color = "";
 														$quantity_txt = "Stück sofort verfügbar";
 														$getQuantity = array();
-														$pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row->supplier_id);
-														$getQuantity = getQuantity($row->supplier_id, $pro_custom_add);
-														if (!empty($getQuantity)) {
+														if ($row->pro_type == 0 ) {
+															$pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row->supplier_id);
+															$getQuantity = getQuantity($row->supplier_id, $pro_custom_add);
 															$pq_quantity = $getQuantity['pq_quantity'];
 															$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
 															$pq_physical_quantity = $getQuantity['pq_physical_quantity'];

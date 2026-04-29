@@ -541,12 +541,11 @@ include("includes/message.php");
 									//$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 									//print($Query);
 									//$rs = mysqli_query($GLOBALS['conn'], $Query);
-									$getQuantity = array();
-									$getQuantity = getQuantity($supplier_id, $pro_custom_add);
 									$ci_qty_type = 0;
-									//$rs = mysqli_query($GLOBALS['conn'], $Query);
-									$ci_qty_type = 0;
-									if (!empty($getQuantity)) {
+									//if (mysqli_num_rows($rs) > 0) {
+									if($pro_type == 0) {
+										$getQuantity = array();
+										$getQuantity = getQuantity($supplier_id, $pro_custom_add);
 										/*$row = mysqli_fetch_object($rs);
 										$pq_quantity = $row->pq_quantity;
 										$pq_upcomming_quantity = $row->pq_upcomming_quantity;

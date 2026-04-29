@@ -91,7 +91,9 @@ if (isset($_REQUEST['action'])) {
             $ci_discount_value = $_REQUEST['ci_discount_value'];
             $ci_discounted_amount = 0;
             $ci_discount = 0;
+            if ($pro_type == 0) {
             $checkquantity = checkquantity($supplier_id, $ci_qty, 0, $ci_qty_type, $ci_type);
+            }
             //print($ci_amount);die();
             if ($ci_discount_value > 0) {
                 $ci_discounted_amount_gross = 0;
@@ -123,12 +125,13 @@ if (isset($_REQUEST['action'])) {
                         $row = mysqli_fetch_object($rs);
 
                         $cart_quantity = returnName("ci_qty", "cart_items", "ci_id", $row->ci_id);
-                        $checkquantity = checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type);
                         if ($pro_type > 0) {
-                            $checkquantity = $ci_qty + $cart_quantity;
+                            //$checkquantity = $ci_qty + $cart_quantity;
+                            $checkquantity = $ci_qty;
                             $get_pro_price = get_pro_price($pro_id, $supplier_id, 1);
                         } else {
                             //$get_pro_price = get_pro_price($pro_id, $supplier_id, $ci_qty + $cart_quantity);
+                            $checkquantity = checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type);
                             $get_pro_price = get_pro_price($pro_id, $supplier_id, $checkquantity);
                         }
                         //print_r($get_pro_price);
@@ -227,7 +230,7 @@ if (isset($_REQUEST['action'])) {
                 $count = 0;
                 $cart_amount = 0;
                 //$Query = "SELECT ci.*, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = ci.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1' WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
-                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_custom_add, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
+                $Query = "WITH ranked_gallery AS (SELECT pg.*, ROW_NUMBER() OVER (PARTITION BY supplier_id ORDER BY pg_mime_source_url ASC) AS rn FROM products_gallery AS pg WHERE pg.pg_mime_purpose = 'normal') SELECT ci.*, pro.pro_type, pro.pro_custom_add, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, rg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT JOIN ranked_gallery AS rg ON rg.supplier_id = ci.supplier_id AND rg.rn = 1 WHERE ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_id ASC";
                 //print($Query);die();
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
@@ -235,7 +238,7 @@ if (isset($_REQUEST['action'])) {
                     while ($row = mysqli_fetch_object($rs)) {
 
                         $pq_quantity = 0;
-                        if (!empty($row->supplier_id)) {
+                         if (!empty($row->supplier_id) && $row->pro_type == 0) {
                             $getQuantity = array();
                             $getQuantity = getQuantity($row->supplier_id, $row->pro_custom_add);
                             if (!empty($getQuantity)) {
@@ -1206,9 +1209,9 @@ if (isset($_REQUEST['action'])) {
                     }
                     $quantity_lenght = 0;
                      $getQuantity = array();
-                    $pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row->supplier_id);
-                    $getQuantity = getQuantity($row->supplier_id, $pro_custom_add);
-                    if (!empty($getQuantity)) {
+                    if ($pro_type == 0) {
+                         $pro_custom_add = returnName('pro_custom_add', 'products', 'supplier_id', $row->supplier_id);
+                        $getQuantity = getQuantity($row->supplier_id, $pro_custom_add);
                         $pq_quantity = $getQuantity['pq_quantity'];
                         $pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
                         $pq_physical_quantity = $getQuantity['pq_physical_quantity'];
