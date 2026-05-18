@@ -47,11 +47,21 @@ $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
 function siteMapCat($parent_id)
 {
     $date = new DateTime('now', new DateTimeZone('Europe/Berlin'));
-    
-    $rs = mysqli_query($GLOBALS['conn'], "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_params_de AS cat_params, cat.cat_status FROM `category` AS cat WHERE parent_id='" . $parent_id . "'");
+    $cat_WhereQuery = "";
+    if (strlen($parent_id) == 3) {
+        $cat_WhereQuery = "AND EXISTS (SELECT 1 FROM category_map AS cm WHERE FIND_IN_SET(cat.group_id, cm.cat_id) )";
+    }
+    $rs = mysqli_query($GLOBALS['conn'], "SELECT cat.cat_id, cat.group_id, cat.parent_id, cat.cat_title_de AS cat_title, cat.cat_params_de AS cat_params, cat.cat_status FROM `category` AS cat WHERE parent_id='" . $parent_id . "' " . $cat_WhereQuery . "");
     if (mysqli_num_rows($rs) > 0) {
         while ($rw = mysqli_fetch_object($rs)) {
-            $pgURL = $GLOBALS['siteURL'] . "kategorie/" . $rw->cat_params;
+            if ($rw->parent_id == 0) {
+                $pgURL = $GLOBALS['siteURL'] . "unterkategorien/" . $rw->cat_params;
+            } elseif (strlen($rw->parent_id) == 2) {
+                $pgURL = $GLOBALS['siteURL'] . "artikelarten/" . $rw->cat_params;
+            } elseif (strlen($rw->parent_id) == 3) {
+                $cat_params = returnName("cat_params_de AS cat_params", "category", "group_id", $rw->parent_id);
+                $pgURL = $GLOBALS['siteURL'] . "artikelarten/" . $cat_params . "/" . $rw->cat_params;
+            }
             //$dt = date("Y-m-d");
             echo "<url>
                 <loc>" . $pgURL . "</loc>
@@ -59,20 +69,7 @@ function siteMapCat($parent_id)
                 <changefreq>weekly</changefreq>
                 <priority>0.1</priority>
             </url>";
-            $rs1 = mysqli_query($GLOBALS['conn'], "SELECT c.*, two_sub.cat_params_de AS two_cat_params_de FROM category AS c LEFT OUTER JOIN category AS two_sub ON two_sub.group_id = c.parent_id  WHERE c.parent_id IN (SELECT sub_cat.group_id  FROM category AS sub_cat WHERE sub_cat.parent_id = '".$rw->group_id."') AND EXISTS (SELECT 1 FROM category_map AS cm WHERE FIND_IN_SET(c.group_id, cm.cat_id) )");
-            if(mysqli_num_rows($rs1) > 0){
-                while($rw1 = mysqli_fetch_object($rs1)){
-                    $pgURL = $GLOBALS['siteURL'] . "produkte/".$rw->cat_params ."/".$rw1->two_cat_params_de."/". $rw1->cat_params_de;
-                    //$dt = date("Y-m-d");
-                    echo "<url>
-                        <loc>" . $pgURL . "</loc>
-                        <lastmod>" . $date->format('c') . "</lastmod>
-                        <changefreq>weekly</changefreq>
-                        <priority>0.1</priority>
-                    </url>";
-                }
-
-            }
+            siteMapCat($rw->group_id);
         }
     }
 }

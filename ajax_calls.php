@@ -761,10 +761,12 @@ if (isset($_REQUEST['action'])) {
                     $pbp_price_amount = $category_data['data_3'];
                     if ($level_one == 20) {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
-                        $cat_link = "artikelarten/" . $row->sub_cat_params . "/20";
+                        //$cat_link = "artikelarten/" . $row->sub_cat_params . "/20";
+                        $cat_link = "produkte/".$cat_params_one."/" . $row->sub_cat_params . "/20";
                     } else {
                         //$cat_two_params_de = returnName("cat_params_de", "category", "group_id", $row->parent_id);
-                        $cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+                        //$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+                        $cat_link = "produkte/".$cat_params_one."/" . $row->cat_params . "/" . $row->sub_cat_params;
                     }
                     $category_type_inner .= '<div class="ctg_type_col">
 												<a href="' . $cat_link . '" title = "' . $row->sub_cat_title . '">

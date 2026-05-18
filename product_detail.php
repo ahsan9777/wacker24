@@ -34,9 +34,10 @@ $ci_type = 0;
 if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
 	$ci_type = 1;
 }
-$product_params = explode("-", $_REQUEST['product_params']);
+//$product_params = explode("-", $_REQUEST['product_params']);
 //$params_supplier_id =  end($product_params);
-$params_supplier_id = returnName("supplier_id", "products", "pro_ean", end($product_params), "AND pro_custom_add IN (0,1) ORDER BY pro_custom_add DESC");
+//$params_supplier_id = returnName("supplier_id", "products", "pro_ean", end($product_params), "AND pro_custom_add IN (0,1) ORDER BY pro_custom_add DESC");
+$params_supplier_id = returnName("supplier_id", "products", "pro_url", $_REQUEST['product_params']);
 $Query = "SELECT pro.*, pbp.pbp_id, pro.pro_ean, manf.manf_name, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
 //print($Query);//die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -74,6 +75,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$pro_quantity_interval = $row->pro_quantity_interval;
 	$pbp_price_amount = $row->pbp_price_amount;
 	$pbp_price_without_tax = $row->pbp_price_without_tax;
+	$pro_url = $row->pro_url;
 	if (config_site_special_price > 0 && $row->pbp_special_price_amount > 0) {
 		$pbp_price_amount = $row->pbp_special_price_amount;
 		$pbp_price_without_tax = $row->pbp_special_price_without_tax;
@@ -287,7 +289,7 @@ include("includes/message.php");
 			},
 			"offers": {
 				"@type": "Offer",
-				"url": "<?php print($GLOBALS['siteURL'] . $_REQUEST['product_params']); ?>",
+				"url": "<?php print($GLOBALS['siteURL'] . $pro_url); ?>",
 				"priceCurrency": "EUR",
 				<?php print($price_schema); ?> "shippingDetails": [{
 					"@type": "OfferShippingDetails",
@@ -409,7 +411,8 @@ include("includes/message.php");
 								<?php
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
-									$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
+									//$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
+									$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, pg.pg_mime_source_url, pro_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$count = mysqli_num_rows($rs);
@@ -424,7 +427,7 @@ include("includes/message.php");
 														<li>
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
-																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px; width: 60px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->pro_ean); ?>" pro_udx_seo_epag_title_params_de="<?php print($row->pro_udx_seo_epag_title_params_de); ?>" data-title="<?php print($row->pf_fvalue); ?>">
+																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px; width: 60px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->pro_ean); ?>" pro_udx_seo_epag_title_params_de="<?php print($row->pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($row->pro_url); ?>" data-title="<?php print($row->pf_fvalue); ?>">
 																	<?php if (in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { ?>
 																		<img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
 																	<?php } else { ?>
@@ -486,7 +489,7 @@ include("includes/message.php");
 								<?php if ($pq_physical_quantity > 0) { ?>
 									<div class="tab_radio_button">
 										<div class="tab_radio_col">
-											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" pro_udx_seo_epag_title_params_de="<?php print($pro_udx_seo_epag_title_params_de); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print((($ci_type == 0) ? 'checked' : '')); ?>>
+											<input type="radio" class="cart_type_online" id="cart_type_online_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" pro_udx_seo_epag_title_params_de="<?php print($pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($pro_url); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="0" <?php print((($ci_type == 0) ? 'checked' : '')); ?>>
 											<label for="cart_type_online_<?php print($pro_id); ?>">
 												<?php if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) {
 													print(getShippingTiming($_SESSION['plz']));
@@ -496,7 +499,7 @@ include("includes/message.php");
 											</label>
 										</div>
 										<div class="tab_radio_col">
-											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" pro_udx_seo_epag_title_params_de="<?php print($pro_udx_seo_epag_title_params_de); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print((($ci_type == 1) ? 'checked' : '')); ?>>
+											<input type="radio" class="cart_type_physical" id="cart_type_physical_<?php print($pro_id); ?>" data-id="<?php print($pro_id); ?>" data-supplier-id="<?php print($supplier_id); ?>" pro_udx_seo_epag_title_params_de="<?php print($pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($pro_url); ?>" name="cart_type_option_<?php print($pro_id); ?>" value="1" <?php print((($ci_type == 1) ? 'checked' : '')); ?>>
 											<label for="cart_type_physical_<?php print($pro_id); ?>">Marktabholung heute ab <?php print(date('H:i', strtotime("+1 hour"))); ?> Uhr</label>
 										</div>
 									</div>
@@ -955,16 +958,20 @@ include("includes/message.php");
 	$(".cart_type_online").on("click", function() {
 		//console.log("cart_type_online");
 		$("#ci_type_" + $(this).attr("data-id")).val(0);
-		let supplier_id = $(this).attr("data-supplier-id");
+		/*let supplier_id = $(this).attr("data-supplier-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
-		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;
+		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;*/
+		let pro_url = $(this).attr("pro_url");
+		window.location.href = pro_url;
 	});
 	$(".cart_type_physical").on("click", function() { //ci_type
 		$("#ci_type_" + $(this).attr("data-id")).val(1);
-		let supplier_id = $(this).attr("data-supplier-id");
+		/*let supplier_id = $(this).attr("data-supplier-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
-		//window.location.href = "product/1/" + supplier_id + "/" + pro_description;
 		window.location.href = "1/" + pro_udx_seo_epag_title_params_de + '-' + supplier_id;
+		let supplier_id = $(this).attr("data-supplier-id");*/
+		let pro_url = $(this).attr("pro_url");
+		window.location.href = "1/" + pro_url;
 	});
 </script>
 <script src="js/slick.js"></script>
@@ -1225,10 +1232,12 @@ include("includes/message.php");
 	});
 
 	$(".color_tab").on("click", function() {
-		let supplier_id = $(this).attr("data-id");
+		/*let supplier_id = $(this).attr("data-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
-		//console.log("pro_description: "+pro_udx_seo_epag_title_params_de+'-'+supplier_id);
-		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;
+		console.log("pro_description: "+pro_udx_seo_epag_title_params_de+'-'+supplier_id);
+		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;*/
+		let pro_url = $(this).attr("pro_url");
+		window.location.href = pro_url;
 	});
 	$(".quantity").on("click", function() {
 		//let quantity = $(this).attr("data-id");

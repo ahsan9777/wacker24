@@ -2,12 +2,13 @@
 include("../lib/openCon.php");
 include("../lib/functions.php");
 // Sample product data (you can replace this with data from your database)
+$products = array();
 //$Query = "SELECT pro.*, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, manf.manf_name, cm.cat_id, cm.sub_group_ids, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id  ORDER BY pro.pro_id ASC";
 $Query = "SELECT * FROM vu_products AS pro ORDER BY pro.pro_id ASC";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
     while ($row = mysqli_fetch_object($rs)) {
-
+        $product = array();
         $product_type = "";
         $special_price = array();
         $sub_group_ids = explode(",", $row->sub_group_ids);
@@ -40,7 +41,7 @@ if (mysqli_num_rows($rs) > 0) {
                 'id' => $row->supplier_id,
                 'title' => $row->pro_udx_seo_internetbezeichung,
                 'description' => $pro_description_long,
-                'link' => $GLOBALS['siteURL'].$row->pro_udx_seo_epag_title_params_de."-".$row->pro_ean,
+                'link' => $GLOBALS['siteURL'] .product_detail_url($row->supplier_id),
                 'image_link' => $pg_mime_source_url,
                 'price' => $row->pbp_price_amount.' EUR',
                 'brand' => $brand,
