@@ -71,6 +71,12 @@ $cu = 'active';
             </li>
         </ul>
         <ul class="accordion-menu border-top border-black">
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_report_search_keywords' ) ? $cu : ''; ?>"><span class="material-symbols-outlined icon">analytics</span> <span class="text">Reports</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_report_search_keywords') ? $c : ''; ?>>
+                    <li><a href="manage_report_search_keywords.php" title="Search Keyword Reports" ><span class="text">Search Keyword</span></a></li>
+                </ul>
+            </li>
             <li>
                 <a href="manage_admin_users.php" title="Benutzerverwaltung Management" ><span class="material-icons icon">admin_panel_settings</span><span class="text">Benutzerverwaltung</span></a>
             </li>
