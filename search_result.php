@@ -29,12 +29,9 @@ $search_keyword_case = "";
 $search_keyword_bonus_case = "";
 $search_keyword_pk_title_where = "";
 if ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword'])) && (isset($_REQUEST['supplier_id'])) && $_REQUEST['supplier_id'] > 0) {
-	$pro_udx_seo_epag_title_params_de = returnName("pro_udx_seo_epag_title_params_de", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
-	$pro_ean = returnName("pro_ean", "vu_products", "supplier_id", $_REQUEST['supplier_id']);
-	header("Location: " . $GLOBALS['siteURL'].$pro_udx_seo_epag_title_params_de."-".$pro_ean);
-	/*$product_detail_url = $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
+	
 	$pro_url = returnName("pro_url", "products", "supplier_id", $_REQUEST['supplier_id']);
-	header("Location: " . $GLOBALS['siteURL'].$pro_url);*/
+	header("Location: " . $GLOBALS['siteURL'] . $pro_url);
 	$search_keyword = $_REQUEST['search_keyword'];
 } elseif ((isset($_REQUEST['search_keyword']) && !empty($_REQUEST['search_keyword']))) {
 

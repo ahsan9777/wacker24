@@ -8,7 +8,7 @@ $cat_params = "";
 //$level_one = $_REQUEST['level_one'];
 $lf_action_type = 0;
 if(isset($_REQUEST['cat_params_one']) && $_REQUEST['cat_params_one'] == 'tinte-toner'){
-	header('Location: '.$GLOBALS['siteURL'].'artikelarten/tinte-toner/tinte-toner');
+	header('Location: '.$GLOBALS['siteURL'].'produkte/tinte-toner/tinte-toner/tinte-toner');
 }
 $Query = "SELECT group_id, cat_keyword, cat_description FROM category WHERE cat_params_de = '".$_REQUEST['cat_params_one']."'";
 $rs = mysqli_query($GLOBALS['conn'], $Query);

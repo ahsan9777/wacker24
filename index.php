@@ -227,7 +227,7 @@ include("includes/php_includes_top.php");
 									}
 									?>
 								</div>
-								<div class="gerenric_show_All"><a  tabindex="-1" href="unterkategorien/schulranzen" title="Schulranzen">Mehr anzeigen</a></div>
+								<div class="gerenric_show_All"><a  tabindex="-1" href="kategorie/<?php print(returnName("cat_params_de AS cat_params","category","group_id",20)); ?>" title="Schulranzen">Mehr anzeigen</a></div>
 							</div>
 						</div>
 						<?php
@@ -282,7 +282,7 @@ include("includes/php_includes_top.php");
 											?>
 										</div>
 									</div>
-									<div class="gerenric_show_All"><a  tabindex="-1" href="unterkategorien/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
+									<div class="gerenric_show_All"><a  tabindex="-1" href="kategorie/<?php print(returnName("cat_params_de AS cat_params","category","group_id",$row1->group_id)); ?>" title="<?php print($row1->cat_title); ?>">Mehr anzeigen</a></div>
 								</div>
 						<?php
 							}
