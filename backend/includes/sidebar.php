@@ -72,9 +72,10 @@ $cu = 'active';
         </ul>
         <ul class="accordion-menu border-top border-black">
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_report_search_keywords' ) ? $cu : ''; ?>"><span class="material-symbols-outlined icon">analytics</span> <span class="text">Reports</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_report_search_keywords') ? $c : ''; ?>>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_report_search_keywords' || $pg == 'manage_report_cart_products') ? $cu : ''; ?>"><span class="material-symbols-outlined icon">analytics</span> <span class="text">Reports</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_report_search_keywords' || $pg == 'manage_report_cart_products') ? $c : ''; ?>>
                     <li><a href="manage_report_search_keywords.php" title="Search Keyword Reports" ><span class="text">Search Keyword</span></a></li>
+                    <li><a href="manage_report_cart_products.php" title="Add to cart Product Reports" ><span class="text">Add to cart Product</span></a></li>
                 </ul>
             </li>
             <li>
