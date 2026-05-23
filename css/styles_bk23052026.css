@@ -5402,9 +5402,3 @@ body.body-white {
     color: #000 !important;
     cursor: pointer;
 }
-
-.login_logo:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 0 18px rgba(144, 255, 33, 0.4);
-    border-color: #20ff20d1;
-}

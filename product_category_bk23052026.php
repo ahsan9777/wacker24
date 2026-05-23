@@ -65,8 +65,6 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 								<h1> <?php print(returnName("cat_title_de AS cat_title", "category", "group_id", $level_one)) ?> </h1>
 							</div>
 							<div class="category_type_product">
-								<input type="hidden" name="category_type_inner_page" id="category_type_inner_page" value="0">
-								<input type="hidden" name="product_load" id="product_load" value="0">
 								<div class="category_type_inner" id="category_type_inner">
 									<div class="spinner" id="spinner_category_type_inner">
 										<div></div>
@@ -83,6 +81,11 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 										<div></div>
 									</div>
 								</div>
+								<div class="txt_align_center" id="btn_load" style="display: none;">
+									<input type="hidden" name="category_type_inner_page" id="category_type_inner_page" value="0">
+									<div class="load-more-button">Weitere anzeigen &nbsp;<i class="fa fa-angle-down" ></i></div>
+									<div class="load-less-button" style="display:none">Ansicht schließen &nbsp;<i class="fa fa-angle-up" ></i></div>
+								</div>
 								<div class="txt_align_center spinner" id="btn_load_spinner" style="display: none;">
 									<div></div>
 									<div></div>
@@ -97,6 +100,47 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 									<div></div>
 									<div></div>
 								</div>
+							</div>
+							<!--<div class="gerenric_white_box">
+								<div class="gerenric_product full_column mostviewed" id="related_category_one">
+									<div class="spinner" id="spinner_related_category_one">
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+									<?php //include("includes/product_category/related_category_one.php"); 
+									?>
+								</div>
+							</div>
+							<div class="gerenric_white_box">
+								<div class="gerenric_product full_column mostviewed" id="related_category_two">
+									<div class="spinner" id="spinner_related_category_two">
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+										<div></div>
+									</div>
+									<?php //include("includes/product_category/related_category_two.php"); 
+									?>
+								</div>
+							</div>-->
 						</div>
 					</div>
 
@@ -206,32 +250,6 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 <?php include("includes/bottom_js.php"); ?>
 <script>
 	let ajaxRequests = [];
-	
-	let loading = false;
-
-	$(window).scroll(function () {
-
-		if (loading) return;
-
-		let lastItem = $(".ctg_type_col").last();
-		let product_load = $("#product_load").val();
-
-		if (lastItem.length === 0) return;
-
-		let lastItemOffset = lastItem.offset().top;
-		let scrollTop = $(window).scrollTop();
-		let windowHeight = $(window).height();
-
-		// Trigger when last item is visible
-		if (scrollTop + windowHeight >= lastItemOffset - 100 && product_load == 0) {
-
-			loading = true;
-
-			console.log("Last product reached - load more");
-
-			$("#category_type_inner").trigger("click");
-		}
-	});
 	$(window).on('load', function() {
 		$("#category_type_inner").trigger("click");
 	});
@@ -283,7 +301,11 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 						$("#btn_load").show();
 					}
 					if (obj.counter == obj.last_record) {
-						$("#product_load").val(1);
+						$(".load-more-button").hide();
+						$(".load-less-button").show();
+					} else {
+						$(".load-more-button").show();
+						$(".load-less-button").hide();
 					}
 					$("#category_type_inner_page").val(obj.category_type_inner_page);
 					$("#category_type_inner").append(obj.category_type_inner);
@@ -296,7 +318,6 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 			},
 			complete: function(jqXHR) {
 				ajaxRequests = ajaxRequests.filter(req => req !== jqXHR);
-				loading = false;
 			}
 		});
 	});
