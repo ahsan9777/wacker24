@@ -13,7 +13,7 @@ $user_id = 0;
 if(isset($_SESSION["UID"])){
 	$user_id = $_SESSION["UID"];
 }
-mysqli_query($GLOBALS['conn'], "INSERT INTO search_keyword (user_id, sk_user_ip, sk_data, sk_cdate) VALUES ('".$user_id."', '".$user_ip."', '".dbStr(trim($_REQUEST['search_keyword']))."', '".date_time."')") or die(mysqli_error($GLOBALS['conn']));
+mysqli_query($GLOBALS['conn'], "INSERT INTO search_keyword (user_id, sk_user_visit, sk_user_ip, sk_data, sk_cdate) VALUES ('".$user_id."','".$_SESSION['user_visit']."', '".$user_ip."', '".dbStr(trim($_REQUEST['search_keyword']))."', '".date_time."')") or die(mysqli_error($GLOBALS['conn']));
 $heading_title = "";
 $search_whereclause = "";
 $Sidefilter_where = "";

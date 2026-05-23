@@ -15,6 +15,11 @@ $mailer = new Mailer();
 
 //$_SESSION['utype_id'] = 3;
 
+if(!isset($_SESSION['user_visit'])){
+    $base64 = base64_encode(date_time);
+    $_SESSION['user_visit'] = $base64;
+}
+
 $page = 0;
 
 $class = "";

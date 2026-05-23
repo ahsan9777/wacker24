@@ -521,5 +521,22 @@ if (isset($_REQUEST['action'])) {
                 print("Total no of record updated: " . $counter);
             }
             break;
+
+        case 'sk_user_visit':
+            print("sk_user_visit");die();
+            $counter = 0;
+            $Query = "SELECT * FROM search_keyword AS sk GROUP BY sk_user_ip ORDER BY sk_id ASC";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                while ($row = mysqli_fetch_object($rs)) {
+                    $sk_user_ip = $row->sk_user_ip;
+                    $sk_user_visit = base64_encode($row->sk_cdate);
+
+                    mysqli_query($GLOBALS['conn'], "UPDATE search_keyword SET sk_user_visit = '" . dbStr(trim($sk_user_visit)) . "' WHERE sk_user_ip = '" . $sk_user_ip . "' ") or die(mysqli_error($GLOBALS['conn']));
+                    $counter++;
+                }
+                print("Total no of record added: " . $counter);
+            }
+            break;
     }
 }
