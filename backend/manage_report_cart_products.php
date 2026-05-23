@@ -52,11 +52,11 @@ include("../lib/session_head.php");
                                 <form class="row flex-row" name="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
                                 <div class=" col-md-4 col-12 mt-2">
                                     <label for="" class="text-white">From</label>
-                                    <input type="date" class="input_style" name="date_from" id="date_from" value="<?php print($date_from); ?>" autocomplete="off" onchange="javascript: frm_search.submit();">
+                                    <input type="date" class="input_style bg-white text-dark" name="date_from" id="date_from" value="<?php print($date_from); ?>" autocomplete="off" onchange="javascript: frm_search.submit();">
                                 </div>
                                 <div class=" col-md-4 col-12 mt-2">
                                     <label for="" class="text-white">To</label>
-                                    <input type="date" class="input_style" name="date_to" id="date_to" value="<?php print($date_to); ?>" autocomplete="off" onchange="javascript: frm_search.submit();">
+                                    <input type="date" class="input_style bg-white text-dark" name="date_to" id="date_to" value="<?php print($date_to); ?>" autocomplete="off" onchange="javascript: frm_search.submit();">
                                 </div>
                             </form>
                             <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
@@ -87,7 +87,7 @@ include("../lib/session_head.php");
                                                 $labels_data .=  "'".$row->pro_udx_seo_epag_title."', ";
                                                 $count_data .=  $row->pro_count.", ";
                                         ?>
-                                                <tr>
+                                                <tr class="border-bottom border-white">
                                                     <td><?php print($row->pro_udx_seo_epag_title); ?></td>
                                                     <td><?php print($row->pro_count); ?></td>
                                                     <td>

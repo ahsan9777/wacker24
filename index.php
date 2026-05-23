@@ -109,8 +109,8 @@ include("includes/php_includes_top.php");
 												while ($row2 = mysqli_fetch_object($rs2)) {
 											?>
 													<div class="pd_ctg_card">
-														<a href="artikelarten/<?php print($row2->cat_params); ?>" title="artikelarten/<?php print($row2->cat_params); ?>">
-															<div class="pd_ctg_image"><img loading="lazy" src="<?php print(get_image_link(75, $row2->pg_mime_source)); ?>" alt="artikelarten/<?php print($row2->cat_params); ?>"></div>
+														<a href="produkte/<?php print($row1->cat_params."/".$row2->cat_params); ?>" title="produkte/<?php print($row1->cat_params."/".$row2->cat_params); ?>">
+															<div class="pd_ctg_image"><img loading="lazy" src="<?php print(get_image_link(75, $row2->pg_mime_source)); ?>" alt="produkte/<?php print($row1->cat_params."/".$row2->cat_params); ?>"></div>
 															<div class="pd_ctg_title"> <?php print($row2->cat_title); ?> </div>
 														</a>
 													</div>
