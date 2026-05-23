@@ -1767,7 +1767,6 @@ function DeleteFile2($Field, $Table, $IDField, $ID, $path)
 		@unlink($tPath);
 	}
 }
-
 function deleteDirectory($dir) {
     // Check if directory exists
     if (!file_exists($dir)) {
@@ -2777,6 +2776,8 @@ function RefundPayment($entityId, $paymentId, $amount)
 
 	return $responseData;
 }
+
+
 function cardrequest($ord_id, $order_net_amount, $request, $usa_id, $pm_id)
 {
 	header('Content-Type: text/plain; charset=utf-8');
@@ -3106,254 +3107,6 @@ function price_format($price)
 }
 
 
-function autocorrectQueryUsingProductTerms_best($query, $pdo)
-{
-    // Fetch both SEO title and keywords
-    $stmt = $pdo->query("
-        SELECT DISTINCT pro_udx_seo_epag_title, pro_manufacture_aid
-        FROM products
-        WHERE 
-            (pro_udx_seo_epag_title IS NOT NULL AND pro_udx_seo_epag_title != '')
-			OR
-			(pro_manufacture_aid IS NOT NULL AND pro_manufacture_aid != '')
-    ");
-
-	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Normalize words (German-safe)
-    function normalizeWord($word)
-    {
-        $map = [
-            'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss',
-            'Ä' => 'ae', 'Ö' => 'oe', 'Ü' => 'ue'
-        ];
-
-        $word = mb_strtolower(trim($word), 'UTF-8');
-        $word = strtr($word, $map);
-
-        return preg_replace('/[^a-z0-9]/', '', $word);
-    }
-
-    // Build dictionary: normalized => [originals]
-    $dictionaryWords = [];
-
-    foreach ($rows as $row) {
-
-        // Merge both fields into one string
-        $combinedText = trim(
-            ($row['pro_udx_seo_epag_title'] ?? '') . ' ' .
-            ($row['pro_manufacture_aid'] ?? '')
-        );
-
-        if ($combinedText === '') {
-            continue;
-        }
-
-        // Split words (supports spaces + commas)
-        $words = preg_split('/[\s,\-_\.\'\"\/\(\)\[\]]+/', $combinedText);
-
-        foreach ($words as $word) {
-            $normalized = normalizeWord($word);
-
-            if (strlen($normalized) > 1) {
-                // prevent duplicate originals
-                $dictionaryWords[$normalized][$word] = true;
-            }
-        }
-    }
-
-    // Split search query
-    $queryWords = preg_split('/\s+/', trim($query));
-    $correctedWords = [];
-
-    foreach ($queryWords as $queryWord) {
-        $normalizedQueryWord = normalizeWord($queryWord);
-
-        // 🔒 Exact normalized word → never autocorrect
-        if (isset($dictionaryWords[$normalizedQueryWord])) {
-            $correctedWords[] = $queryWord;
-            continue;
-        }
-
-        // 🔍 Fuzzy matching
-        $bestWord = null;
-        $bestScore = 0;
-        $bestDistance = PHP_INT_MAX;
-
-        foreach ($dictionaryWords as $dictNorm => $dictOriginals) {
-
-            // Length sanity check
-            if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 2) {
-                continue;
-            }
-
-            similar_text($normalizedQueryWord, $dictNorm, $similarity);
-            $lev = levenshtein($normalizedQueryWord, $dictNorm);
-
-            if (
-                $similarity > $bestScore ||
-                ($similarity == $bestScore && $lev < $bestDistance)
-            ) {
-                $bestScore = $similarity;
-                $bestDistance = $lev;
-                // safest original
-                $bestWord = array_key_first($dictOriginals);
-            }
-        }
-
-        // 🎯 Confidence threshold
-        $minSimilarity = strlen($normalizedQueryWord) <= 6 ? 85 : 70;
-
-        if ($bestWord !== null && $bestScore >= $minSimilarity) {
-            $correctedWords[] = $bestWord;
-        } else {
-            $correctedWords[] = $queryWord;
-        }
-    }
-
-    return [
-        'original'  => $query,
-        'corrected' => implode(' ', $correctedWords)
-    ];
-}
-
-function autocorrectQueryUsingProductTerms_bk($query, $pdo)
-{
-    $stmt = $pdo->query("
-        SELECT DISTINCT pro_udx_seo_epag_title, pro_manufacture_aid
-        FROM products
-        WHERE 
-            (pro_udx_seo_epag_title IS NOT NULL AND pro_udx_seo_epag_title != '')
-            OR
-            (pro_manufacture_aid IS NOT NULL AND pro_manufacture_aid != '')
-    ");
-
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    /* ---------------- Normalization ---------------- */
-
-    function normalizeWord($word)
-    {
-        $map = [
-            'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss',
-            'Ä' => 'ae', 'Ö' => 'oe', 'Ü' => 'ue'
-        ];
-
-        $word = mb_strtolower(trim($word), 'UTF-8');
-        $word = strtr($word, $map);
-
-        return preg_replace('/[^a-z0-9]/', '', $word);
-    }
-
-    function isProductCode($word)
-    {
-        // any digit → treat as manufacturer code
-        return preg_match('/\d/', $word);
-    }
-
-    /* ---------------- Dictionaries ---------------- */
-
-    $seoDictionary = [];
-    $manufacturerDictionary = [];
-
-    foreach ($rows as $row) {
-
-        if (!empty($row['pro_udx_seo_epag_title'])) {
-            $words = preg_split('/[\s,\-_\.\'\"\/\(\)\[\]]+/', $row['pro_udx_seo_epag_title']);
-            foreach ($words as $word) {
-                $n = normalizeWord($word);
-                if (strlen($n) > 1) {
-                    $seoDictionary[$n][$word] = true;
-                }
-            }
-        }
-
-        if (!empty($row['pro_manufacture_aid'])) {
-            $words = preg_split('/[\s,\-_\.\'\"\/\(\)\[\]]+/', $row['pro_manufacture_aid']);
-            foreach ($words as $word) {
-                $n = normalizeWord($word);
-                if (strlen($n) > 1) {
-                    $manufacturerDictionary[$n][$word] = true;
-                }
-            }
-        }
-    }
-
-    /* ---------------- Matcher ---------------- */
-
-    function findBestMatch($queryWord, $dictionary)
-    {
-        $normalizedQueryWord = normalizeWord($queryWord);
-
-        // ✅ Exact normalized match → return canonical DB value
-        if (isset($dictionary[$normalizedQueryWord])) {
-            return array_key_first($dictionary[$normalizedQueryWord]);
-        }
-
-        $bestWord = null;
-        $bestScore = 0;
-        $bestDistance = PHP_INT_MAX;
-
-        foreach ($dictionary as $dictNorm => $dictOriginals) {
-
-            if (abs(strlen($normalizedQueryWord) - strlen($dictNorm)) > 2) {
-                continue;
-            }
-
-            similar_text($normalizedQueryWord, $dictNorm, $similarity);
-            $lev = levenshtein($normalizedQueryWord, $dictNorm);
-
-            if (
-                $similarity > $bestScore ||
-                ($similarity == $bestScore && $lev < $bestDistance)
-            ) {
-                $bestScore = $similarity;
-                $bestDistance = $lev;
-                $bestWord = array_key_first($dictOriginals);
-            }
-        }
-
-        $minSimilarity = strlen($normalizedQueryWord) <= 6 ? 85 : 70;
-
-        return ($bestWord !== null && $bestScore >= $minSimilarity)
-            ? $bestWord
-            : null;
-    }
-
-    /* ---------------- Query Processing ---------------- */
-
-    // 🔥 FIX: break lc-121 → lc 121
-    $queryWords = preg_split('/[\s\-_\.\'\"\/\(\)\[\]]+/', trim($query));
-    $correctedWords = [];
-
-    foreach ($queryWords as $queryWord) {
-
-        if ($queryWord === '') {
-            continue;
-        }
-
-        // 🔢 Codes → manufacturer FIRST
-        if (isProductCode($queryWord)) {
-
-            $match = findBestMatch($queryWord, $manufacturerDictionary)
-                  ?? findBestMatch($queryWord, $seoDictionary);
-
-        }
-        // 🔤 Text → SEO FIRST
-        else {
-
-            $match = findBestMatch($queryWord, $seoDictionary)
-                  ?? findBestMatch($queryWord, $manufacturerDictionary);
-        }
-
-        $correctedWords[] = $match ?? $queryWord;
-    }
-
-    return [
-        'original'  => $query,
-        'corrected' => implode(' ', $correctedWords)
-    ];
-}
 function autocorrectQueryUsingProductTerms($query, $pdo)
 {
     $stmt = $pdo->query("
@@ -3523,7 +3276,6 @@ function autocorrectQueryUsingProductTerms($query, $pdo)
 
 
 
-
 // Helper to preserve casing style
 function matchCase($input, $reference)
 {
@@ -3671,6 +3423,7 @@ function checkquantity_bk($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $
 	}
 	return $return_quantity;
 }
+
 function checkquantity($supplier_id, $ci_qty, $cart_quantity, $ci_qty_type, $ci_type)
 {
 	$return_quantity = 0;

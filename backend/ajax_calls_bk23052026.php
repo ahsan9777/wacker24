@@ -1,10 +1,6 @@
 <?php
-ob_start();
-session_save_path('/tmp');
-session_start();
 include("../lib/openCon.php");
 include("../lib/functions.php");
-include("../lib/pbs_api.php");
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
 
@@ -474,224 +470,21 @@ if (isset($_REQUEST['action'])) {
         break;
 
     case 'footer_title_de':
-            $json = array();
-            $where = "";
-            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-                $where .= " WHERE footer_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
-            }
-            $Query = "SELECT footer_id, footer_title_de FROM footer " . $where . " ORDER BY footer_id  LIMIT 0,20";
-            $rs = mysqli_query($GLOBALS['conn'], $Query);
-            while ($row = mysqli_fetch_object($rs)) {
-                $json[] = array(
-                    'footer_id' => strip_tags(html_entity_decode($row->footer_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->footer_title_de, ENT_QUOTES, 'UTF-8'))
-                );
-            }
-            $jsonResults = json_encode($json);
-            print($jsonResults);
-            break;
-
-        case 'pro_price_discount':
-            //print_r($_REQUEST);die();
-            $retValue = array();
-            $supplier_id = $_REQUEST['supplier_id'];
-            $pro_id = $_REQUEST['pro_id'];
-            $usp_price_type = $_REQUEST['usp_price_type'];
-            $usp_discounted_value = $_REQUEST['usp_discounted_value'];
-            $Query1 = "SELECT * FROM `category_map` WHERE supplier_id = '".$supplier_id."'";
-            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-            if(mysqli_num_rows($rs1) > 0){
-                $row1 = mysqli_fetch_object($rs1);
-
-                $level_one_id = $row1->cat_id_level_one;
-                $level_two_id = $row1->cat_id_level_two;
-                $Query2 = "SELECT * FROM `user_special_price` WHERE user_id = '0' AND supplier_id = '".$supplier_id."'";
-                $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
-                if(mysqli_num_rows($rs2) > 0){
-                    $row2 = mysqli_fetch_object($rs2);
-                    $usp_id = $row2->usp_id;
-                    mysqli_query($GLOBALS['conn'], "UPDATE user_special_price SET usp_price_type = '".$usp_price_type."', usp_discounted_value = '".$usp_discounted_value."', usp_updatedby = '".$_SESSION["UserID"]."', usp_udate = '".date_time."' WHERE usp_id = '".$usp_id."'") or die(mysqli_error($GLOBALS['conn']));
-                    $retValue = array("status" => "1", "message" => "Artical Discount updated successfully");
-                } else {
-                    $usp_id = getMaximum('user_special_price', 'usp_id');
-                    mysqli_query($GLOBALS['conn'], "INSERT INTO user_special_price (usp_id, level_one_id, level_two_id, supplier_id, usp_price_type, usp_discounted_value, usp_addedby, usp_cdate) VALUE ('".$usp_id."', '".$level_one_id."', '".$level_two_id."', '".$supplier_id."', '".$usp_price_type."', '".$usp_discounted_value."', '".$_SESSION["UserID"]."', '".date_time."')") or die(mysqli_error($GLOBALS['conn']));
-                    $retValue = array("status" => "1", "message" => "Article Discount added successfully");
-                }
-            } else {
-                 $retValue = array("status" => "0", "message" => "Record not found!");
-            }
-            $jsonResults = json_encode($retValue);
-            print($jsonResults);
-            break;
-
-        case 'td_article_price':
-            //print_r($_REQUEST);die();
-            $retValue = array();
-            $td_article_price = '';
-            $supplier_id = $_REQUEST['supplier_id'];
-            $pro_ean = $_REQUEST['pro_ean'];
-            $pbp_price_amount = $_REQUEST['pbp_price_amount'];
-            $getprice = getprice($pro_ean); 
-
-                        $td_article_price .= '<div class="d-flex flex-column gap-2">
-                            <div class="price-wrapper">
-                                <div class="price-title">
-                                    Price Information
-                                    <div class="info-icon">i</div>
-                                </div>
-                                <div class="popup-box" style="left: 0px;">
-                                    <div class="popup-header">
-                                        Price information
-                                    </div>
-                                    <div class="popup-content">
-                                        <table>
-                                            <tr>';
-                                                if(!empty($getprice['data'])) {
-                                                for ($i = 0; $i < count($getprice['data']); $i++) {
-                                                    if(!in_array($getprice['data'][$i]['type'], array('RSPVAT'))){
-                        $td_article_price .= "<th>".$getprice['data'][$i]['type']."</th>";
-                                                }
-                                                    } 
-                                                }
-                        $td_article_price .= '<th>Your Price</th>
-                                            </tr>
-                                            <tr>';
-                                                if(!empty($getprice['data'])) {
-                                                for ($i = 0; $i < count($getprice['data']); $i++) {
-                                                    if(!in_array($getprice['data'][$i]['type'], array('RSPVAT'))){
-                                                        if($getprice['data'][$i]['type'] == 'LISTBP'){
-                                                            $lp_price = $getprice['data'][$i]['price'];
-                                                        }
-                        $td_article_price .= "<td>".price_format($getprice['data'][$i]['price'])." €</td>";
-                                                }
-                                                    } 
-                                                }
-                        $td_article_price .= '<td>'.price_format($pbp_price_amount).' €</td>
-                                            </tr>
-                                        </table>
-
-                                        <div class="note">
-                                            LP = list price <br>
-                                            RSP = recommended selling price
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>';
-
-                            if(!empty($getprice['data'])) {
-                            for ($i = 0; $i < count($getprice['data']); $i++) {
-                                if(!in_array($getprice['data'][$i]['type'], array('RSPVAT'))){
-            $td_article_price .= "<div class='td_price-row'>
-                                <b class='td_label'>".$getprice['data'][$i]['type']." :</b>
-                                <p class='td_price m-0'>".price_format($getprice['data'][$i]['price'])." €</p>
-                                <p class='td_unit m-0'>".(isset($getprice['data'][$i]['fromQty']) ? (int)$getprice['data'][$i]['fromQty'] : (int)$getprice['data'][$i]['priceBase'])." Piece</p>
-                            </div>";
-                                    }
-                                }
-                            }
-                    $td_article_price .= ' </div>';
-            
-            
-            $retValue = array("status" => "1", "message" => "Article price info found successfully", "supplier_id" => $supplier_id, "pro_ean" => $pro_ean, "td_article_price" => $td_article_price);
-            $jsonResults = json_encode($retValue);
-            print($jsonResults);
-            break;
-
-        case 'td_article_margin':
-            //print_r($_REQUEST);die();
-            $retValue = array();
-            $td_article_margin = '';
-            $supplier_id = $_REQUEST['supplier_id'];
-            $pro_ean = $_REQUEST['pro_ean'];
-            $getprice = getprice($pro_ean);
-            $lp_price = 0;
-            if(!empty($getprice['data'])) {
-                for ($i = 0; $i < count($getprice['data']); $i++) {
-                    if(!in_array($getprice['data'][$i]['type'], array('RSPVAT'))){
-                        if($getprice['data'][$i]['type'] == 'LISTBP'){
-                            $lp_price = $getprice['data'][$i]['price'];
-                        }
-                    }
-                }
-            }
-
-                        $td_article_margin .= '
-                        <div class="d-flex flex-column gap-2">
-                            <b>Article Margin</b>
-                            <div class="td_price-row ">
-                                <b class="td_unit_margin m-0"> Staffel ab</b>
-                                <b class="td_price_calculation_margin m-0"> Calculation </b>
-                                <b class="td_price m-0"> Marge €</b>
-                                <b class="td_price m-0">Marge %</b>
-                            </div>';
-                            if(!empty($getprice['data'])) {
-                            for ($i = 0; $i < count($getprice['data']); $i++) {
-                                if(!in_array($getprice['data'][$i]['type'], array('RSPVAT', 'LISTBP'))){
-                                    $net_profit = $getprice['data'][$i]['price'] - $lp_price;
-                                    $profit_percentage = ($net_profit / $getprice['data'][$i]['price']) * 100;
-            $td_article_margin .= "
-                            <div class='td_price-row'>
-                                <p class='td_unit_margin m-0'>".(isset($getprice['data'][$i]['fromQty']) ? (int)$getprice['data'][$i]['fromQty'] : (int)$getprice['data'][$i]['priceBase'])." Piece</p>
-                                <p class='td_price_calculation_margin m-0'>".price_format($getprice['data'][$i]['price'])." € - ".price_format($lp_price)." € </p>
-                                <p class='td_price m-0'>".price_format($net_profit)." €</p>
-                                <p class='td_price m-0'>".number_format($profit_percentage, '2', '.', '')." %</p>
-                            </div>"; 
-                                    }
-                                }
-                            }
-                        $td_article_margin .= '</div>';
-            
-            $retValue = array("status" => "1", "message" => "Article margin found successfully", "supplier_id" => $supplier_id, "pro_ean" => $pro_ean, "td_article_price" => $td_article_margin);
-            $jsonResults = json_encode($retValue);
-            print($jsonResults);
-            break;
-
-        case 'td_article_quantity':
-            //print_r($_REQUEST);die();
-            $retValue = array();
-            $td_article_quantity = '';
-            $supplier_id = $_REQUEST['supplier_id'];
-            $pro_ean = $_REQUEST['pro_ean'];
-            $pro_type = $_REQUEST['pro_type'];
-
-                        $td_article_quantity .= '
-                        <div class="d-flex flex-column gap-2">
-                                <b>Availability</b>';
-                            if($pro_type == 0) {
-                                $getQuantity = array();
-                                $getQuantity = getQuantity($supplier_id, 0);
-                                $pq_quantity = $getQuantity['pq_quantity'];
-                                $pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
-                                $pq_physical_quantity = $getQuantity['pq_physical_quantity'];
-                                $pq_status = $getQuantity['pq_status'];
-                                if ($pq_status == 'true') {
-                                    $ci_qty_type = 1;
-                                }
-                                if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
-                                    $quantity_lenght = $pq_upcomming_quantity;
-            $td_article_quantity .= '<div class="text-success"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>';
-                                } elseif ($pq_quantity > 0 && $pq_status == 'false') {
-                                    $quantity_lenght = $pq_quantity;
-            $td_article_quantity .= '<div class="text-success"> ' . $pq_quantity . ' Stück sofort verfügbar</div>';
-                                } elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
-            $td_article_quantity .= '<div class="text-danger"">Auf Anfrage</div>';
-                                }
-                            } else {
-                                if ($pro_type > 0) {
-                                    $quantity_lenght = 1;
-                                } else {
-            $td_article_quantity .= '<div class="text-danger"">Auf Anfrage</div>';
-                                }
-                            }
-            $td_article_quantity .= '</div>';
-
-            $retValue = array("status" => "1", "message" => "Article quantity found successfully", "supplier_id" => $supplier_id, "pro_ean" => $pro_ean, "td_article_price" => $td_article_quantity);
-            $jsonResults = json_encode($retValue);
-            print($jsonResults);
-            break;
+        $json = array();
+        $where = "";
+        if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
+            $where .= " WHERE footer_title_de LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' ";
+        }
+        $Query = "SELECT footer_id, footer_title_de FROM footer " . $where . " ORDER BY footer_id  LIMIT 0,20";
+        $rs = mysqli_query($GLOBALS['conn'], $Query);
+        while ($row = mysqli_fetch_object($rs)) {
+            $json[] = array(
+                'footer_id' => strip_tags(html_entity_decode($row->footer_id, ENT_QUOTES, 'UTF-8')),
+                'value' => strip_tags(html_entity_decode($row->footer_title_de, ENT_QUOTES, 'UTF-8'))
+            );
+        }
+        $jsonResults = json_encode($json);
+        print($jsonResults);
+        break;
     }
-    
 }

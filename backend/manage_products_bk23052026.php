@@ -1,9 +1,6 @@
 <?php
 include("../lib/session_head.php");
-/*$getprice = getprice("4012700018779");
-print('<pre>');
-print_r($getprice['data'][0]);
-print('</pre>');die();*/
+
 
 if (isset($_REQUEST['pro_status']) && $_REQUEST['pro_status'] > 0) {
     $pro_status = $_REQUEST['pro_status'];
@@ -68,7 +65,11 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $pro_delivery_time = isset($rl->PRODUCT_LOGISTIC_DETAILS->DELIVERY_TIMES->TIME_SPAN->TIME_VALUE_DURATION) ? $rl->PRODUCT_LOGISTIC_DETAILS->DELIVERY_TIMES->TIME_SPAN->TIME_VALUE_DURATION : 0;
         $pro_udx_manufacturer_address = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.MANUFACTURER_ADRESS'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.MANUFACTURER_ADRESS'} : '';
         $pro_udx_manufacturer_mail = isset($rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.MANUFACTURER_MAIL'}) ? $rl->USER_DEFINED_EXTENSIONS->{'UDX.SOE.MANUFACTURER_MAIL'} : '';
-        
+        //print($pg_mime_source = basename($pro_gallery[0]->MIME_SOURCE));die();
+        //print($pro_udx_seo_pk);die();
+        /*print('<pre>');
+            print_r($pro_artical_price); 
+            print('</pre>');die();*/
         $pro_udx_seo_epag_title_params_de = url_clean(convertGermanChars(trim($pro_udx_seo_epag_title)));
         $field = "";
         $value = "";
@@ -80,12 +81,8 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
         $field .= ", pro_url";
         $value .= ", '".dbStr($pro_url)."'";
         $ufield .= ", pro_url = '".dbStr($pro_url)."'";
+
         }
-        //print($pg_mime_source = basename($pro_gallery[0]->MIME_SOURCE));die();
-        //print($pro_udx_seo_pk);die();
-        /*print('<pre>');
-            print_r($pro_artical_price); 
-            print('</pre>');die();*/
 
         $Query1 = "SELECT * FROM manufacture WHERE  manf_name = '" . dbStr(trim($pro_manufacture_name)) . "'";
         $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
@@ -103,10 +100,10 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $row2 = mysqli_fetch_object($rs2);
             $pro_uid = $row2->pro_id;
             $pro_id = $row2->pro_id;
-            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_udx_seo_internetbezeichung_params_de = '".dbStr(url_clean(convertGermanChars(trim($pro_udx_seo_internetbezeichung))))."', pro_udx_seo_epag_title = '".dbStr(trim($pro_udx_seo_epag_title))."', pro_udx_seo_epag_title_params_de = '".dbStr($pro_udx_seo_epag_title_params_de)."', pro_udx_seo_epag_id = '" . dbStr(trim($pro_udx_seo_epag_id)) . "', pro_udx_seo_selection_feature = '" . dbStr(trim($pro_udx_seo_selection_feature)) . "', pro_udx_seo_pk = '".dbStr(trim($pro_udx_seo_pk))."', pro_udx_manufacturer_address = '".dbStr(trim($pro_udx_manufacturer_address))."', pro_udx_manufacturer_mail = '".dbStr(trim($pro_udx_manufacturer_mail))."', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "' ".$ufield."  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_status = '1', pro_description_short = '" . dbStr(trim($pro_description_short)) . "', pro_description_long = '" . dbStr(trim($pro_description_long)) . "', pro_ean = '" . dbStr(trim($pro_ean)) . "', pro_buyer_id = '" . dbStr(trim($pro_buyer_id)) . "', manf_id = '" . dbStr(trim($manf_id)) . "', pro_delivery_time = '" . dbStr(trim($pro_delivery_time)) . "', pro_order_unit = '" . dbStr(trim($pro_order_unit)) . "', pro_count_unit = '" . dbStr(trim($pro_count_unit)) . "', pro_no_cu_per_ou = '" . dbStr(trim($pro_no_cu_per_ou)) . "', pro_price_quantity = '" . dbStr(trim($pro_price_quantity)) . "', pro_quantity_min = '" . dbStr(trim($pro_quantity_min)) . "', pro_quantity_interval = '" . dbStr(trim($pro_quantity_interval)) . "', pro_udx_seo_internetbezeichung = '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', pro_udx_seo_internetbezeichung_params_de = '".dbStr(url_clean(convertGermanChars(trim($pro_udx_seo_internetbezeichung))))."', pro_udx_seo_epag_title = '".dbStr(trim($pro_udx_seo_epag_title))."', pro_udx_seo_epag_title_params_de = ".$pro_udx_seo_epag_title_params_de.", pro_udx_seo_epag_id = '" . dbStr(trim($pro_udx_seo_epag_id)) . "', pro_udx_seo_selection_feature = '" . dbStr(trim($pro_udx_seo_selection_feature)) . "', pro_udx_seo_pk = '".dbStr(trim($pro_udx_seo_pk))."', pro_udx_manufacturer_address = '".dbStr(trim($pro_udx_manufacturer_address))."', pro_udx_manufacturer_mail = '".dbStr(trim($pro_udx_manufacturer_mail))."', pro_updatedby = '" . $_SESSION["UserID"] . "', pro_udate = '" . date_time . "'  WHERE pro_id = '" . $pro_uid . "' ") or die(mysqli_error($GLOBALS['conn']));
         } else {
 
-            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_type, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_udx_seo_internetbezeichung_params_de, pro_udx_seo_epag_title, pro_udx_seo_epag_title_params_de, pro_udx_seo_epag_id, pro_udx_seo_selection_feature, pro_udx_seo_pk, pro_udx_manufacturer_address, pro_udx_manufacturer_mail, pro_addedby, pro_cdate ".$field.") VALUES ('" . $pro_id . "', '" . $pro_type . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '".dbStr(url_clean(convertGermanChars(trim($pro_udx_seo_internetbezeichung))))."', '".dbStr(trim($pro_udx_seo_epag_title))."', '".dbStr($pro_udx_seo_epag_title_params_de)."', '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . dbStr(trim($pro_udx_seo_selection_feature)) . "', '".dbStr(trim($pro_udx_seo_pk))."', '".dbStr(trim($pro_udx_manufacturer_address))."', '".dbStr(trim($pro_udx_manufacturer_mail))."', '" . $_SESSION["UserID"] . "', '" . date_time . "' ".$value.")") or die(mysqli_error($GLOBALS['conn']));
+            mysqli_query($GLOBALS['conn'], "INSERT INTO products (pro_id, pro_type, supplier_id, pro_description_short, pro_description_long, pro_ean, pro_buyer_id, manf_id, pro_manufacture_aid, pro_delivery_time, pro_order_unit, pro_count_unit, pro_no_cu_per_ou, pro_price_quantity, pro_quantity_min, pro_quantity_interval, pro_udx_seo_internetbezeichung, pro_udx_seo_internetbezeichung_params_de, pro_udx_seo_epag_title, pro_udx_seo_epag_title_params_de, pro_udx_seo_epag_id, pro_udx_seo_selection_feature, pro_udx_seo_pk, pro_udx_manufacturer_address, pro_udx_manufacturer_mail, pro_addedby, pro_cdate) VALUES ('" . $pro_id . "', '" . $pro_type . "', '" . $supplier_id . "', '" . dbStr(trim($pro_description_short)) . "', '" . dbStr(trim($pro_description_long)) . "', '" . dbStr(trim($pro_ean)) . "', '" . dbStr(trim($pro_buyer_id)) . "', '" . dbStr(trim($manf_id)) . "', '" . dbStr(trim($pro_manufacture_aid)) . "', '" . dbStr(trim($pro_delivery_time)) . "', '" . dbStr(trim($pro_order_unit)) . "', '" . dbStr(trim($pro_count_unit)) . "', '" . dbStr(trim($pro_no_cu_per_ou)) . "', '" . dbStr(trim($pro_price_quantity)) . "', '" . dbStr(trim($pro_quantity_min)) . "', '" . dbStr(trim($pro_quantity_interval)) . "', '" . dbStr(trim($pro_udx_seo_internetbezeichung)) . "', '".dbStr(url_clean(convertGermanChars(trim($pro_udx_seo_internetbezeichung))))."', '".dbStr(trim($pro_udx_seo_epag_title))."', '".dbStr($pro_udx_seo_epag_title_params_de)."', '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . dbStr(trim($pro_udx_seo_selection_feature)) . "', '".dbStr(trim($pro_udx_seo_pk))."', '".dbStr(trim($pro_udx_manufacturer_address))."', '".dbStr(trim($pro_udx_manufacturer_mail))."', '" . $_SESSION["UserID"] . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
         }
 
         if ($pro_type == 20) {
@@ -148,7 +145,7 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                     //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
                     $pf_id = getMaximum("products_feature", "pf_id");
                     mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details, pf_fname_params_de, pf_fvalue_params_de) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "', '" . $pf_fname_params_de . "', '" . $pf_fvalue_params_de . "') ") or die(mysqli_error($GLOBALS['conn']));
-                    
+
                     if(!empty($pro_udx_seo_selection_feature) && $pro_type == 0){
                         if(isset($pf_fvalue_params_de) && $pf_fvalue_params_de !== '' && $pf_fname === $pro_udx_seo_selection_feature){
                             $pro_url = $pro_udx_seo_epag_title_params_de.'-'.$pf_fvalue_params_de;
@@ -225,12 +222,11 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                 $pg_mime_alt = $pro_gallery[$i]->MIME_ALT;
                 $pg_mime_purpose = $pro_gallery[$i]->MIME_PURPOSE;
                 $pg_mime_order = $pro_gallery[$i]->MIME_ORDER;
-                 if($pro_type == 20 && $pg_mime_type == 'image/jpeg'){
-                $firstfolder = substr($pg_mime_alt, 0, 4);
-                $secondfolder = substr($pg_mime_alt, 4, 3);
-                $pg_mime_source_url = "https://bilddaten.privatepilot.de/Soennecken/2000/".$firstfolder."/".$secondfolder."/".$pro_gallery[$i]->MIME_SOURCE;
-                 }
-                 //echo $pg_mime_source_url;die();
+                if($pro_type == 20 && $pg_mime_type == 'image/jpeg'){
+                    $firstfolder = substr($pg_mime_alt, 0, 4);
+                    $secondfolder = substr($pg_mime_alt, 4, 3);
+                    $pg_mime_source_url = "https://bilddaten.privatepilot.de/Soennecken/2000/".$firstfolder."/".$secondfolder."/".$pro_gallery[$i]->MIME_SOURCE;
+                }
                 //print($i.": pg_mime_type = ".$pg_mime_type." pg_mime_source = ".$pg_mime_source." pg_mime_description = ".$pg_mime_description." pg_mime_alt = ".$pg_mime_alt." pg_mime_order =".$pg_mime_order."<br>");
                 $pg_id = getMaximum("products_gallery", "pg_id");
                 mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_type, pg_mime_source, pg_mime_source_url, pg_mime_description, pg_mime_alt, pg_mime_purpose, pg_mime_order) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pg_mime_type)) . "', '" . dbStr(trim($pg_mime_source)) . "', '" . dbStr(trim($pg_mime_source_url)) . "', '" . dbStr(trim($pg_mime_description)) . "', '" . dbStr(trim($pg_mime_alt)) . "', '" . dbStr(trim($pg_mime_purpose)) . "', '" . dbStr(trim($pg_mime_order)) . "') ") or die(mysqli_error($GLOBALS['conn']));
@@ -479,9 +475,9 @@ include("includes/messages.php");
                                             $counter++;
                                     ?>
                                             <div class="col-md-3 col-12 mt-3">
-                                                <label for="">Keywowd <?php print($counter); ?> </label>
+                                                <label for="">Keyword <?php print($counter); ?> </label>
                                                 <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
-                                                <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
+                                                <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keyword">
                                             </div>
                                     <?php
                                         }
@@ -535,7 +531,7 @@ include("includes/messages.php");
                 <?php } else { ?>
                     <div class="row">
                         <div class="table-controls">
-                            <h1 class="text-white">Article Management</h1>
+                            <h1 class="text-white">Artikelverwaltung</h1>
                             <div class="d-flex gap-1">
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=3"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Quantity</span></a>
                                 <a href="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL . "action=5"); ?>" class="add-new"><span class="material-icons icon">upload</span> <span class="text">Import Special Price</span></a>
@@ -546,7 +542,7 @@ include("includes/messages.php");
 
                         </div>
                     </div>
-                    <div class="main_table_container product_table_container">
+                    <div class="main_table_container">
                         <?php
                         $pro_id = 0;
                         $pro_status = 0;
@@ -586,17 +582,26 @@ include("includes/messages.php");
                         </form>
                         <form class="table_responsive" name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <table>
+                                <thead>
+                                    <tr>
+                                        <th width="10"><input type="checkbox" name="chkAll" onClick="setAll();"></th>
+                                        <th width="100">Image</th>
+                                        <th width="100">Article Id</th>
+                                        <th>Title </th>
+                                        <th style="text-align: right; width: 256px">Stock</th>
+                                        <th style="text-align: right; width: 185px">Normal Price</th>
+                                        <th style="text-align: right; width: 185px">Special Price</th>
+                                        <th width="50">Status</th>
+                                        <th width="110">Action</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT pro.*, manf.manf_name, pg.pg_mime_source_url, usp.usp_price_type, usp.usp_discounted_value, usp.usp_addedby, usp.usp_cdate, usp.usp_updatedby, usp.usp_udate, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_special_price_amount, pbp.pbp_tax FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN user_special_price AS usp ON usp.supplier_id = pro.supplier_id AND usp.user_id = 0 LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
+                                    $Query = "SELECT pro.*, pg.pg_mime_source_url, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_physical_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //$Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
                                     //print($Query);
-                                    $supplier_id = array();
-                                    $pro_ean = array();
-                                    $pbp_price_amount = array();
-                                    $pro_type = array();
                                     $counter = 0;
-                                    $limit = 15;
+                                    $limit = 25;
                                     $start = $p->findStart($limit);
                                     $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
                                     $pages = $p->findPages($count, $limit);
@@ -606,145 +611,108 @@ include("includes/messages.php");
                                             $counter++;
                                             $strClass = 'label  label-danger';
                                             $image_path = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
-                                            $supplier_id[] = $row->supplier_id;
-                                            $pro_ean[] = $row->pro_ean;
-                                            $pbp_price_amount[] = $row->pbp_price_amount;
-                                            $pro_type[] = $row->pro_type;
 
                                     ?>
                                             <tr>
-                                                <td colspan="8" class="border-start border-top border-end border-white"><b>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <?php print($row->manf_name); ?></b> <input type="checkbox" name="chkstatus[]" value="<?php print($row->pro_id); ?>">
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="product_table border-start border-end border-bottom border-white" style="background-color: #1F1F2B;">
-                                                <td width="100">
+                                                <td><input type="checkbox" name="chkstatus[]" value="<?php print($row->pro_id); ?>"></td>
+                                                <td>
                                                     <div class="popup_container">
                                                         <div class="container__img-holder">
                                                             <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>">
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td width="350">
-                                                    <div class="d-flex flex-column gap-2">
-                                                        <b>Article Numbers</b>
-
-                                                        <div><b>Supplier Id: </b><?= $row->supplier_id ?></div>
-                                                        <div><b>GTN No: </b><?= $row->pro_ean ?></div>
-                                                        <div><b>Manufacture No: </b><?= $row->pro_manufacture_aid ?></div>
-                                                    </div>
-                                                </td>
-                                                
-                                                <td width="250" id="td_article_price_<?= $row->supplier_id ?>">
-                                                    <div class="loading-container" id="td_article_price_loading_<?= $row->supplier_id ?>">
-                                                        <p class="text-start fs-6 m-0"> Price Information</p>
-                                                        <div class="loading-text">
-                                                            Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td width="450" id="td_article_margin_<?= $row->supplier_id ?>">
-                                                    <div class="loading-container" id="td_article_margin_loading_<?= $row->supplier_id ?>">
-                                                        <p class="text-start fs-6 m-0"> Article Margin</p>
-                                                        <div class="loading-text">
-                                                            Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-
-                                                <td width="300" id="td_article_quantity_<?= $row->supplier_id ?>">
-                                                    <div class="loading-container" id="td_article_quantity_loading_<?= $row->supplier_id ?>">
-                                                        <p class="text-start fs-6 m-0"> Availability</p>
-                                                        <div class="loading-text">
-                                                            Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td width="170" >
-                                                    <div class="price-wrapper mb-2">
-                                                            <div class="price-title">
-                                                                Article Discount
-                                                                <?php if(!empty($row->usp_discounted_value)){ ?>
-                                                                <div class="info-icon">i</div>
-                                                                <?php } ?>
-                                                            </div>
-                                                            <?php if(!empty($row->usp_discounted_value)){ ?>
-                                                            <div class="popup-box" style="right: 0px;">
-                                                                <div class="popup-header">
-                                                                    Article Discount
-                                                                </div>
-                                                                <div class="popup-content">
-                                                                    <table>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <th>Action</th>
-                                                                                <th>Name</th>
-                                                                                <th>Date</th>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>Added By</td>
-                                                                                <td><?php print(returnName("CONCAT(user_fname, ' ',user_lname) AS full_name", "users", "user_id", $row->usp_addedby)); ?></td>
-                                                                                <td><?php echo date("F d, Y h:i", strtotime($row->usp_cdate)) ?></td>
-                                                                            </tr>
-                                                                            <?php if($row->usp_updatedby > 0){ ?>
-                                                                            <tr>
-                                                                                <td>Updated By</td>
-                                                                                <td><?php print(returnName("CONCAT(user_fname, ' ',user_lname) AS full_name", "users", "user_id", $row->usp_updatedby)); ?></td>
-                                                                                <td><?php echo date("F d, Y h:i", strtotime($row->usp_udate)) ?></td>
-                                                                            </tr>
-                                                                            <?php } ?>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                            <?php }?>
-                                                        </div>
+                                                <td><?php print($row->supplier_id); ?></td>
+                                                <td><?php print($row->pro_udx_seo_internetbezeichung); ?></td>
+                                                <td>
                                                     <div class="table-box-body">
                                                         <input type="hidden" name="pro_id" id="pro_id_<?php print($counter); ?>" value="<?php print($row->pro_id); ?>">
                                                         <input type="hidden" name="supplier_id" id="supplier_id_<?php print($counter); ?>" value="<?php print($row->supplier_id); ?>">
+                                                        <input type="hidden" name="pq_id" id="pq_id_<?php print($counter); ?>" value="<?php print($row->pq_id); ?>">
                                                         <div class="table-form-group">
-                                                            <label for="">Type: </label>
-                                                            <select style="width: 130px !important;" name="usp_price_type" id="usp_price_type_<?php print($counter); ?>" class="input_style"> 
-                                                                <option value="0" <?php print( ($row->usp_price_type == 0) ? 'selected' : '' ); ?> >Percentage</option>
-                                                                <option value="1" <?php print( ($row->usp_price_type == 1) ? 'selected' : '' ); ?>>Fix</option>
-                                                            </select>
-                                                            <span class="material-icons dropdown-icon">keyboard_arrow_down</span>
+                                                            <label for="">Auf Lager</label>
+                                                            <input type="number" name="pq_quantity" id="pq_quantity_<?php print($counter); ?>" value="<?php print($row->pq_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
                                                         </div>
                                                         <div class="table-form-group">
-                                                            <label for="">Disc: </label>
-                                                            <input type="number" style="width: 130px !important;" name="usp_discounted_value" id="usp_discounted_value_<?php print($counter); ?>" value="<?php print(!empty($row->usp_discounted_value) ? $row->usp_discounted_value : 0) ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
+                                                            <label for="">Online verfügbar</label>
+                                                            <input type="number" name="pq_upcomming_quantity" id="pq_upcomming_quantity_<?php print($counter); ?>" value="<?php print($row->pq_upcomming_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
+                                                        </div>
+                                                        <div class="table-form-group">
+                                                            <label for="">Abholung</label>
+                                                            <input type="number" name="pq_physical_quantity" id="pq_physical_quantity_<?php print($counter); ?>" value="<?php print($row->pq_physical_quantity); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0">
                                                         </div>
                                                         <div class="table-form-group">
                                                             <label for="">&nbsp;</label>
-                                                            <input type="button" style="width: 130px !important;" name="pro_price_discount" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_price_discount" value="Update">
+                                                            <input type="button" name="pro_update_quantity" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light w-auto pro_update_quantity" value="Update (<?php print(($row->pq_status == "true") ? 'T' : 'F'); ?>)">
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td width="180">
-                                                    <div class="td_site_price_container d-flex flex-column align-items-center gap-1 text-end px-3">
-                                                        <b>Your Price</b>
-                                                        <?php if(!empty($row->usp_discounted_value)) { ?>
-                                                        
-                                                        <del class="td_site_quantity text-danger"> <?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount))); ?> €</del>
-                                                        <div class="td_site_price text-success"><?php print(price_format(discounted_price($row->usp_price_type, ((config_site_special_price > 0 && $row->pbp_special_price_amount > 0) ? $row->pbp_special_price_amount : $row->pbp_price_amount), $row->usp_discounted_value, $row->pbp_tax))); ?> €</div>
-                                                        <div class="td_site_quantity">1 Piece</div>
-                                                        
-                                                        <?php } else { ?>
-                                                        
-                                                        <div class="td_site_price"><?= price_format($row->pbp_price_amount) ?> €</div>
-                                                        <div class="td_site_quantity">1 Piece</div>
-                                                        
-                                                        <?php } ?>
-                                                        <div class="d-flex align-items-center justify-content-end w-100 gap-2">
-                                                            <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'].product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
-                                                            <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
+                                                <td>
+                                                    <div class="table-box-body">
+                                                        <?php
+                                                        $counter1 = 0;
+                                                        $Query1 = "SELECT * FROM `products_bundle_price` WHERE pro_id = '" . $row->pro_id . "' AND supplier_id = '" . $row->supplier_id . "' ORDER BY pbp_lower_bound ASC";
+                                                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                                                        if (mysqli_num_rows($rs1) > 0) {
+                                                            while ($row1 = mysqli_fetch_object($rs1)) {
+                                                                $counter1++;
+                                                        ?>
+                                                                <div class="table-form-group">
+                                                                    <input type="hidden" name="pbp_id" id="pbp_id_<?php print($counter); ?>_<?php print($counter1); ?>" value="<?php print($row1->pbp_id); ?>">
+                                                                    <label for="">LB <?php print($row1->pbp_lower_bound) ?> </label>
+                                                                    <input type="number" step="any" name="pbp_price_amount[]" id="pbp_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0" value="<?php print($row1->pbp_price_amount) ?>">
+                                                                </div>
+                                                        <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <div class="table-form-group">
+                                                            <label for="">&nbsp;</label>
+                                                            <input type="hidden" name="pro_update_price_lenght" id="pro_update_price_lenght_<?php print($counter); ?>" value="<?php print($counter1); ?>">
+                                                            <input type="button" name="btnUpdatePrice" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_price" value="Update">
                                                         </div>
                                                     </div>
+                                                </td>
+                                                <td>
+                                                    <div class="table-box-body">
+                                                        <?php
+                                                        $counter1 = 0;
+                                                        $Query1 = "SELECT * FROM `products_bundle_price` WHERE pro_id = '" . $row->pro_id . "' AND supplier_id = '" . $row->supplier_id . "' ORDER BY pbp_lower_bound ASC";
+                                                        $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+                                                        if (mysqli_num_rows($rs1) > 0) {
+                                                            while ($row1 = mysqli_fetch_object($rs1)) {
+                                                                $counter1++;
+                                                        ?>
+                                                                <div class="table-form-group">
+                                                                    <input type="hidden" name="pbp_special_price_id" id="pbp_special_price_id_<?php print($counter); ?>_<?php print($counter1); ?>" value="<?php print($row1->pbp_id); ?>">
+                                                                    <label for="">LB <?php print($row1->pbp_lower_bound) ?> </label>
+                                                                    <input type="number" readonly step="any" name="pbp_special_price_amount[]" id="pbp_special_price_amount_<?php print($counter); ?>_<?php print($counter1); ?>" onkeyup="if(this.value === '' || parseFloat(this.value) <= 0) {this.value = 0;} " min="0" value="<?php print($row1->pbp_special_price_amount) ?>">
+                                                                </div>
+                                                        <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <!--<div class="table-form-group">
+                                                            <label for="">&nbsp;</label>
+                                                            <input type="hidden" name="pro_update_special_price_lenght" id="pro_update_special_price_lenght_<?php print($counter); ?>" value="<?php print($counter1); ?>">
+                                                            <input type="button" name="btnUpdateSpecialPrice" data-id="<?php print($counter); ?>" class="btn btn-success btn-style-light pro_update_special_price" value="Update">
+                                                        </div>-->
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if ($row->pro_status == 0) {
+                                                        echo '<span class="btn btn-danger w-auto">Offline</span>';
+                                                    } else {
+                                                        echo '<span class="btn btn-success w-auto">Live</span>';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'].product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                    <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                 </td>
                                             </tr>
-                                            <tr> <td colspan="8" class="mb-2">&nbsp;</td></tr>
                                     <?php
                                         }
                                     } else {
@@ -753,7 +721,7 @@ include("includes/messages.php");
                                     ?>
                                 </tbody>
                             </table>
-                            <?php if ($counter > 0) { //echo "<pre>"; print_r($supplier_id); echo "</pre>";?>
+                            <?php if ($counter > 0) { ?>
                                 <table width="100%" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td><?php print("Page <b>" . $_GET['page'] . "</b> of " . $pages); ?></td>
@@ -811,134 +779,84 @@ include("includes/messages.php");
                 //console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
             }
         });
-        $('.pro_price_discount').on('click', function(){
-            $('.pro_price_discount').prop('disabled', true);
-            let supplier_id = $('#supplier_id_'+$(this).attr('data-id')).val();
-            let pro_id = $('#pro_id_'+$(this).attr('data-id')).val();
-            let usp_price_type = $('#usp_price_type_'+$(this).attr('data-id')).val();
-            let usp_discounted_value = $('#usp_discounted_value_'+$(this).attr('data-id')).val();
-            //console.log("pro_price_discount", usp_discounted_value);
-            if(usp_discounted_value > 0){
+        $(".pro_update_quantity").on("click", function() {
+            //console.log("btnUpdateQuantity");
+            let pro_id = $("#pro_id_" + $(this).attr("data-id")).val();
+            let supplier_id = $("#supplier_id_" + $(this).attr("data-id")).val();
+            let pq_id = $("#pq_id_" + $(this).attr("data-id")).val();
+            let pq_quantity = $("#pq_quantity_" + $(this).attr("data-id")).val();
+            let pq_upcomming_quantity = $("#pq_upcomming_quantity_" + $(this).attr("data-id")).val();
+            let pq_physical_quantity = $("#pq_physical_quantity_" + $(this).attr("data-id")).val();
+            //console.log("pro_id: "+pro_id+" supplier_id: "+supplier_id+" pq_id: "+pq_id);
             $.ajax({
-                url: 'ajax_calls.php?action=pro_price_discount',
+                url: 'ajax_calls.php?action=pro_update_quantity',
                 method: 'POST',
                 data: {
                     pro_id: pro_id,
                     supplier_id: supplier_id,
-                    usp_price_type: usp_price_type,
-                    usp_discounted_value: usp_discounted_value
+                    pq_id: pq_id,
+                    pq_quantity: pq_quantity,
+                    pq_upcomming_quantity: pq_upcomming_quantity,
+                    pq_physical_quantity: pq_physical_quantity
                 },
                 success: function(response) {
                     //console.log("response = "+response);
                     const obj = JSON.parse(response);
                     //console.log(obj);
                     if (obj.status == 1) {
+                        $("#pq_quantity_" + $(this).attr("data-id")).val(obj.data[0].pq_quantity);
+                        $("#pq_upcomming_quantity_" + $(this).attr("data-id")).val(obj.data[0].pq_upcomming_quantity);
                         $.toast({
                             heading: 'Success',
-                            text: obj.message,
+                            text: 'Stock updated successfully',
                             icon: 'success',
                             position: 'top-right'
                         });
-
-                        setTimeout(function () {
-                           location.reload();
-                        }, 3000);
-
                     }
                 }
             });
-            } else {
-                $.toast({
-                    heading: 'Warning',
-                    text: 'Please set the discount value',
-                    icon: 'warning',
-                    position: 'top-right'
+        });
+        $(".pro_update_price").on("click", function() {
+            //console.log("btnUpdateQuantity");
+            let priceData = [];
+            let pro_id = $("#pro_id_" + $(this).attr("data-id")).val();
+            let supplier_id = $("#supplier_id_" + $(this).attr("data-id")).val();
+            let pro_update_price_lenght = $("#pro_update_price_lenght_" + $(this).attr("data-id")).val();
+            for (let i = 1; i <= pro_update_price_lenght; i++) {
+                //console.log("i: "+i);
+                let pbp_id = $("#pbp_id_" + $(this).attr("data-id") + "_" + i).val();
+                let pbp_price_amount = $("#pbp_price_amount_" + $(this).attr("data-id") + "_" + i).val();
+                priceData.push({
+                    pbp_id: pbp_id,
+                    pbp_price_amount: pbp_price_amount
                 });
             }
-        });
-    </script>
-
-    <script>
-
-    let supplier_id = <?php echo json_encode($supplier_id); ?>;
-    let pro_ean = <?php echo json_encode($pro_ean); ?>;
-    let pbp_price_amount = <?php echo json_encode($pbp_price_amount); ?>;
-    let pro_type = <?php echo json_encode($pro_type); ?>;
-
-    $(window).on('load', function () {
-        $.each(pro_ean, function(index, id) {
-        $.ajax({
-            url: 'ajax_calls.php?action=td_article_price',
-            type: 'POST',
-            data: {
-                supplier_id: supplier_id[index],
-                pbp_price_amount: pbp_price_amount[index],
-                pro_ean: id
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#td_article_price_"+obj.supplier_id).html("");
-                    $("#td_article_price_"+obj.supplier_id).html(obj.td_article_price);
+            //let pbp_id = $("#pbp_id_" + $(this).attr("data-id")).val();
+            //let pbp_price_amount = $("#pbp_price_amount_" + $(this).attr("data-id")).val();
+            //console.log("pro_id: "+pro_id+" supplier_id: "+supplier_id+" pbp_id: "+pbp_id+" pbp_price_amount: "+pbp_price_amount);
+            $.ajax({
+                url: 'ajax_calls.php?action=pro_update_price',
+                method: 'POST',
+                data: {
+                    pro_id: pro_id,
+                    supplier_id: supplier_id,
+                    priceData: priceData
+                },
+                success: function(response) {
+                    //console.log("response = "+response);
+                    const obj = JSON.parse(response);
+                    console.log(obj);
+                    if (obj.status == 1) {
+                        $.toast({
+                            heading: 'Success',
+                            text: 'Price updated successfully',
+                            icon: 'success',
+                            position: 'top-right'
+                        });
+                    }
                 }
-            }
+            });
         });
-
-         });
-
-    });
-    
-    $(window).on('load', function () {
-        $.each(pro_ean, function(index, id) {
-        $.ajax({
-            url: 'ajax_calls.php?action=td_article_margin',
-            type: 'POST',
-            data: {
-                supplier_id: supplier_id[index],
-                pro_ean: id
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#td_article_margin_"+obj.supplier_id).html("");
-                    $("#td_article_margin_"+obj.supplier_id).html(obj.td_article_price);
-                }
-            }
-        });
-
-         });
-
-    });
-    
-    $(window).on('load', function () {
-        $.each(pro_ean, function(index, id) {
-        $.ajax({
-            url: 'ajax_calls.php?action=td_article_quantity',
-            type: 'POST',
-            data: {
-                supplier_id: supplier_id[index],
-                pro_type: pro_type[index],
-                pro_ean: id
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#td_article_quantity_"+obj.supplier_id).html("");
-                    $("#td_article_quantity_"+obj.supplier_id).html(obj.td_article_price);
-                }
-            }
-        });
-
-         });
-
-    });
-
     </script>
 </body>
 
