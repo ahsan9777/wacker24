@@ -89,7 +89,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # Page slugs (letters, numbers, underscores, hyphens, German umlauts)
 
-RewriteRule ^(barrierefreiheit|agb|datenschutz|über-uns|privacy|abg|partner|wacker_and_the_environment|impressum|widerrufsbelehrung|altgeräte_entsorgung|rücknahme_von_altbatterien|rücknahme_von_verpackungen|dhl_paketshop|contact_us|kontakt)/?$ page.php?cnt_slug=$1 [L,QSA]
+#RewriteRule ^(barrierefreiheit|agb|datenschutz|über-uns|privacy|abg|partner|wacker_and_the_environment|impressum|widerrufsbelehrung|altgeräte_entsorgung|rücknahme_von_altbatterien|rücknahme_von_verpackungen|dhl_paketshop|contact_us|kontakt)/?$ page.php?cnt_slug=$1 [L,QSA]
 
 # -----------------
 # Product detail rules

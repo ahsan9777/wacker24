@@ -1,13 +1,6 @@
 <?php
 
 include("includes/php_includes_top.php");
-$Query1 = "SELECT cnt.cnt_id, cnt.cnt_slug, cnt.cnt_section, cnt.cnt_title_de AS cnt_title, cnt.cnt_heading_de AS cnt_heading, cnt.cnt_details_de AS cnt_details, cnt.cnt_image, cnt.cnt_banner_image  FROM contents AS cnt WHERE cnt.cnt_slug = '" .$_REQUEST['product_params']. "'";
-//print($Query1);
-$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
-if (mysqli_num_rows($rs1) > 0) {
-    require_once 'page.php';
-    exit;
-}
 //print_r($_REQUEST);die();
 $pro_id = 0;
 $supplier_id = 0;
@@ -109,7 +102,7 @@ if (mysqli_num_rows($rs) > 0) {
 	$cat_three_params = $row->cat_three_params;
 	$pro_udx_manufacturer_address = $row->pro_udx_manufacturer_address;
 	$pro_udx_manufacturer_mail = $row->pro_udx_manufacturer_mail;
-	//$pro_udate = date("Y-m-d", strtotime($row->pro_udate));
+	$pro_udate = date("Y-m-d", strtotime($row->pro_udate));
 
 	$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
 	//print($Query);
@@ -169,7 +162,7 @@ if (mysqli_num_rows($rs) > 0) {
 		$pro_udx_seo_epag_title_params_de = returnName("pro_udx_seo_epag_title_params_de", "products", "supplier_id", $product_params_supplier_id);
 		header("Location: " . $GLOBALS['siteURL'] . $pro_udx_seo_epag_title_params_de . "-" . $product_params_supplier_id);
 	} else {*/
-	header("Location: " . $GLOBALS['siteURL'] . "nicht-verfuegbar");
+		//header("Location: " . $GLOBALS['siteURL'] . "nicht-verfuegbar");
 	//}
 }
 
@@ -262,6 +255,7 @@ if (isset($_REQUEST['btnAdd_to_list'])) {
 	}
 }
 
+
 /*$result = getStockData($supplier_id, 1);
 echo "<pre>";
 print_r($result);
@@ -338,156 +332,6 @@ include("includes/message.php");
 		}
 	</script>
 	<?php include("includes/html_header.php"); ?>
-	<style>
-		.product_detail_page .product_detail_section1 .product_left {
-			width: 50%;
-		}
-
-		.product_detail_page .product_detail_section1 .product_right {
-			width: 50%;
-		}
-
-		.product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-lens-image img {
-			object-fit: cover;
-			height: auto;
-		}
-
-		
-		/* full width grey background */
-		.special-price-ad {
-			width: 100%;
-			border-top: 1px solid #c7c7c7;
-			border-bottom: 1px solid #c7c7c7;
-			background: linear-gradient(90deg, #e5e5e5, #f3f3f3, #e5e5e5);
-		}
-
-		/* centered content */
-		.special-price-ad-inner {
-			max-width: 75%;
-			margin: auto;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			padding: 0px 12%;
-			background-color: #fff;
-			border-radius: 100px 100px 35px 35px;
-			cursor: pointer;
-		}
-
-		/* left section */
-		.special-price-ad-inner-left {
-			display: flex;
-			align-items: center;
-			gap: 35px;
-		}
-
-		.brand {
-			height: 60px;
-		}
-
-		.product {
-			height: 60px;
-		}
-
-		/* text */
-		.special-price-ad-inner-text {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-		}
-
-		.special-price-ad-inner-text .small {
-			display: block;
-			font-size: 14px;
-			color: #273445;
-			font-weight: 500;
-		}
-
-		.special-price-ad-inner-text p {
-			font-size: 14px;
-			color: #007185;
-			text-decoration: none;
-			border-top: 1px solid #000;
-		}
-
-		.special-price-ad-inner-text a:hover {
-			text-decoration: underline;
-		}
-
-		/* right section */
-		.special-price-ad-inner-right {
-			display: flex;
-			align-items: center;
-			gap: 15px;
-		}
-
-		/* price */
-		.price {
-			text-align: right;
-		}
-
-		.price strong:first-child, .price p:nth-of-type(1){
-			display: none;
-		}
-
-		.price strong {
-			font-size: 16px;
-			font-weight: 700;
-			color: #212529;
-		}
-
-		.price p {
-			display: block;
-			font-size: 11px;
-			color: #666;
-			margin: 0;
-		}
-		
-
-		/* coupon */
-		.text-green {
-			background: #ff1c0a;
-			padding: 3px 7px;
-			border-radius: 4px;
-			font-size: 12px;
-			font-weight: bold;
-			color: #fff;
-		}
-
-		.coupon-text {
-			font-size: 12px;
-			color: #444;
-		}
-
-		/* button */
-		.buy-btn {
-			background: #ffca44;
-			border: 1px solid #ffca44;
-			padding: 5px 20px;
-			border-radius: 5px;
-			font-size: 14px;
-			cursor: pointer;
-		}
-
-		.buy-btn:hover {
-			background: #eeb31e;
-		}
-
-		@media screen and (max-width:1024px) and (min-width:240px) {
-			.special-price-ad-inner{
-				flex-direction: column;
-				border-radius: 0;
-				gap: 10px;
-				width: 100%;
-			}
-			.special-price-ad-inner-text{
-				align-items: center;
-			}
-			.special-price-ad-inner-left{
-				gap: 0;
-			}
-		}
-	</style>
 </head>
 
 <body style="background-color: #fff;">
@@ -495,44 +339,7 @@ include("includes/message.php");
 		<!--HEADER_SECTION_START-->
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
-		<?php
-		$Query_special = "SELECT usp.*, pro.pro_type, pro.pro_udx_seo_epag_title, pro.pro_description_long, pro.pg_mime_source_url, pro.pbp_price_amount, pro.pbp_price_without_tax, pro.pbp_tax, pro.manf_id, m.manf_name, m.manf_name_params FROM user_special_price AS usp INNER JOIN vu_products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN manufacture AS m ON m.manf_id = pro.manf_id WHERE usp.usp_featured = '1' AND usp.supplier_id != '".$supplier_id."' ORDER BY  RAND() LIMIT 0,1";
-		$rs_special = mysqli_query($GLOBALS['conn'], $Query_special);
-		if(mysqli_num_rows($rs_special) > 0){
-			$rws = mysqli_fetch_object($rs_special);
-			$manf_file = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $rws->supplier_id, " AND pg_mime_purpose = 'logo'");
-		?>
-		<div class="special-price-ad">
-			<a href="<?php print(product_detail_url($rws->supplier_id)); ?>">
-				<div class="special-price-ad-inner">
 
-					<div class="special-price-ad-inner-left">
-						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand">
-						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product">
-					</div>
-					<div class="special-price-ad-inner-text">
-						<span class="small"><?php print($rws->pro_udx_seo_epag_title);?></span>
-						<p>
-							<?php print(limit_text($rws->pro_description_long, 70));?>
-						</p>
-					</div>
-					<div class="special-price-ad-inner-right">
-						<div class="price">
-							<strong class="special_price_tag price_without_tex" <?php print($price_without_tex_display); ?> ><?php print(price_format(discounted_price($rws->usp_price_type, $rws->pbp_price_without_tax, $rws->usp_discounted_value))); ?>€</strong>
-							<strong class="special_price_tag pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> ><?php print(price_format(discounted_price($rws->usp_price_type, $rws->pbp_price_amount, $rws->usp_discounted_value, $rws->pbp_tax)) ); ?>€</strong>
-							<p class="price_without_tex" <?php print($price_without_tex_display); ?> >exkl. MwSt.</p>
-							<p class="pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?> >inkl. MwSt.</p>
-						</div>
-						<div class="coupon">
-							<span class="text-green">Sparen <?php print($rws->usp_discounted_value.(($rws->usp_price_type > 0) ? '€' : '%')) ?></span>
-						</div>
-						<button class="buy-btn">Jetzt kaufen</button>
-					</div>
-
-				</div>
-			</a>
-		</div>
-		<?php } ?>
 		<!--BREADCRUMB_SECTION_START-->
 		<div class="gerenric_breadcrumb">
 			<div class="page_width_1480">
@@ -543,12 +350,12 @@ include("includes/message.php");
 							$cat_title_heading = returnName("cat_title_de AS cat_title", "category", "group_id", 20);
 							$cat_params_heading = returnName("cat_params_de AS cat_params", "category", "group_id", 20);
 						?>
-							<li><a href="kategorie/<?php print($cat_params_heading); ?>" title="<?php print($cat_title_heading); ?>"> <?php print($cat_title_heading); ?> </a></li>
+							<li><a href="unterkategorien/<?php print($cat_params_heading); ?>" title="<?php print($cat_title_heading); ?>"> <?php print($cat_title_heading); ?> </a></li>
 						<?php } else { ?>
-							<li><a href="kategorie/<?php print($cat_one_params); ?>" title="<?php print($cat_title_one); ?>"> <?php print($cat_title_one); ?> </a></li>
+							<li><a href="unterkategorien/<?php print($cat_one_params); ?>" title="<?php print($cat_title_one); ?>"> <?php print($cat_title_one); ?> </a></li>
 						<?php } ?>
-						<li><a href="produkte/<?php print($cat_one_params . "/" . $cat_two_params . $qryStrURL); ?>" title="<?php print($cat_title_two); ?>"> <?php print($cat_title_two); ?> </a></li>
-						<li><a href="produkte/<?php print($cat_one_params . "/" . $cat_two_params . "/" . $cat_three_params . $qryStrURL); ?>" title="<?php print($cat_title_three); ?>"> <?php print($cat_title_three); ?> </a></li>
+						<li><a href="artikelarten/<?php print($cat_two_params . $qryStrURL); ?>" title="<?php print($cat_title_two); ?>"> <?php print($cat_title_two); ?> </a></li>
+						<li><a href="artikelarten/<?php print($cat_two_params . "/" . $cat_three_params . $qryStrURL); ?>" title="<?php print($cat_title_three); ?>"> <?php print($cat_title_three); ?> </a></li>
 					</ul>
 				</div>
 			</div>
@@ -581,7 +388,7 @@ include("includes/message.php");
 												if (mysqli_num_rows($rs) > 0) {
 													while ($row = mysqli_fetch_object($rs)) {
 												?>
-														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(2000, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(2000, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>"> <img src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
+														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>"> <img src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
 												<?php
 													}
 												}
@@ -590,7 +397,7 @@ include("includes/message.php");
 										</div>
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(2000, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(2000, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -604,6 +411,7 @@ include("includes/message.php");
 								<?php
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
+									//$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, pg.pg_mime_source_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
 									$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, pg.pg_mime_source_url, pro_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -619,7 +427,7 @@ include("includes/message.php");
 														<li>
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
-																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 90px; width: 90px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->pro_ean); ?>" pro_udx_seo_epag_title_params_de="<?php print($row->pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($row->pro_url); ?>" data-title="<?php print($row->pf_fvalue); ?>">
+																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 60px; width: 60px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->pro_ean); ?>" pro_udx_seo_epag_title_params_de="<?php print($row->pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($row->pro_url); ?>" data-title="<?php print($row->pf_fvalue); ?>">
 																	<?php if (in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { ?>
 																		<img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
 																	<?php } else { ?>
@@ -638,9 +446,9 @@ include("includes/message.php");
 									}
 								} ?>
 								<h4> <?php print($pro_description_short); ?> </h4>
-								<?php
-								if (!empty($pg_mime_source_url_logo)) {
-									print('<img src="' . get_image_link(75, $pg_mime_source_url_logo) . '" alt="logo">');
+								<?php 
+								if(!empty($pg_mime_source_url_logo)){
+									print('<img src="'.get_image_link(75, $pg_mime_source_url_logo).'" alt="logo">');
 								}
 								?>
 								<ul>
@@ -1072,7 +880,7 @@ include("includes/message.php");
 		<!--CONTENT_SECTION_END-->
 
 		<!--FOOTER_SECTION_START-->
-
+		
 		<?php include("includes/footer.php"); ?>
 		<!--FOOTER_SECTION_END-->
 
@@ -1150,16 +958,20 @@ include("includes/message.php");
 	$(".cart_type_online").on("click", function() {
 		//console.log("cart_type_online");
 		$("#ci_type_" + $(this).attr("data-id")).val(0);
-		let supplier_id = $(this).attr("data-supplier-id");
+		/*let supplier_id = $(this).attr("data-supplier-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
-		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;
+		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;*/
+		let pro_url = $(this).attr("pro_url");
+		window.location.href = pro_url;
 	});
 	$(".cart_type_physical").on("click", function() { //ci_type
 		$("#ci_type_" + $(this).attr("data-id")).val(1);
-		let supplier_id = $(this).attr("data-supplier-id");
+		/*let supplier_id = $(this).attr("data-supplier-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
-		//window.location.href = "product/1/" + supplier_id + "/" + pro_description;
 		window.location.href = "1/" + pro_udx_seo_epag_title_params_de + '-' + supplier_id;
+		let supplier_id = $(this).attr("data-supplier-id");*/
+		let pro_url = $(this).attr("pro_url");
+		window.location.href = "1/" + pro_url;
 	});
 </script>
 <script src="js/slick.js"></script>
@@ -1420,11 +1232,11 @@ include("includes/message.php");
 	});
 
 	$(".color_tab").on("click", function() {
-		let supplier_id = $(this).attr("data-id");
+		/*let supplier_id = $(this).attr("data-id");
 		let pro_udx_seo_epag_title_params_de = $(this).attr("pro_udx_seo_epag_title_params_de");
+		console.log("pro_description: "+pro_udx_seo_epag_title_params_de+'-'+supplier_id);
+		window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;*/
 		let pro_url = $(this).attr("pro_url");
-		//console.log("pro_description: "+pro_udx_seo_epag_title_params_de+'-'+supplier_id);
-		//window.location.href = pro_udx_seo_epag_title_params_de + '-' + supplier_id;
 		window.location.href = pro_url;
 	});
 	$(".quantity").on("click", function() {
