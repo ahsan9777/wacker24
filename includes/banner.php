@@ -3,7 +3,7 @@
         <div class="banner_inner">
             <div class="banner_slider">
                 <?php
-                $Query = "SELECT ban_heading_color, ban_detail_color, ban_heading_de AS ban_heading, ban_details_de AS ban_details, ban_file, ban_link, ban_background_color, ban_text_color, ban_button_show FROM banners WHERE ban_status = '1' ORDER BY ban_order ASC";
+                $Query = "SELECT ban_heading_color, ban_detail_color, ban_heading_de AS ban_heading, ban_details_de AS ban_details, ban_btn_text_de AS ban_btn_text, ban_file, ban_link, ban_background_color, ban_text_color, ban_button_show FROM banners WHERE ban_status = '1' ORDER BY ban_order ASC";
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
@@ -17,7 +17,7 @@
                                 <?php if($row->ban_button_show > 0) { ?>
                                 <div class="full_width">
                                     <a href="<?php print( !empty($row->ban_link) ? $GLOBALS['siteURL'].$row->ban_link : '#' ); ?> ">
-                                        <div class="gerenric_btn" style="background: <?php print($row->ban_background_color); ?>; color: <?php print($row->ban_text_color); ?>; ">Buy Now</div>
+                                        <div class="gerenric_btn" style="background: <?php print($row->ban_background_color); ?>; color: <?php print($row->ban_text_color); ?>; "> <?php print($row->ban_btn_text); ?> </div>
                                     </a>
                                 </div>
                                 <?php } ?>

@@ -16,7 +16,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "INSERT INTO banners (ban_id, ban_heading_color, ban_detail_color, ban_link, ban_background_color, ban_text_color, ban_heading_en, ban_heading_de, ban_details_en, ban_details_de, ban_file) VALUES ('" . $ban_id . "', '" . dbStr(trim($_REQUEST['ban_heading_color'])) . "', '" . dbStr(trim($_REQUEST['ban_detail_color'])) . "', '" . dbStr(trim($_REQUEST['ban_link'])) . "', '" . dbStr(trim($_REQUEST['ban_background_color'])) . "', '" . dbStr(trim($_REQUEST['ban_text_color'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO banners (ban_id, ban_heading_color, ban_detail_color, ban_btn_text_de, ban_btn_text_en, ban_link, ban_background_color, ban_text_color, ban_heading_en, ban_heading_de, ban_details_en, ban_details_de, ban_file) VALUES ('" . $ban_id . "', '" . dbStr(trim($_REQUEST['ban_heading_color'])) . "', '" . dbStr(trim($_REQUEST['ban_detail_color'])) . "', '".dbStr(trim($_REQUEST['ban_btn_text_de']))."', '".dbStr(trim($_REQUEST['ban_btn_text_en']))."', '" . dbStr(trim($_REQUEST['ban_link'])) . "', '" . dbStr(trim($_REQUEST['ban_background_color'])) . "', '" . dbStr(trim($_REQUEST['ban_text_color'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', '" . $mfileName . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -31,7 +31,7 @@ if (isset($_REQUEST['btnAdd'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE banners SET ban_heading_color = '" . dbStr(trim($_REQUEST['ban_heading_color'])) . "', ban_detail_color = '" . dbStr(trim($_REQUEST['ban_detail_color'])) . "', ban_link = '" . dbStr(trim($_REQUEST['ban_link'])) . "', ban_background_color = '" . dbStr(trim($_REQUEST['ban_background_color'])) . "', ban_text_color = '" . dbStr(trim($_REQUEST['ban_text_color'])) . "', ban_heading_en = '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', ban_heading_de = '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', ban_details_en = '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', ban_details_de = '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', ban_file = '" . $mfileName . "' WHERE ban_id= '" . $_REQUEST['ban_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE banners SET ban_heading_color = '" . dbStr(trim($_REQUEST['ban_heading_color'])) . "', ban_detail_color = '" . dbStr(trim($_REQUEST['ban_detail_color'])) . "', ban_btn_text_de = '".dbStr(trim($_REQUEST['ban_btn_text_de']))."', ban_btn_text_en = '".dbStr(trim($_REQUEST['ban_btn_text_en']))."', ban_link = '" . dbStr(trim($_REQUEST['ban_link'])) . "', ban_background_color = '" . dbStr(trim($_REQUEST['ban_background_color'])) . "', ban_text_color = '" . dbStr(trim($_REQUEST['ban_text_color'])) . "', ban_heading_en = '" . dbStr(trim($_REQUEST['ban_heading_en'])) . "', ban_heading_de = '" . dbStr(trim($_REQUEST['ban_heading_de'])) . "', ban_details_en = '" . dbStr(trim($_REQUEST['ban_details_en'])) . "', ban_details_de = '" . dbStr(trim($_REQUEST['ban_details_de'])) . "', ban_file = '" . $mfileName . "' WHERE ban_id= '" . $_REQUEST['ban_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -40,6 +40,8 @@ if (isset($_REQUEST['btnAdd'])) {
             $rsMem = mysqli_fetch_object($rsM);
             $ban_heading_color = $rsMem->ban_heading_color;
             $ban_detail_color = $rsMem->ban_detail_color;
+            $ban_btn_text_de = $rsMem->ban_btn_text_de;
+            $ban_btn_text_en = $rsMem->ban_btn_text_en;
             $ban_button_show = $rsMem->ban_button_show;
             $ban_link = $rsMem->ban_link;
             $ban_background_color = $rsMem->ban_background_color;
@@ -56,6 +58,8 @@ if (isset($_REQUEST['btnAdd'])) {
     } else {
         $ban_heading_color = "";
         $ban_detail_color = "";
+        $ban_btn_text_de = "";
+        $ban_btn_text_en = "";
         $ban_button_show = "";
         $ban_link = "";
         $ban_background_color = "";
@@ -174,6 +178,14 @@ include("includes/messages.php");
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Detail Color (Like: #fff)</label>
                                     <input type="text" class="input_style" name="ban_detail_color" id="ban_detail_color" value="<?php print($ban_detail_color); ?>" placeholder="#fff">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Button Text DE</label>
+                                    <input type="text" class="input_style" name="ban_btn_text_de" id="ban_btn_text_de" value="<?php print($ban_btn_text_de); ?>" placeholder="Button Text De">
+                                </div>
+                                <div class="col-md-6 col-12 mt-3">
+                                    <label for="">Button Text EN</label>
+                                    <input type="text" class="input_style" name="ban_btn_text_en" id="ban_btn_text_en" value="<?php print($ban_btn_text_en); ?>" placeholder="Button Text EN">
                                 </div>
                                 <div class="col-md-6 col-12 mt-3">
                                     <label for="">Button Link</label>
