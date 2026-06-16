@@ -321,7 +321,7 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		let documentHeight = $(document).height();
 
 		// Trigger when 150px near bottom
-		if (scrollTop + windowHeight >= documentHeight - 250 && !loading) {
+		if (scrollTop + windowHeight >= documentHeight - 400 && !loading) {
 
 			loading = true;
 

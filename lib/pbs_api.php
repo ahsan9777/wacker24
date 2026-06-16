@@ -41,7 +41,7 @@ function getKeycloakToken()
 function getprice($gtin)
 {
     // API URL
-    $url = "https://reseller.cntr.pbsnetwork.eu/reseller/api/v3/catalogs/4399901576926/items/".$gtin;
+    $url = "https://reseller.cntr.pbsnetwork.eu/reseller/api/v3/catalogs/4388888002610/items/".$gtin;
 
     $getKeycloakToken = getKeycloakToken();
     // Access Token
