@@ -148,15 +148,6 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                     //print($i.": pf_fname = ".$pf_fname." pf_fvalue = ".$pf_fvalue." pf_forder = ".$pf_forder." pf_fvalue_details = ".$pf_fvalue_details."<br>");
                     $pf_id = getMaximum("products_feature", "pf_id");
                     mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pro_udx_seo_epag_id, pf_group_id, pf_fname, pf_fvalue, pf_forder, pf_fvalue_details, pf_fname_params_de, pf_fvalue_params_de) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "',  '" . dbStr(trim($pro_udx_seo_epag_id)) . "', '" . $pro_referance_feature_group_id . "', '" . dbStr(trim($pf_fname)) . "', '" . dbStr(trim($pf_fvalue)) . "', '" . dbStr(trim($pf_forder)) . "', '" . dbStr(trim($pf_fvalue_details)) . "', '" . $pf_fname_params_de . "', '" . $pf_fvalue_params_de . "') ") or die(mysqli_error($GLOBALS['conn']));
-                    
-                    if(!empty($pro_udx_seo_selection_feature) && $pro_type == 0){
-                        if(isset($pf_fvalue_params_de) && $pf_fvalue_params_de !== '' && $pf_fname === $pro_udx_seo_selection_feature){
-                            $pro_url = $pro_udx_seo_epag_title_params_de.'-'.$pf_fvalue_params_de;
-                        } else{
-                            $pro_url = $pro_udx_seo_epag_title_params_de;
-                        }
-                        mysqli_query($GLOBALS['conn'], "UPDATE products SET  pro_url = '".dbStr($pro_url)."' WHERE pro_id = '" . $pro_id . "' ") or die(mysqli_error($GLOBALS['conn']));
-                    }
                 }
             }
         }
@@ -234,6 +225,22 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
                 //print($i.": pg_mime_type = ".$pg_mime_type." pg_mime_source = ".$pg_mime_source." pg_mime_description = ".$pg_mime_description." pg_mime_alt = ".$pg_mime_alt." pg_mime_order =".$pg_mime_order."<br>");
                 $pg_id = getMaximum("products_gallery", "pg_id");
                 mysqli_query($GLOBALS['conn'], "INSERT INTO products_gallery (pg_id, pro_id, supplier_id, pg_mime_type, pg_mime_source, pg_mime_source_url, pg_mime_description, pg_mime_alt, pg_mime_purpose, pg_mime_order) VALUES ('" . $pg_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($pg_mime_type)) . "', '" . dbStr(trim($pg_mime_source)) . "', '" . dbStr(trim($pg_mime_source_url)) . "', '" . dbStr(trim($pg_mime_description)) . "', '" . dbStr(trim($pg_mime_alt)) . "', '" . dbStr(trim($pg_mime_purpose)) . "', '" . dbStr(trim($pg_mime_order)) . "') ") or die(mysqli_error($GLOBALS['conn']));
+            }
+        }
+
+        if($pro_type == 0){
+            $Query = "SELECT pro.*, pf.pf_fvalue_params_de FROM products AS pro LEFT OUTER JOIN products_feature AS pf ON pf.supplier_id = pro.supplier_id AND pf.pf_fname = pro.pro_udx_seo_selection_feature WHERE pro.supplier_id = '".$supplier_id."'";
+            $rs = mysqli_query($GLOBALS['conn'], $Query);
+            if (mysqli_num_rows($rs) > 0) {
+                    $row = mysqli_fetch_object($rs);
+                    
+                    if(!empty($row->pf_fvalue_params_de)){
+                        $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$row->pf_fvalue_params_de;
+                    } else{
+                        $pro_url = $row->pro_udx_seo_epag_title_params_de;
+                    }
+                    $update_query = "UPDATE products SET pro_url = '" . dbStr($pro_url) . "' WHERE supplier_id = '" . $supplier_id . "' ";
+                    mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
             }
         }
     }
