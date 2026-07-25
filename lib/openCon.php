@@ -15,6 +15,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbUserName = "root";
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "wacker24";
+	$GLOBALS['siteTitle'] = "Wacker Buerocenter – Buerobedarf, Bueromoebel, Drucker & Buerotechnik";
 	$GLOBALS['siteURL'] = "http://localhost:82/wacker24/";
 } elseif ($_SERVER['HTTP_HOST'] == 'localhost') {
 	$dbServer   = "localhost";
@@ -22,6 +23,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 	$dbUserName = "root";
 	$dbPassword = "";
 	$GLOBALS['siteName'] = "Wacker Buerocenter";
+	$GLOBALS['siteTitle'] = "Wacker Buerocenter – Buerobedarf, Bueromoebel, Drucker & Buerotechnik";
 	$GLOBALS['siteURL'] = "http://localhost/wacker24/";
 	$GLOBALS['siteURL_main'] = "http://localhost/";
 	$GLOBALS['vorkasse_email'] = "bestellung@wacker24.de";
@@ -33,6 +35,7 @@ if ($_SERVER['HTTP_HOST'] == 'localhost:82') {
 
 	$dbPassword = "T!1yNxP=gd!T";
 	$GLOBALS['siteName'] = "Wacker Buerocenter";
+	$GLOBALS['siteTitle'] = "Wacker Buerocenter – Buerobedarf, Bueromoebel, Drucker & Buerotechnik";
 
 	$GLOBALS['siteURL'] = "https://www.wacker-buerocenter.de/";
 }

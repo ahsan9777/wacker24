@@ -1,24 +1,7 @@
 <?php
 include("includes/php_includes_top.php");
 
-/*$key = "1234567890abcdef1234567890abcdef"; // Must match the encryption key
 
-if (isset($_GET['data'])) {
-    $data = base64_decode($_GET['data']);
-    $iv = substr($data, 0, 16);                  // Extract IV
-    $encrypted = substr($data, 16);              // Extract encrypted data
-
-    $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
-    parse_str($decrypted, $params);              // Convert string to array
-
-    // Use parameters
-    echo "lf_parent_id: " . $params['lf_parent_id'] . "<br>";
-    echo "pro_type: " . $params['pro_type'] . "<br>";
-    echo "lf_group_id: " . $params['lf_group_id'][0] . "<br>";
-}*/
-//$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-//$host = $_SERVER['HTTP_HOST'];
-//$requestUri = $_SERVER['REQUEST_URI'];
 $requestUri = rtrim($GLOBALS['siteURL'], "/") . $_SERVER['REQUEST_URI'];
 //$url = $protocol . $host . $requestUri;
 //print_r($_REQUEST);die();
@@ -28,12 +11,14 @@ $lf_group_id = 0;
 $pro_type = (isset($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : 0);
 $whereclause = "WHERE 1 = 1";
 $whereclause_top_category = "";
+$whereclause_meta = "";
 
 $level_three = 0;
 $level_two = 0;
 $lf_parent_id = 0;
 $level_two_link = 1;
 if (isset($_REQUEST['level_three'])) {
+	$whereclause_meta = " cat_params_de = '".$_REQUEST['level_three']."'";
 	$AND = returnName("group_id", "category", "cat_params_de", $_REQUEST['level_two'], " AND parent_id > 0");
 	$level_three = returnName("group_id", "category", "cat_params_de", $_REQUEST['level_three'], " AND parent_id = '" . $AND . "'");
 	$lf_parent_id = returnName("parent_id", "category", "cat_params_de", $_REQUEST['level_three'], " AND parent_id = '" . $AND . "'");
@@ -41,6 +26,7 @@ if (isset($_REQUEST['level_three'])) {
 		$lf_parent_id = 19;
 	}
 } elseif (isset($_REQUEST['level_two'])) {
+	$whereclause_meta = " cat_params_de = '".$_REQUEST['level_two']."'";
 	$level_two = returnName("group_id", "category", "cat_params_de", $_REQUEST['level_two']);
 	$lf_parent_id = returnName("parent_id", "category", "cat_params_de", $_REQUEST['level_two']);
 } //die();
@@ -53,6 +39,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 	} else {
 		$lf_group_id = $_REQUEST['lf_group_id'][0];
 		$lf_parent_id = $_REQUEST['lf_parent_id'];
+		$whereclause_meta = " group_id = '".$_REQUEST['lf_group_id'][0]."'";
 	}
 	if (strlen($lf_group_id) > 3) {
 		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND (" . $lf_group_id . ", cm.cat_id)";
@@ -90,6 +77,18 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 
 //print($whereclause);
 
+if(!empty($whereclause_meta)){
+	$Query = "SELECT group_id, cat_title_de AS cat_title, cat_keyword, cat_description FROM category WHERE ".$whereclause_meta."";
+	$rs = mysqli_query($GLOBALS['conn'], $Query);
+	if(mysqli_num_rows($rs) > 0){
+		$row = mysqli_fetch_object($rs);
+		$level_one = $row->group_id;
+		$level_one_request = $row->group_id;
+		$meta_keywords = $row->cat_keyword;
+		$meta_description = $row->cat_description;
+		$page_title = convertGermanChars($row->cat_title) . " online kaufen | Wacker Buerocenter";
+	}
+}
 
 ?>
 <!doctype html>

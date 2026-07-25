@@ -41,10 +41,10 @@ $ci_type = 0;
 if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
 	$ci_type = 1;
 }
-//$product_params = explode("-", $_REQUEST['product_params']);
+$product_params = explode("-", $_REQUEST['product_params']);
 //$params_supplier_id =  end($product_params);
-//$params_supplier_id = returnName("supplier_id", "products", "pro_ean", end($product_params), "AND pro_custom_add IN (0,1) ORDER BY pro_custom_add DESC");
-$params_supplier_id = returnName("supplier_id", "products", "pro_url", $_REQUEST['product_params'], "AND pro_status = '1'");
+$params_supplier_id = returnName("supplier_id", "products", "pro_id", end($product_params));
+//$params_supplier_id = returnName("supplier_id", "products", "pro_url", $_REQUEST['product_params'], "AND pro_status = '1'");
 $Query = "SELECT pro.*, pbp.pbp_id, pro.pro_ean, manf.manf_name, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
 //print($Query);//die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
@@ -60,10 +60,10 @@ if (mysqli_num_rows($rs) > 0) {
 	$supplier_id = $row->supplier_id;
 	$pro_custom_add = $row->pro_custom_add;
 	$pro_udx_seo_internetbezeichung = $row->pro_udx_seo_internetbezeichung;
-	$page_title = $pro_udx_seo_internetbezeichung;
 	$pro_udx_seo_internetbezeichung_params_de = $row->pro_udx_seo_internetbezeichung_params_de;
 	$pro_udx_seo_epag_title = $row->pro_udx_seo_epag_title;
 	$pro_udx_seo_epag_title_params_de = $row->pro_udx_seo_epag_title_params_de;
+	$page_title = $pro_udx_seo_epag_title.' | Wacker Buerocenter';
 	$pro_description_short = $row->pro_description_short;
 	$pro_description_long = $row->pro_description_long;
 	$pro_description_long_schema = addslashes(str_replace(array("-", '"'), "", strip_tags($pro_description_long)));

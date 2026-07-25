@@ -10,7 +10,7 @@ $lf_action_type = 0;
 if(isset($_REQUEST['cat_params_one']) && $_REQUEST['cat_params_one'] == 'tinte-toner'){
 	header('Location: '.$GLOBALS['siteURL'].'produkte/tinte-toner/tinte-toner/tinte-toner');
 }
-$Query = "SELECT group_id, cat_keyword, cat_description FROM category WHERE cat_params_de = '".$_REQUEST['cat_params_one']."'";
+$Query = "SELECT group_id, cat_title_de AS cat_title, cat_keyword, cat_description FROM category WHERE cat_params_de = '".$_REQUEST['cat_params_one']."'";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if(mysqli_num_rows($rs) > 0){
 	$row = mysqli_fetch_object($rs);
@@ -18,6 +18,7 @@ if(mysqli_num_rows($rs) > 0){
 	$level_one_request = $row->group_id;
 	$meta_keywords = $row->cat_keyword;
 	$meta_description = $row->cat_description;
+	$page_title = convertGermanChars($row->cat_title) . " online kaufen | Wacker Buerocenter";
 }
 /*$level_one =  returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
 $level_one_request = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);*/
@@ -38,7 +39,7 @@ $meta_description = returnName("cat_description", "category", "cat_params_de", $
 <html lang="de">
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] ."unterkategorien/".$_REQUEST['cat_params_one']); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] ."kategorie/".$_REQUEST['cat_params_one']); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

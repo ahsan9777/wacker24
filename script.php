@@ -509,9 +509,9 @@ if (isset($_REQUEST['action'])) {
                 while ($row = mysqli_fetch_object($rs)) {
                     $pro_id = $row->pro_id;
                     if(!empty($row->pf_fvalue_params_de)){
-                        $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$row->pf_fvalue_params_de;
+                        $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$row->pf_fvalue_params_de.'-'.$pro_id;
                     } else{
-                        $pro_url = $row->pro_udx_seo_epag_title_params_de;
+                        $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$pro_id;
                     }
                     $update_query = "UPDATE products SET pro_url = '" . dbStr($pro_url) . "' WHERE pro_id = '" . $pro_id . "' ";
                     //print($update_query."<br>");

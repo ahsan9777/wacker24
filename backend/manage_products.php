@@ -363,6 +363,9 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
     for ($i = 0; $i < count($_REQUEST['pk_id']); $i++) {
         mysqli_query($GLOBALS['conn'], "UPDATE products_keyword SET pk_title = '" . dbStr(trim($_REQUEST['pk_title'][$i])) . "' WHERE pk_id = '" . $_REQUEST['pk_id'][$i] . "' AND pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
     }
+    for ($i = 0; $i < count($_REQUEST['pbp_id']); $i++) {
+        mysqli_query($GLOBALS['conn'], "UPDATE products_bundle_price SET pbp_price_amount = '" . dbStr(trim($_REQUEST['pbp_price_amount'][$i])) . "', pbp_special_price_amount = '" . dbStr(trim($_REQUEST['pbp_price_amount'][$i])) . "'  WHERE pbp_id = '" . $_REQUEST['pbp_id'][$i] . "' AND pro_id= '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "'") or die(mysqli_error($GLOBALS['conn']));
+    }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -380,16 +383,16 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             $pro_description_long = $rsMem->pro_description_long;
             $mfile_path = !empty($rsMem->pg_mime_source_url) ? get_image_link(427, $rsMem->pg_mime_source_url) : "";
             //$mfile_path = !empty($rsMem->pg_mime_source_url) ? "" : "";
-            $formHead = "Update Info";
+            $formHead = "Update-Informationen";
         }
     } elseif ($_REQUEST['action'] == 3) {
-        $formHead = "Add Quantity of ";
+        $formHead = "Menge hinzufügen von ";
     } elseif ($_REQUEST['action'] == 4) {
-        $formHead = "Add New Schulranzen of ";
+        $formHead = "Neue Schulranzen hinzufügen ";
     } elseif ($_REQUEST['action'] == 5) {
-        $formHead = "Add New Special Price of ";
+        $formHead = "Neuen Sonderpreis hinzufügen von ";
     } else {
-        $formHead = "Add New";
+        $formHead = "Neu hinzufügen";
     }
 }
 
@@ -449,7 +452,7 @@ include("includes/messages.php");
                 <?php if (isset($_REQUEST['action'])) { ?>
                     <div class="main_container">
                         <h2 class="text-white">
-                            <?php print($formHead); ?> Product
+                            <?php print($formHead); ?> Produkt
                         </h2>
                         <form name="frm" id="frm" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                             <?php if ($_REQUEST['action'] == 2) { ?>
@@ -458,24 +461,24 @@ include("includes/messages.php");
                                         <img class="rounded" src="<?php print($mfile_path); ?>" width="30%" alt="">
                                     </div>
                                     <div class="col-md-4 col-12 mt-3">
-                                        <label for="">Category ( Group Name One )</label>
-                                        <input type="text" class="input_style" readonly name="cat_title_one" id="cat_title_one" value="<?php print($cat_title_one); ?>" placeholder="Category ( Group Name One )">
+                                        <label for="">Kategorie ( Gruppenname Eins )</label>
+                                        <input type="text" class="input_style" readonly name="cat_title_one" id="cat_title_one" value="<?php print($cat_title_one); ?>" placeholder="Kategorie ( Gruppenname Eins )">
                                     </div>
                                     <div class="col-md-4 col-12 mt-3">
-                                        <label for="">Category ( Group Name Two )</label>
-                                        <input type="text" class="input_style" readonly name="cat_title_two" id="cat_title_two" value="<?php print($cat_title_two); ?>" placeholder="Category ( Group Name Two )">
+                                        <label for="">Kategorie ( Gruppenname zwei )</label>
+                                        <input type="text" class="input_style" readonly name="cat_title_two" id="cat_title_two" value="<?php print($cat_title_two); ?>" placeholder="Kategorie ( Gruppenname zwei )">
                                     </div>
                                     <div class="col-md-4 col-12 mt-3">
-                                        <label for="">Category ( Group Name Three )</label>
-                                        <input type="text" class="input_style" readonly name="cat_title_three" id="cat_title_three" value="<?php print($cat_title_three); ?>" placeholder="Category ( Group Name Three )">
+                                        <label for="">Kategorie ( Gruppenname Drei )</label>
+                                        <input type="text" class="input_style" readonly name="cat_title_three" id="cat_title_three" value="<?php print($cat_title_three); ?>" placeholder="Kategorie ( Gruppenname Drei )">
                                     </div>
                                     <div class="col-md-12 col-12 mt-3">
-                                        <label for="">Short Description</label>
-                                        <input type="text" class="input_style" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Short Description">
+                                        <label for="">Kurzbeschreibung</label>
+                                        <input type="text" class="input_style" name="pro_description_short" id="pro_description_short" value="<?php print($pro_description_short); ?>" placeholder="Kurzbeschreibung">
                                     </div>
                                     <div class="col-md-12 col-12 mt-3">
-                                        <label for="">Long Description</label>
-                                        <textarea type="text" class="input_style" name="pro_description_long" id="pro_description_long" placeholder="Long Description"> <?php print($pro_description_long); ?> </textarea>
+                                        <label for="">Kurzbeschreibung</label>
+                                        <textarea type="text" class="input_style" name="pro_description_long" id="pro_description_long" placeholder="Kurzbeschreibung"> <?php print($pro_description_long); ?> </textarea>
                                     </div>
                                     <?php
                                     $counter = 0;
@@ -486,9 +489,25 @@ include("includes/messages.php");
                                             $counter++;
                                     ?>
                                             <div class="col-md-3 col-12 mt-3">
-                                                <label for="">Keywowd <?php print($counter); ?> </label>
+                                                <label for="">Schlüsselwort <?php print($counter); ?> </label>
                                                 <input type="hidden" name="pk_id[]" id="pk_id" value="<?php print($row->pk_id); ?>">
                                                 <input type="text" class="input_style" name="pk_title[]" id="pk_title" value="<?php print($row->pk_title); ?>" placeholder="Keywowd">
+                                            </div>
+                                    <?php
+                                        }
+                                    }
+                                    $counter = 0;
+                                    $Query = "SELECT * FROM `products_bundle_price` WHERE pro_id = '" . $_REQUEST['pro_id'] . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' ORDER BY pbp_lower_bound ASC";
+                                    $rs = mysqli_query($GLOBALS['conn'], $Query);
+                                    if (mysqli_num_rows($rs) > 0) {
+                                        print('<div class="col-md-12 col-12 mt-3"><h4 style = "text-align: start;">Preis ( exkl. MwSt )</h4></div>');
+                                        while ($row = mysqli_fetch_object($rs)) {
+                                            $counter++;
+                                    ?>
+                                            <div class="col-md-3 col-12 mt-3">
+                                                <label for="">Ab <?php print($row->pbp_lower_bound); ?> </label>
+                                                <input type="hidden" name="pbp_id[]" id="pbp_id" value="<?php print($row->pbp_id); ?>">
+                                                <input type="number" step="any" class="input_style" name="pbp_price_amount[]" id="pbp_price_amount" value="<?php print($row->pbp_price_amount); ?>">
                                             </div>
                                     <?php
                                         }

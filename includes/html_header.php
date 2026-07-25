@@ -4,10 +4,15 @@
 <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 <meta name="keywords" content="<?php print( ((!empty($meta_keywords))? $meta_keywords : config_metakey ) ); ?>">
 <meta name="description" content="<?php print( ((!empty($meta_description))? $meta_description : config_metades ) ); ?>">
+<meta name="publisher" content="Wacker Systems">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<?php
+header("X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1");
+?>
 <?php if(!empty($page_title)){ ?>
     <title><?php print($page_title); ?></title>
 <?php } else { ?>
-    <title><?php print($GLOBALS['siteName']); ?></title>
+    <title><?php print($GLOBALS['siteTitle']); ?></title>
 <?php } ?>
 <link rel="preload" href="<?php print(get_font_link(config_fonts));?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>"></noscript>
