@@ -45,6 +45,7 @@ print("</pre>");
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . "tint-toner"); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

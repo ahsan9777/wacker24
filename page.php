@@ -13,12 +13,14 @@ if (mysqli_num_rows($rs1) > 0) {
 	$cnt_details = $row1->cnt_details;
 	$cnt_image = !empty($row1->cnt_image) ? $GLOBALS['siteURL'] . "files/contents/" . $row1->cnt_image : "";
 	$cnt_banner_image = !empty($row1->cnt_banner_image) ? $GLOBALS['siteURL'] . "files/contents/" . $row1->cnt_banner_image : "";
+	$page_title = convertGermanChars($row1->cnt_title) . " | Wacker Buerocenter";
 }
 ?>
 <!doctype html>
 <html lang="de">
 
 <head>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'].$cnt_slug); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

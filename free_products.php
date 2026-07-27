@@ -22,7 +22,7 @@ $fp_price = price_format(getMinimum("free_product", "fp_price"));
 ?>
 
 <head>
-	<link rel="canonical" href="">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . "kostenlose-produktgeschenke"); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

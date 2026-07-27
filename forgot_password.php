@@ -28,6 +28,12 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 	<meta charset="utf-8">
 	<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL']."passwortvergessen"); ?>">
+	<meta name="publisher" content="Wacker Systems">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<?php
+	header("X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1");
+	?>
 	<title>Passwort vergessen</title>
 	<link href="css/styles.css" rel="stylesheet" type="text/css" />
 	<link href="css/responsive.css" rel="stylesheet" type="text/css" />
@@ -69,7 +75,6 @@ if (isset($_REQUEST['btn_forgotpassword'])) {
 	<div id="footer_register">
 			<div class="page_width">
 				<ul>
-					<li><a href="javascript:void(0)">Cookie-Einstellungen </a></li>
 					<li><a href="impressum">Impressum</a></li>
 					<li><a href="datenschutz">Datenschutzerklärung</a></li>
 					<li><a href="agb">Allgemeinen Geschäftsbedingungen</a></li>

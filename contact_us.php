@@ -32,6 +32,7 @@
 <html lang="de">
 
 <head>
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL']."kontakt"); ?>">
 	<?php include("includes/html_header.php"); ?>
 </head>
 

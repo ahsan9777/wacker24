@@ -14,7 +14,7 @@ if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
 <html>
 
 <head>
-	<link rel="canonical" href="<?php print($GLOBALS['siteURL_main'] . "verkäufe-angebote"); ?>">
+	<link rel="canonical" href="<?php print($GLOBALS['siteURL'] . "verkaeufe-angebote"); ?>">
 	<?php include("includes/html_header.php"); ?>
 	<style>
 		.pd_card{
