@@ -394,9 +394,9 @@ include("includes/messages.php");
                                                             <div>
                                                                 <label class="fw-bold">Bill Payment:</label> <input type="checkbox" class="user_invoice_payment" id="user_invoice_payment" data-id="<?php print($row->user_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->user_invoice_payment == 1) ? 'checked' : ''); ?>>
                                                             </div>
-                                                            <div>
-                                                                <label class="fw-bold">Sepa Payment:</label> <input type="checkbox" class="user_sepa_payment" id="user_sepa_payment" data-id="<?php print($row->user_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php print(($row->user_sepa_payment == 1) ? 'checked' : ''); ?>>
-                                                            </div>
+                                                            <!--<div>
+                                                                <label class="fw-bold">Sepa Payment:</label> <input type="checkbox" class="user_sepa_payment" id="user_sepa_payment" data-id="<?php //print($row->user_id); ?>" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-size="sm" <?php //print(($row->user_sepa_payment == 1) ? 'checked' : ''); ?>>
+                                                            </div>-->
                                                         </div>
                                                     </td>
                                                 <?php } ?>

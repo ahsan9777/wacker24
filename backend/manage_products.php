@@ -228,20 +228,18 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             }
         }
 
-        if($pro_type == 0){
-            $Query = "SELECT pro.*, pf.pf_fvalue_params_de FROM products AS pro LEFT OUTER JOIN products_feature AS pf ON pf.supplier_id = pro.supplier_id AND pf.pf_fname = pro.pro_udx_seo_selection_feature WHERE pro.supplier_id = '".$supplier_id."'";
-            $rs = mysqli_query($GLOBALS['conn'], $Query);
-            if (mysqli_num_rows($rs) > 0) {
-                    $row = mysqli_fetch_object($rs);
-                    
-                    if(!empty($row->pf_fvalue_params_de)){
-                        $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$row->pf_fvalue_params_de;
-                    } else{
-                        $pro_url = $row->pro_udx_seo_epag_title_params_de;
-                    }
-                    $update_query = "UPDATE products SET pro_url = '" . dbStr($pro_url) . "' WHERE supplier_id = '" . $supplier_id . "' ";
-                    mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
-            }
+        
+        $Query = "SELECT pro.*, pf.pf_fvalue_params_de FROM products AS pro LEFT OUTER JOIN products_feature AS pf ON pf.supplier_id = pro.supplier_id AND pf.pf_fname = pro.pro_udx_seo_selection_feature WHERE pro.supplier_id = '".$supplier_id."'";
+        $rs = mysqli_query($GLOBALS['conn'], $Query);
+        if (mysqli_num_rows($rs) > 0) {
+                $row = mysqli_fetch_object($rs);
+                if(!empty($row->pf_fvalue_params_de)){
+                    $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$row->pf_fvalue_params_de.'-'.$pro_id;
+                } else{
+                    $pro_url = $row->pro_udx_seo_epag_title_params_de.'-'.$pro_id;
+                }
+                $update_query = "UPDATE products SET pro_url = '" . dbStr($pro_url) . "' WHERE supplier_id = '" . $supplier_id . "' ";
+                mysqli_query($GLOBALS['conn'], $update_query) or die(mysqli_error($GLOBALS['conn']).$update_query);
         }
     }
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=1");

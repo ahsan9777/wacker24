@@ -315,7 +315,7 @@ class Mailer
 
 
 
-    public function vorkasse($email, $ord_id, $customer_name)
+    public function vorkasse($email, $ord_id, $customer_name, $order_net_amount)
     {
         $username = "";
         $password = "";
@@ -332,6 +332,7 @@ class Mailer
 				<br>IBAN: <b>DE95 5486 2500 0006 7025 70</b>
 				<br>BIC: <b>GENODE61SUW</b>
 				<br><br>Bestellung: '.$ord_id.'
+				<br><br>ZU ZAHLENDER BETRAG: '.price_format($order_net_amount).' €
 				<br><br>Nach Zahlungseingang erhalten Sie eine Bestätigung per E-Mail. Anschließend wird Ihre Bestellung schnellstmöglich versendet.
 				<br><br><b><img style="width: 20px;" data-emoji="📞" class="an1" alt="📞" aria-label="📞" draggable="false" src="'.$GLOBALS['siteURL'].'images/phone.png" loading="lazy" data-emailtracker-detector="1"> Bei Fragen sind wir gerne für Sie da:</b>
                 <br><br>Hotline: <b>06321 9124-80</b>
@@ -344,6 +345,7 @@ class Mailer
         $this->sendEmail($username, $password, $to, $subject, $message, 1, 0);
         //print($ret);
     }
+    
     public function forgotpassword($email, $token)
     {
         $username = "";

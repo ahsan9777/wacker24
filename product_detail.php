@@ -507,8 +507,8 @@ include("includes/message.php");
 				<div class="special-price-ad-inner">
 
 					<div class="special-price-ad-inner-left">
-						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand">
-						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product">
+						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand" alt="brand">
+						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product" alt="product">
 					</div>
 					<div class="special-price-ad-inner-text">
 						<span class="small"><?php print($rws->pro_udx_seo_epag_title);?></span>
@@ -869,7 +869,7 @@ include("includes/message.php");
 													<p><?php print($pro_udx_manufacturer_address); ?></p>
 													<p><?php print($pro_udx_manufacturer_mail); ?></p>
 												</div>
-												<a href="javascript:void(0);" title="Herstellerinformationen"><i class="fa fa-info-circle"></i> Herstellerinformationen </a>
+												<a href="#" title="Herstellerinformationen"><i class="fa fa-info-circle"></i> Herstellerinformationen </a>
 											</div>
 										<?php } ?>
 									</div>

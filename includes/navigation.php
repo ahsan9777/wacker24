@@ -76,7 +76,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                     <li>
                         <div class="hdr_icon"><i class="fa fa-user" ></i> </div>
                         <div class="hdr_text">
-                            <a href="#" role="button" onclick="return false;"><span> <?php print(isset($_SESSION["FullName"]) ? "Hi, " . $_SESSION["FullName"] : "Hello Login"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
+                            <a href="#" role="button" onclick="return false;"><span> <?php print(isset($_SESSION["FullName"]) ? "Hallo, " . $_SESSION["FullName"] : "Anmelden"); ?> <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?> </span>Konto & Listen <i class="fa fa-caret-down"></i> <?php } ?> </a>
                             <?php if( (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3,4))) || !isset($_SESSION["FullName"])){ ?>
                             <div class="account_nav">
                                 <ul>
@@ -89,12 +89,12 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                         <?php } ?>
                                     </li>
                                     <li><span>Meine Listen</span></li>
-                                    <li> <a title="sonderpreise" href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "#"); ?>"> Sonderpreise </a></li>
-                                    <li> <a title="einkaufslisten" href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "#"); ?>"> Einkaufslisten </a></li>
+                                    <li> <a title="sonderpreise" href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "anmelden"); ?>"> Sonderpreise </a></li>
+                                    <li> <a title="einkaufslisten" href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "anmelden"); ?>"> Einkaufslisten </a></li>
                                     <li><span>Mein Konto</span></li>
-                                    <li> <a title="benutzerprofile" href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "#"); ?>"> Persönliche Daten <a href=""></a></li>
-                                    <li> <a title="bestellungen" href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "#"); ?>"> Bestellungen </a></li>
-                                    <li> <a title="adressen" href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "#"); ?>"> Adressen </a></li>
+                                    <li> <a title="benutzerprofile" href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "anmelden"); ?>"> Persönliche Daten <a href=""></a></li>
+                                    <li> <a title="bestellungen" href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "anmelden"); ?>"> Bestellungen </a></li>
+                                    <li> <a title="adressen" href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "anmelden"); ?>"> Adressen </a></li>
                                     <li>Zahlungsarten</li>
                                     <?php if (isset($_SESSION["FullName"])) { ?>
                                         <li><a title="abmelden" href="abmelden">Abmelden</a></li>
