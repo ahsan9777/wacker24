@@ -38,10 +38,6 @@ $cu = 'active';
                     <li><a href="manage_sales_system.php" title="Sales System Management"><span class="text">Sales System</span></a></li>
                 </ul>
             </li>
-            <li>
-                <a href="manage_product_info_request.php" title="Anfrage zu Artikelinformationen" ><span class="material-icons icon">info</span> <span class="text">Anfrage zu Artikelinformationen</span> </a>
-            </li>
-            
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_free_product_category' || $pg == 'manage_free_products') ? $cu : ''; ?>"><span class="material-symbols-outlined icon">hand_package</span> <span class="text">Gratis</span></a>
                 <ul class="sub-menu panel" <?php echo ( $pg == 'manage_free_product_category' || $pg == 'manage_free_products') ? $c : ''; ?>>
@@ -50,8 +46,8 @@ $cu = 'active';
                 </ul>
             </li>
             <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $c : ''; ?>>
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_appointment.php' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $cu : ''; ?>"><span class="material-icons icon">schedule</span> <span class="text">Appointment</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_appointment.php' || $pg == 'manage_appointment_category' || $pg == 'manage_appointment_schedule' || $pg == 'manage_appointment_holidays') ? $c : ''; ?>>
                     <li><a href="manage_appointment.php" title="Appointment Management"><span class="text">Appointment</span></a></li>
                     <li><a href="manage_appointment_category.php" title="Category Management"><span class="text">Category</span></a></li>
                     <li><a href="manage_appointment_schedule.php" title="Schedule Management"><span class="text">Schedule</span></a></li>
@@ -67,18 +63,21 @@ $cu = 'active';
             <li>
                 <a href="manage_most_sale_articles.php" title="Meistverkaufte Artikel" ><span class="material-symbols-outlined icon">award_star</span> <span class="text">Meistverkaufte Artikel</span> </a>
             </li>
-            <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_orders' || $pg == 'manage_order_return') ? $cu : ''; ?>"><span class="material-icons icon">inventory</span> <span class="text">Auftragsverwaltung</span></a>
-                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_orders' || $pg == 'manage_order_return') ? $c : ''; ?>>
-                    <li><a href="manage_orders.php" title="Auftragsverwaltung Management" ><span class="text">Auftragsverwaltung</span> </a></li>
-                    <li><a href="manage_order_return.php" title="Verwaltung von Rücksendungen" ><span class="text">Bestellrückgabe</span> </a></li>
-                </ul>
+            <li>
+                <a href="manage_orders.php" title="Auftragsverwaltung Management" ><span class="material-icons icon">inventory</span> <span class="text">Auftragsverwaltung</span> </a>
             </li>
             <li>
                 <a href="manage_contact_request.php" title="Kontakt Formular Management" ><span class="material-icons icon">mail</span> <span class="text">Kontakt Formular</span> </a>
             </li>
         </ul>
         <ul class="accordion-menu border-top border-black">
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_report_search_keywords' || $pg == 'manage_report_cart_products') ? $cu : ''; ?>"><span class="material-symbols-outlined icon">analytics</span> <span class="text">Reports</span></a>
+                <ul class="sub-menu panel" <?php echo ( $pg == 'manage_report_search_keywords' || $pg == 'manage_report_cart_products') ? $c : ''; ?>>
+                    <li><a href="manage_report_search_keywords.php" title="Search Keyword Reports" ><span class="text">Search Keyword</span></a></li>
+                    <li><a href="manage_report_cart_products.php" title="Add to cart Product Reports" ><span class="text">Add to cart Product</span></a></li>
+                </ul>
+            </li>
             <li>
                 <a href="manage_admin_users.php" title="Benutzerverwaltung Management" ><span class="material-icons icon">admin_panel_settings</span><span class="text">Benutzerverwaltung</span></a>
             </li>

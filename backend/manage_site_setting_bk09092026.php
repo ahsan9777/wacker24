@@ -38,11 +38,6 @@ if (isset($_REQUEST['btnUpdate'])) {
     config_fonts = '" . dbStr(trim($_REQUEST['config_fonts'])) . "', 
     config_site_special_price = '" . dbStr(trim($_REQUEST['config_site_special_price'])) . "', 
     config_site_quantity_source = '" . dbStr(trim($_REQUEST['config_site_quantity_source'])) . "', 
-    config_site_dhl_link = '" . dbStr(trim($_REQUEST['config_site_dhl_link'])) . "', 
-    config_site_dhl_receiverid = '" . dbStr(trim($_REQUEST['config_site_dhl_receiverid'])) . "', 
-    config_site_dhl_username = '" . dbStr(trim($_REQUEST['config_site_dhl_username'])) . "', 
-    config_site_dhl_password = '" . dbStr(trim($_REQUEST['config_site_dhl_password'])) . "', 
-    config_site_dhl_apikey = '" . dbStr(trim($_REQUEST['config_site_dhl_apikey'])) . "', 
     config_site_logo = '" . $mfileName . "'")
         or die(mysqli_error($GLOBALS['conn']));
 
@@ -86,11 +81,6 @@ if (mysqli_num_rows($rsM) > 0) {
     $config_fonts = $rsMem->config_fonts;
     $config_site_special_price = $rsMem->config_site_special_price;
     $config_site_quantity_source = $rsMem->config_site_quantity_source;
-    $config_site_dhl_link = $rsMem->config_site_dhl_link;
-    $config_site_dhl_receiverid = $rsMem->config_site_dhl_receiverid;
-    $config_site_dhl_username = $rsMem->config_site_dhl_username;
-    $config_site_dhl_password = $rsMem->config_site_dhl_password;
-    $config_site_dhl_apikey = $rsMem->config_site_dhl_apikey;
     $mfileName = $rsMem->config_site_logo;
     $mfile_path = !empty($rsMem->config_site_logo) ? $GLOBALS['siteURL'] . "files/" . $rsMem->config_site_logo : "";
     $formHead = "Update Info";
@@ -239,7 +229,7 @@ include("includes/messages.php");
                                 <input type="color" class="input_style" name="config_btn_color" id="config_btn_color" value="<?php print($config_btn_color); ?>">
                             </div>
                             <div class="col-md-3 col-12 mt-3">
-                                <label for="config_ftp_img">Font Family</label>
+                                <label for="config_ftp_img">Button Color</label>
                                 <select class="input_style" name="config_fonts" id="config_fonts">
                                     <?php
                                     $font_options = [
@@ -325,41 +315,18 @@ include("includes/messages.php");
                                 </select>
                             </div>
                             <div class="col-md-3 col-12 mt-3">
-                                <label for="config_ftp_img">Price Sources</label>
+                                <label for="config_ftp_img">Price Source</label>
                                 <select class="input_style" name="config_site_special_price" id="config_site_special_price">
                                     <option value="0" <?php print( (($config_site_special_price == 0) ? 'selected' : '') ); ?> >Source One</option>
                                     <option value="1" <?php print( (($config_site_special_price == 1) ? 'selected' : '') ); ?> >Source Two</option>
                                 </select>
                             </div>
                             <div class="col-md-3 col-12 mt-3">
-                                <label for="config_ftp_img">Quantity Sources</label>
+                                <label for="config_ftp_img">Quantity Source</label>
                                 <select class="input_style" name="config_site_quantity_source" id="config_site_quantity_source">
                                     <option value="0" <?php print( (($config_site_quantity_source == 0) ? 'selected' : '') ); ?> >Database Quantity</option>
                                     <option value="1" <?php print( (($config_site_quantity_source == 1) ? 'selected' : '') ); ?> >Live API Quantity</option>
                                 </select>
-                            </div>
-                            <div class="col-md-12 col-12 mt-3 border-bottom">
-                                <h2 class="text-start text-white">DHL</h2>
-                            </div>
-                            <div class="col-md-12 col-12 mt-3">
-                                <label for="config_ftp_img">Api Link</label>
-                                <input type="text" class="input_style" name="config_site_dhl_link" id="config_site_dhl_link" value="<?php print($config_site_dhl_link); ?>">
-                            </div>
-                            <div class="col-md-6 col-12 mt-3">
-                                <label for="config_ftp_img">Receiver ID</label>
-                                <input type="text" class="input_style" name="config_site_dhl_receiverid" id="config_site_dhl_receiverid" value="<?php print($config_site_dhl_receiverid); ?>">
-                            </div>
-                            <div class="col-md-6 col-12 mt-3">
-                                <label for="config_ftp_img">Api Key</label>
-                                <input type="text" class="input_style" name="config_site_dhl_apikey" id="config_site_dhl_apikey" value="<?php print($config_site_dhl_apikey); ?>">
-                            </div>
-                            <div class="col-md-6 col-12 mt-3">
-                                <label for="config_ftp_img">Username</label>
-                                <input type="text" class="input_style" name="config_site_dhl_username" id="config_site_dhl_username" value="<?php print($config_site_dhl_username); ?>">
-                            </div>
-                            <div class="col-md-6 col-12 mt-3">
-                                <label for="config_ftp_img">Password</label>
-                                <input type="text" class="input_style" name="config_site_dhl_password" id="config_site_dhl_password" value="<?php print($config_site_dhl_password); ?>">
                             </div>
                             <div class="col-md-12 col-12 mt-3"><!--  -->
                                 <label for="">Logo</label>

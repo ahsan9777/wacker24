@@ -12,13 +12,12 @@ if (mysqli_num_rows($rs) > 0) {
 		$user_id = $customer_id;
 	}
 	$ord_datetime = date('d/m/Y', strtotime($row->ord_datetime));
-	$ord_gross_total = $row->ord_gross_total;
-	$ord_gst = $row->ord_gst;
-	$ord_discount = $row->ord_discount;
-	$ord_shipping_charges = $row->ord_shipping_charges;
-	$ord_amount = $row->ord_amount + $row->ord_shipping_charges;
+	$ord_gross_total = price_format($row->ord_gross_total);
+	$ord_gst = price_format($row->ord_gst);
+	$ord_discount = price_format($row->ord_discount);
+	$ord_shipping_charges = price_format($row->ord_shipping_charges);
+	$ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
 
-	$oi_net_total_cancellation = 0;
 	$delivery_info = "";
 	$user_company_name = returnName("user_company_name", "users", "user_id", $row->user_id);
 	if (!empty($row->dinfo_additional_info)) {
@@ -158,10 +157,6 @@ if (mysqli_num_rows($rs) > 0) {
 								$supplier_id = "GRATIS fur Sie!";
 								$pro_description_short = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
 							}
-							if($row->oi_status == 1){
-								$oi_net_total_cancellation = $oi_net_total_cancellation + $row->oi_net_total;
-								$pro_description_short = "<del>".$pro_description_short."</del>";
-							}
 					?>
 							<tr>
 								<td colspan="7" height="15"></td>
@@ -189,39 +184,33 @@ if (mysqli_num_rows($rs) > 0) {
 			<td colspan="2">
 				<table width="100%" cellpadding="0" cellspacing="0">
 					<tr>
-						<td colspan="6" style="width: 100%; border-bottom: 1px solid #000;height: 2px;"></td>
+						<td colspan="5" style="width: 100%; border-bottom: 1px solid #000;height: 2px;"></td>
 					</tr>
 					<tr>
-						<td colspan="6" height="15"></td>
+						<td colspan="5" height="15"></td>
 					</tr>
 					<tr>
 						<td style="width: 35%; font-size: 12px; font-weight: bold;color: #000;">Zahlungsbedingungen</td>
 						<td style="width: 15%; font-size: 12px; font-weight: bold;color: #000;">Nettobetrag</td>
 						<td style="width: 20%; font-size: 12px; font-weight: bold;color: #000;">Mwstbetrag (<?php print(config_gst * 100); ?>%)</td>
 						<td style="width: 15%; font-size: 12px; font-weight: bold;color: #000;">Versand</td>
-						<?php if($oi_net_total_cancellation > 0){?>
-						<td style="width: 15%; font-size: 12px; font-weight: bold;color: #000;">Abgesagt</td>
-						<?php } ?>
 						<td style="width: 15%; font-size: 12px; font-weight: bold;color: #000;">Rechnungsbetrag</td>
 					</tr>
 					<tr>
-						<td colspan="6" height="15"></td>
+						<td colspan="5" height="15"></td>
 					</tr>
 					<tr>
 						<td style="width: 35%; font-size: 12px; font-weight: 400;color: #000;">&nbsp;</td>
-						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(price_format($ord_gross_total)); ?> EUR</td>
-						<td style="width: 20%; font-size: 12px; font-weight: 400;color: #000;"><?php print(price_format($ord_gst)); ?> EUR</td>
-						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(price_format($ord_shipping_charges)); ?> EUR</td>
-						<?php if($oi_net_total_cancellation > 0){?>
-						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(price_format($oi_net_total_cancellation)); ?> EUR</td>
-						<?php } ?>
-						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(price_format($ord_amount - $oi_net_total_cancellation)); ?> EUR</td>
+						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(str_replace(".", ",", $ord_gross_total)); ?> EUR</td>
+						<td style="width: 20%; font-size: 12px; font-weight: 400;color: #000;"><?php print(str_replace(".", ",", $ord_gst)); ?> EUR</td>
+						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(str_replace(".", ",", $ord_shipping_charges)); ?> EUR</td>
+						<td style="width: 15%; font-size: 12px; font-weight: 400;color: #000;"><?php print(str_replace(".", ",", $ord_amount)); ?> EUR</td>
 					</tr>
 					<tr>
-						<td colspan="6" height="15"></td>
+						<td colspan="5" height="15"></td>
 					</tr>
 					<tr>
-						<td colspan="6" style="width: 100%; border-bottom: 1px solid #000; height: 2px;"></td>
+						<td colspan="5" style="width: 100%; border-bottom: 1px solid #000; height: 2px;"></td>
 					</tr>
 
 				</table>

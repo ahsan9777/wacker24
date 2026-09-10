@@ -1,12 +1,10 @@
 <?php
 ob_start();
-//session_save_path('/tmp');
+session_save_path('/tmp');
 session_start();
 include("../lib/openCon.php");
 include("../lib/functions.php");
 include("../lib/pbs_api.php");
-include("../lib/mailer.php");
-$mailer = new Mailer();
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
 
@@ -691,55 +689,6 @@ if (isset($_REQUEST['action'])) {
             $td_article_quantity .= '</div>';
 
             $retValue = array("status" => "1", "message" => "Article quantity found successfully", "supplier_id" => $supplier_id, "pro_ean" => $pro_ean, "td_article_price" => $td_article_quantity);
-            $jsonResults = json_encode($retValue);
-            print($jsonResults);
-            break;
-
-        case 'order_return_id':
-            $json = array();
-            $where = "";
-            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-               $where .= " WHERE orid_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
-            }
-            $Query = "SELECT orid_id FROM order_return_item_detail " . $where . " ORDER BY orid_id  LIMIT 0,20";
-            //print($Query);die();
-            $rs = mysqli_query($GLOBALS['conn'], $Query);
-            while ($row = mysqli_fetch_object($rs)) {
-                $json[] = array(
-                    'orid_id' => strip_tags(html_entity_decode($row->orid_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->orid_id, ENT_QUOTES, 'UTF-8'))
-                );
-            }
-            $jsonResults = json_encode($json);
-            print($jsonResults);
-            break;
-        
-        case 'return_order_id':
-            $json = array();
-            $where = "";
-            if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
-               $where .= " WHERE ord_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
-            }
-            $Query = "SELECT DISTINCT(ord_id) FROM order_return_item_detail " . $where . " ORDER BY ord_id  LIMIT 0,20";
-            //print($Query);die();
-            $rs = mysqli_query($GLOBALS['conn'], $Query);
-            while ($row = mysqli_fetch_object($rs)) {
-                $json[] = array(
-                    'ord_id' => strip_tags(html_entity_decode($row->ord_id, ENT_QUOTES, 'UTF-8')),
-                    'value' => strip_tags(html_entity_decode($row->ord_id, ENT_QUOTES, 'UTF-8'))
-                );
-            }
-            $jsonResults = json_encode($json);
-            print($jsonResults);
-            break;
-
-        case 'return_received':
-            $json = array();
-            //print_r($_REQUEST);die();
-            //mysqli_query($GLOBALS['conn'], "UPDATE order_return_item_detail SET orid_send_item_tracking_id = '".dbStr(trim($_REQUEST['orid_send_item_tracking_id']))."', orid_return_item_received = '".dbStr(trim($_REQUEST['orid_return_item_received']))."' WHERE or_id = '".$_REQUEST['or_id']."'") or die(mysqli_error($GLOBALS['conn']));
-            mysqli_query($GLOBALS['conn'], "UPDATE order_return_item_detail SET orid_return_item_received = '".dbStr(trim($_REQUEST['orid_return_item_received']))."', orid_return_item_received_status = '1' WHERE orid_id = '".$_REQUEST['orid_id']."'") or die(mysqli_error($GLOBALS['conn']));
-            $mailer->order_item_return_received($_REQUEST['orid_id']);
-            $retValue = array("status" => "1", "message" => "Article return received successfully");
             $jsonResults = json_encode($retValue);
             print($jsonResults);
             break;

@@ -87,6 +87,11 @@ if (mysqli_num_rows($rs) > 0) {
 		define('config_fonts', $row->config_fonts);
 		define('config_site_special_price', $row->config_site_special_price);
 		define('config_site_quantity_source', $row->config_site_quantity_source);
+		define('config_site_dhl_link', $row->config_site_dhl_link);
+		define('config_site_dhl_receiverid', $row->config_site_dhl_receiverid);
+		define('config_site_dhl_username', $row->config_site_dhl_username);
+		define('config_site_dhl_password', $row->config_site_dhl_password);
+		define('config_site_dhl_apikey', $row->config_site_dhl_apikey);
 		define('config_site_logo', $GLOBALS['siteURL'] . "files/" . $row->config_site_logo);
 	}
 }

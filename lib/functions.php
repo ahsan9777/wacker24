@@ -3956,3 +3956,25 @@ function getQuantity($supplier_id, $pro_custom_add){
 
 	return $quantity_data;
 }
+
+function getPostalCodeAndCity($location)
+{
+    $location = trim($location);
+
+    if (preg_match('/\b(\d{5})\b/', $location, $matches)) {
+        $postalCode = $matches[1];
+
+        // Remove the postal code from the string to get the city
+        $city = trim(str_replace($postalCode, '', $location));
+
+        return [
+            'postalCode' => $postalCode,
+            'city'       => $city
+        ];
+    }
+
+    return [
+        'postalCode' => '',
+        'city'       => $location
+    ];
+}

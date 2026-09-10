@@ -5,6 +5,7 @@ $ord_id = getMaximum("orders", "ord_id");
 if ($ord_id > 0) {
     $ord_id = $ord_id - 1;
 }
+//$mailer->order_attachment_file("sayedkamalhussaini6@gmail.com", "test mail", 1717);
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -125,6 +126,8 @@ if ($ord_id > 0) {
                                             <p> <?php print($order_pending_count); ?> ausstehend</p>
                                         </a>
                                     <?php } ?>
+                                    <a href="manage_orders.php" class="cart_text_right text-decoration-none" id = "pending_order_srarus_two" style="display: none;">
+                                    </a>
                                 </div>
                             </div>
                         </a>
@@ -251,7 +254,23 @@ if ($ord_id > 0) {
                             </div>
                         </a>
                     </div>
-                    <!--<div class="col-md-2-half col-12 mt-3 cart">
+
+                    <div class="col-md-2-half col-12 mt-3 cart">
+                        <a class="text-decoration-none" href="manage_report_search_keywords.php?date_from=<?php print(date('Y-m-d')); ?>&">
+                            <div class="cart_body">
+                                <div class="cart_icon btn btn-xs btn-warning btn-style-light">
+                                    <i class="material-icons icon fs-1">today</i>
+                                </div>
+                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
+                                    <div class="cart_text_left">
+                                        <label for="">Benutzersuchen</label>
+                                        <h2><?php print(TotalRecords("DISTINCT sk_user_visit", "search_keyword", "WHERE DATE(sk_cdate) = '".date('Y-m-d')."'")); ?></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-2-half col-12 mt-3 cart">
                         <a class="text-decoration-none" href="manage_brands.php">
                             <div class="cart_body">
                                 <div class="cart_icon btn btn-xs btn-warning btn-style-light">
@@ -260,74 +279,8 @@ if ($ord_id > 0) {
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
                                         <label for="">Marken</label>
-                                        <h2><?php //print(TotalRecords("brand_id", "brands", "WHERE 1 = 1")); ?></h2>
+                                        <h2><?php print(TotalRecords("brand_id", "brands", "WHERE 1 = 1")); ?></h2>
                                     </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>-->
-                    <div class="col-md-5 col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_product_info_request.php">
-                            <div class="cart_body">
-                                <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-1">info</i>
-                                </div>
-                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
-                                    <div class="cart_text_left">
-                                        <label for="">Info Request</label>
-                                        <h2 id="total_no_of_order"><?php print(TotalRecords("pis_id", "products_info_submit", "WHERE 1 = 1")); ?></h2>
-                                    </div>
-                                    <?php $info_submit_count = TotalRecords("pis_id", "products_info_submit", "WHERE pis_status = '0' ");
-                                    if ($info_submit_count > 0) {
-                                    ?>
-                                        <a href="manage_orders.php" class="cart_text_right text-decoration-none" id = "pending_order_srarus_one">
-                                            <p> <?php print($info_submit_count); ?> ausstehend</p>
-                                        </a>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-5 col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_order_return.php?orid_courier_type=2">
-                            <div class="cart_body">
-                                <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-1">arrow_circle_left</i>
-                                </div>
-                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
-                                    <div class="cart_text_left">
-                                        <label for="">DHL Zurückkehren</label>
-                                        <h2><?php print(TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 2")); ?></h2>
-                                    </div>
-                                    <?php $return_dhl_pending_count = TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 2 AND orid_status = '0' ");
-                                    if ($return_dhl_pending_count > 0) {
-                                    ?>
-                                        <a href="manage_order_return.php" class="cart_text_right text-decoration-none" id = "pending_order_srarus_one">
-                                            <p> <?php print($return_dhl_pending_count); ?> ausstehend</p>
-                                        </a>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-5 col-12 mt-3 cart">
-                        <a class="text-decoration-none" href="manage_order_return.php?orid_courier_type=1">
-                            <div class="cart_body">
-                                <div class="cart_icon btn btn-xs btn-warning btn-style-light">
-                                    <i class="material-icons icon fs-1">arrow_circle_left</i>
-                                </div>
-                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
-                                    <div class="cart_text_left">
-                                        <label for="">Tourlefeurung Zurückkehren</label>
-                                        <h2><?php print(TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 1")); ?></h2>
-                                    </div>
-                                    <?php $return_pending_count = TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 1 AND orid_status = '0' ");
-                                    if ($return_pending_count > 0) {
-                                    ?>
-                                        <a href="manage_order_return.php" class="cart_text_right text-decoration-none" id = "pending_order_srarus_one">
-                                            <p> <?php print($return_pending_count); ?> ausstehend</p>
-                                        </a>
-                                    <?php } ?>
                                 </div>
                             </div>
                         </a>

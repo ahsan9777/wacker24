@@ -228,7 +228,6 @@ if (isset($_REQUEST['btnImport']) || isset($_REQUEST['btnImportSchulranzen'])) {
             }
         }
 
-        
         $Query = "SELECT pro.*, pf.pf_fvalue_params_de FROM products AS pro LEFT OUTER JOIN products_feature AS pf ON pf.supplier_id = pro.supplier_id AND pf.pf_fname = pro.pro_udx_seo_selection_feature WHERE pro.supplier_id = '".$supplier_id."'";
         $rs = mysqli_query($GLOBALS['conn'], $Query);
         if (mysqli_num_rows($rs) > 0) {

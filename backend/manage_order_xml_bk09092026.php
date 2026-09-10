@@ -1,12 +1,12 @@
 <?php
-//session_save_path('/tmp');
+include '../lib/openCon.php';
+include '../lib/functions.php';
+session_save_path('/tmp');
 session_start();
 if(!isset($_SESSION['UserID'])) {
     header("Location: login.php");
     exit;
 }
-include '../lib/openCon.php';
-include '../lib/functions.php';
 $address_tag_data = "";
 $ord_id = $_REQUEST['ord_id'];
 $Query = "SELECT ord.*, u.user_id, u.customer_id, u.user_company_name, CONCAT(u.user_fname, ' ', u.user_fname) AS user_full_name, di.dinfo_email, CONCAT(di.dinfo_street, ' ', di.dinfo_house_no) AS user_street_house, di.dinfo_usa_zipcode, c.countries_iso_code_2 FROM orders AS ord LEFT OUTER JOIN users AS u ON u.user_id = ord.user_id LEFT OUTER JOIN delivery_info AS di ON di.ord_id = ord.ord_id LEFT OUTER JOIN countries AS c ON c.countries_id = di.dinfo_countries_id WHERE ord.ord_id = '".$ord_id."'";
@@ -19,8 +19,7 @@ if (mysqli_num_rows($rs) > 0) {
     $ord_id = $row->ord_id;
     $ord_datetime = date("Y-m-d", strtotime($row->ord_datetime));
     $ord_note = $row->ord_note;
-    $order_cancellation_total = returnSum("oi_net_total", "order_items", "ord_id", $row->ord_id, " AND oi_status = '1'");
-    $order_total = number_format(($row->ord_amount - $order_cancellation_total), "2", ".", "");
+    $order_total = $row->ord_amount;
     $dinfo_email = $row->dinfo_email;
     $user_street_house = $row->user_street_house;
     $dinfo_usa_zipcode = $row->dinfo_usa_zipcode;
@@ -103,7 +102,7 @@ print('</ORDER_HEADER>');
 print('<ORDER_ITEM_LIST>');
 
 $count = 0;
-$Query = "SELECT oi.*, pro.pro_description_short, pro.pro_order_unit FROM order_items AS oi LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id WHERE oi.oi_status = '1' AND oi.ord_id = '".$ord_id."'";
+$Query = "SELECT oi.*, pro.pro_description_short, pro.pro_order_unit FROM order_items AS oi LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id WHERE oi.ord_id = '".$ord_id."'";
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
 	while ($row = mysqli_fetch_object($rs)) {

@@ -12,7 +12,6 @@ if (isset($_REQUEST['btn_checkout']) || (isset($_REQUEST['btn_checkout_value']) 
 	$_SESSION['delivery_instruction'] = $_REQUEST['delivery_instruction'];
 	$pm_id = $_REQUEST['pm_id'];
 	$_SESSION['ord_note'] = $_REQUEST['ord_note'];
-	$_SESSION['ord_shipping_type'] = $_REQUEST['ord_shipping_type'];
 	if ($pm_id == 1) {
 		$usa_id_billing = returnName("usa_id", "user_shipping_address", "user_id", $user_id, "AND usa_type = '1'");
 		if (empty($usa_id_billing)) {
@@ -252,14 +251,6 @@ if (isset($_SESSION['UID']) && $_SESSION['UID'] > 0) {
 	$checkout_click_href = "javascript:void(0);";
 }
 ci_max_quentity();
-$ord_shipping_type = 1;
-$getShippingTiming = "";
-if (isset($_SESSION['plz']) && !empty($_SESSION['plz'])) {
-	$getShippingTiming = getShippingTiming($_SESSION['plz'], 1);
-	if($getShippingTiming == 'DHL'){
-		$ord_shipping_type = 2;
-	}
-}
 include("includes/message.php");
 ?>
 <!doctype html>
@@ -403,7 +394,7 @@ include("includes/message.php");
 									$schipping_cost_waived = 0;
 									$display = 'style = "display:none;"';
 									$count = 0;
-									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_type, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.ci_type IN (0,1) AND ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
+									$Query = "SELECT ci.*, c.cart_gross_total, c.cart_gst, c.cart_amount, pro.pro_description_short, pro.pro_udx_seo_internetbezeichung, pro.pro_type, pg.pg_mime_source_url FROM cart_items AS ci LEFT OUTER JOIN cart AS c ON c.cart_id = ci.cart_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = ci.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE ci.ci_type IN (0,1) AND ci.cart_id = '" . $_SESSION['cart_id'] . "' ORDER BY ci.ci_type DESC";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
 									if (mysqli_num_rows($rs) > 0) {
@@ -439,6 +430,7 @@ include("includes/message.php");
 														<div class="cart_pd_title"><a href="<?php print($product_link); ?>" id="product_title_<?php print($row->ci_id); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><?php print($row->pro_description_short); ?></a></div>
 														<?php
 														$pq_quantity = 0;
+														$quantity_txt_color = "";
 														$quantity_txt = "Stück sofort verfügbar";
 														$getQuantity = array();
 														if ($row->pro_type == 0 ) {
@@ -448,8 +440,6 @@ include("includes/message.php");
 															$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
 															$pq_physical_quantity = $getQuantity['pq_physical_quantity'];
 															$pq_status = $getQuantity['pq_status'];
-															$quantity_txt = "Stück sofort verfügbar";
-															$quantity_txt_color = "";
 															if ($row->ci_type > 0) {
 																$pq_quantity = $pq_physical_quantity - $row->ci_qty;
 															} elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
@@ -574,209 +564,6 @@ include("includes/message.php");
 									<div><textarea class="gerenric_input gerenric_textarea" name="ord_note" id="ord_note"></textarea></div>
 								</div>
 							</div>
-							<div class="gerenric_white_box margin_20">
-								<h2>Versandarten</h2>
-								<style>
-									.delivery_method {
-										width: 100%;
-									}
-
-									.delivery_box {
-										width: 100%;
-									}
-
-									.delivery_method_list {
-										display: flex;
-										gap: 10px 15px;
-										margin: 0;
-										padding: 0;
-										list-style: none;
-									}
-
-									.delivery_method_list li {
-										margin: 0;
-										padding: 0;
-									}
-
-									.delivery_radio {
-										margin-top: 5px;
-										position: relative;
-										display: flex;
-										align-items: center;
-										width: 100%;
-										gap: 7px;
-										cursor: pointer;
-									}
-
-									.delivery_radio input[type="radio"] {
-										position: absolute;
-										width: 1px;
-										height: 1px;
-										opacity: 0;
-									}
-
-									.delivery_radio_check {
-										position: relative;
-										flex: 0 0 16px;
-										width: 16px;
-										height: 16px;
-										border: 2px solid #b5b5b5;
-										border-radius: 50%;
-										background: #fff;
-										box-sizing: border-box;
-									}
-
-									.delivery_radio input[type="radio"]:checked + .delivery_radio_check {
-										border-color: #222;
-									}
-
-									.delivery_radio input[type="radio"]:checked
-									+ .delivery_radio_check::after {
-										content: "";
-										position: absolute;
-										width: 7px;
-										height: 7px;
-										top: 50%;
-										left: 50%;
-										border-radius: 50%;
-										background: #222;
-										transform: translate(-50%, -50%);
-									}
-
-									.delivery_checkmark {
-										display: block;
-										width: 100%;
-									}
-
-									.delivery_card {
-										display: flex;
-										flex-direction: column;
-										align-items: center;
-										justify-content: center;
-
-										width: 100%;
-										min-height: 70px;
-										padding: 10px;
-
-										box-sizing: border-box;
-
-										background: #fff;
-										border: 1px solid #d5d5d5;
-										border-radius: 15px;
-
-										transition: all 0.2s ease;
-									}
-
-									.delivery_card_image {
-										display: flex;
-										align-items: center;
-										justify-content: center;
-
-										width: 75%;
-										height: 15px;
-									}
-
-									.delivery_card_image img {
-										display: block;
-										max-width: 50px;
-										max-height: 70px;
-										width: auto;
-										height: auto;
-										object-fit: contain;
-									}
-
-									.delivery_card_title {
-										display: block;
-										margin-top: 5px;
-
-										color: #222;
-										font-size: 12px;
-										line-height: 20px;
-										font-weight: 500;
-										text-align: center;
-									}
-
-									.delivery_radio:hover .delivery_card {
-										border-color: #999;
-									}
-
-									.delivery_radio input[type="radio"]:checked
-									~ .delivery_checkmark .delivery_card {
-										border: 2px solid #222;
-									}
-
-
-									/* Tablet */
-									@media (max-width: 768px) {
-
-										.delivery_method_list {
-											grid-template-columns: repeat(2, 1fr);
-											gap: 10px;
-										}
-
-										.delivery_card {
-											min-height: 90px;
-											padding: 10px;
-										}
-
-										.delivery_card_image {
-											height: 55px;
-										}
-									}
-
-
-									/* Mobile */
-									@media (max-width: 480px) {
-
-										.delivery_method_list {
-											grid-template-columns: 1fr;
-											gap: 10px;
-										}
-
-										.delivery_card {
-											min-height: 80px;
-										}
-									}
-								</style>
-								<div class="delivery_method">
-									<div class="delivery_box">
-										<ul class="delivery_method_list">
-											<?php if($ord_shipping_type == 1){?>
-											<li>
-												<label class="delivery_radio">
-													<input type="radio" class="ord_shipping_type" name="ord_shipping_type" value="1" <?php print(($ord_shipping_type == 1) ? 'checked' : '') ?>>
-													<span class="delivery_radio_check"></span>
-													<span class="delivery_checkmark">
-														<span class="delivery_card">
-															<span class="delivery_card_image">
-																<img src="images/icon-ecodirect.png" alt="EcoDirect" title="EcoDirect"></span>
-															<span class="delivery_card_title">
-																EcoDirect
-															</span>
-														</span>
-													</span>
-												</label>
-											</li>
-											<?php } ?>
-											<li>
-												<label class="delivery_radio">
-													<input type="radio" class="ord_shipping_type" name="ord_shipping_type" value="2" <?php print(($ord_shipping_type == 2) ? 'checked' : '') ?>>
-													<span class="delivery_radio_check"></span>
-													<span class="delivery_checkmark">
-														<span class="delivery_card">
-															<span class="delivery_card_image">
-																<img src="images/icon-dhl.png" alt="DHL – versicherter Versand" title="DHL – versicherter Versand"></span>
-															<span class="delivery_card_title">
-																DHL
-															</span>
-														</span>
-													</span>
-												</label>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
 							<?php if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) { ?>
 								<div class="cart_delivery">
 									<?php
@@ -811,7 +598,7 @@ include("includes/message.php");
 															<li><?php print($delivery_instruction); ?></li>
 														<?php } ?>
 														<?php if ($_SESSION["utype_id"] != 5) { ?>
-															<li><a href="adressen" class="gerenric_btn mt_30" title="Lieferadresse ändern" style="color: #fff;">Lieferadresse ändern</a></li>
+															<li><a href="adressen" class="gerenric_btn mt_30" title="Lieferadresse ändern">Lieferadresse ändern</a></li>
 														<?php } ?>
 													</ul>
 												</div>
@@ -842,7 +629,7 @@ include("includes/message.php");
 													<li> <?php print($row->usa_street . " " . $row->usa_house_no); ?> </li>
 													<li><?php print($row->usa_zipcode); ?></li>
 													<li> <?php print("Telefonnummer : " . $row->usa_contactno); ?> </li>
-													<li><a href="adressen" class="gerenric_btn mt_30" title="Rechnungsadresse ändern" style="color: #fff;">Rechnungsadresse ändern</a></li>
+													<li><a href="adressen" class="gerenric_btn mt_30" title="Rechnungsadresse ändern">Rechnungsadresse ändern</a></li>
 												</ul>
 											</div>
 										</div>
@@ -897,7 +684,7 @@ include("includes/message.php");
 											<div class="success_message">Kaufen Sie nur noch für <b><?php print(price_format($schipping_cost_waived)); ?> €</b> ein und die <b>Kosten der Verpackungspauschale und Versandkosten entfallen.</b></div>
 										</li>
 										<li>
-											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>" title="Zur Kasse" style="color: #fff;">Zur Kasse</a>
+											<a href="<?php print($checkout_click_href); ?>" class="gerenric_btn full_btn mt_30 <?php print($checkout_click); ?>" title="Zur Kasse">Zur Kasse</a>
 										</li>
 										<?php if (!isset($_SESSION["UID"])) { ?>
 											<!--<li>
@@ -971,7 +758,7 @@ include("includes/message.php");
 									</div>
 									<div class="pay_btn">
 										<input type="hidden" name="btn_checkout_value" id="btn_checkout_value" value="0">
-										<button type="button" name="btn_checkout" class="gerenric_btn full_btn mt_30 btn_checkout">Jetzt bezahlen <?php print(number_format($cart_amount, "2", ",", "")); ?> €</button>
+										<button type="button" name="btn_checkout" class="gerenric_btn full_btn mt_30 btn_checkout">Pay <?php print(number_format($cart_amount, "2", ",", "")); ?> €</button>
 									</div>
 								</div>
 							</div>
@@ -1007,7 +794,7 @@ include("includes/message.php");
 		}
 	});
 	$(".btn_checkout").on("click", function() {
-		//console.log("btn_checkout");
+		console.log("btn_checkout");
 		let selectedPmId = $("input[name='pm_id']:checked").val();
 		if (!selectedPmId) {
 			$(".btn_checkout").attr("type", "button");

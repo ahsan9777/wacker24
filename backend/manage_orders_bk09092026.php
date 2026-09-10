@@ -189,7 +189,6 @@ include("includes/messages.php");
                                         <th width="250">User Info </th>
                                         <th width="100">Rechnungsadresse</th>
                                         <th width="250">Lieferadresse</th>
-                                        <th width="250">Versandarten</th>
                                         <th>Betrag</th>
                                         <th>Zahlungsart</th>
                                         <th>Transaktions-ID</th>
@@ -280,7 +279,6 @@ include("includes/messages.php");
                                             <td><?php print($user_info); ?></td>
                                             <td><?php print($shipping_info); ?></td>
                                             <td><?php print($delivery_info); ?></td>
-                                            <td><?php print(($row->ord_shipping_type == 2) ? 'DHL' : 'ecodirect'); ?></td>
                                             <td><?php print(price_format($row->ord_amount + $row->ord_shipping_charges)); ?> €</td>
                                             <td><?php print($row->pm_title); ?></td>
                                             <td><?php print($row->ord_payment_transaction_id); ?></td>
@@ -376,9 +374,7 @@ include("includes/messages.php");
                                     $ord_discount = 0;
                                     $ord_shipping_charges = 0;
                                     $ord_amount = 0;
-                                    $orid_net_total = 0;
-                                    $oi_net_total_cancellation = 0;
-                                    $Query = "SELECT oi.*, pro.pro_custom_add, pro.pro_description_short, pg.pg_mime_source_url, ord.ord_gross_total, ord.ord_gst, ord.ord_discount, ord.ord_amount, ord.ord_shipping_charges, orid.orid_id, orid.orid_net_total  FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN order_return_item_detail AS orid  ON orid.oi_id = oi.oi_id AND orid.orid_status = '1'  LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE oi.ord_id =  '" . $_REQUEST['ord_id'] . "' ORDER BY oi.oi_type ASC";
+                                    $Query = "SELECT oi.*, pro.pro_custom_add, pro.pro_description_short, pg.pg_mime_source_url, ord.ord_gross_total, ord.ord_gst, ord.ord_discount, ord.ord_amount, ord.ord_shipping_charges FROM order_items AS oi LEFT OUTER JOIN orders AS ord ON ord.ord_id = oi.ord_id LEFT OUTER JOIN products AS pro ON pro.supplier_id = oi.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_source_url ASC LIMIT 1) WHERE oi.ord_id =  '" . $_REQUEST['ord_id'] . "' ORDER BY oi.oi_type ASC";
                                     //print($Query);
                                     $rs = mysqli_query($GLOBALS['conn'], $Query);
                                     if (mysqli_num_rows($rs) > 0) {
@@ -388,7 +384,7 @@ include("includes/messages.php");
                                             $ord_gst = price_format($row->ord_gst);
                                             $ord_discount = price_format($row->ord_discount);
                                             $ord_shipping_charges = price_format($row->ord_shipping_charges);
-                                            $ord_amount = $row->ord_amount + $row->ord_shipping_charges;
+                                            $ord_amount = price_format($row->ord_amount + $row->ord_shipping_charges);
 
                                             $pg_mime_source_url = $row->pg_mime_source_url;
                                             $pro_title = $row->pro_description_short;
@@ -423,22 +419,13 @@ include("includes/messages.php");
                                                 $show_text =  ": Time expired";
                                             }
 
-                                                $order_type = '<span class="btn btn-primary btn-style-light w-auto mb-2">Abholung'.$show_text.'</span>';
+                                                $order_type = '<span class="btn btn-primary btn-style-light w-auto mb-2">Abholung'.$show_text.'</span><br>';
                                             } elseif ($row->oi_type == 2) {
-                                                $order_type = '<span class="btn btn-info btn-style-light w-auto mb-2">GRATIS fur Sie!</span>';
+                                                $order_type = '<span class="btn btn-info btn-style-light w-auto mb-2">GRATIS fur Sie!</span><br>';
                                                 $pg_mime_source_url = $GLOBALS['siteURL'] . "files/free_product/" .returnName("fp_file", "free_product", "fp_id", $row->fp_id);
                                                 $pro_title = returnName("fp_title_de AS fp_title", "free_product", "fp_id", $row->fp_id);
                                             } else {
-                                                $order_type = '<span class="btn btn-success btn-style-light w-auto mb-2">Lieferung</span>';
-                                            }
-
-                                            if($row->orid_id > 0){
-                                                $orid_net_total = $orid_net_total + $row->orid_net_total;
-                                                $order_type .= '<span class="btn btn-success btn-style-light w-auto mb-2 ms-2">Return</span>';
-                                            }
-                                            if($row->oi_status > 0){
-                                                $oi_net_total_cancellation = $oi_net_total_cancellation + $row->oi_net_total;
-                                                $order_type .= '<span class="btn btn-danger btn-style-light w-auto mb-2 ms-2">Canceled</span>';
+                                                $order_type = '<span class="btn btn-success btn-style-light w-auto mb-2">Lieferung</span><br>';
                                             }
 
                                     ?>
@@ -451,7 +438,7 @@ include("includes/messages.php");
                                                     </div>
                                                 </td>
                                                 <td><?php print($row->supplier_id); ?></td>
-                                                <td><?php print($order_type .'<br>'. $pro_title); ?></td>
+                                                <td><?php print($order_type . $pro_title); ?></td>
                                                 <td>
                                                     <?php
                                                     if ($row->oi_discount_value > 0) {
@@ -482,20 +469,9 @@ include("includes/messages.php");
                                             <th colspan="7" class="text-end text-white fs-6">Versand:</th>
                                             <td class="text-white fs-6"><?php print($ord_shipping_charges); ?></td>
                                         </tr>
-                                        <?php if($orid_net_total > 0){?>
-                                        <tr>
-                                            <th colspan="7" class="text-end text-white fs-6">Rückerstattungsbetrag:</th>
-                                            <td class="text-white fs-6"><?php print(price_format($orid_net_total)); ?></td>
-                                        </tr>
-                                        <?php }  if($oi_net_total_cancellation > 0){?>
-                                        <tr>
-                                            <th colspan="7" class="text-end text-white fs-6">Abgesagt:</th>
-                                            <td class="text-white fs-6"><?php print(price_format($oi_net_total_cancellation)); ?></td>
-                                        </tr>
-                                        <?php } ?>
                                         <tr>
                                             <th colspan="7" class="text-end text-white fs-6">Rechnungsbetrag:</th>
-                                            <td class="text-white fs-6"><?php print(price_format($ord_amount - $orid_net_total - $oi_net_total_cancellation)); ?></td>
+                                            <td class="text-white fs-6"><?php print($ord_amount); ?></td>
                                         </tr>
                                     <?php } else {
                                         print('<tr><td colspan="100%" class="text-center">No record found!</td></tr>');
@@ -564,7 +540,6 @@ include("includes/messages.php");
                                         <th>User Info </th>
                                         <th width="100">Rechnungsadresse</th>
                                         <th width="500">Lieferadresse</th>
-                                        <th width="500">Versandarten</th>
                                         <th width="100">Betrag</th>
                                         <th>Zahlungsart</th>
                                         <th>Transaktions-ID</th>
@@ -591,10 +566,6 @@ include("includes/messages.php");
                                             $strClass = 'label  label-danger';
                                             $user_info = "";
                                             $user_guest = "";
-                                            $order_cancellation_total = returnSum("oi_net_total", "order_items", "ord_id", $row->ord_id, " AND oi_status = '1'");
-                                            $order_return = returnSum("orid_net_total", "order_return_item_detail", "ord_id", $row->ord_id, " AND orid_status = '1'");
-                                            $order_return = $order_return + $order_cancellation_total;
-                                            
                                             $utype_id_as_guest = returnName("utype_id_as_guest", "users", "user_id", $row->user_id);
                                             if ($utype_id_as_guest > 0) {
                                                 $user_guest = "Guest";
@@ -656,16 +627,7 @@ include("includes/messages.php");
                                                 <td><?php print($user_info); ?></td>
                                                 <td><?php print($shipping_info); ?></td>
                                                 <td><?php print($delivery_info); ?></td>
-                                                <td><?php print(($row->ord_shipping_type == 2) ? 'DHL' : 'ecodirect'); ?></td>
-                                                <td>
-                                                    <?php
-                                                    if ($order_return > 0) {
-                                                        print("<del class = 'text-danger fs-6'>" . price_format($row->ord_amount + $row->ord_shipping_charges) . "€</del><br> <span class = 'text-success'>" . price_format(($row->ord_amount + $row->ord_shipping_charges) - $order_return) . "€ " . "</span>");
-                                                    } else {
-                                                        print(price_format($row->ord_amount + $row->ord_shipping_charges) . "€");
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?php print(((!empty($row->ord_note)) ? '<span class="btn btn-success btn-style-light w-auto">Benachrichtigung</span><br><br>' : '') . number_format($row->ord_amount + $row->ord_shipping_charges, "2", ",", ".")); ?> €</td>
                                                 <td><?php print($row->pm_title); ?></td>
                                                 <td><?php print($row->ord_payment_transaction_id); ?></td>
                                                 <td><?php print($row->ord_datetime); ?></td>

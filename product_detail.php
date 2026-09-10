@@ -810,7 +810,7 @@ include("includes/message.php");
 											<div class="popup_manufacturer_detail">
 												<p>Da wir Ihnen diesen Artikel zu einem überaus günstigen Preis anbieten, ist eine Zugabe von Gratis-Artikeln nicht möglich.</p>
 											</div>
-											<a href="javascript:void(0);" title="Keine Geschenke möglich"><i class="fa fa-info-circle"></i> Keine Geschenke möglich </a>
+											<a href="#" title="Keine Geschenke möglich"><i class="fa fa-info-circle"></i> Keine Geschenke möglich </a>
 										</div>
 									<?php } ?>
 									<div class="best_nr">Best.-Nr.: <?php print($pro_manufacture_aid); ?></div>
