@@ -296,7 +296,7 @@ if ($ord_id > 0) {
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
-                                        <label for="">DHL Zurückkehren</label>
+                                        <label for="">DHL - Rücksendung</label>
                                         <h2><?php print(TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 2")); ?></h2>
                                     </div>
                                     <?php $return_dhl_pending_count = TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 2 AND orid_status = '0' ");
@@ -318,7 +318,7 @@ if ($ord_id > 0) {
                                 </div>
                                 <div class="cart_text w-100 d-flex justify-content-between align-items-center">
                                     <div class="cart_text_left">
-                                        <label for="">Tourlefeurung Zurückkehren</label>
+                                        <label for="">Tourlefeurung - Rücksendung</label>
                                         <h2><?php print(TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 1")); ?></h2>
                                     </div>
                                     <?php $return_pending_count = TotalRecords("orid_id", "order_return_item_detail", "WHERE orid_courier_type = 1 AND orid_status = '0' ");

@@ -751,7 +751,7 @@ include("includes/message.php");
 															<span class="delivery_card_image">
 																<img src="images/icon-ecodirect.png" alt="EcoDirect" title="EcoDirect"></span>
 															<span class="delivery_card_title">
-																EcoDirect
+																EcoDirect Tour
 															</span>
 														</span>
 													</span>
@@ -765,7 +765,7 @@ include("includes/message.php");
 													<span class="delivery_checkmark">
 														<span class="delivery_card">
 															<span class="delivery_card_image">
-																<img src="images/icon-dhl.png" alt="DHL – versicherter Versand" title="DHL – versicherter Versand"></span>
+																<img src="images/icon-dhl.png" alt="DHL" title="DHL"></span>
 															<span class="delivery_card_title">
 																DHL
 															</span>

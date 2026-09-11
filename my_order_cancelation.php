@@ -73,7 +73,7 @@ $oi_cancelation_reason_reasons = [
 						<div class="popup_inner_container">
 							<p><strong>Möchten Sie diese Bestellposition wirklich stornieren?</strong></p>
 							<div class="create_button">
-								<button class="gerenric_btn btn_cancelation_confirm" type="button" name="btn_cancelation_confirm">Ja</button>
+								<button class="gerenric_btn btn_cancelation_confirm" style="margin-right: 10px;" type="button" name="btn_cancelation_confirm">Ja</button>
 								<div class="gerenric_btn gray_btn popup_close">Nein</div>
 							</div>
 						</div>

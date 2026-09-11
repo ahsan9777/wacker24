@@ -57,7 +57,7 @@ if(isset($_REQUEST['btn_order_return'])){
 			}
 			$mailer->order_item_return($oi_id, $return_reasons[$_REQUEST['orid_type']], $return_method);
 		}
-		header("Location: " . $GLOBALS['siteURL'] . "bestellungen/2");
+		header("Location: " . $GLOBALS['siteURL'] . "bestellungen/27");
 	} else {
 		header("Location: " . $_SERVER['PHP_SELF'] . "?ord_id=".$ord_id."&oi_id=".$oi_id."&op=10");
 	}

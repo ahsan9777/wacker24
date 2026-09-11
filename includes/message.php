@@ -130,6 +130,11 @@ if(isset($_REQUEST['op'])){
 						<br><br>Mit freundlichen Grüßen
 						<br><br>Ihr Team vom <b>Wacker Bürocenter</b>';
 			break;
+
+		case 27:
+			$class = "alert alert-success";
+			$strMSG = "Rekord erfolgreich Rücksendungen";
+			break;
 	}
 }
 ?>

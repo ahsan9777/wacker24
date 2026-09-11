@@ -743,9 +743,9 @@ include("includes/messages.php");
                             $orid_courier_type = $_REQUEST['orid_courier_type'];
                             $searchQuery .= " AND odr.orid_courier_type = '".$orid_courier_type."'";
                         }
-                        if (isset($_REQUEST['orid_status']) && $_REQUEST['orid_status'] < 3) {
-                            $orid_status = $_REQUEST['orid_status'];
-                            $searchQuery .= " AND odr.orid_status = '".$orid_status."'";
+                        if (isset($_REQUEST['orid_return_item_received_status_filter']) && $_REQUEST['orid_return_item_received_status_filter'] < 3) {
+                            $orid_return_item_received_status_filter = $_REQUEST['orid_return_item_received_status_filter'];
+                            $searchQuery .= " AND odr.orid_return_item_received_status = '".$orid_return_item_received_status_filter."'";
                         }
                         ?>
                         <form class="row flex-row" name="frm_search" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $qryStrURL); ?>">
@@ -767,11 +767,10 @@ include("includes/messages.php");
                             </div>
                             <div class=" col-md-2 col-12 mt-3">
                                 <label for="" class="text-white">Status</label>
-                                <select name="orid_status" id="orid_status" class="input_style" onchange="javascript: frm_search.submit();">
-                                    <option value="3" <?php print(($orid_status == 3) ? 'selected' : ''); ?>>N/A</option>
-                                    <option value="0" <?php print(($orid_status == 0) ? 'selected' : ''); ?>>Pending</option>
-                                    <option value="1" <?php print(($orid_status == 1) ? 'selected' : ''); ?>>Approved</option>
-                                    <option value="2" <?php print(($orid_status == 2) ? 'selected' : ''); ?>>Canceled</option>
+                                <select name="orid_return_item_received_status_filter" id="orid_return_item_received_status_filter" class="input_style" onchange="javascript: frm_search.submit();">
+                                    <option value="3" <?php print(($orid_return_item_received_status_filter == 3) ? 'selected' : ''); ?>>N/A</option>
+                                    <option value="1" <?php print(($orid_return_item_received_status_filter == 1) ? 'selected' : ''); ?>>Open</option>
+                                    <option value="2" <?php print(($orid_return_item_received_status_filter == 2) ? 'selected' : ''); ?>>Close</option>
                                 </select>
                             </div>
                         </form>
