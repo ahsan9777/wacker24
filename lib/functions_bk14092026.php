@@ -3053,9 +3053,10 @@ function get_image_link($replace, $link)
 	return $get_image_link;
 }
 
-function getShippingTiming($plz, $type = 0)
+function getShippingTiming($plz)
 {
-	
+
+
 	$order_date = date('Y-m-d');
 	$order_day_num = date('N', strtotime($order_date)); // 1 (Monday) - 7 (Sunday)
 	$order_time = date('H:i');
@@ -3076,12 +3077,7 @@ function getShippingTiming($plz, $type = 0)
 	}
 	$_SESSION['ort'] = (isset($_SESSION["UID"])) ? returnName("usa_zipcode", "user_shipping_address", "user_id", $_SESSION["UID"], "AND usa_defualt = '1' AND usa_type = '0'") : '';
 	//return "Lieferung nicht verfügbar"; // Return if no shipping info found
-	if($type == 1){
-		return "DHL";
-	} else {
-		//return print("Lieferung " . date('d-m-Y', strtotime("+7 day", strtotime(date_time)))); // Return if no shipping info found
-		return "Lieferung " . date('d-m-Y', strtotime("+7 day", strtotime(date_time))); // Return if no shipping info found
-	}
+	return print("Lieferung " . date('d-m-Y', strtotime("+7 day", strtotime(date_time)))); // Return if no shipping info found
 }
 
 function calculateDeliveryDate($order_date, $order_day_num, $order_time, $delivery_days)
@@ -3564,7 +3560,6 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 
 	$orders_table_check = 0;
 	$order_items_table_check = 0;
-	$order_net_amount = 0;
 	$Query1 = "SELECT * FROM `cart` WHERE `cart_id` = '" . $_SESSION['cart_id'] . "'";
 	$rs1 = mysqli_query($GLOBALS['conn'], $Query1);
 	if (mysqli_num_rows($rs1) > 0) {
@@ -3584,7 +3579,7 @@ function cart_to_order($user_id, $usa_id, $pm_id, $entityId = null, $ord_payment
 		if (isset($_SESSION['delivery_instruction']) && !empty($_SESSION['delivery_instruction'])) {
 			$delivery_instruction = dbStr(trim($_SESSION['delivery_instruction']));
 		}
-		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_shipping_type, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '".$_SESSION['ord_shipping_type']."', '" . $entityId . "', '" . $ord_payment_transaction_id . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
+		mysqli_query($GLOBALS['conn'], "INSERT INTO orders (ord_id, user_id, user_visit, guest_id, ord_gross_total, ord_gst, ord_discount, ord_amount, ord_shipping_charges, ord_shipping_type, ord_payment_entity_id, ord_payment_transaction_id, ord_payment_method, ord_note, ord_datetime) VALUES ('" . $ord_id . "', '" . $user_id . "', '".$_SESSION['user_visit']."', '" . $_SESSION['sess_id'] . "', '" . $row1->cart_gross_total . "',  '" . $row1->cart_gst . "',  '" . $row1->cart_discount . "', '" . $row1->cart_amount . "', '" . $ord_shipping_charges . "', '".$_SESSION['ord_shipping_type']."', '" . $entityId . "', '" . $ord_payment_transaction_id . "', '" . $pm_id . "', '" . $ord_note . "', '" . date_time . "')") or die(mysqli_error($GLOBALS['conn']));
 		mysqli_query($GLOBALS['conn'], "INSERT INTO delivery_info (dinfo_id, ord_id, user_id, usa_id, delivery_instruction, guest_id, dinfo_fname, dinfo_lname, dinfo_phone, dinfo_email, dinfo_street, dinfo_house_no, dinfo_address, dinfo_countries_id, dinfo_usa_zipcode, dinfo_additional_info) VALUES ('" . $dinfo_id . "', '" . $ord_id . "', '" . $user_id . "', '" . $usa_id . "', '" . $delivery_instruction . "', '" . $_SESSION['sess_id'] . "', '" . $dinfo_fname . "', '" . $dinfo_lname . "', '" . $dinfo_phone . "', '" . $dinfo_email . "', '" . $dinfo_street . "', '" . $dinfo_house_no . "', '" . $dinfo_address . "', '" . $dinfo_countries_id . "', '" . $dinfo_usa_zipcode . "', '" . $dinfo_additional_info . "')") or die(mysqli_error($GLOBALS['conn']));
 		$orders_table_check = 1;
 	}
@@ -3963,9 +3958,6 @@ function getQuantity($supplier_id, $pro_custom_add){
 	return $quantity_data;
 }
 
-
-
-
 function getPostalCodeAndCity($location)
 {
     $location = trim($location);
@@ -3987,5 +3979,3 @@ function getPostalCodeAndCity($location)
         'city'       => $location
     ];
 }
-
-?>

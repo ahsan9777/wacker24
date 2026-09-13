@@ -82,9 +82,11 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                 <ul>
                                     <li>
                                         <?php if (!isset($_SESSION["FullName"])) { ?>
-                                            <div class="full_width txt_align_center mb-10"><a class="href_login" href="anmelden" title="anmelden">
+                                            <div class="full_width txt_align_center mb-10">
+                                                <a class="href_login gerenric_btn" href="anmelden" title="anmelden">
                                                     <div class="gerenric_btn">Anmelden</div>
-                                                </a></div>
+                                                </a>
+                                            </div>
                                             <div class="full_width txt_align_center">Neues Konto? <a href="registrierung"><b>Erstellen Sie hier.</b></a></div>
                                         <?php } ?>
                                     </li>
@@ -92,7 +94,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                     <li> <a title="sonderpreise" href="<?php print(isset($_SESSION["FullName"]) ? "sonderpreise" : "anmelden"); ?>"> Sonderpreise </a></li>
                                     <li> <a title="einkaufslisten" href="<?php print(isset($_SESSION["FullName"]) ? "einkaufslisten" : "anmelden"); ?>"> Einkaufslisten </a></li>
                                     <li><span>Mein Konto</span></li>
-                                    <li> <a title="benutzerprofile" href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "anmelden"); ?>"> Persönliche Daten <a href=""></a></li>
+                                    <li> <a title="benutzerprofile" href="<?php print(isset($_SESSION["FullName"]) ? "benutzerprofile" : "anmelden"); ?>"> Persönliche Daten</li>
                                     <li> <a title="bestellungen" href="<?php print(isset($_SESSION["FullName"]) ? "bestellungen" : "anmelden"); ?>"> Bestellungen </a></li>
                                     <li> <a title="adressen" href="<?php print(isset($_SESSION["FullName"]) ? "adressen" : "anmelden"); ?>"> Adressen </a></li>
                                     <li>Zahlungsarten</li>
