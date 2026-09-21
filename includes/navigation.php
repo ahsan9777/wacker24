@@ -64,7 +64,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 <input type="text" class="search_input search_keyword" name="search_keyword" id="search_keyword" value="<?php print($search_keyword); ?>" placeholder="Suchhbegriff" autocomplete="off">
                 <button class="search_icon" title="search button"></button>
             </form>
-            <a class="header_tint_toner_logo" href="tint-toner">
+            <a class="header_tint_toner_logo" href="tinte-toner">
                 <div class="tint_toner_logo"><img src="images/tint_toner_logo.png" alt=""></div>
                 <div class="tint_toner_txt">Suche<br>Tinte / Toner</div>
             </a>
@@ -142,7 +142,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 }
                 ?>
                 <li><a href="kostenlose-produktgeschenke" class="green"><b>Gratis</b></a></li>
-                <li><a title="verkäufe-angebote" href="verkaeufe-angebote" class="nav_sale">Verkäufe & Angebote</a></li>
+                <li><a title="Angebote & Aktionen" href="angebote-aktionen" class="nav_sale">Angebote & Aktionen</a></li>
             </ul>
             <div class="nav_submenu">
                 <div class="nav_submenu_logo"><a title="logo" href="index.php"><img src="images/logo.png" alt="logo"></a>

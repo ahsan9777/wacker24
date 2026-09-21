@@ -67,8 +67,8 @@ RewriteRule ^sitemap-product4.xml? sitemap_product_page_four.php [L]
 RewriteRule ^sitemap-product5.xml? sitemap_product_page_five.php [L]
 RewriteRule ^sitemap-product6.xml? sitemap_product_page_six.php [L]
 #RewriteRule ^verkaeufe-angebote/([0-9]+)?$ site_special_price.php?page=$1 [L]
-RewriteRule ^verkaeufe-angebote/(.*)?$ site_special_price.php?cat_params=$1 [L]
-RewriteRule ^verkaeufe-angebote? site_special_price.php [L]
+RewriteRule ^angebote-aktionen/(.*)?$ site_special_price.php?cat_params=$1 [L]
+RewriteRule ^angebote-aktionen? site_special_price.php [L]
 RewriteRule ^addupdateaddress/([0-9]+)?$ add_update_address.php?usa_id=$1 [L]
 RewriteRule ^addupdateaddress? add_update_address.php [L]
 RewriteRule ^abmelden? logout.php [L]
@@ -86,8 +86,8 @@ RewriteRule ^produkte/(.*)/(.*)?$ products.php?level_one=$1&level_two=$2 [L]
 RewriteRule ^marken/(.*)?$ manufacture_products.php?manf_name_params=$1 [L]
 RewriteRule ^marken? manufacture.php [L]
 
-RewriteRule ^tint-toner/(.*)?$ manufacture_tinte_toner_products.php?manf_name_params=$1 [L]
-RewriteRule ^tint-toner? manufacture_tinte_toner.php [L]
+RewriteRule ^tinte-toner/(.*)?$ manufacture_tinte_toner_products.php?manf_name_params=$1 [L]
+RewriteRule ^tinte-toner? manufacture_tinte_toner.php [L]
 
 
 RewriteCond %{REQUEST_FILENAME} !-f

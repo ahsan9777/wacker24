@@ -83,9 +83,9 @@
                                 $("#cart_vat").hide();
                             }
                         }
-                        let packing = (obj.delivery_charges.packing).toFixed(2)
-                        let shipping = (obj.delivery_charges.shipping).toFixed(2)
-                        let total = (obj.delivery_charges.total).toFixed(2)
+                        let packing = obj.delivery_charges.packing;
+                        let shipping = obj.delivery_charges.shipping;
+                        let total = obj.delivery_charges.total;
                         $("#packing").text("Verpackungspauschale  (" + packing.replace(".", ",") + " €)");
                         $("#shipping").text("Versandkosten (" + shipping.replace(".", ",") + " €)");
                         $("#total").text(total.replace(".", ",") + " €");

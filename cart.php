@@ -502,7 +502,6 @@ include("includes/message.php");
 										}
 									}
 									$shipping_one = 0;
-									$shipping_two = 0;
 									$delivery_charges_packing = 0;
 									$delivery_charges_shipping = 0;
 									$delivery_charges_total = 0;
@@ -511,8 +510,7 @@ include("includes/message.php");
 									if ($count > 0) {
 										if ($delivery_charges['total'] > 0) {
 											$display = "";
-											$shipping_one = 7.99;
-											$shipping_two = 8;
+											$shipping_one = $delivery_charges['total'];
 											$delivery_charges_shipping = $delivery_charges['shipping'];
 											$delivery_charges_packing = $delivery_charges['packing'];
 											$delivery_charges_total = $delivery_charges['total'];
@@ -877,12 +875,6 @@ include("includes/message.php");
 											</div>
 											<div class="cart_prise_vl"><?php print(price_format($cart_gross_total + $shipping_one)); ?> €</div>
 										</li>
-										<!--<li id="cart_vat" <?php print($display_check); ?>>
-											<div class="cart_prise_lb">
-												<div class="packing_cost">zzgl. MwSt. <?php print(config_gst * 100); ?>%</div>
-											</div>
-											<div class="cart_prise_vl"><?php print(price_format(($cart_gross_total + $shipping_two) * config_gst, "2", ",", "")); ?> €</div>
-										</li>-->
 										<li id="cart_vat" <?php print($display_check); ?>>
 											<div class="cart_prise_lb">
 												<div class="packing_cost">zzgl. MwSt.</div>

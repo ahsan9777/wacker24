@@ -69,6 +69,12 @@ if (mysqli_num_rows($rs) > 0) {
 		define('config_payment_url', $row->config_payment_url);
 		define('config_authorization_bearer', $row->config_authorization_bearer);
 		define('config_condition_courier_amount', $row->config_condition_courier_amount);
+		define('config_courier_packing_wt', $row->config_courier_packing_wt);
+		define('config_courier_shipping_wt', $row->config_courier_shipping_wt);
+		define('config_courier_tex_wt', $row->config_courier_tex_wt);
+		define('config_courier_amount_wt', $row->config_courier_amount_wt);
+		define('config_courier_packing', $row->config_courier_packing);
+		define('config_courier_shipping', $row->config_courier_shipping);
 		define('config_courier_fix_charges', $row->config_courier_fix_charges);
 		define('config_ftp_img', $row->config_ftp_img);
 		define('config_appointment_regular_opening', $row->config_appointment_regular_opening);

@@ -91,7 +91,7 @@ if (isset($_REQUEST['cat_params']) && !empty($_REQUEST['cat_params'])) {
 
 											print('<div>
 													<div class="ctg_type_col">
-													<a href="' . $GLOBALS['siteURL'] . 'verkaeufe-angebote/' . $row->cat_params . '" title = "' . $row->cat_title . '">
+													<a href="' . $GLOBALS['siteURL'] . 'angebote-aktionen/' . $row->cat_params . '" title = "' . $row->cat_title . '">
 														<div class="ctg_type_card">
 															<div class="ctg_type_image"><img loading="lazy" src="' . get_image_link(427, $pg_mime_source_url_href) . '" alt="' . $row->cat_title . '"></div>
 															<div class="ctg_type_detail">

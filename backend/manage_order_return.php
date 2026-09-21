@@ -809,6 +809,7 @@ include("includes/messages.php");
                                             $user_info = "";
                                             $user_guest = "";
                                             $utype_id_as_guest = returnName("utype_id_as_guest", "users", "user_id", $row->user_id);
+                                            $or_status = returnName("or_status", "order_return", "or_id", $row->or_id);
                                             if ($utype_id_as_guest > 0) {
                                                 $user_guest = "Guest";
                                             }
@@ -875,9 +876,9 @@ include("includes/messages.php");
                                                 <td><?php print(price_format($row->orid_net_total)); ?></td>
                                                 <td><?php print($row->orid_cdate); ?></td>
                                                 <td>
-                                                    <?php if($row->orid_return_item_received_status <= 1){ ?>
+                                                    <?php if($row->orid_return_item_received_status <= 1 && $or_status < 2){ ?>
                                                     <span class="btn btn-warning btn-style-light w-auto"> Open </span>
-                                                    <?php } elseif ($row->orid_return_item_received_status > 1) { ?>
+                                                    <?php } elseif ($row->orid_return_item_received_status > 1 || $or_status == 2) { ?>
                                                         <span class="btn btn-success btn-style-light w-auto"> Close </span>
                                                     <?php } ?>
                                                 </td>

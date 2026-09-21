@@ -20,6 +20,12 @@ if (isset($_REQUEST['btnUpdate'])) {
     config_authorization_bearer = '" . dbStr(trim($_REQUEST['config_authorization_bearer'])) . "', 
     config_gst = '" . dbStr(trim($_REQUEST['config_gst'])) . "', 
     config_condition_courier_amount = '" . dbStr(trim($_REQUEST['config_condition_courier_amount'])) . "', 
+    config_courier_packing_wt = '" . dbStr(trim($_REQUEST['config_courier_packing_wt'])) . "', 
+    config_courier_shipping_wt = '" . dbStr(trim($_REQUEST['config_courier_shipping_wt'])) . "', 
+    config_courier_tex_wt = '" . dbStr(trim($_REQUEST['config_courier_tex_wt'])) . "', 
+    config_courier_amount_wt = '" . dbStr(trim($_REQUEST['config_courier_amount_wt'])) . "', 
+    config_courier_packing = '" . dbStr(trim($_REQUEST['config_courier_packing'])) . "', 
+    config_courier_shipping = '" . dbStr(trim($_REQUEST['config_courier_shipping'])) . "', 
     config_courier_fix_charges = '" . dbStr(trim($_REQUEST['config_courier_fix_charges'])) . "', 
     config_ftp_img = '" . dbStr(trim($_REQUEST['config_ftp_img'])) . "', 
     config_appointment_regular_opening = '" . dbStr(trim($_REQUEST['config_appointment_regular_opening'])) . "', 
@@ -68,6 +74,12 @@ if (mysqli_num_rows($rsM) > 0) {
     $config_authorization_bearer = $rsMem->config_authorization_bearer;
     $config_gst = $rsMem->config_gst;
     $config_condition_courier_amount = $rsMem->config_condition_courier_amount;
+    $config_courier_packing_wt = $rsMem->config_courier_packing_wt;
+    $config_courier_shipping_wt = $rsMem->config_courier_shipping_wt;
+    $config_courier_tex_wt = $rsMem->config_courier_tex_wt;
+    $config_courier_amount_wt = $rsMem->config_courier_amount_wt;
+    $config_courier_packing = $rsMem->config_courier_packing;
+    $config_courier_shipping = $rsMem->config_courier_shipping;
     $config_courier_fix_charges = $rsMem->config_courier_fix_charges;
     $config_ftp_img = $rsMem->config_ftp_img;
     $config_appointment_regular_opening = $rsMem->config_appointment_regular_opening;
@@ -163,14 +175,38 @@ include("includes/messages.php");
                                 <input type="text" class="input_style" name="config_gst" id="config_gst" value="<?php print($config_gst); ?>" placeholder="GST">
                             </div>
 
-                            <div class="col-md-6 col-12 mt-3">
+                            <div class="col-md-3 col-12 mt-3">
                                 <label for="config_condition_courier_amount">Courier Condition Value</label>
                                 <input type="number" class="input_style" name="config_condition_courier_amount" id="config_condition_courier_amount" value="<?php print($config_condition_courier_amount); ?>" placeholder="Courier Condition Value">
                             </div>
 
-                            <div class="col-md-6 col-12 mt-3">
-                                <label for="config_courier_fix_charges">Courier Fixed Charges</label>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_packing">Courier Packing Charges</label>
+                                <input type="number" class="input_style" name="config_courier_packing" id="config_courier_packing" step="any" value="<?php print($config_courier_packing); ?>" placeholder="Courier Packing Charges">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_shipping">Courier shipping Charges</label>
+                                <input type="number" class="input_style" name="config_courier_shipping" id="config_courier_shipping" step="any" value="<?php print($config_courier_shipping); ?>" placeholder="Courier Shipping Charges">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_fix_charges">Courier Charges</label>
                                 <input type="number" class="input_style" name="config_courier_fix_charges" id="config_courier_fix_charges" step="any" value="<?php print($config_courier_fix_charges); ?>" placeholder="Courier Fixed Charges">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_packing_wt">Courier Packing Charges Without Tax</label>
+                                <input type="number" class="input_style" name="config_courier_packing_wt" id="config_courier_packing_wt" step="any" value="<?php print($config_courier_packing_wt); ?>" placeholder="Courier Packing Charges Without tax">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_shipping_wt">Courier Shipping Charges Without Tax</label>
+                                <input type="number" class="input_style" name="config_courier_shipping_wt" id="config_courier_shipping_wt" step="any" value="<?php print($config_courier_shipping_wt); ?>" placeholder="Courier Shipping Charges Without tax">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_tex_wt">Courier Tax Charges</label>
+                                <input type="number" class="input_style" name="config_courier_tex_wt" id="config_courier_tex_wt" step="any" value="<?php print($config_courier_tex_wt); ?>" placeholder="Courier tax Charges">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="config_courier_fix_charges">Courier Charges Without Tax</label>
+                                <input type="number" class="input_style" name="config_courier_amount_wt" id="config_courier_amount_wt" step="any" value="<?php print($config_courier_amount_wt); ?>" placeholder="Courier Charges Without tax">
                             </div>
                             <div class="col-md-12 col-12 mt-3">
                                 <label for="config_authorization_bearer">Authorization Bearer</label>

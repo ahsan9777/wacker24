@@ -72,7 +72,7 @@ class Mailer
 
         $eml_contents = $get_email_template[0]->eml_contents;
         $eml_contents = str_replace("{customer_name}", $customer_name, $eml_contents);
-        $eml_contents = str_replace("{sitelogo}", $GLOBALS['siteURL'] . "images/register_logo.png", $eml_contents);
+        $eml_contents = str_replace("{sitelogo}", $GLOBALS['siteURL'] . "files/email_logo.png", $eml_contents);
         $eml_contents = str_replace("{btnlink}", $GLOBALS['siteURL'] . "anmelden?verification_code=" . $user_verification_code, $eml_contents);
         $eml_contents = str_replace("{href_site}", $GLOBALS['siteURL'], $eml_contents);
         $eml_contents = str_replace("{siteName}", $GLOBALS['siteName'], $eml_contents);
@@ -162,7 +162,7 @@ class Mailer
 
         $get_email_template = json_decode(get_email_template("2"));
         $message = $get_email_template[0]->eml_contents;;
-        $message = str_replace("{logo}", $GLOBALS['siteURL'] . "images/register_logo.png", $message);
+        $message = str_replace("{logo}", $GLOBALS['siteURL'] . "files/email_logo.png", $message);
         $message = str_replace("{order_date}", $ord_datetime, $message);
         $message = str_replace("{order_id}", $ord_id, $message);
         $message = str_replace("{payment_method}", ((!empty($payment_method)) ? ucwords($payment_method) : 'Bezahlen Sie mit Rechnung'), $message);
@@ -291,7 +291,7 @@ class Mailer
 
         $get_email_template = json_decode(get_email_template("3"));
         $message = $get_email_template[0]->eml_contents;;
-        $message = str_replace("{logo}", $GLOBALS['siteURL'] . "images/register_logo.png", $message);
+        $message = str_replace("{logo}", $GLOBALS['siteURL'] . "files/email_logo.png", $message);
         $message = str_replace("{order_date}", $ord_datetime, $message);
         $message = str_replace("{order_id}", $ord_id, $message);
         $message = str_replace("{payment_method}", ((!empty($payment_method)) ? ucwords($payment_method) : 'Bezahlen Sie mit Rechnung'), $message);

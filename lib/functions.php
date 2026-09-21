@@ -2863,7 +2863,7 @@ function get_pro_price($pro_id, $supplier_id, $ci_qty)
 	return $retValue;
 }
 
-function get_delivery_charges($total)
+function get_delivery_charges_bk($total)
 {
 	//echo $total;die();
 	$delivery_charges = array();
@@ -2881,6 +2881,37 @@ function get_delivery_charges($total)
 				"shipping" => 4.75,
 				"tex" => 0,
 				"total" => 9.51
+			);
+		}
+	} else {
+		$delivery_charges = array(
+			"packing" => 0,
+			"shipping" => 0,
+			"tex" => 0,
+			"total" => 0
+		);
+	}
+	return $delivery_charges;
+}
+
+function get_delivery_charges($total)
+{
+	//echo $total;die();
+	$delivery_charges = array();
+	if ($total <= config_condition_courier_amount) {
+		if (isset($_SESSION['utype_id']) && $_SESSION['utype_id'] == 4) {
+			$delivery_charges = array(
+				"packing" => config_courier_packing_wt,
+				"shipping" => config_courier_shipping_wt,
+				"tex" => config_courier_tex_wt,
+				"total" => config_courier_amount_wt
+			);
+		} else {
+			$delivery_charges = array(
+				"packing" => config_courier_packing,
+				"shipping" => config_courier_shipping,
+				"tex" => 0,
+				"total" => config_courier_fix_charges
 			);
 		}
 	} else {

@@ -133,7 +133,7 @@ if(isset($_REQUEST['op'])){
 
 		case 27:
 			$class = "alert alert-success";
-			$strMSG = "Rekord erfolgreich Rücksendungen";
+			$strMSG = "Rücksendung wurde begonnen";
 			break;
 	}
 }

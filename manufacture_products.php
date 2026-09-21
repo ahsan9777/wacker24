@@ -67,6 +67,8 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 										if (mysqli_num_rows($rs) > 0) {
 											while ($row = mysqli_fetch_object($rs)) {
 												$pg_mime_source_url_href = "files/no_img_1.jpg";
+												$level_one = returnName("parent_id", "category", "group_id", $row->parent_id);
+												$level_one_params = returnName("cat_params_de", "category", "group_id", $level_one);
 												if (strlen($row->group_id) < 4) {
 													if ($pro_type == 20) {
 														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
@@ -84,7 +86,8 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 												$pbp_price_without_tax = $category_data['data_2'];
 												$pbp_price_amount = $category_data['data_3'];
 												
-													$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+													//$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
+													$cat_link = "produkte/".$level_one_params."/" . $row->cat_params . "/" . $row->sub_cat_params;
 													if ($pro_type == 20) {
 														$cat_link = "artikelarten/" . $row->sub_cat_params."/" . $pro_type;
 													}
