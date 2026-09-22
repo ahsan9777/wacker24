@@ -202,8 +202,10 @@ class Mailer
 				<br><br>Message:         
 				<br><br>This is an automatic generated message. Do not reply to this message.";
 
+        $internalToken = 'XML_'.$ord_id.'_INTERNAL_SECRET';
+
         //$fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php'; // Your file URL
-        $fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php?ord_id='.$ord_id; // Your file URL
+        $fileUrl = $GLOBALS['siteURL'] . 'backend/manage_order_xml.php?ord_id='.$ord_id.'&internal_token='.urlencode($internalToken); // Your file URL
         //$tempFilePath = 'tempfile_' . uniqid() . '.xml'; // Temporary file to save
 		$tempFilePath = 'edimail.xml'; // Temporary file to save
 

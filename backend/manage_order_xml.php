@@ -1,9 +1,20 @@
 <?php
 //session_save_path('/tmp');
 session_start();
-if(!isset($_SESSION['UserID'])) {
-    header("Location: login.php");
-    exit;
+$ord_id = $_REQUEST['ord_id'];
+$internalToken = 'XML_'.$ord_id.'_INTERNAL_SECRET';
+$isInternalRequest = (
+    isset($_GET['internal_token']) &&
+    hash_equals($internalToken, $_GET['internal_token'])
+);
+
+if (!$isInternalRequest) {
+
+    if (empty($_SESSION['UserID'])) {
+
+        http_response_code(403);
+        exit('Access denied');
+    }
 }
 include '../lib/openCon.php';
 include '../lib/functions.php';
