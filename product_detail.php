@@ -603,11 +603,11 @@ include("includes/message.php");
 				<div class="special-price-ad-inner">
 
 					<div class="special-price-ad-inner-left">
-						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand">
-						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product">
+						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand" alt="brand">
+						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product" alt="product">
 					</div>
 					<div class="special-price-ad-inner-text">
-						<span class="small"><?php print($rws->pro_udx_seo_epag_title);?></span>
+						<span class="small"><?php print(limit_text($rws->pro_udx_seo_epag_title, 70));?></span>
 						<p>
 							<?php print(limit_text($rws->pro_description_long, 70));?>
 						</p>

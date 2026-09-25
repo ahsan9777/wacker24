@@ -391,6 +391,28 @@ if ($ord_id > 0) {
                             </div>
                         </a>
                     </div>
+                    <div class="col-md-5 col-12 mt-3 cart">
+                        <a class="text-decoration-none" href="manage_return_request.php">
+                            <div class="cart_body">
+                                <div class="cart_icon btn btn-xs btn-danger btn-style-light">
+                                    <i class="material-icons icon fs-1">arrow_back</i>
+                                </div>
+                                <div class="cart_text w-100 d-flex justify-content-between align-items-center">
+                                    <div class="cart_text_left">
+                                        <label for="">Vertrag widerrufen</label>
+                                        <h2><?php print(TotalRecords("rr_id", "return_request", "WHERE 1 = 1")); ?></h2>
+                                    </div>
+                                    <?php $return_request_pending_count = TotalRecords("rr_id", "return_request", "WHERE rr_status = '0' ");
+                                    if ($return_request_pending_count > 0) {
+                                    ?>
+                                        <a href="manage_contact_request.php" class="cart_text_right text-decoration-none">
+                                            <p> <?php print($return_request_pending_count); ?> ausstehend</p>
+                                        </a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </section>
         </div>

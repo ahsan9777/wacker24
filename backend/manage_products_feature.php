@@ -17,7 +17,7 @@ if (isset($_REQUEST['btnAdd'])) {
         $pf_fvalue_details = "FILTER";
     }
     $pf_id = getMaximum("products_feature", "pf_id");
-    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pf_fname, pf_fvalue, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($_REQUEST['pf_fname'])) . "', '" . dbStr(trim($_REQUEST['pf_fvalue'])) . "', '" . $pf_fvalue_details . "')") or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "INSERT INTO products_feature (pf_id, pro_id, supplier_id, pf_fname, pf_fvalue, pf_funit, pf_fvalue_details) VALUES ('" . $pf_id . "', '" . $pro_id . "', '" . $supplier_id . "', '" . dbStr(trim($_REQUEST['pf_fname'])) . "', '" . dbStr(trim($_REQUEST['pf_fvalue'])) . "', '".dbStr(trim($_REQUEST['pf_funit']))."', '" . $pf_fvalue_details . "')") or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=1");
 } elseif (isset($_REQUEST['btnUpdate'])) {
 
@@ -25,7 +25,7 @@ if (isset($_REQUEST['btnAdd'])) {
     if ($_REQUEST['pf_fvalue_details']) {
         $pf_fvalue_details = "FILTER";
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE products_feature SET pf_fname = '" . dbStr(trim($_REQUEST['pf_fname'])) . "', pf_fvalue = '" . dbStr(trim($_REQUEST['pf_fvalue'])) . "', pf_fvalue_details = '" . $pf_fvalue_details . "' WHERE pf_id=" . $_REQUEST['pf_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE products_feature SET pf_fname = '" . dbStr(trim($_REQUEST['pf_fname'])) . "', pf_fvalue = '" . dbStr(trim($_REQUEST['pf_fvalue'])) . "', pf_funit = '".dbStr(trim($_REQUEST['pf_funit']))."', pf_fvalue_details = '" . $pf_fvalue_details . "' WHERE pf_id=" . $_REQUEST['pf_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?action=1&" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -34,12 +34,14 @@ if (isset($_REQUEST['btnAdd'])) {
             $rsMem = mysqli_fetch_object($rsM);
             $pf_fname = $rsMem->pf_fname;
             $pf_fvalue = $rsMem->pf_fvalue;
+            $pf_funit = $rsMem->pf_funit;
             $pf_fvalue_details = ($rsMem->pf_fvalue_details == 'FILTER') ? 1 : 0;
             $formHead = "Update Info";
         }
     } else {
         $pf_fname = "";
         $pf_fvalue = "";
+        $pf_funit = "";
         $pf_fvalue_details = 0;
         $formHead = "Add New";
     }
@@ -104,15 +106,19 @@ include("includes/messages.php");
                     </h2>
                     <form name="frm_data" id="frm_data" method="post" action="<?php print($_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING']); ?>" role="form" enctype="multipart/form-data">
                         <div class="row">
-                            <div class="col-md-4 col-12 mt-3">
+                            <div class="col-md-3 col-12 mt-3">
                                 <label for="">Title</label>
                                 <input type="text" class="input_style" name="pf_fname" id="pf_fname" value="<?php print($pf_fname); ?>" placeholder="Title">
                             </div>
-                            <div class="col-md-4 col-12 mt-3">
+                            <div class="col-md-3 col-12 mt-3">
                                 <label for="">Value</label>
                                 <input type="text" class="input_style" name="pf_fvalue" id="pf_fvalue" value="<?php print($pf_fvalue); ?>" placeholder="Value">
                             </div>
-                            <div class="col-md-4 col-12 mt-3">
+                            <div class="col-md-3 col-12 mt-3">
+                                <label for="">Unit</label>
+                                <input type="text" class="input_style" name="pf_funit" id="pf_funit" value="<?php print($pf_funit); ?>" placeholder="Unit">
+                            </div>
+                            <div class="col-md-3 col-12 mt-3">
                                 <label for="">Type</label>
                                 <select class="input_style" name="pf_fvalue_details" id="pf_fvalue_details">
                                     <option value="0" <?php print( ($pf_fvalue_details == 0) ? 'selected' : '' ); ?> >N/A</option>

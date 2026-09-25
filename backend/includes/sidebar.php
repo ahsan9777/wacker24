@@ -41,6 +41,9 @@ $cu = 'active';
             <li>
                 <a href="manage_product_info_request.php" title="Anfrage zu Artikelinformationen" ><span class="material-icons icon">info</span> <span class="text">Anfrage zu Artikelinformationen</span> </a>
             </li>
+            <li>
+                <a href="manage_return_request.php" title="Vertrag widerrufen" ><span class="material-icons icon">info</span> <span class="text">Vertrag widerrufen</span> </a>
+            </li>
             
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link accordion <?php echo ( $pg == 'manage_free_product_category' || $pg == 'manage_free_products') ? $cu : ''; ?>"><span class="material-symbols-outlined icon">hand_package</span> <span class="text">Gratis</span></a>

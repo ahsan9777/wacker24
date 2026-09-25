@@ -5408,3 +5408,90 @@ body.body-white {
     box-shadow: 0 0 18px rgba(144, 255, 33, 0.4);
     border-color: #20ff20d1;
 }
+
+.login_page .login_inner_return{max-width: 53%; margin: auto;}
+
+.revocation-info {
+    width: 100%;
+    max-width: 950px;
+    margin: 20px auto;
+    padding: 20px 24px;
+    box-sizing: border-box;
+
+    background: #f1f1f1;
+    border-radius: 10px;
+
+    color: #111;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    line-height: 1.55;
+    }
+
+    .revocation-info p {
+    margin: 0 0 26px;
+    }
+
+    .revocation-info p:last-child {
+    margin-bottom: 0;
+    }
+
+    .revocation-info strong {
+    font-weight: 700;
+    }
+
+    .revocation-section {
+    width: 100%;
+    max-width: 950px;
+    margin: 20px auto;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .revocation-section h2 {
+    margin: 0 0 4px;
+    padding: 0;
+
+    color: #0068a8;
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: 500;
+    }
+
+    .revocation-box {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 20px 25px 22px;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    background: #fafafa;
+
+    color: #111;
+    font-size: 18px;
+    line-height: 1.55;
+    }
+
+    .revocation-title {
+    margin: 0 0 10px;
+    font-weight: 700;
+    }
+
+    .revocation-box ul {
+    margin: 0 0 17px;
+    padding-left: 22px;
+    }
+
+    .revocation-box ul:last-child {
+    margin-bottom: 0;
+    }
+
+    .revocation-box li {
+    padding-left: 1px;
+    margin-bottom: 3px;
+    }
+
+    .revocation-box li:last-child {
+    margin-bottom: 0;
+    }
+    .form_field textarea{height: 150px;}

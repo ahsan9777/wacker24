@@ -12,6 +12,9 @@
                         <h2><?php print($row1->footer_title); ?></h2>
                         <ul>
                             <?php
+                            if($row1->footer_id == 3){
+                                print('<li><a title="Vertrag widerrufen" href="vertrag-widerrufen">Vertrag widerrufen</a></li>');
+                            }
                             $Query2 = "SELECT cnt_id, cnt_slug, cnt_title_de AS cnt_title FROM contents WHERE cnt_status = '1' AND footer_id = '" . $row1->footer_id . "' ORDER BY cnt_orderby ASC";
                             $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                             if (mysqli_num_rows($rs2) > 0) {

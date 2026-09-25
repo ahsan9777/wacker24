@@ -40,7 +40,7 @@ include("includes/php_includes_top.php");
 								$row1 = mysqli_fetch_object($rs1);
 							?>
 									<div class="pd_ctg_block pd_ctg_special_sale">
-										<a href="verkaeufe-angebote" title="verkäufe-angebote" class="pd_ctg_heading">SALE <i class="fa fa-tag" ></i></a>
+										<a href="angebote-aktionen" title="Angebote & Aktionen" class="pd_ctg_heading">SALE <i class="fa fa-tag" ></i></a>
 										<div class="pd_ctg_row">
 											<?php
 											$whereclause = "WHERE 1=1";
@@ -99,7 +99,7 @@ include("includes/php_includes_top.php");
 								while ($row1 = mysqli_fetch_object($rs1)) {
 								?>
 									<div class="pd_ctg_block">
-										<div class="pd_ctg_heading"> <?php print($row1->cat_title); ?> </div>
+										<a class="pd_ctg_heading" href="<?php print($GLOBALS['siteURL'].'kategorie/'.$row1->cat_params); ?>"> <?php print($row1->cat_title); ?> </a>
 										<div class="pd_ctg_row">
 											<?php
 											//$Query2 = "SELECT cm.cat_id, cm.supplier_id, c.group_id, c.cat_title_de AS cat_title, pg.pg_mime_source FROM category_map AS cm LEFT OUTER JOIN category AS c ON c.group_id = SUBSTRING(cm.cat_id, 1, 3) LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = cm.supplier_id AND pg.pg_mime_purpose = 'normal' AND pg.pg_mime_order = '1'  WHERE FIND_IN_SET(".$row1->group_id.", cm.sub_group_ids) GROUP BY c.group_id ORDER BY  RAND() LIMIT 0,4";
