@@ -188,8 +188,8 @@ include("includes/message.php");
 				<ul>
 					<li><a href="javascript:void(0)">Cookie-Einstellungen </a></li>
 					<li><a href="impressum">Impressum</a></li>
-					<li><a href="privacy">Datenschutzerklärung</a></li>
-					<li><a href="term">Allgemeinen Geschäftsbedingungen</a></li>
+					<li><a href="datenschutz">Datenschutzerklärung</a></li>
+					<li><a href="agb">Allgemeinen Geschäftsbedingungen</a></li>
 					<li><a href="kontakt">Kontakt</a></li>
 				</ul>
 			</div>

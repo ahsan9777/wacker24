@@ -41,7 +41,7 @@
 										<div class="appintment_image"><img src="<?php print($image_path); ?>" alt=""></div>
 										<div class="appintment_detail">
 											<h2><?php print($row->as_title); ?></h2>
-											<div class="appointment_time"><?php print($row->as_duration); ?> minutes</div>
+											<div class="appointment_time"><?php print($row->as_duration); ?> Minuten</div>
 											<p><?php print(limit_text($row->as_detail, 265)); ?></p>
 											<div class="full_width txt_align_right">
 												<a href="terminauswählen/<?php print($row->as_id); ?>">

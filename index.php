@@ -435,6 +435,8 @@ include("includes/php_includes_top.php");
 	</div>
 
 </body>
+
+<?php include("includes/bottom_js.php"); ?>
 <script src="js/slick.js"></script>
 <script type="text/javascript">
 	$(".banner_slider").slick({
@@ -548,6 +550,4 @@ include("includes/php_includes_top.php");
 		]
 	});
 </script>
-<?php include("includes/bottom_js.php"); ?>
-
 </html>

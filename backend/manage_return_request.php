@@ -55,9 +55,9 @@ include("includes/messages.php");
                                                 <?php
                                                 print($row1->rr_name);
                                                 if ($row1->rr_status > 0) {
-                                                    print('<span class="ms-2 p-2 mb-3 text-bg-success rounded-3"> Close</span>');
+                                                    print('<span class="ms-2 p-2 mb-3 text-bg-success rounded-3"> Schließen</span>');
                                                 } else {
-                                                    print('<span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Open</span>');
+                                                    print('<span class="ms-2 p-2 mb-3 text-bg-danger rounded-3"> Öffnen</span>');
                                                 }
                                                 ?>
                                             </div>
@@ -88,7 +88,7 @@ include("includes/messages.php");
                                             <?php print(date('F j, Y H:i', strtotime($row2->rr_cdate))); ?>
                                         </div>
                                         <h3 class="from text-white">
-                                            From: <?php  print($row2->rr_name); ?>
+                                            Von: <?php  print($row2->rr_name); ?>
                                         </h3>
                                         <div class="contact_detail_user_info">
                                             <div class="tab_img rounded">
@@ -99,7 +99,7 @@ include("includes/messages.php");
                                                     <?php print($row2->rr_email); ?>
                                                 </div>
                                                 <div class="contact_date">
-                                                    To: <span class="ms-1 p-1 mb-3 text-bg-info rounded-3 text-white"> Wacker</span>
+                                                    An: <span class="ms-1 p-1 mb-3 text-bg-info rounded-3 text-white"> Wacker</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,27 +108,27 @@ include("includes/messages.php");
                                         Name: <?php print($row2->rr_name); ?>
                                     </div>
                                     <div class="contact_email border-bottom pb-3 fs-5 text-white">
-                                        Email: <?php print($row2->rr_email); ?>
+                                        E-Mail: <?php print($row2->rr_email); ?>
                                     </div>
                                     <div class="contact_phone border-bottom pb-3 fs-5 text-white">
-                                        Order Date: <?php print(date('F j, Y H:i', strtotime($row2->rr_order_date))); ?>
+                                        Bestelldatum: <?php print(date('F j, Y H:i', strtotime($row2->rr_order_date))); ?>
                                     </div>
                                     <div class="contact_phone border-bottom pb-3 fs-5 text-white">
-                                        Delivery Date: <?php print(date('F j, Y H:i', strtotime($row2->rr_order_date))); ?>
+                                        Lieferdatum: <?php print(date('F j, Y H:i', strtotime($row2->rr_order_date))); ?>
                                     </div>
                                     <div class="contact_topic border-bottom pb-3 fs-5 text-white">
-                                        Address: <?php print($row2->rr_address); ?>
+                                        Adresse: <?php print($row2->rr_address); ?>
                                     </div>
                                     <div class="contact_topic border-bottom pb-3 fs-5 text-white">
-                                        Application: <?php print($row2->rr_application); ?>
+                                        Antrag: <?php print($row2->rr_application); ?>
                                     </div>
                                     <div class="bottom_btndelete text-end">
                                         <?php if ($row2->rr_status > 0) { ?>
-                                            <a href="<?php print($_SERVER['PHP_SELF'] . "?rr_status=0&rr_id=" . $row2->rr_id); ?>" class="btn btn-danger btn-style-light w-auto">Open</a>
+                                            <a href="<?php print($_SERVER['PHP_SELF'] . "?rr_status=0&rr_id=" . $row2->rr_id); ?>" class="btn btn-danger btn-style-light w-auto">Öffnen</a>
                                         <?php } else { ?>
-                                            <a href="<?php print($_SERVER['PHP_SELF'] . "?rr_status=1&rr_id=" . $row2->rr_id); ?>" class="btn btn-success btn-style-light w-auto">Close</a>
+                                            <a href="<?php print($_SERVER['PHP_SELF'] . "?rr_status=1&rr_id=" . $row2->rr_id); ?>" class="btn btn-success btn-style-light w-auto">Schließen</a>
                                         <?php } ?>
-                                        <a href="<?php print($_SERVER['PHP_SELF'] . "?btnDelete&rr_id=" . $row2->rr_id); ?>" class="btn btn-danger btn-style-light w-auto">Delete</a>
+                                        <a href="<?php print($_SERVER['PHP_SELF'] . "?btnDelete&rr_id=" . $row2->rr_id); ?>" class="btn btn-danger btn-style-light w-auto">Löschen</a>
                                     </div>
                                 </div>
                             <?php } ?>

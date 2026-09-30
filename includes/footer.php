@@ -12,9 +12,6 @@
                         <h2><?php print($row1->footer_title); ?></h2>
                         <ul>
                             <?php
-                            if($row1->footer_id == 3){
-                                print('<li><a title="Vertrag widerrufen" href="vertrag-widerrufen">Vertrag widerrufen</a></li>');
-                            }
                             $Query2 = "SELECT cnt_id, cnt_slug, cnt_title_de AS cnt_title FROM contents WHERE cnt_status = '1' AND footer_id = '" . $row1->footer_id . "' ORDER BY cnt_orderby ASC";
                             $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
                             if (mysqli_num_rows($rs2) > 0) {
@@ -64,6 +61,11 @@
             <div class="footer_btm_right">
                 <div class="social_medial">
                     <ul>
+                        <li>
+                            <div class="brand_btn" style="margin-right: 20px;"><a  tabindex="-1" href="vertrag-widerrufen" title="Vertrag widerrufen">
+									<div class="gerenric_btn">Vertrag widerrufen</div>
+								</a></div>
+                        </li>
                         <?php
                         $Query = "SELECT * FROM social_links WHERE sl_status = '1' ORDER BY sl_orderby ASC";
                         $rs = mysqli_query($GLOBALS['conn'], $Query);
