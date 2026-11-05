@@ -1,4 +1,5 @@
 <?php
+http_response_code(404);
 include("includes/php_includes_top.php");
 $page = 1;
 ?>

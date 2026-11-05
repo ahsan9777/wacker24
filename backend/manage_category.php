@@ -45,7 +45,7 @@ if (isset($_REQUEST['btnImport'])) {
             createThumbnail2($dirName, $mfileName, $dirName . "th/", "138", "80");
         }
     }
-    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_params_de = '".dbStr(url_clean(trim($_REQUEST['cat_title_de'])))."', cat_params_en = '".dbStr(url_clean(trim($_REQUEST['cat_title_en'])))."', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_image='" . $mfileName . "' WHERE cat_id=" . $_REQUEST['cat_id']) or die(mysqli_error($GLOBALS['conn']));
+    mysqli_query($GLOBALS['conn'], "UPDATE category SET cat_title_de = '" . dbStr(trim($_REQUEST['cat_title_de'])) . "',  cat_title_en='" . dbStr(trim($_REQUEST['cat_title_en'])) . "', cat_params_de = '".dbStr(url_clean(trim($_REQUEST['cat_title_de'])))."', cat_params_en = '".dbStr(url_clean(trim($_REQUEST['cat_title_en'])))."', cat_keyword = '" . dbStr(trim($_REQUEST['cat_keyword'])) . "', cat_description = '" . dbStr(trim($_REQUEST['cat_description'])) . "', cat_image='" . $mfileName . "', cat_icon = '".dbStr(trim($_REQUEST['cat_icon']))."', cat_icon_color = '".dbStr(trim($_REQUEST['cat_icon_color']))."' WHERE cat_id=" . $_REQUEST['cat_id']) or die(mysqli_error($GLOBALS['conn']));
     header("Location: " . $_SERVER['PHP_SELF'] . "?" . $qryStrURL . "op=2");
 } elseif (isset($_REQUEST['action'])) {
     if ($_REQUEST['action'] == 2) {
@@ -58,6 +58,8 @@ if (isset($_REQUEST['btnImport'])) {
             $mfile_path = !empty($rsMem->cat_image) ? $GLOBALS['siteURL'] . "files/category/" . $rsMem->cat_image : "";
             $cat_keyword = $rsMem->cat_keyword;
             $cat_description = $rsMem->cat_description;
+            $cat_icon = $rsMem->cat_icon;
+            $cat_icon_color = $rsMem->cat_icon_color;
             $formHead = "Update Info";
         }
     } elseif ($_REQUEST['action'] == 3) {
@@ -78,6 +80,8 @@ if (isset($_REQUEST['btnImport'])) {
         $mfileName = "";
         $cat_keyword = "";
         $cat_description = "";
+        $cat_icon = "";
+        $cat_icon_color = "";
         $formHead = "Add New";
     }
 }
@@ -161,6 +165,14 @@ include("includes/messages.php");
                                     <div class="col-md-6 col-12 mt-3">
                                         <label for="">Meta Description</label>
                                         <input type="text" class="input_style" name="cat_description" id="cat_description" value="<?php print($cat_description); ?>" placeholder="Meta Description">
+                                    </div>
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for="">Icon ( Like: fa fa-pencil )</label>
+                                        <input type="text" class="input_style" name="cat_icon" id="cat_icon" value="<?php print($cat_icon); ?>" placeholder="Icon">
+                                    </div>
+                                    <div class="col-md-6 col-12 mt-3">
+                                        <label for="">Icon Color ( Hex color like: #000 )</label>
+                                        <input type="text" class="input_style" name="cat_icon_color" id="cat_icon_color" value="<?php print($cat_icon_color); ?>" placeholder="Icon Color">
                                     </div>
                                     <div class="col-md-6 col-12 mt-3">
                                         <label for="">Image ( <span class="label_span">Banner Size must be 1200px x 300x</span> )</label>
