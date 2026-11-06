@@ -1,0 +1,24 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="<?php print($GLOBALS['siteURL']); ?>">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<meta name="keywords" content="<?php print( ((!empty($meta_keywords))? $meta_keywords : config_metakey ) ); ?>">
+<meta name="description" content="<?php print( ((!empty($meta_description))? $meta_description : config_metades ) ); ?>">
+<meta name="publisher" content="Wacker Systems">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<?php
+header("X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1");
+?>
+<?php if(!empty($page_title)){ ?>
+    <title><?php print($page_title); ?></title>
+<?php } else { ?>
+    <title><?php print($GLOBALS['siteTitle']); ?></title>
+<?php } ?>
+<link rel="preload" href="<?php print(get_font_link(config_fonts));?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>"></noscript>
+<link rel="preload" href="css/styles.min.css?dt=23052026" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="css/styles.min.css?dt=23052026"></noscript>
+<?php include("includes/btn_color.php"); ?>
+<!-- <script src="js/jquery-2.2.0.min.js"></script>-->
+<!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js" defer></script> -->
+ <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.0/dist/jquery.min.js"></script>
