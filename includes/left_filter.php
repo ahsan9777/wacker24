@@ -54,7 +54,8 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || (is
         $pf_fvalue_check = $_REQUEST['lf_pf_fvalue'];
     } else {
         $level_three = 0;
-        $leve_id = returnName("group_id", "category", "cat_params_de", $_REQUEST['cat_params_one']);
+        $cat_params_lookup = isset($_REQUEST['cat_params_one']) ? $_REQUEST['cat_params_one'] : (isset($_REQUEST['level_one']) ? $_REQUEST['level_one'] : '');
+        $leve_id = !empty($cat_params_lookup) ? returnName("group_id", "category", "cat_params_de", $cat_params_lookup) : 11;
     }
     /*if ($pro_type == 20) {
         $leve_id = 19;

@@ -1149,6 +1149,7 @@ if (isset($_REQUEST['action'])) {
                 }
             }
             $total_count = 0;
+            $count = 0;
             if ($manf_id > 0) {
                 $Query = "SELECT * FROM vu_category_map AS cm WHERE cm.manf_id = '" . $manf_id . "' " . $whereclause . " " . $order_by . "";
             } else {

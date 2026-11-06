@@ -42,7 +42,7 @@ if ((isset($_REQUEST['lf_group_id']) && !empty($_REQUEST['lf_group_id'])) || $le
 		$whereclause_meta = " group_id = '".$_REQUEST['lf_group_id'][0]."'";
 	}
 	if (strlen($lf_group_id) > 3) {
-		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND (" . $lf_group_id . ", cm.cat_id)";
+		$whereclause .= " AND cm.pro_type = '" . $pro_type . "' AND FIND_IN_SET(" . $lf_group_id . ", cm.cat_id)";
 	} else {
 		if ($pro_type == 20) {
 			//$lf_group_id = $_REQUEST['lf_group_id'][0];
@@ -120,6 +120,11 @@ if(!empty($whereclause_meta)){
 			text-align: center;
 			font-size: 50px;
 			font-weight: 700;
+			line-height: 1.25;
+			overflow-wrap: break-word;
+			word-break: break-word;
+			hyphens: auto;
+			box-sizing: border-box;
 		}
 
 		.list_type_row {
@@ -368,7 +373,7 @@ if(!empty($whereclause_meta)){
 			$("#btn_load_spinner").show();
 			lf_group_id = lf_group_id_data;
 		} else if (pro_type > 0) {
-			lf_group_id = <?php print($lf_group_id); ?>
+			lf_group_id = "<?php print($lf_group_id); ?>";
 		}
 		let lf_manf_id = "";
 		if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {

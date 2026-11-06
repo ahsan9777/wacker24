@@ -2,17 +2,17 @@
 <link href="css/slick-theme.min.css" rel="stylesheet" type="text/css" />
 <!-- <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">-->
-<link rel="stylesheet" href="css/jquery-ui.min.css">
-<link href="css/responsive.min.css?dt=23052026" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/jquery-ui-1.13.3.min.css">
+<link href="css/responsive.min.css?dt=05112026" rel="stylesheet" type="text/css" />
 <link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="./backend/assets/style/jquery-ui-1.10.3.custom.min.css" />
+
 <!--<script defer src="js/jquery-ui.min.js"></script>
 <script defer type="text/javascript" src="js/jquery.simpleGallery.min.js"></script>
 <script defer type="text/javascript" src="js/jquery.simpleLens.min.js"></script>-->
 <script>
     setTimeout(function() {
         const scripts = [
-            "js/jquery-ui.min.js"
+            //"js/jquery-ui.min.js"
         ];
 
         scripts.forEach(function(src) {
@@ -249,7 +249,7 @@
 	$aux.remove()
 	}).change()
 </script>
-<script src="./backend/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="js/jquery-ui-1.13.3.min.js"></script>
 <!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" defer></script> -->
 <script>
 	$('.close').on('click', function(){
