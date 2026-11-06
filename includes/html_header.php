@@ -16,8 +16,8 @@ header("X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, ma
 <?php } ?>
 <link rel="preload" href="<?php print(get_font_link(config_fonts));?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>"></noscript>
-<link rel="preload" href="css/styles.min.css?dt=05112026" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="css/styles.min.css?dt=05112026"></noscript>
+<link rel="preload" href="css/styles.min.css?dt=06112026" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="css/styles.min.css?dt=06112026"></noscript>
 <?php include("includes/btn_color.php"); ?>
 <script src="js/jquery-3.7.1.min.js"></script>
 <script>

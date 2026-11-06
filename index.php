@@ -26,6 +26,9 @@ include("includes/php_includes_top.php");
 		<!--BANNER_SECTION_END-->
 		<style>
 			.product_category{padding: 0px 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;}
+			.gerenric_slider:not(.slick-initialized), .gerenric_slider_mostviewed:not(.slick-initialized), .brand_slider:not(.slick-initialized){display: flex; overflow: hidden;}
+			.gerenric_slider:not(.slick-initialized) > div{flex: 0 0 16.666667%; max-width: 16.666667%;}
+			.gerenric_slider_mostviewed:not(.slick-initialized) > div, .brand_slider:not(.slick-initialized) > div{flex: 0 0 10%; max-width: 10%;}
 			.product_category_inner{padding: 15px; display: flex; flex-direction: column; gap: 10px; border-radius: 3px; background-color: #fff; box-shadow: 0 0 5px rgba(0, 0, 0, .05); border-radius: 20px; border: 1px solid rgba(0, 0, 0, .04);}
 			.product_category_inner.pd_ctg_special_sale{border: 5px solid transparent; border-image: linear-gradient(to right, #ff0000bf, #ffc106d4); border-image-slice: 1;}
 			.product_category_heading{font-size: 21px; color: #232f3e;font-weight: 700;}
