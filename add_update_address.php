@@ -87,6 +87,12 @@ if (isset($_REQUEST['btnAdd'])) {
 		$fields .= ", usa_other_check";
 		$values .= ", '" . dbStr(trim($_REQUEST['usa_other_check'])) . "'";
 	}
+
+	if (isset($_REQUEST['usa_zipcode'])) {
+		$plz = explode(" ", $_REQUEST['usa_zipcode']);
+		$_SESSION['plz'] = $plz[0];
+	}
+
 	mysqli_query($GLOBALS['conn'], "INSERT INTO user_shipping_address (usa_id, user_id, usa_type, usa_fname, usa_lname, usa_street, usa_house_no, usa_zipcode, usa_contactno, countries_id, usa_defualt " . $fields . ") VALUES ('" . $usa_id . "', '" . $_SESSION["UID"] . "', '" . $usa_type . "', '" . dbStr(trim($_REQUEST['usa_fname'])) . "',  '" . dbStr(trim($_REQUEST['usa_lname'])) . "', '" . dbStr(trim($_REQUEST['usa_street'])) . "', '" . dbStr(trim($_REQUEST['usa_house_no'])) . "', '" . dbStr(trim($_REQUEST['usa_zipcode'])) . "', '" . dbStr(trim($_REQUEST['usa_contactno'])) . "', '" . dbStr(trim($_REQUEST['countries_id'])) . "', '" . $usa_defualt . "' " .	$values . ")") or die(mysqli_error($GLOBALS['conn']));
 	if ($usa_defualt > 0) {
 		mysqli_query($GLOBALS['conn'], "UPDATE user_shipping_address SET usa_defualt = '0' WHERE usa_type = '0' AND user_id = '" . $_SESSION["UID"] . "' AND usa_id != '" . $usa_id . "'") or die(mysqli_error($GLOBALS['conn']));
@@ -126,6 +132,8 @@ if (isset($_REQUEST['btnAdd'])) {
 		$ufields .= ", usa_house_no = '" . dbStr(trim($_REQUEST['usa_house_no'])) . "'";
 	}
 	if (isset($_REQUEST['usa_zipcode'])) {
+		$plz = explode(" ", $_REQUEST['usa_zipcode']);
+		$_SESSION['plz'] = $plz[0];
 		$ufields .= ", usa_zipcode = '" . dbStr(trim($_REQUEST['usa_zipcode'])) . "'";
 	}
 	if (isset($_REQUEST['usa_contactno'])) {

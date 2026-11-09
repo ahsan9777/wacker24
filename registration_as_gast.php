@@ -104,6 +104,7 @@ if (isset($_REQUEST['btn_registration'])) {
 		$_SESSION["FullName"] = $_REQUEST['user_fname'] . " " . $_REQUEST['user_lname'];
 		$_SESSION["Utype"] = $utype_id_as_guest;
 		$_SESSION["utype_id"] = $utype_id_as_guest;
+		$_SESSION['plz'] = $_REQUEST['plz']; 
 		header('Location: einkaufswagen');
 	}
 }
