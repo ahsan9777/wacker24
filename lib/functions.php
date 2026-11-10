@@ -2927,6 +2927,13 @@ function get_delivery_charges($total)
 
 function user_special_price($parameter, $value, $user_id = 0, $price_type = 0)
 {
+	static $usp_cache = array();
+	$sess_uid = (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) ? (int)$_SESSION["UID"] : 0;
+	$sess_utype = isset($_SESSION["utype_id"]) ? (int)$_SESSION["utype_id"] : 0;
+	$cache_key = $parameter . '|' . trim((string)$value) . '|' . (int)$user_id . '|' . (int)$price_type . '|' . $sess_uid . '|' . $sess_utype;
+	if (isset($usp_cache[$cache_key])) {
+		return $usp_cache[$cache_key];
+	}
 	$searchWhere = "";
 	if ((isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) && (isset($_SESSION["utype_id"]) && in_array($_SESSION["utype_id"], array(3, 4))) && $price_type == 0) {
 		$user_id = $_SESSION["UID"];
@@ -2963,6 +2970,7 @@ function user_special_price($parameter, $value, $user_id = 0, $price_type = 0)
 			);
 		}
 	}
+	$usp_cache[$cache_key] = $special_price;
 	return $special_price;
 }
 

@@ -226,3 +226,52 @@ Before any project files were modified, full backups of all original files were 
    - Deferred below-the-fold Slick sliders and their product/brand images (`class="js_lazy_slider_img" data-src="..."`) in `index.php` using `IntersectionObserver` with pre-Slick CSS flex layout rules.
    - Removed broken `url('./ajax-loader.gif')` and unused `@font-face{font-family:slick}` from `css/slick-theme.min.css` and `css/slick-theme.css`, switched `js/slick.js` to `js/slick.min.js`, and trimmed `js/jquery-ui-1.13.3.min.js` from `255 KB` to `50.6 KB`.
    - Added 1-year `Cache-Control`, `mod_expires`, `mod_deflate`, and static-extension rewrite exclusions in `.htaccess`.
+
+
+---
+
+## Follow-Up Fix #4 — Product Detail Page (`product_detail.php`) Speed & Product Gallery Image Load Optimization
+
+### 1. Summary of Performance Improvements
+
+| Metric / Component | Before Optimization | After Optimization |
+| :--- | :--- | :--- |
+| **Server TTFB (`product_detail.php` — Large Category `cat_id=70100`)** | **`5,100+ ms`** (`~4.8 s` spent on 3 `vu_category_map` `ORDER BY RAND()` queries) | **`113 ms – 136 ms`** (**37x faster**) |
+| **SQL Queries Executed per Product Detail Load** | `160+` queries (108 `user_special_price`, 36 `product_detail_url`, 42 `category`, 5 `products_gallery`, 3 `products_bundle_price`, 3 `products_quantity`) | **`~14` indexed queries** |
+| **Main Product Gallery Image (`simpleLens-big-image`)** | `2000x2000px` (`770 KB – 2.2 MB`, `2.0 s – 10.0+ s` from `bilddaten.privatepilot.de/Soennecken/2000/...`) | **`427x427px`** (`~40–82 KB`) with `<link rel="preload" as="image" fetchpriority="high">` + `<link rel="preconnect" href="https://bilddaten.privatepilot.de" crossorigin>` |
+| **Gallery Thumbnail Hover / Click Switching (`simpleGallery`)** | Wiped container, showed broken `demo/images/loading.gif` (404), and waited `2–10+ s` to download `2000x2000px` image on every hover | **Instant (`0 ms`)**: updates DOM in place, preloads all `427x427px` gallery images in background after main image loads, and uses `75px` thumb as immediate fallback if needed |
+| **Gallery Magnifier Lens Zoom (`simpleLens`)** | Showed blank white box with broken `demo/images/loading.gif` (404) while waiting `2–10+ s` for `2000x2000px` image | **Instant (`0 ms`)**: opens zoom lens immediately using already-loaded `427px` image (`2.4x`), preloads `2000px` high-res image on gallery hover, and swaps to `2000px` seamlessly when ready |
+| **Host Connection Contention (`bilddaten.privatepilot.de`)** | Simultaneously requested `36` `427x427` slider images + up to `47` `160x160` variant swatch images alongside the main gallery image (saturating browser's 6-connection-per-host limit) | Deferred all `36` below-the-fold slider images (`160x160` via `IntersectionObserver`) and hidden variant swatches (`> 14`) so the main product gallery has 100% of image bandwidth on initial load |
+
+---
+
+### 2. Files Modified & Backed Up
+- **Backups saved to `md doc/backups_05112026/perf_backup/`:**
+  - `md doc/backups_05112026/perf_backup/product_detail.php`
+  - `md doc/backups_05112026/perf_backup/js/jquery.simpleGallery.js`
+  - `md doc/backups_05112026/perf_backup/js/jquery.simpleGallery.min.js`
+  - `md doc/backups_05112026/perf_backup/js/jquery.simpleLens.js`
+  - `md doc/backups_05112026/perf_backup/js/jquery.simpleLens.min.js`
+- **Modified Files:**
+  - `product_detail.php`
+  - `lib/functions.php`
+  - `js/jquery.simpleGallery.js` & `js/jquery.simpleGallery.min.js`
+  - `js/jquery.simpleLens.js` & `js/jquery.simpleLens.min.js`
+- **Database Composite Indexes Added (`gac_2024_wacker_buerocenter`):**
+  - `category_map`: `idx_cm_cat_supp (cat_id, supplier_id)`
+  - `products_bundle_price`: `idx_pbp_supp_bound (supplier_id, pbp_lower_bound)`
+  - `products_gallery`: `idx_pg_supp_purp_ord (supplier_id(30), pg_mime_purpose(20), pg_mime_order)`
+  - `products_feature`: `idx_pf_epag_fname (pro_udx_seo_epag_id, pf_fname(50))`
+
+
+### 3. Product Detail Page Responsive Layout Fixes (`1024px`, `768px`, `650px`, `412px`, `375px`, `320px`)
+1. **Fixed `.product_left` & `.product_right` Stuck at `50%` Width on Mobile/Tablet (`product_detail.php`, `css/responsive.css`, `css/responsive.min.css`):**
+   - Inline `<style>` in `product_detail.php` defined `.product_detail_page .product_detail_section1 .product_left { width: 50%; }` and `.product_right { width: 50%; }` *after* `includes/html_header.php` (`css/responsive.min.css`), overriding the `100%` width rule at `<= 1024px` and crushing the left gallery column to `135px–163px` on mobile.
+   - Added responsive overrides (`width: 100% !important; padding-left: 0 !important;`) at `max-width: 1024px` in both `product_detail.php` and `css/responsive.css` / `css/responsive.min.css`, and moved `css/jquery.simpleLens.min.css` and `css/jquery.simpleGallery.min.css` before `includes/html_header.php`.
+2. **Fixed Mobile & Tablet Product Gallery Positioning (`<= 1024px` & `<= 768px`):**
+   - Reset `.product_main_image` from `position: sticky; top: 100px; padding-left: 120px` to `position: relative !important; top: 0 !important; padding-left: 0 !important` on `<= 768px`, and reset `.thum_images` from `position: absolute; top: 0; left: 0; width: 130px` to `position: static !important; width: 100% !important; height: auto !important;` so the main image renders full-width above a centered horizontal thumbnail strip (`64x64px` rounded cards).
+3. **Fixed Color/Feature Variant Swatch Visibility (`product_detail.php`):**
+   - Explicitly set `style="display: inline-block;"` on the first 14 `.pd_detail_shirt ul li` items (and `display: none` on `>= 14`) to override `css/styles.css`'s default `.pd_detail_shirt ul li { display: none }`.
+4. **Fixed Specifications Table & Pre-Slick Slider Responsive Containment (`product_detail.php`):**
+   - Added `width: 100%; box-sizing: border-box; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);` on `.product_detail_container` and `min-width: 0; overflow-wrap: break-word; word-break: break-word;` on `.product_specification_name, .product_specification_value` so long German attribute names (e.g., `"Werbliche Produkttypbezeichnung"`) wrap cleanly without horizontal overflow.
+   - Added responsive flex-basis rules (`25%` at `<= 1024px`, `33.333%` at `<= 650px`, `50%` at `<= 480px`) for `.gerenric_slider:not(.slick-initialized) > div` and `.gerenric_slider_mostviewed:not(.slick-initialized) > div`.

@@ -29,6 +29,13 @@ $cat_title_two = "";
 $cat_three_params = "";
 $cat_title_three = "";
 $pg_mime_description = "";
+$pg_mime_description_pdf = "";
+$pg_mime_source_url_logo = "";
+$pg_mime_source_url_pdf = "";
+$gallery_images = array();
+$bundle_prices = array();
+$cat_title_heading = "";
+$cat_params_heading = "";
 $pro_udx_seo_epag_id = "";
 $pro_description_short = "";
 $pro_description_long = "";
@@ -36,6 +43,9 @@ $pro_manufacture_aid = "";
 $pbp_price_without_tax = 0;
 $pbp_price_amount = 0;
 $pq_physical_quantity = 0;
+$pq_upcomming_quantity = 0;
+$pq_quantity = 0;
+$pq_status = 'false';
 $cat_id_three = 0;
 $ci_type = 0;
 if (isset($_REQUEST['ci_type']) && $_REQUEST['ci_type'] > 0) {
@@ -45,7 +55,7 @@ $product_params = explode("-", $_REQUEST['product_params']);
 //$params_supplier_id =  end($product_params);
 $params_supplier_id = returnName("supplier_id", "products", "pro_id", end($product_params));
 //$params_supplier_id = returnName("supplier_id", "products", "pro_url", $_REQUEST['product_params'], "AND pro_status = '1'");
-$Query = "SELECT pro.*, pbp.pbp_id, pro.pro_ean, manf.manf_name, manf.manf_name_params, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, pg.pg_mime_source_url, pg.pg_mime_description, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
+$Query = "SELECT pro.*, pbp.pbp_id, pro.pro_ean, manf.manf_name, manf.manf_name_params, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, cm.cat_id AS cat_id_three, cm.sub_group_ids, c.cat_title_de AS cat_title_three, c.cat_params_de AS cat_three_params FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id LEFT OUTER JOIN category AS c ON c.group_id = cm.cat_id WHERE pro.pro_status = '1' AND pro.supplier_id = '" . $params_supplier_id . "'";
 //print($Query);//die();
 $rs = mysqli_query($GLOBALS['conn'], $Query);
 if (mysqli_num_rows($rs) > 0) {
@@ -93,19 +103,57 @@ if (mysqli_num_rows($rs) > 0) {
 	$pbp_tax = $row->pbp_tax;
 	$ci_amount = $pbp_price_without_tax;
 
-	$pg_mime_source_url = $row->pg_mime_source_url;
-	$pg_mime_description = $row->pg_mime_description;
+	$Query_pg = "SELECT pro_id, pg_mime_source_url, pg_mime_description, pg_mime_purpose, pg_mime_type FROM products_gallery WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END, pg_mime_order ASC";
+	$rs_pg = mysqli_query($GLOBALS['conn'], $Query_pg);
+	if ($rs_pg && mysqli_num_rows($rs_pg) > 0) {
+		while ($row_pg = mysqli_fetch_object($rs_pg)) {
+			if ($row_pg->pg_mime_purpose == 'normal' && $pg_mime_source_url === "") {
+				$pg_mime_source_url = $row_pg->pg_mime_source_url;
+				$pg_mime_description = $row_pg->pg_mime_description;
+			}
+			if ($row_pg->pg_mime_purpose == 'logo' && $pg_mime_source_url_logo === "") {
+				$pg_mime_source_url_logo = $row_pg->pg_mime_source_url;
+			}
+			if ($row_pg->pg_mime_type == 'application/pdf' && $pg_mime_source_url_pdf === "") {
+				$pg_mime_source_url_pdf = $row_pg->pg_mime_source_url;
+				$pg_mime_description_pdf = $row_pg->pg_mime_description;
+			}
+			if ($row_pg->pro_id == $pro_id && $row_pg->pg_mime_type == 'image/jpeg') {
+				$gallery_images[] = $row_pg;
+			}
+		}
+	}
+	if ($pg_mime_source_url === "" && !empty($gallery_images)) {
+		$pg_mime_source_url = $gallery_images[0]->pg_mime_source_url;
+		$pg_mime_description = $gallery_images[0]->pg_mime_description;
+	}
+
 	$sub_group_ids = explode(",", $row->sub_group_ids);
 	//print_r($sub_group_ids);
-	$cat_id_one = $sub_group_ids[1];
+	$cat_id_one = isset($sub_group_ids[1]) ? $sub_group_ids[1] : 0;
+	$cat_id_two = isset($sub_group_ids[0]) ? $sub_group_ids[0] : 0;
 	$meta_keywords = implode(", ", returnNameArray("pk_title", "products_keyword", "supplier_id", $supplier_id));
 	$meta_description = $pro_udx_seo_internetbezeichung;
-	$pq_physical_quantity = returnName("pq_physical_quantity", "products_quantity", "supplier_id", $supplier_id);
-	$cat_title_one = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_one);
-	$cat_one_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_one);
-	$cat_id_two = $sub_group_ids[0];
-	$cat_title_two = returnName("cat_title_de AS cat_title", "category", "group_id", $cat_id_two);
-	$cat_two_params = returnName("cat_params_de AS cat_params", "category", "group_id", $cat_id_two);
+	$cat_lookup_ids = array_unique(array_filter(array(intval($cat_id_one), intval($cat_id_two), 20)));
+	if (!empty($cat_lookup_ids)) {
+		$rs_cats = mysqli_query($GLOBALS['conn'], "SELECT group_id, cat_title_de, cat_params_de FROM category WHERE group_id IN (" . implode(",", $cat_lookup_ids) . ")");
+		if ($rs_cats) {
+			while ($row_cat = mysqli_fetch_object($rs_cats)) {
+				if ($row_cat->group_id == $cat_id_one) {
+					$cat_title_one = $row_cat->cat_title_de;
+					$cat_one_params = $row_cat->cat_params_de;
+				}
+				if ($row_cat->group_id == $cat_id_two) {
+					$cat_title_two = $row_cat->cat_title_de;
+					$cat_two_params = $row_cat->cat_params_de;
+				}
+				if ($row_cat->group_id == 20) {
+					$cat_title_heading = $row_cat->cat_title_de;
+					$cat_params_heading = $row_cat->cat_params_de;
+				}
+			}
+		}
+	}
 	$cat_id_three = $row->cat_id_three;
 	$cat_title_three = $row->cat_title_three;
 	$cat_three_params = $row->cat_three_params;
@@ -120,6 +168,8 @@ if (mysqli_num_rows($rs) > 0) {
 	if (mysqli_num_rows($rs) > 0) {
 		$row = mysqli_fetch_object($rs);
 		$pq_quantity = $row->pq_quantity;
+		$pq_upcomming_quantity = $row->pq_upcomming_quantity;
+		$pq_physical_quantity = $row->pq_physical_quantity;
 		$pq_status = $row->pq_status;
 		if ($pq_status == 'true') {
 			$ci_qty_type = 1;
@@ -141,27 +191,14 @@ if (mysqli_num_rows($rs) > 0) {
 		}
 	}
 
-
-	//$street = ""; $postal_city = ""; $country = "";
-	//$parts = preg_split('/\bGmbH\b\s*/', $pro_udx_manufacturer_address, 2);
-	/*$company = $parts[0] . 'GmbH';
-	if (preg_match('/^(.*?)(\b\d{5}\b.*)$/', $parts[1], $matches)) {
-		$firstPart = trim($matches[1]);
-    	$secondPart = trim($matches[2]);
-
-		$words = explode(' ', $secondPart);
-		$lastWord = end($words);
-
-		$street = $firstPart;
-		$postal_city = rtrim($secondPart, $lastWord);
-		$country = $lastWord;
+	$Query_pbp = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount, pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound ASC";
+	$rs_pbp = mysqli_query($GLOBALS['conn'], $Query_pbp);
+	if ($rs_pbp && mysqli_num_rows($rs_pbp) > 0) {
+		while ($row_pbp = mysqli_fetch_object($rs_pbp)) {
+			$bundle_prices[] = $row_pbp;
+		}
 	}
-	$pro_udx_manufacturer_address =*/
-	//print_r($parts);
 
-	$pg_mime_source_url_logo = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_purpose = 'logo'");
-	$pg_mime_source_url_pdf = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
-	$pg_mime_description = returnName("pg_mime_description", "products_gallery", "supplier_id", $supplier_id, " AND pg_mime_type = 'application/pdf'");
 	mysqli_query($GLOBALS['conn'], "UPDATE products SET pro_view = pro_view + '1' WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'") or die(mysqli_error($GLOBALS['conn']));
 } else {
 	/*$product_params = explode("/", $_REQUEST['product_params']);
@@ -202,31 +239,27 @@ $returnShippingFeesAmount = '"returnShippingFeesAmount": {
 						"value": "' . config_courier_fix_charges . '",
 						"currency": "EUR"
 					},';
-if (!empty($special_price)) {
-	$Query_special_price = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
-	$rs_special_price = mysqli_query($GLOBALS['conn'], $Query_special_price);
-	if (mysqli_num_rows($rs_special_price) > 0) {
-		$row_special_price = mysqli_fetch_object($rs_special_price);
-		$discounted_price = discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row_special_price->pbp_special_price_amount > 0) ? $row_special_price->pbp_special_price_amount : $row_special_price->pbp_price_amount), $special_price['usp_discounted_value'], $row_special_price->pbp_tax);
+if (!empty($special_price) && !empty($bundle_prices)) {
+	$row_special_price = end($bundle_prices);
+	$discounted_price = discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row_special_price->pbp_special_price_amount > 0) ? $row_special_price->pbp_special_price_amount : $row_special_price->pbp_price_amount), $special_price['usp_discounted_value'], $row_special_price->pbp_tax);
 
-		$price_schema = '
-			"price": "' . $discounted_price . '", 
-			"priceValidUntil": "2099-12-31",
-			"itemCondition": "https://schema.org/NewCondition",
-			"availability": "' . $quantity_status . '",
+	$price_schema = '
+		"price": "' . $discounted_price . '", 
+		"priceValidUntil": "2099-12-31",
+		"itemCondition": "https://schema.org/NewCondition",
+		"availability": "' . $quantity_status . '",
 
-			"priceSpecification": {
-			"@type": "PriceSpecification",
-			"priceCurrency": "EUR",
-			"price": "' . $pbp_price_amount . '",
-			"name": "Original price",
-			"eligibleQuantity": {
-				"@type": "QuantitativeValue",
-				"value": 1
-			}
-			},
-		';
-	}
+		"priceSpecification": {
+		"@type": "PriceSpecification",
+		"priceCurrency": "EUR",
+		"price": "' . $pbp_price_amount . '",
+		"name": "Original price",
+		"eligibleQuantity": {
+			"@type": "QuantitativeValue",
+			"value": 1
+		}
+		},
+	';
 }
 
 if ($discounted_price > 0) {
@@ -433,10 +466,45 @@ include("includes/message.php");
 		]
 	}
 	</script>
+	<link rel="preconnect" href="https://bilddaten.privatepilot.de" crossorigin>
+	<link rel="dns-prefetch" href="//bilddaten.privatepilot.de">
+	<?php if (!empty($pg_mime_source_url)) { ?>
+	<link rel="preload" as="image" href="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" fetchpriority="high">
+	<?php } ?>
+	<link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">
 	<?php include("includes/html_header.php"); ?>
 	<style>
 		.product_detail_page .product_detail_section1 .product_left {
 			width: 50%;
+		}
+
+		/* Prevent CLS before lazy Slick initialization */
+		.gerenric_slider:not(.slick-initialized),
+		.gerenric_slider_mostviewed:not(.slick-initialized) {
+			display: flex;
+			overflow: hidden;
+			gap: 12px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+		.gerenric_slider:not(.slick-initialized) > div {
+			flex: 0 0 calc(16.666% - 10px);
+			max-width: calc(16.666% - 10px);
+			min-width: 0;
+			box-sizing: border-box;
+		}
+		.gerenric_slider_mostviewed:not(.slick-initialized) > div {
+			flex: 0 0 calc(10% - 11px);
+			max-width: calc(10% - 11px);
+			min-width: 0;
+			box-sizing: border-box;
+		}
+		.gerenric_slider:not(.slick-initialized) .pd_card,
+		.gerenric_slider_mostviewed:not(.slick-initialized) .pd_card {
+			width: 100% !important;
+			min-width: 0;
+			box-sizing: border-box;
 		}
 
 		.product_detail_page .product_detail_section1 .product_right {
@@ -444,8 +512,9 @@ include("includes/message.php");
 		}
 
 		.product_detail_page .product_detail_section1 .product_left .product_main_image .simpleLens-lens-image img {
-			object-fit: cover;
+			object-fit: contain;
 			height: auto;
+			max-height: 450px;
 		}
 
 		
@@ -570,17 +639,54 @@ include("includes/message.php");
 		}
 
 		@media screen and (max-width:1024px) and (min-width:240px) {
+			.product_detail_page .product_detail_section1 .product_left {
+				width: 100% !important;
+				margin-bottom: 30px;
+			}
+			.product_detail_page .product_detail_section1 .product_right {
+				width: 100% !important;
+				padding-left: 0;
+			}
+			.gerenric_slider:not(.slick-initialized) > div,
+			.gerenric_slider_mostviewed:not(.slick-initialized) > div {
+				flex: 0 0 calc(25% - 9px);
+				max-width: calc(25% - 9px);
+			}
 			.special-price-ad-inner{
 				flex-direction: column;
 				border-radius: 0;
 				gap: 10px;
 				width: 100%;
+				max-width: 100%;
+				padding: 12px 15px;
+				box-sizing: border-box;
 			}
 			.special-price-ad-inner-text{
 				align-items: center;
+				text-align: center;
 			}
 			.special-price-ad-inner-left{
-				gap: 0;
+				gap: 15px;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+			.special-price-ad-inner-right{
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+		}
+		@media screen and (max-width:650px) and (min-width:240px) {
+			.gerenric_slider:not(.slick-initialized) > div,
+			.gerenric_slider_mostviewed:not(.slick-initialized) > div {
+				flex: 0 0 calc(33.333% - 8px);
+				max-width: calc(33.333% - 8px);
+			}
+		}
+		@media screen and (max-width:480px) and (min-width:240px) {
+			.gerenric_slider:not(.slick-initialized) > div,
+			.gerenric_slider_mostviewed:not(.slick-initialized) > div {
+				flex: 0 0 calc(50% - 6px);
+				max-width: calc(50% - 6px);
 			}
 		}
 	</style>
@@ -592,19 +698,19 @@ include("includes/message.php");
 		<?php include("includes/navigation.php"); ?>
 		<!--HEADER_SECTION_END-->
 		<?php
-		$Query_special = "SELECT usp.*, pro.pro_type, pro.pro_udx_seo_epag_title, pro.pro_description_long, pro.pg_mime_source_url, pro.pbp_price_amount, pro.pbp_price_without_tax, pro.pbp_tax, pro.manf_id, m.manf_name, m.manf_name_params FROM user_special_price AS usp INNER JOIN vu_products AS pro ON pro.supplier_id = usp.supplier_id LEFT OUTER JOIN manufacture AS m ON m.manf_id = pro.manf_id WHERE usp.usp_featured = '1' AND usp.supplier_id != '".$supplier_id."' ORDER BY  RAND() LIMIT 0,1";
+		$Query_special = "SELECT usp.*, pro.pro_type, pro.pro_url, pro.pro_udx_seo_epag_title, pro.pro_description_long, (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) AS pg_mime_source_url, (SELECT pg_logo.pg_mime_source_url FROM products_gallery AS pg_logo WHERE pg_logo.supplier_id = pro.supplier_id AND pg_logo.pg_mime_purpose = 'logo' LIMIT 1) AS manf_file, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_tax, pro.manf_id, m.manf_name, m.manf_name_params FROM (SELECT * FROM user_special_price WHERE usp_featured = '1' AND supplier_id != '" . $supplier_id . "' ORDER BY RAND() LIMIT 0,1) AS usp INNER JOIN products AS pro ON pro.supplier_id = usp.supplier_id AND pro.pro_status = '1' LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' LEFT OUTER JOIN manufacture AS m ON m.manf_id = pro.manf_id";
 		$rs_special = mysqli_query($GLOBALS['conn'], $Query_special);
-		if(mysqli_num_rows($rs_special) > 0){
+		if($rs_special && mysqli_num_rows($rs_special) > 0){
 			$rws = mysqli_fetch_object($rs_special);
-			$manf_file = returnName("pg_mime_source_url", "products_gallery", "supplier_id", $rws->supplier_id, " AND pg_mime_purpose = 'logo'");
+			$manf_file = $rws->manf_file;
 		?>
 		<div class="special-price-ad">
-			<a href="<?php print(product_detail_url($rws->supplier_id)); ?>">
+			<a href="<?php print(product_detail_url($rws->supplier_id, 0, $rws->pro_url)); ?>">
 				<div class="special-price-ad-inner">
 
 					<div class="special-price-ad-inner-left">
-						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand" alt="brand">
-						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product" alt="product">
+						<img src="<?php print(get_image_link(75,$manf_file));?>" class="brand" alt="brand" decoding="async">
+						<img src="<?php print(get_image_link(75,$rws->pg_mime_source_url));?>" class="product" alt="product" decoding="async">
 					</div>
 					<div class="special-price-ad-inner-text">
 						<span class="small"><?php print(limit_text($rws->pro_udx_seo_epag_title, 70));?></span>
@@ -636,8 +742,6 @@ include("includes/message.php");
 					<ul>
 						<?php
 						if ($pro_type > 0) {
-							$cat_title_heading = returnName("cat_title_de AS cat_title", "category", "group_id", 20);
-							$cat_params_heading = returnName("cat_params_de AS cat_params", "category", "group_id", 20);
 						?>
 							<li><a href="kategorie/<?php print($cat_params_heading); ?>" title="<?php print($cat_title_heading); ?>"> <?php print($cat_title_heading); ?> </a></li>
 						<?php } else { ?>
@@ -666,13 +770,10 @@ include("includes/message.php");
 										<div class="thum_images">
 											<div class="simpleLens-thumbnails-container">
 												<?php
-												//$Query = "SELECT pg_mime_source_url FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $_REQUEST['supplier_id'] . "' AND pg_mime_purpose != 'data_sheet' AND pg_mime_purpose != 'others' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
-												$Query = "SELECT pg_mime_source_url, pg_mime_description FROM `products_gallery` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' AND pg_mime_type = 'image/jpeg' ORDER BY CASE WHEN pg_mime_purpose = 'normal' THEN 1 ELSE 2 END";
-												$rs = mysqli_query($GLOBALS['conn'], $Query);
-												if (mysqli_num_rows($rs) > 0) {
-													while ($row = mysqli_fetch_object($rs)) {
+												if (!empty($gallery_images)) {
+													foreach ($gallery_images as $row) {
 												?>
-														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(2000, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(2000, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>"> <img src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pg_mime_description); ?>"> </a>
+														<a href="#" role="button" onclick="return false;" class="simpleLens-thumbnail-wrapper" data-lens-image="<?php print(get_image_link(2000, $row->pg_mime_source_url)); ?>" data-big-image="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" title="<?php print($row->pg_mime_description); ?>"> <img src="<?php print(get_image_link(75, $row->pg_mime_source_url)); ?>" width="80" height="80" decoding="async" alt="<?php print($row->pg_mime_description); ?>"> </a>
 												<?php
 													}
 												}
@@ -681,7 +782,7 @@ include("includes/message.php");
 										</div>
 										<div class="large_image">
 											<div class="simpleLens-container">
-												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(2000, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(2000, $pg_mime_source_url)); ?>" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
+												<div class="simpleLens-big-image-container"> <a href="#" role="button" onclick="return false;" class="simpleLens-lens-image" data-lens-image="<?php print(get_image_link(2000, $pg_mime_source_url)); ?>" title="<?php print($pg_mime_description); ?>"> <img src="<?php print(get_image_link(427, $pg_mime_source_url)); ?>" fetchpriority="high" decoding="async" class="simpleLens-big-image" alt="<?php print($pg_mime_description); ?>"> </a> </div>
 											</div>
 										</div>
 										<div class="clearfix"></div>
@@ -695,24 +796,43 @@ include("includes/message.php");
 								<?php
 								$count = 0;
 								if ($pro_udx_seo_epag_id > 0) {
-									$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, pg.pg_mime_source_url, pro_url FROM products_feature AS pf LEFT OUTER JOIN products AS pro ON pro.supplier_id = pf.supplier_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pf.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
+									$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe', 'Schreibfarbe des Stempels', 'Farbe des Griffes', 'Farbe der Sitzfläche', 'Farbe des Fußkreuzes', 'Farbe des Korpus', 'Farbe des Gestells', 'Farbe der Front', 'Farbe des Deckels');
+									$is_image_feature = in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check);
+									$pg_feature_select = $is_image_feature ? "(SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pf.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) AS pg_mime_source_url," : "'' AS pg_mime_source_url,";
+									$Query = "SELECT pf.*, pro.pro_udx_seo_epag_title_params_de, pro.pro_ean, " . $pg_feature_select . " pro.pro_url FROM products_feature AS pf INNER JOIN products AS pro ON pro.supplier_id = pf.supplier_id WHERE pro.pro_status = '1' AND pf.pro_udx_seo_epag_id = '" . $pro_udx_seo_epag_id . "' AND pf.pf_fname = '" . $pro_udx_seo_selection_feature . "'";
 									//print($Query);
 									$rs = mysqli_query($GLOBALS['conn'], $Query);
-									$count = mysqli_num_rows($rs);
+									$count = $rs ? mysqli_num_rows($rs) : 0;
 									if ($count > 1) {
-										if (mysqli_num_rows($rs) > 0) {
-											$pro_udx_seo_selection_feature_check = array('Farbe', 'Farbe der Rückenlehne', 'Schreibfarbe', 'Schreibfarbe des Stempels', 'Farbe des Griffes', 'Farbe der Sitzfläche', 'Farbe des Fußkreuzes', 'Farbe des Korpus', 'Farbe des Gestells', 'Farbe der Front', 'Farbe des Deckels');
+										$feature_rows = array();
+										$active_feature_value = "";
+										while ($row_f = mysqli_fetch_object($rs)) {
+											$feature_rows[] = $row_f;
+											if ($row_f->supplier_id == $supplier_id) {
+												$active_feature_value = $row_f->pf_fvalue;
+											}
+										}
+										if ($active_feature_value === "" && !empty($feature_rows)) {
+											$active_feature_value = $feature_rows[0]->pf_fvalue;
+										}
 								?>
 											<div class="pd_detail_shirt">
-												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print(returnName("pf_fvalue", "products_feature", "supplier_id", $supplier_id, "AND pf_fname = '" . $pro_udx_seo_selection_feature . "'")); ?></span> </h2>
+												<h2><?php print($pro_udx_seo_selection_feature); ?>: <span id="color_title"><?php print($active_feature_value); ?></span> </h2>
 												<ul>
-													<?php while ($row = mysqli_fetch_object($rs)) { ?>
-														<li>
+													<?php foreach ($feature_rows as $f_idx => $row) {
+														$is_hidden_feature = ($f_idx >= 14);
+													?>
+														<li style="display: <?php print($is_hidden_feature ? 'none' : 'inline-block'); ?>;">
 															<input type="radio" class="color" id="color_<?php print($row->supplier_id); ?>" name="color_radio" value="<?php print($row->supplier_id); ?>" <?php print(($row->supplier_id == $supplier_id) ? 'checked' : ''); ?>>
 															<label for="color_<?php print($row->supplier_id); ?>">
-																<span style="<?php print(((in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) ? 'height: 90px; width: 90px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->pro_ean); ?>" pro_udx_seo_epag_title_params_de="<?php print($row->pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($row->pro_url); ?>" data-title="<?php print($row->pf_fvalue); ?>">
-																	<?php if (in_array($pro_udx_seo_selection_feature, $pro_udx_seo_selection_feature_check)) { ?>
-																		<img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
+																<span style="<?php print(($is_image_feature ? 'height: 90px; width: 90px;' : 'height: 40px;min-width: 50px;border-radius: 5px;')); ?>" class="color_tab" id="color_tab_<?php print($row->supplier_id); ?>" data-id="<?php print($row->pro_ean); ?>" pro_udx_seo_epag_title_params_de="<?php print($row->pro_udx_seo_epag_title_params_de); ?>" pro_url="<?php print($row->pro_url); ?>" data-title="<?php print($row->pf_fvalue); ?>">
+																	<?php if ($is_image_feature) {
+																		$swatch_img_url = get_image_link(75, $row->pg_mime_source_url);
+																		if ($is_hidden_feature) { ?>
+																			<img class="js_lazy_feature_img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="<?php print($swatch_img_url); ?>" width="80" height="80" decoding="async" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
+																		<?php } else { ?>
+																			<img src="<?php print($swatch_img_url); ?>" width="80" height="80" loading="lazy" decoding="async" title="<?php print($row->pf_fvalue); ?>" alt="<?php print($row->pf_fvalue); ?>">
+																		<?php } ?>
 																	<?php } else { ?>
 																		<label for="" title="<?php print($row->pf_fvalue.' '.$row->pf_funit); ?>"><?php print($row->pf_fvalue.' '.$row->pf_funit); ?></label>
 																	<?php } ?>
@@ -722,10 +842,11 @@ include("includes/message.php");
 													<?php } ?>
 												</ul>
 											</div>
+											<?php if ($count > 14) { ?>
 											<div class="btn_show feature-show-more">Mehr Produktdetails</div>
 											<div class="btn_show feature-show-less" style="display: none;">Weniger Produktdetails</div>
+											<?php } ?>
 								<?php
-										}
 									}
 								} ?>
 								<h4> <?php print($pro_description_short); ?> </h4>
@@ -881,10 +1002,8 @@ include("includes/message.php");
 								<?php } ?>
 								<div class="sticky">
 									<?php
-									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM products_bundle_price WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound DESC LIMIT 1";
-									$rs = mysqli_query($GLOBALS['conn'], $Query);
-									if (mysqli_num_rows($rs) > 0) {
-										$row = mysqli_fetch_object($rs);
+									if (!empty($bundle_prices)) {
+										$row = end($bundle_prices);
 										if (!empty($special_price)) {
 									?>
 											<div class="main_staffel_price_discount price_without_tex"> <del><?php print(price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax))); ?> €</del> <span>- <?php print($special_price['usp_discounted_value'] . (($special_price['usp_price_type'] > 0) ? '€' : '%')); ?></span></div>
@@ -899,11 +1018,7 @@ include("includes/message.php");
 										<div class="product_vat txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>exkl. MwSt + <span class="versand_trigger <?php print($versand_txt_color); ?>"><?php print($versand_txt); ?></span></div>
 										<div class="product_vat txt_align_right pbp_price_with_tex" <?php print($pbp_price_with_tex_display); ?>>inkl. MwSt + <span class="versand_trigger <?php print($versand_txt_color); ?>"><?php print($versand_txt); ?></span></div>
 										<?php
-									}
-									$Query = "SELECT pbp_lower_bound, (pbp_price_amount + (pbp_price_amount * pbp_tax)) AS pbp_price_amount,  pbp_price_amount AS pbp_price_without_tax, (pbp_special_price_amount + (pbp_special_price_amount * pbp_tax)) AS pbp_special_price_amount, pbp_special_price_amount AS pbp_special_price_without_tax, pbp_tax FROM `products_bundle_price` WHERE pro_id = '" . $pro_id . "' AND supplier_id = '" . $params_supplier_id . "' ORDER BY pbp_lower_bound ASC";
-									$rs = mysqli_query($GLOBALS['conn'], $Query);
-									if (mysqli_num_rows($rs) > 0) {
-										while ($row = mysqli_fetch_object($rs)) {
+										foreach ($bundle_prices as $row) {
 											if (!empty($special_price)) {
 										?>
 												<div class="piece_prise txt_align_right price_without_tex" <?php print($price_without_tex_display); ?>>Ab <?php print($row->pbp_lower_bound); ?> Stück <?php print("<del class='orignal_price'>" . price_format(((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax)) . "€</del> <span class='pd_prise_discount'>" . price_format(discounted_price($special_price['usp_price_type'], ((config_site_special_price > 0 && $row->pbp_special_price_without_tax > 0) ? $row->pbp_special_price_without_tax : $row->pbp_price_without_tax), $special_price['usp_discounted_value'])) . "€  </span>"); ?> </div>
@@ -916,23 +1031,15 @@ include("includes/message.php");
 										}
 									}
 									$quantity_lenght = 0;
-									//$Query = "SELECT * FROM products_quantity WHERE supplier_id = '" . dbStr(trim($supplier_id)) . "'";
-									//print($Query);
-									//$rs = mysqli_query($GLOBALS['conn'], $Query);
 									$ci_qty_type = 0;
-									//if (mysqli_num_rows($rs) > 0) {
 									if($pro_type == 0) {
-										$getQuantity = array();
-										$getQuantity = getQuantity($supplier_id, $pro_custom_add);
-										/*$row = mysqli_fetch_object($rs);
-										$pq_quantity = $row->pq_quantity;
-										$pq_upcomming_quantity = $row->pq_upcomming_quantity;
-										$pq_physical_quantity = $row->pq_physical_quantity;
-										$pq_status = $row->pq_status;*/
-										$pq_quantity = $getQuantity['pq_quantity'];
-										$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
-										$pq_physical_quantity = $getQuantity['pq_physical_quantity'];
-										$pq_status = $getQuantity['pq_status'];
+										if (config_site_quantity_source > 0 && $pro_custom_add == 0) {
+											$getQuantity = getQuantity($supplier_id, $pro_custom_add);
+											$pq_quantity = $getQuantity['pq_quantity'];
+											$pq_upcomming_quantity = $getQuantity['pq_upcomming_quantity'];
+											$pq_physical_quantity = $getQuantity['pq_physical_quantity'];
+											$pq_status = $getQuantity['pq_status'];
+										}
 										if ($pq_status == 'true') {
 											$ci_qty_type = 1;
 										}
@@ -1044,7 +1151,7 @@ include("includes/message.php");
 									</style>
 									<div class="info_link_detailpage">
 										<?php if (!empty($pg_mime_source_url_pdf)) { ?>
-											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description); ?>"><i class="fa fa-info-circle"></i> <?php print($pg_mime_description); ?></a>
+											<a target="_blank" href="<?php print($pg_mime_source_url_pdf); ?>" title="<?php print($pg_mime_description_pdf); ?>"><i class="fa fa-info-circle"></i> <?php print($pg_mime_description_pdf); ?></a>
 										<?php }
 										if (!empty($pro_udx_manufacturer_address)) { ?>
 											<div class="manufacturer_detail">
@@ -1089,6 +1196,9 @@ include("includes/message.php");
 								box-sizing: border-box;
 								font-size: 16px;
 								line-height: 1.45;
+								min-width: 0;
+								overflow-wrap: break-word;
+								word-break: break-word;
 							}
 
 							/* Left side */
@@ -1181,11 +1291,13 @@ include("includes/message.php");
 								font-size: 16px;
 								line-height: 1.6;
 							}
-							.product_detail_container{margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;}
+							.product_detail_container{width: 100%; box-sizing: border-box; margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px;}
+							.product_detail_container > .product_col1{width: 100% !important; padding-right: 0 !important; min-width: 0; box-sizing: border-box;}
+							.product_details_description p, .product_details_contact p{overflow-wrap: break-word; word-break: break-word;}
 
 							/* Mobile */
 							@media (max-width: 767px) {
-								.product_detail_container{display: flex; flex-direction: column; gap: 15px;}
+								.product_detail_container{display: flex; flex-direction: column; gap: 15px; width: 100%;}
 								.product_details_heading {
 									font-size: 22px;
 								}
@@ -1269,42 +1381,72 @@ include("includes/message.php");
 							</div>
 						</div>
 					</div>
+					<?php
+					// Pre-fetch candidate products for all 3 "Ähnliche Produkte" sliders in a single fast query
+					$sim_cat_id_two = substr($cat_id_three, 0, 3);
+					$sim_cat_id_one = ($sim_cat_id_two == $cat_id_two && $cat_id_one > 0) ? $cat_id_one : returnName("parent_id", "category", "group_id", $sim_cat_id_two);
+					$sim_special_level_two = user_special_price("level_two", $sim_cat_id_two);
+					$sim_special_level_one = (!$sim_special_level_two) ? user_special_price("level_one", $sim_cat_id_one) : false;
+
+					$sim_slider_1 = array();
+					$sim_slider_2 = array();
+					$sim_slider_3 = array();
+
+					if ($cat_id_three > 0) {
+						$rs_sim_ids = mysqli_query($GLOBALS['conn'], "SELECT supplier_id FROM category_map IGNORE INDEX (cat_id) WHERE cat_id = '" . intval($cat_id_three) . "' AND supplier_id != '" . dbStr(trim($supplier_id)) . "'");
+						$sim_cand_ids = array();
+						if ($rs_sim_ids) {
+							while ($r_sid = mysqli_fetch_row($rs_sim_ids)) {
+								$sim_cand_ids[] = intval($r_sid[0]);
+							}
+						}
+						if (!empty($sim_cand_ids)) {
+							shuffle($sim_cand_ids);
+							$sim_pick_ids = array_slice($sim_cand_ids, 0, 48);
+							$Query_sim = "SELECT pro.pro_id, pro.supplier_id, pro.pro_url, pro.pro_udx_seo_internetbezeichung, pro.pro_udx_seo_epag_title, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, (pbp.pbp_special_price_amount + (pbp.pbp_special_price_amount * pbp.pbp_tax)) AS pbp_special_price_amount, pbp.pbp_special_price_amount AS pbp_special_price_without_tax, pbp.pbp_tax, (SELECT pg.pg_mime_source_url FROM products_gallery AS pg WHERE pg.supplier_id = pro.supplier_id AND pg.pg_mime_purpose = 'normal' ORDER BY pg.pg_mime_order ASC LIMIT 1) AS pg_mime_source_url FROM products AS pro INNER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' WHERE pro.pro_status = '1' AND pro.supplier_id IN (" . implode(',', $sim_pick_ids) . ") LIMIT 36";
+							$rs_sim = mysqli_query($GLOBALS['conn'], $Query_sim);
+							$sim_all_rows = array();
+							if ($rs_sim) {
+								while ($row_s = mysqli_fetch_object($rs_sim)) {
+									$sim_all_rows[] = $row_s;
+								}
+							}
+							if (!empty($sim_all_rows)) {
+								shuffle($sim_all_rows);
+								$sim_slider_1 = array_slice($sim_all_rows, 0, 12);
+								$sim_slider_2 = count($sim_all_rows) > 12 ? array_slice($sim_all_rows, 12, 12) : $sim_slider_1;
+								$sim_slider_3 = count($sim_all_rows) > 24 ? array_slice($sim_all_rows, 24, 12) : $sim_slider_2;
+								if (count($sim_slider_2) < 12 && count($sim_all_rows) >= 12) {
+									$sim_slider_2 = array_slice($sim_all_rows, 0, 12);
+								}
+								if (count($sim_slider_3) < 12 && count($sim_all_rows) >= 12) {
+									$sim_slider_3 = array_slice(array_reverse($sim_all_rows), 0, 12);
+								}
+							}
+						}
+					}
+					$lazy_placeholder_gif = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+					?>
 					<div class="product_detail_section2">
 						<div class="gerenric_white_box gray_bg">
 							<div class="gerenric_product full_column">
 								<h2>Ähnliche Produkte</h2>
 								<div class="gerenric_slider">
 									<?php
-									$Query = "SELECT * FROM vu_category_map AS cm  WHERE cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
-									//print($Query);die();
-									$rs = mysqli_query($GLOBALS['conn'], $Query);
-									if (mysqli_num_rows($rs) > 0) {
-										while ($row = mysqli_fetch_object($rs)) {
-											//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-											$cat_id_two = substr($cat_id_three, 0, 3);
-											$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
-											/*$special_price = user_special_price("level_two", $cat_id_two);
-											if (!$special_price) {
-												$special_price = user_special_price("level_one", $cat_id_one);
-											}*/
-
+									if (!empty($sim_slider_1)) {
+										foreach ($sim_slider_1 as $row) {
 											$special_price = user_special_price("supplier_id", $row->supplier_id);
-
 											if (!$special_price) {
-												$special_price = user_special_price("level_two", $cat_id_two);
+												$special_price = $sim_special_level_two ? $sim_special_level_two : $sim_special_level_one;
 											}
-
-											if (!$special_price) {
-												$special_price = user_special_price("level_one", $cat_id_one);
-											}
-											//print_r($special_price);
-											//}
+											$sim_url = product_detail_url($row->supplier_id, 0, $row->pro_url);
+											$sim_img = get_image_link(160, $row->pg_mime_source_url);
 									?>
 											<div>
 												<div class="pd_card">
-													<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+													<div class="pd_image"><a href="<?php print($sim_url); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img class="js_lazy_slider_img" src="<?php print($lazy_placeholder_gif); ?>" data-src="<?php print($sim_img); ?>" width="160" height="160" decoding="async" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 													<div class="pd_detail">
-														<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
+														<h5><a href="<?php print($sim_url); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
 														<div class="pd_rating">
 															<ul>
 																<li>
@@ -1341,35 +1483,20 @@ include("includes/message.php");
 							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
-								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '" . $supplier_id . "' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
-								//print($Query);die();
-								$rs = mysqli_query($GLOBALS['conn'], $Query);
-								if (mysqli_num_rows($rs) > 0) {
-									while ($row = mysqli_fetch_object($rs)) {
-										//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-										$cat_id_two = substr($cat_id_three, 0, 3);
-										$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
-										/*$special_price = user_special_price("level_two", $cat_id_two);
-										if (!$special_price) {
-											$special_price = user_special_price("level_one", $cat_id_one);
-										}*/
+								if (!empty($sim_slider_2)) {
+									foreach ($sim_slider_2 as $row) {
 										$special_price = user_special_price("supplier_id", $row->supplier_id);
-
 										if (!$special_price) {
-											$special_price = user_special_price("level_two", $cat_id_two);
+											$special_price = $sim_special_level_two ? $sim_special_level_two : $sim_special_level_one;
 										}
-
-										if (!$special_price) {
-											$special_price = user_special_price("level_one", $cat_id_one);
-										}
-										//print_r($special_price);
-										//}
+										$sim_url = product_detail_url($row->supplier_id, 0, $row->pro_url);
+										$sim_img = get_image_link(160, $row->pg_mime_source_url);
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a href="<?php print($sim_url); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img class="js_lazy_slider_img" src="<?php print($lazy_placeholder_gif); ?>" data-src="<?php print($sim_img); ?>" width="160" height="160" decoding="async" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
+													<h5><a href="<?php print($sim_url); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -1405,31 +1532,20 @@ include("includes/message.php");
 							<h2>Ähnliche Produkte</h2>
 							<div class="gerenric_slider_mostviewed">
 								<?php
-								$Query = "SELECT * FROM vu_category_map AS cm WHERE cm.supplier_id != '" . $supplier_id . "' AND cm.cat_id = '" . $cat_id_three . "' ORDER BY  RAND() LIMIT 0,12";
-								//print($Query);die();
-								$rs = mysqli_query($GLOBALS['conn'], $Query);
-								if (mysqli_num_rows($rs) > 0) {
-									while ($row = mysqli_fetch_object($rs)) {
-										//if (isset($_SESSION["UID"]) && $_SESSION["UID"] > 0) {
-										$cat_id_two = substr($cat_id_three, 0, 3);
-										$cat_id_one = returnName("parent_id", "category", "group_id", $cat_id_two);
+								if (!empty($sim_slider_3)) {
+									foreach ($sim_slider_3 as $row) {
 										$special_price = user_special_price("supplier_id", $row->supplier_id);
-
 										if (!$special_price) {
-											$special_price = user_special_price("level_two", $cat_id_two);
+											$special_price = $sim_special_level_two ? $sim_special_level_two : $sim_special_level_one;
 										}
-
-										if (!$special_price) {
-											$special_price = user_special_price("level_one", $cat_id_one);
-										}
-										//print_r($special_price);
-										//}
+										$sim_url = product_detail_url($row->supplier_id, 0, $row->pro_url);
+										$sim_img = get_image_link(160, $row->pg_mime_source_url);
 								?>
 										<div>
 											<div class="pd_card txt_align_left">
-												<div class="pd_image"><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img loading="lazy" src="<?php print(get_image_link(427, $row->pg_mime_source_url)); ?>" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
+												<div class="pd_image"><a href="<?php print($sim_url); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"><img class="js_lazy_slider_img" src="<?php print($lazy_placeholder_gif); ?>" data-src="<?php print($sim_img); ?>" width="160" height="160" decoding="async" alt="<?php print($row->pro_udx_seo_internetbezeichung); ?>"></a></div>
 												<div class="pd_detail">
-													<h5><a href="<?php print(product_detail_url($row->supplier_id)); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
+													<h5><a href="<?php print($sim_url); ?>" title="<?php print($row->pro_udx_seo_internetbezeichung); ?>"> <?php print($row->pro_udx_seo_epag_title); ?> </a></h5>
 													<div class="pd_rating">
 														<ul>
 															<li>
@@ -1519,19 +1635,12 @@ include("includes/message.php");
 	</div>
 	<!--CREATE_LIST_POPUP_END-->
 </body>
-<link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
-<link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">
 <script defer type="text/javascript" src="js/jquery.simpleGallery.min.js"></script>
 <script defer type="text/javascript" src="js/jquery.simpleLens.min.js"></script>
 <script>
 	$(document).ready(function() {
-		$('#demo-1 .simpleLens-thumbnails-container img').simpleGallery({
-			loading_image: 'demo/images/loading.gif'
-		});
-
-		$('#demo-1 .simpleLens-big-image').simpleLens({
-			loading_image: 'demo/images/loading.gif'
-		});
+		$('#demo-1 .simpleLens-thumbnails-container img').simpleGallery();
+		$('#demo-1 .simpleLens-big-image').simpleLens();
 	});
 	$(window).on('resize', function() {
 		if (window.innerWidth <= 1024 && window.innerWidth >= 240) {
@@ -1557,72 +1666,71 @@ include("includes/message.php");
 		window.location.href = "1/" + pro_url;
 	});
 </script>
-<script src="js/slick.js"></script>
+<script src="js/slick.min.js"></script>
 <script type="text/javascript">
-	$(".gerenric_slider").slick({
-		slidesToShow: 6,
-		slidesToScroll: 1,
-		autoplay: false,
-		dots: false,
-		autoplaySpeed: 2000,
-		infinite: true,
-		responsive: [
+	(function() {
+		function hydrateSliderImages(sliderEl) {
+			$(sliderEl).find('img.js_lazy_slider_img[data-src]').each(function() {
+				var src = this.getAttribute('data-src');
+				if (src) {
+					this.setAttribute('src', src);
+					this.removeAttribute('data-src');
+				}
+			});
+		}
 
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 4,
+		function initSliderElement(el) {
+			var $el = $(el);
+			if ($el.hasClass('slick-initialized')) return;
+			hydrateSliderImages(el);
+			if ($el.hasClass('gerenric_slider')) {
+				$el.slick({
+					slidesToShow: 6,
 					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 650,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1
-				}
+					autoplay: false,
+					dots: false,
+					autoplaySpeed: 2000,
+					infinite: true,
+					responsive: [
+						{ breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 1 } },
+						{ breakpoint: 650, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+						{ breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 1 } }
+					]
+				});
+			} else if ($el.hasClass('gerenric_slider_mostviewed')) {
+				$el.slick({
+					slidesToShow: 10,
+					slidesToScroll: 1,
+					autoplay: true,
+					dots: false,
+					autoplaySpeed: 2000,
+					infinite: true,
+					responsive: [
+						{ breakpoint: 1024, settings: { slidesToShow: 4, slidesToScroll: 1 } },
+						{ breakpoint: 650, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+						{ breakpoint: 480, settings: { slidesToShow: 2, slidesToScroll: 1 } }
+					]
+				});
 			}
-		]
-	});
-	$(".gerenric_slider_mostviewed").slick({
-		slidesToShow: 10,
-		slidesToScroll: 1,
-		autoplay: true,
-		dots: false,
-		autoplaySpeed: 2000,
-		infinite: true,
-		responsive: [
+		}
 
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 4,
-					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 650,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1
-				}
+		$(function() {
+			var sliders = document.querySelectorAll('.gerenric_slider, .gerenric_slider_mostviewed');
+			if ('IntersectionObserver' in window) {
+				var observer = new IntersectionObserver(function(entries, obs) {
+					entries.forEach(function(entry) {
+						if (entry.isIntersecting) {
+							initSliderElement(entry.target);
+							obs.unobserve(entry.target);
+						}
+					});
+				}, { rootMargin: '250px 0px' });
+				sliders.forEach(function(s) { observer.observe(s); });
+			} else {
+				sliders.forEach(function(s) { initSliderElement(s); });
 			}
-		]
-	});
+		});
+	})();
 </script>
 <?php include("includes/bottom_js.php"); ?>
 <script>
@@ -1638,14 +1746,16 @@ include("includes/message.php");
 	$(function() {
 		let show_record = 14;
 		$(".product_col1 .pd_detail_shirt ul li").slice(0, show_record).show();
-		let product_col1 = $(".product_col1 .pd_detail_shirt ul li:hidden").length;
-		if (product_col1 == 0) {
+		$(".product_col1 .pd_detail_shirt ul li").slice(show_record).hide();
+		if ($(".product_col1 .pd_detail_shirt ul li:hidden").length == 0) {
 			$(".feature-show-more").hide();
 		}
-		$(".product_col1 .pd_detail_shirt ul li").slice(show_record).hide();
 		$("body").on('click touchstart', '.feature-show-more', function(e) {
 			e.preventDefault();
-
+			$(".product_col1 .pd_detail_shirt ul li img.js_lazy_feature_img[data-src]").each(function() {
+				this.setAttribute('src', this.getAttribute('data-src'));
+				this.removeAttribute('data-src');
+			});
 			//$(".product_col1 .pd_detail_shirt ul li:hidden").slice(0, show_record).slideDown("slow");
 			$(".product_col1 .pd_detail_shirt ul li:hidden").slideDown("slow");
 			if ($(".product_col1 .pd_detail_shirt ul li:hidden").length == 0) {
