@@ -17,8 +17,8 @@ header("X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, ma
 <link rel="preload" href="css/fonts/sans-serif-fonts/roboto/Roboto-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="css/fonts/sans-serif-fonts/roboto/Roboto-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>">
-<link rel="stylesheet" href="css/styles.min.css?dt=06112026">
-<link rel="stylesheet" href="css/responsive.min.css?dt=10112026">
+<link rel="stylesheet" href="css/styles.min.css?dt=12112026">
+<link rel="stylesheet" href="css/responsive.min.css?dt=12112026">
 <link rel="stylesheet" href="css/slick-theme.min.css">
 <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 <?php include("includes/btn_color.php"); ?>

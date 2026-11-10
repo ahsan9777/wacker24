@@ -2277,7 +2277,7 @@ body.body-white {
 #navigation_section .nav_overlay {
     width: calc(100% - 300px);
     height: 100%;
-    z-index: 9999;
+    z-index: 100009;
     content: '';
     background-color: rgba(0, 0, 0, .5);
     position: fixed;
@@ -2288,7 +2288,7 @@ body.body-white {
 #navigation_section .nav_submenu {
     width: 300px;
     display: none;
-    z-index: 9999;
+    z-index: 100010;
     position: fixed;
     left: 0;
     top: 0;
@@ -2335,7 +2335,11 @@ body.body-white {
 
 .submenu_close {
     cursor: pointer;
-    font-size: 18px
+    font-size: 18px;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center
 }
 
 .header_nav_2 {
