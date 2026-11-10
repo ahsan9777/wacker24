@@ -1,0 +1,91 @@
+<div id="scroll_top" <?php print($background_color_two); ?>>Zurück zum Seitenanfang</div>
+<footer id="footer_section" <?php print($background_color_one); ?>>
+    <div class="page_width">
+        <div class="footer_top">
+            <?php
+            $Query1 = "SELECT footer_id, footer_title_de AS footer_title FROM footer WHERE footer_status = '1' ORDER BY footer_orderby ASC";
+            $rs1 = mysqli_query($GLOBALS['conn'], $Query1);
+            if (mysqli_num_rows($rs1) > 0) {
+                while ($row1 = mysqli_fetch_object($rs1)) {
+            ?>
+                    <div class="footer-col">
+                        <h2><?php print($row1->footer_title); ?></h2>
+                        <ul>
+                            <?php
+                            $Query2 = "SELECT cnt_id, cnt_slug, cnt_title_de AS cnt_title FROM contents WHERE cnt_status = '1' AND footer_id = '" . $row1->footer_id . "' ORDER BY cnt_orderby ASC";
+                            $rs2 = mysqli_query($GLOBALS['conn'], $Query2);
+                            if (mysqli_num_rows($rs2) > 0) {
+                                while ($row2 = mysqli_fetch_object($rs2)) {
+                            ?>
+                                    <li><a title="<?php print($row2->cnt_title); ?>" href="<?php print($row2->cnt_slug); ?>"><?php print($row2->cnt_title); ?></a></li>
+                            <?php
+
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </div>
+            <?php
+                }
+            }
+            ?>
+        </div>
+        <style>
+            .payment_card_img{width: 60px;}
+            .payment_card_img img{width: 100% !important;}
+        </style>
+        <div class="footer_bottom">
+            <div class="footer_btm_left">
+                <div class="social_medial">
+                    <ul>
+                        <?php
+                        $Query = "SELECT pm.pm_id, pm_title_de AS pm_title, pm.pm_image FROM payment_method AS pm WHERE pm.pm_status = '1' ORDER BY pm.pm_orderby ASC";
+                        $rs = mysqli_query($GLOBALS['conn'], $Query);
+                        if (mysqli_num_rows($rs) > 0) {
+                            while ($row = mysqli_fetch_object($rs)) {
+                                $pm_image_href = "files/no_img_1.jpg";
+                                if (!empty($row->pm_image)) {
+                                    $pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
+                                }
+                        ?>
+                                <li>
+                                    <div class="payment_card_img"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
+                                </li>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer_btm_right">
+                <div class="social_medial">
+                    <ul>
+                        <li>
+                            <div class="brand_btn" style="margin-right: 20px;"><a  tabindex="-1" href="vertrag-widerrufen" title="Vertrag widerrufen">
+									<div class="gerenric_btn">Vertrag widerrufen</div>
+								</a></div>
+                        </li>
+                        <?php
+                        $Query = "SELECT * FROM social_links WHERE sl_status = '1' ORDER BY sl_orderby ASC";
+                        $rs = mysqli_query($GLOBALS['conn'], $Query);
+                        if (mysqli_num_rows($rs) > 0) {
+                            while ($row = mysqli_fetch_object($rs)) {
+                                $image_path = "files/no_img_1.jpg";
+                                if (!empty($row->sl_icon)) {
+                                    $image_path = $GLOBALS['siteURL'] . "files/social_media_icons/" . $row->sl_icon;
+                                }
+                        ?>
+                                <li><a target="_blank" title="<?php print($row->sl_title); ?>" href="<?php print($row->sl_url); ?>" aria-label="<?php print($row->sl_title); ?>"><img src="<?php print($image_path); ?>" alt=""></a></li>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer_logo"><a title="logo" href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>
+    </div>
+</footer>

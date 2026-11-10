@@ -181,3 +181,48 @@ Before any project files were modified, full backups of all original files were 
   - `Console errors: []` (zero JavaScript console errors).
   - Mobile `Filter` drawer opens cleanly with sticky `"Kategorie X"` header at the top and zero red overlay.
   - Both Grid View (2-column cards) and List View on `products.php` render cleanly without text or button clipping.
+
+
+---
+
+## Follow-Up Fix #3 — Site Performance Optimization (`wacker-buerocenter.de`)
+
+### 1. Audit Summary (Before vs. After)
+
+| Category | Check | Initial Status | Verified Status (`http://localhost/wacker24/`) |
+| :--- | :--- | :--- | :--- |
+| **Performance** | **Page Size** (`total-byte-weight` `< 3.0 MB`) | **FAIL** (`15.6 MB`) | **PASS** (`0.60 MB` / `612.33 KB`, `score: 1.00`) |
+| **Performance** | **Page Requests** (`network-requests` `< 30`) | **FAIL** (`127` requests) | **PASS** (`27` requests) |
+| **Performance** | **Page Speed** (`interactive` / TTI `<= 5.3 s`) | **FAIL** (`16.3 s`, Server TTFB `24.8 s`) | **PASS** (`5.06 s`, Server TTFB `0.70 s – 0.80 s`, `CLS: 0.0013`) |
+| **Performance** | **Browser Caching** (`uses-long-cache-ttl`) | PASS | **PASS** (`1 year` cache headers in `.htaccess`) |
+| **Performance** | **Minimal Page Redirects** (`redirects`) | PASS | **PASS** (`score: 1.00`) |
+| **Performance** | **Image Size** (`image-delivery-insight` / `image-size-responsive`) | **FAIL** | **PASS** (`score: 1.00` on `image-delivery-insight`, `image-size-responsive`, `image-aspect-ratio`, `unsized-images`) |
+| **Performance** | **Minified CSS / JS** (`unminified-css` / `unminified-javascript`) | PASS | **PASS** (`score: 1.00`) |
+| **SEO** | All SEO Checks (`30/30`) | PASS | **PASS** (`100/100`) |
+| **Mobile** | Viewport, Legible Font Sizes, Tap Targets (`30/30`) | PASS | **PASS** (`30/30`) |
+| **Security** | HTTPS & Secure JS Libraries (`10/10`) | PASS | **PASS** (`100/100` Best Practices) |
+
+---
+
+### 2. Root Causes & Fixes Applied
+
+1. **Database Query & Server TTFB Optimization (`47.86 s` local / `24.83 s` live -> `0.70 s`):**
+   - **Category Cards (`index.php`):** Rewrote the 7 subcategory queries in `hm_section_1` to select 4 random active subcategories from `category` (`WHERE c_inner.parent_id = $row1->group_id AND c_inner.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm2 WHERE cm2.cat_id_level_two = c_inner.group_id) ORDER BY RAND() LIMIT 0, 4`) and fetch 1 `pg_mime_source_url` per subcategory instead of joining `category_map`, `category`, and `products_gallery` across tens of thousands of rows before `GROUP BY c.group_id`. Reduced all 7 queries combined from **27.80 s to 0.068 s**.
+   - **Bestsellers (`index.php`):** Pre-aggregated `order_items` (`GROUP BY supplier_id ORDER BY sales_count DESC LIMIT 0, 12`) in a derived table before joining `products` and `products_bundle_price`, reducing query time from **11.11 s to 0.023 s**.
+   - **Schulranzen, Beliebte Produkte & Baumarkt Sliders (`index.php`):** Selected random product rows from `category_map` in a derived table first before joining `products`, `products_bundle_price`, and `products_gallery`, avoiding full-view evaluation of `vu_category_map` (`8.7 s -> 0.4 s`).
+   - **URL & Stock Caching (`lib/functions.php`):** Added static memory caching and an optional `$pro_url` parameter to `product_detail_url()` (eliminating ~88 redundant `SELECT ... FROM products` queries per homepage render) and added static + session caching with a 3-second timeout to `getStockData()`.
+   - **Output Compression (`includes/php_includes_top.php`):** Enabled `ob_start("ob_gzhandler")`, compressing the HTML transfer size from `~176 KB` to `22.2 KB`.
+
+2. **Image Sizing & Responsive WebP Delivery (`lib/functions.php`, `includes/banner.php`, `includes/navigation.php`, `includes/footer.php`, `index.php`, `images/favicon.ico`):**
+   - Added `get_optimized_image($path, $max_width, $quality)` and `get_logo_attr($path, $target_width)` in `lib/functions.php` using PHP GD (`imagewebp`) to generate and cache resized WebP assets (`opt_{width}w_{name}.webp`).
+   - Updated `get_image_link($replace, $link, $webp_cache, $quality)` in `lib/functions.php` to optimize local gallery images (`files/products_gallery/...`) to WebP and cache above-the-fold `75x75` category/sale thumbnails as compressed WebP (`files/thumb_cache/`).
+   - Converted hero banners (`includes/banner.php`) to responsive `640w`, `800w`, and `1280w` WebP `srcset` (`4–126 KB` instead of `1.3–1.88 MB` PNGs) and pre-generated WebP variants in `files/banners/`.
+   - Switched homepage product slider thumbnails in `index.php` from `get_image_link(427, ...)` (`427x427`) to `get_image_link(160, ...)` (`160x160`).
+   - Optimized `images/favicon.ico` from `101 KB` down to `441 bytes`.
+
+3. **Page Requests & Lazy Loading (`127` requests -> `27` requests):**
+   - Deferred slides `2..N` in `includes/banner.php` (`class="lazy_banner_img" data-src="..."`) until `.banner_slider` transitions (`beforeChange`).
+   - Kept the first 2 category blocks (8 thumbnails) eager for above-the-fold rendering and deferred category blocks `3..8` (24 thumbnails), footer payment/social icons, and submenu images via `IntersectionObserver` (`class="js_lazy_img" data-src="..."` in `includes/bottom_js.php`).
+   - Deferred below-the-fold Slick sliders and their product/brand images (`class="js_lazy_slider_img" data-src="..."`) in `index.php` using `IntersectionObserver` with pre-Slick CSS flex layout rules.
+   - Removed broken `url('./ajax-loader.gif')` and unused `@font-face{font-family:slick}` from `css/slick-theme.min.css` and `css/slick-theme.css`, switched `js/slick.js` to `js/slick.min.js`, and trimmed `js/jquery-ui-1.13.3.min.js` from `255 KB` to `50.6 KB`.
+   - Added 1-year `Cache-Control`, `mod_expires`, `mod_deflate`, and static-extension rewrite exclusions in `.htaccess`.

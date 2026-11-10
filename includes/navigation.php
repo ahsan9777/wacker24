@@ -39,7 +39,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
             <li><a href="kontakt" title="Kontaktformular">Kontakt</a></li>
             <li>
                 <div class="header_language">
-                    <div class="language_select"><a href="#" role="button" onclick="return false;" title="DE"><img src="images/gm_icon.webp" alt="DE"> Germany</a></div>
+                    <div class="language_select"><a href="#" role="button" onclick="return false;" title="DE"><img src="images/gm_icon.webp" width="20" height="13" alt="DE"> Germany</a></div>
                     <!--<div class="language_select"><a href="javascript:void(0)"><img src="images/gm_icon.png" alt=""> Germany <i class="fa fa-caret-down" ></i></a></div>
                     <ul>
                         <li><a href="javascript:void(0)"><img src="images/en_icon.svg" alt=""> English</a></li>
@@ -51,7 +51,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
     </div>
     <div class="header_sticky">
         <div class="header_bottom" <?php print($background_color_two); ?>>
-            <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>" title="logo" aria-label="logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>
+            <div id="logo"><a href="<?php print($GLOBALS['siteURL']); ?>" title="logo" aria-label="logo"><img src="<?php print(get_optimized_image(config_site_logo, 260, 85)); ?>" <?php print(get_logo_attr(config_site_logo, 120)); ?> style="width: 100%; height: auto;" fetchpriority="high" alt="logo"></a></div>
             <div class="header_location location_trigger"><i class="fa fa-map-marker" ></i> <span> <?php print((isset($_SESSION['ort']) && !empty($_SESSION['ort']))? $_SESSION['ort'] : 'Versand Germany'); ?> </span></div>
             <form class="header_search" name="frm_search" id="frm_search" method="GET" action="search_result.php" role="form" enctype="multipart/form-data">
                 <div class="header_select">
@@ -65,7 +65,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 <button class="search_icon" title="search button"></button>
             </form>
             <a class="header_tint_toner_logo" href="tinte-toner">
-                <div class="tint_toner_logo"><img src="images/tint_toner_logo.png" alt=""></div>
+                <div class="tint_toner_logo"><img src="<?php print(get_optimized_image("images/tint_toner_logo.png", 150, 82)); ?>" width="75" height="37" style="width: auto; height: auto; max-width: 100%;" alt=""></div>
                 <div class="tint_toner_txt">Suche<br>Tinte / Toner</div>
             </a>
             <div class="header_account">
@@ -145,7 +145,7 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                 <li><a title="Angebote & Aktionen" href="angebote-aktionen" class="nav_sale">Angebote & Aktionen</a></li>
             </ul>
             <div class="nav_submenu">
-                <div class="nav_submenu_logo"><a title="logo" href="index.php"><img src="images/logo.png" alt="logo"></a>
+                <div class="nav_submenu_logo"><a title="logo" href="index.php"><img class="js_lazy_img" data-src="<?php print(get_optimized_image(config_site_logo, 260, 85)); ?>" <?php print(get_logo_attr(config_site_logo, 150)); ?> style="width: 150px; height: auto;" alt="logo"></a>
                     <div class="submenu_close"><i class="fa fa-close"></i> </div>
                 </div>
                 <ul>
@@ -231,10 +231,11 @@ if (isset($_SESSION["utype_id"]) && $_SESSION['utype_id'] == 4) {
                                     $rs4 = mysqli_query($GLOBALS['conn'], $Query4);
                                     if (mysqli_num_rows($rs4)) {
                                         while ($row4 = mysqli_fetch_object($rs4)) {
+                                            $sub_img = get_optimized_image("files/gallery_images/special_category/" . $row4->scat_id . "/" . $row4->gimg_file, 300, 80);
                                         ?>
                                             <div class="sub_menu_col">
                                                 <a class="sub_menu_div" title="<?php print($row4->gimg_title); ?>" href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : '#'); ?>">
-                                                    <div class="sub_menu_image"><img src="<?php print($GLOBALS['siteURL'] . "files/gallery_images/special_category/" . $row4->scat_id . "/" . $row4->gimg_file); ?>" alt="<?php print($row4->gimg_title); ?>"></div>
+                                                    <div class="sub_menu_image"><img class="js_lazy_img" data-src="<?php print($sub_img); ?>" alt="<?php print($row4->gimg_title); ?>"></div>
                                                     <div class="sub_menu_title"><a title="<?php print($row4->gimg_title); ?>" href="<?php print(!empty($row4->gimg_link) ? $GLOBALS['siteURL'].$row4->gimg_link : '#'); ?>"><?php print($row4->gimg_title); ?></a></div>
                                                 </a>
                                             </div>

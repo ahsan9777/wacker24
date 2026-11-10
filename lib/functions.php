@@ -3075,11 +3075,47 @@ function get_font_link($font, $path = "")
 	return $get_font_link;
 }
 
-function get_image_link($replace, $link)
+function get_image_link($replace, $link, $webp_cache = false, $quality = 75)
 {
 	$get_image_link = $GLOBALS['siteURL'] . "files/no_img_1.jpg";
 	if (!empty($link)) {
-		$get_image_link = str_replace("/2000/", "/" . $replace . "/", $link);
+		if (strpos($link, "/2000/") !== false) {
+			$get_image_link = str_replace("/2000/", "/" . $replace . "/", $link);
+			if ($webp_cache && function_exists('imagewebp')) {
+				$root_dir = str_replace('\\', '/', dirname(__DIR__));
+				$cache_dir = $root_dir . '/files/thumb_cache';
+				if (!is_dir($cache_dir)) {
+					@mkdir($cache_dir, 0775, true);
+				}
+				$hash = md5($get_image_link . '_' . $replace . '_' . $quality);
+				$opt_rel = 'files/thumb_cache/opt_' . (int)$replace . 'w_' . $hash . '.webp';
+				$opt_abs = $root_dir . '/' . $opt_rel;
+				if (file_exists($opt_abs) && filesize($opt_abs) > 0) {
+					return $GLOBALS['siteURL'] . $opt_rel;
+				}
+				$ctx = stream_context_create([
+					'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
+					'http' => ['timeout' => 3]
+				]);
+				$raw = @file_get_contents($get_image_link, false, $ctx);
+				if ($raw !== false && function_exists('imagecreatefromstring')) {
+					$im = @imagecreatefromstring($raw);
+					if ($im !== false) {
+						if (function_exists('imagepalettetotruecolor') && !imageistruecolor($im)) {
+							@imagepalettetotruecolor($im);
+						}
+						if (@imagewebp($im, $opt_abs, $quality) && file_exists($opt_abs) && filesize($opt_abs) > 0) {
+							imagedestroy($im);
+							return $GLOBALS['siteURL'] . $opt_rel;
+						}
+						imagedestroy($im);
+					}
+				}
+			}
+		} else {
+			$max_w = max(75, (int)$replace);
+			$get_image_link = get_optimized_image($link, $max_w, $quality);
+		}
 	}
 	return $get_image_link;
 }
@@ -3859,23 +3895,152 @@ function convertGermanChars($string)
 	return strtr($string, $map);
 }
 
-function product_detail_url($supplier_id, $ci_type = 0)
+function product_detail_url($supplier_id, $ci_type = 0, $pro_url = null)
 {
+	static $url_cache = array();
 	$product_detail_url = "javascript: void();";
-	$Query = "SELECT pro_id, supplier_id, pro_ean, pro_udx_seo_epag_title_params_de, pro_url FROM products WHERE supplier_id = '" . $supplier_id . "' ORDER BY pro_id ASC";
-	$rs = mysqli_query($GLOBALS['conn'], $Query);
-	if (mysqli_num_rows($rs) > 0) {
-		$row = mysqli_fetch_object($rs);
-		//$pro_udx_seo_internetbezeichung_params_de = "product/".$row->pro_udx_seo_internetbezeichung_params_de;
-		//$product_detail_url = $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
-		$product_detail_url = $row->pro_url;
-		if ($ci_type > 0) {
-			//$pro_udx_seo_internetbezeichung_params_de = "product/1/".$row->pro_udx_seo_internetbezeichung_params_de;
-			//$product_detail_url = "1/" . $row->pro_udx_seo_epag_title_params_de . "-" . $row->pro_ean;
-			$product_detail_url = "1/" . $row->pro_url;
+	if ($pro_url !== null && $pro_url !== '') {
+		$base_url = $pro_url;
+		$url_cache[$supplier_id] = $base_url;
+	} elseif (isset($url_cache[$supplier_id])) {
+		$base_url = $url_cache[$supplier_id];
+	} else {
+		$base_url = "";
+		$Query = "SELECT pro_id, supplier_id, pro_ean, pro_udx_seo_epag_title_params_de, pro_url FROM products WHERE supplier_id = '" . $supplier_id . "' ORDER BY pro_id ASC LIMIT 1";
+		$rs = mysqli_query($GLOBALS['conn'], $Query);
+		if ($rs && mysqli_num_rows($rs) > 0) {
+			$row = mysqli_fetch_object($rs);
+			$base_url = $row->pro_url;
 		}
+		$url_cache[$supplier_id] = $base_url;
+	}
+	if (!empty($base_url)) {
+		$product_detail_url = ($ci_type > 0) ? ("1/" . $base_url) : $base_url;
 	}
 	return $product_detail_url;
+}
+
+function get_optimized_image($path, $max_width = 0, $quality = 80)
+{
+	if (empty($path)) {
+		return "";
+	}
+	$site_url = isset($GLOBALS['siteURL']) ? $GLOBALS['siteURL'] : '';
+	$rel_path = $path;
+	if (!empty($site_url) && strpos($rel_path, $site_url) === 0) {
+		$rel_path = substr($rel_path, strlen($site_url));
+	}
+	$rel_path = ltrim(str_replace('\\', '/', $rel_path), '/');
+	$root_dir = str_replace('\\', '/', dirname(__DIR__));
+	$src_abs = $root_dir . '/' . $rel_path;
+
+	if (!file_exists($src_abs) || !function_exists('imagewebp')) {
+		return (strpos($path, 'http') === 0) ? $path : ($site_url . $rel_path);
+	}
+
+	$ext = strtolower(pathinfo($src_abs, PATHINFO_EXTENSION));
+	if (!in_array($ext, array('png', 'jpg', 'jpeg', 'webp', 'gif'))) {
+		return (strpos($path, 'http') === 0) ? $path : ($site_url . $rel_path);
+	}
+
+	$dir_rel = dirname($rel_path);
+	if ($dir_rel === '.') {
+		$dir_rel = '';
+	}
+	$base_name = pathinfo($src_abs, PATHINFO_FILENAME);
+	if (strpos($base_name, 'opt_') === 0 && $ext === 'webp') {
+		return $site_url . $rel_path;
+	}
+	$clean_base = preg_replace('/[^a-zA-Z0-9_-]/', '_', convertGermanChars($base_name));
+	$w_tag = ($max_width > 0) ? ($max_width . 'w_') : 'full_';
+	$opt_filename = 'opt_' . $w_tag . $clean_base . '.webp';
+	$opt_rel = ($dir_rel !== '' ? ($dir_rel . '/') : '') . $opt_filename;
+	$opt_abs = $root_dir . '/' . $opt_rel;
+
+	if (file_exists($opt_abs) && @filemtime($opt_abs) >= @filemtime($src_abs) && filesize($opt_abs) > 0) {
+		return $site_url . $opt_rel;
+	}
+
+	$info = @getimagesize($src_abs);
+	if (!$info || empty($info[0]) || empty($info[1])) {
+		return $site_url . $rel_path;
+	}
+	$orig_w = (int)$info[0];
+	$orig_h = (int)$info[1];
+	$mime = $info['mime'];
+
+	$src_img = false;
+	if ($mime === 'image/png' && function_exists('imagecreatefrompng')) {
+		$src_img = @imagecreatefrompng($src_abs);
+	} elseif ($mime === 'image/jpeg' && function_exists('imagecreatefromjpeg')) {
+		$src_img = @imagecreatefromjpeg($src_abs);
+	} elseif ($mime === 'image/webp' && function_exists('imagecreatefromwebp')) {
+		$src_img = @imagecreatefromwebp($src_abs);
+	} elseif ($mime === 'image/gif' && function_exists('imagecreatefromgif')) {
+		$src_img = @imagecreatefromgif($src_abs);
+	}
+
+	if (!$src_img) {
+		return $site_url . $rel_path;
+	}
+
+	if (function_exists('imagepalettetotruecolor') && !imageistruecolor($src_img)) {
+		@imagepalettetotruecolor($src_img);
+	}
+
+	$target_w = $orig_w;
+	$target_h = $orig_h;
+	if ($max_width > 0 && $orig_w > $max_width) {
+		$target_w = (int)$max_width;
+		$target_h = max(1, (int)round($orig_h * ($max_width / $orig_w)));
+	}
+
+	if ($target_w !== $orig_w || $target_h !== $orig_h) {
+		$dst_img = imagecreatetruecolor($target_w, $target_h);
+		imagealphablending($dst_img, false);
+		imagesavealpha($dst_img, true);
+		$transparent = imagecolorallocatealpha($dst_img, 0, 0, 0, 127);
+		imagefilledrectangle($dst_img, 0, 0, $target_w, $target_h, $transparent);
+		imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $target_w, $target_h, $orig_w, $orig_h);
+		imagedestroy($src_img);
+	} else {
+		$dst_img = $src_img;
+		imagealphablending($dst_img, false);
+		imagesavealpha($dst_img, true);
+	}
+
+	$saved = @imagewebp($dst_img, $opt_abs, $quality);
+	imagedestroy($dst_img);
+
+	if ($saved && file_exists($opt_abs) && filesize($opt_abs) > 0) {
+		return $site_url . $opt_rel;
+	}
+	return $site_url . $rel_path;
+}
+
+function get_logo_attr($path, $target_width = 120)
+{
+	$w = (int)$target_width;
+	if ($w <= 0) {
+		$w = 120;
+	}
+	$site_url = isset($GLOBALS['siteURL']) ? $GLOBALS['siteURL'] : '';
+	$rel_path = $path;
+	if (!empty($site_url) && strpos($rel_path, $site_url) === 0) {
+		$rel_path = substr($rel_path, strlen($site_url));
+	}
+	$rel_path = ltrim(str_replace('\\', '/', $rel_path), '/');
+	$root_dir = str_replace('\\', '/', dirname(__DIR__));
+	$src_abs = $root_dir . '/' . $rel_path;
+	if (file_exists($src_abs)) {
+		$info = @getimagesize($src_abs);
+		if ($info && !empty($info[0]) && !empty($info[1])) {
+			$h = max(1, (int)round($info[1] * ($w / $info[0])));
+			return 'width="' . $w . '" height="' . $h . '"';
+		}
+	}
+	$h = max(1, (int)round($w * (187 / 540)));
+	return 'width="' . $w . '" height="' . $h . '"';
 }
 
 function ci_max_quentity()
@@ -3912,12 +4077,26 @@ function ci_max_quentity()
 
 function getStockData($supplier_id, $quantity = 1)
 {
+    static $stockMemoryCache = [];
+    $cacheKey = $supplier_id . '_' . $quantity;
+    if (isset($stockMemoryCache[$cacheKey])) {
+        return $stockMemoryCache[$cacheKey];
+    }
+    if (isset($_SESSION['stock_api_cache'][$cacheKey]) && (time() - $_SESSION['stock_api_cache'][$cacheKey]['ts']) < 60) {
+        $stockMemoryCache[$cacheKey] = $_SESSION['stock_api_cache'][$cacheKey]['data'];
+        return $stockMemoryCache[$cacheKey];
+    }
+
     $url = "https://api.soennecken.de/api/wacker/logistics/v1/stocks/" . $supplier_id . "?quantity=" . $quantity;
 
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+    curl_setopt($ch, CURLOPT_ENCODING, '');
 
     // Add headers (adjust if needed)
     $headers = [
@@ -3938,7 +4117,12 @@ function getStockData($supplier_id, $quantity = 1)
     curl_close($ch);
 
     // Convert JSON to array
-    return json_decode($response, true);
+    $decoded = json_decode($response, true);
+    if (is_array($decoded) && !isset($decoded['error'])) {
+        $stockMemoryCache[$cacheKey] = $decoded;
+        $_SESSION['stock_api_cache'][$cacheKey] = ['ts' => time(), 'data' => $decoded];
+    }
+    return $decoded;
 }
 
 
@@ -4019,4 +4203,3 @@ function getPostalCodeAndCity($location)
     ];
 }
 
-?>

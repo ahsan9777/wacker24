@@ -45,11 +45,12 @@
                             while ($row = mysqli_fetch_object($rs)) {
                                 $pm_image_href = "files/no_img_1.jpg";
                                 if (!empty($row->pm_image)) {
-                                    $pm_image_href = $GLOBALS['siteURL'] . "files/payment_method/" . $row->pm_image;
+                                    $pm_image_href = "files/payment_method/" . $row->pm_image;
                                 }
+                                $pm_image_href = get_optimized_image($pm_image_href, 120, 82);
                         ?>
                                 <li>
-                                    <div class="payment_card_img"><img src="<?php print($pm_image_href); ?>" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
+                                    <div class="payment_card_img"><img class="js_lazy_img" data-src="<?php print($pm_image_href); ?>" width="60" height="38" alt="<?php print($row->pm_title) ?>" title="<?php print($row->pm_title) ?>"></div>
                                 </li>
                         <?php
                             }
@@ -73,10 +74,11 @@
                             while ($row = mysqli_fetch_object($rs)) {
                                 $image_path = "files/no_img_1.jpg";
                                 if (!empty($row->sl_icon)) {
-                                    $image_path = $GLOBALS['siteURL'] . "files/social_media_icons/" . $row->sl_icon;
+                                    $image_path = "files/social_media_icons/" . $row->sl_icon;
                                 }
+                                $image_path = get_optimized_image($image_path, 64, 82);
                         ?>
-                                <li><a target="_blank" title="<?php print($row->sl_title); ?>" href="<?php print($row->sl_url); ?>" aria-label="<?php print($row->sl_title); ?>"><img src="<?php print($image_path); ?>" alt=""></a></li>
+                                <li><a target="_blank" title="<?php print($row->sl_title); ?>" href="<?php print($row->sl_url); ?>" aria-label="<?php print($row->sl_title); ?>"><img class="js_lazy_img" data-src="<?php print($image_path); ?>" width="36" height="36" alt=""></a></li>
                         <?php
                             }
                         }
@@ -86,6 +88,6 @@
             </div>
 
         </div>
-        <div class="footer_logo"><a title="logo" href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(config_site_logo) ?>" alt="logo"></a></div>
+        <div class="footer_logo"><a title="logo" href="<?php print($GLOBALS['siteURL']); ?>" aria-label="site logo"><img src="<?php print(get_optimized_image(config_site_logo, 260, 85)); ?>" <?php print(get_logo_attr(config_site_logo, 150)); ?> style="width: 150px; height: auto;" alt="logo"></a></div>
     </div>
 </footer>

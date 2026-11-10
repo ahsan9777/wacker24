@@ -1,28 +1,13 @@
-
-<link href="css/slick-theme.min.css" rel="stylesheet" type="text/css" />
 <!-- <link rel="stylesheet" type="text/css" href="css/jquery.simpleLens.min.css">
 <link rel="stylesheet" type="text/css" href="css/jquery.simpleGallery.min.css">-->
-<link rel="stylesheet" href="css/jquery-ui-1.13.3.min.css">
-<link href="css/responsive.min.css?dt=05112026" rel="stylesheet" type="text/css" />
-<link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-
-<!--<script defer src="js/jquery-ui.min.js"></script>
-<script defer type="text/javascript" src="js/jquery.simpleGallery.min.js"></script>
-<script defer type="text/javascript" src="js/jquery.simpleLens.min.js"></script>-->
+<link rel="stylesheet" href="css/jquery-ui-1.13.3.min.css" media="print" onload="this.media='all'">
 <script>
-    setTimeout(function() {
-        const scripts = [
-            //"js/jquery-ui.min.js"
-        ];
-
-        scripts.forEach(function(src) {
-            const script = document.createElement("script");
-            script.src = src;
-            script.defer = true;
-            document.body.appendChild(script);
-            //console.log(src + " loaded after 5 seconds");
-        });
-    }, 10000);
+    $('.popup_close').click(function() {
+		$('.popup').hide();
+		$('body').css({
+			'overflow': 'inherit'
+		});
+	});
 </script>
 
 
@@ -111,14 +96,15 @@
         padding: 20px 10px;
         font-size: 18px;
     }
-</style>
-<script>
-    function blinker() {
-        $('.nav_sale').fadeOut(500);
-        $('.nav_sale').fadeIn(500);
+    @keyframes navSaleBlink {
+        0%, 100% { opacity: 1; }
+        25% { opacity: 0; }
+        50% { opacity: 1; }
     }
-    setInterval(blinker, 2000);
-</script>
+    .nav_sale {
+        animation: navSaleBlink 2s ease-in-out infinite;
+    }
+</style>
 <script>
     $(() => {
         <?php if($page_bottom_js == 1) { ?>
@@ -158,7 +144,7 @@
 </script>
 
 <script>
-	$(window).load(function () {
+	$(window).on('load', function () {
 		/*2 popup 1 hide 1 show*/
 		$(".location_trigger").click(function () { $('.location_popup').show(); $('.location_popup').resize(); $('body').css({ 'overflow': 'hidden' }); });
 		$('.location_close').click(function () { $('.location_popup').hide(); $('body').css({ 'overflow': 'inherit' }); });
@@ -206,17 +192,19 @@
 </script>
 <script>
 	$(function() {
-	$( "#slider-range" ).slider({
-	  range: true,
-	  min: 130,
-	  max: 500,
-	  values: [ 130, 250 ],
-	  slide: function( event, ui ) {
-		$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-	  }
-	});
-	$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-	  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+	if ($( "#slider-range" ).length) {
+		$( "#slider-range" ).slider({
+		  range: true,
+		  min: 130,
+		  max: 500,
+		  values: [ 130, 250 ],
+		  slide: function( event, ui ) {
+			$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+		  }
+		});
+		$( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+		  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+	}
 });
 </script>
 
@@ -241,16 +229,51 @@
 	});
 </script>
 <script>
-	$('#header_section .header_bottom .header_search .header_select_slt').change(function(){
-	var text = $(this).find('option:selected').text()
-	var $aux = $('<select/>').append($('<option/>').text(text))
-	$(this).after($aux)
-	$(this).width($aux.width())
-	$aux.remove()
-	}).change()
+	$('#header_section .header_bottom .header_search .header_select_slt').on('change', function(e, isInit){
+		var text = $(this).find('option:selected').text().trim();
+		if (isInit && text === 'Alle') {
+			$(this).width(52);
+			return;
+		}
+		var $aux = $('<select/>').append($('<option/>').text(text));
+		$(this).after($aux);
+		$(this).width($aux.width());
+		$aux.remove();
+	}).trigger('change', [true]);
+
+	window.loadLazyImg = function(img) {
+		if (!img) return;
+		var ds = img.getAttribute('data-src');
+		var dss = img.getAttribute('data-srcset');
+		var dsz = img.getAttribute('data-sizes');
+		if (dsz) { img.setAttribute('sizes', dsz); img.removeAttribute('data-sizes'); }
+		if (dss) { img.setAttribute('srcset', dss); img.removeAttribute('data-srcset'); }
+		if (ds) { img.setAttribute('src', ds); img.removeAttribute('data-src'); }
+		img.classList.remove('js_lazy_img');
+	};
+	(function() {
+		var lazyImgs = document.querySelectorAll('img.js_lazy_img');
+		if (!lazyImgs.length) return;
+		if ('IntersectionObserver' in window) {
+			var io = new IntersectionObserver(function(entries, obs) {
+				for (var i = 0; i < entries.length; i++) {
+					if (entries[i].isIntersecting) {
+						window.loadLazyImg(entries[i].target);
+						obs.unobserve(entries[i].target);
+					}
+				}
+			}, { rootMargin: '200px 0px' });
+			for (var j = 0; j < lazyImgs.length; j++) {
+				io.observe(lazyImgs[j]);
+			}
+		} else {
+			for (var k = 0; k < lazyImgs.length; k++) {
+				window.loadLazyImg(lazyImgs[k]);
+			}
+		}
+	})();
 </script>
 <script src="js/jquery-ui-1.13.3.min.js"></script>
-<!-- <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" defer></script> -->
 <script>
 	$('.close').on('click', function(){
         $('.alert').hide();
@@ -259,31 +282,35 @@
 		$("#pro_id").val(0);
         $("#search_keyword").val("");
 	});
-	$('input.search_keyword').autocomplete({
-            source: function(request, response) {
-				let level_one = $("#level_one").val();
-                $.ajax({
-                    url: 'ajax_calls.php?action=search_keyword&level_one='+level_one+'',
-                    dataType: "json",
-                    data: {
-                        term: request.term
-                    },
-                    success: function(data) {
-                        response(data);
-
-                    }
-                });
-            },
-            minLength: 1,
-            select: function(event, ui) {
-                var supplier_id = $("#supplier_id");
-                var search_keyword = $("#search_keyword");
-                $(supplier_id).val(ui.item.supplier_id);
-                $(search_keyword).val(ui.item.value);
-                frm_search.submit();
-                //return false;
-            }
-        });
+	$(window).on('load', function() {
+		setTimeout(function() {
+			if ($.fn.autocomplete) {
+				$('input.search_keyword').autocomplete({
+					source: function(request, response) {
+						let level_one = $("#level_one").val();
+						$.ajax({
+							url: 'ajax_calls.php?action=search_keyword&level_one='+level_one+'',
+							dataType: "json",
+							data: {
+								term: request.term
+							},
+							success: function(data) {
+								response(data);
+							}
+						});
+					},
+					minLength: 1,
+					select: function(event, ui) {
+						var supplier_id = $("#supplier_id");
+						var search_keyword = $("#search_keyword");
+						$(supplier_id).val(ui.item.supplier_id);
+						$(search_keyword).val(ui.item.value);
+						frm_search.submit();
+					}
+				});
+			}
+		}, 50);
+	});
 // Also update the code in product.php file
 	$(".add_to_card").on("click", function(){
 		//console.log("add_to_card");

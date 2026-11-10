@@ -9,7 +9,7 @@
         position: relative;
     }
     #banner_section .banner_slider:not(.slick-initialized) > div:not(:first-child) {
-        display: none;
+        display: none !important;
     }
     #banner_section .banner_image img {
         width: 100%;
@@ -25,9 +25,13 @@
         z-index: 9999;
     }
     @media screen and (max-width: 1024px) and (min-width: 240px) {
-        #banner_section .banner_inner,
+        #banner_section .banner_inner {
+            height: auto;
+            aspect-ratio: 1280 / 492;
+        }
         #banner_section .banner_image img {
             height: auto;
+            aspect-ratio: 1280 / 492;
         }
         #banner_section .banner_detail {
             left: 60px;
@@ -54,8 +58,9 @@
                 $rs = mysqli_query($GLOBALS['conn'], $Query);
                 if (mysqli_num_rows($rs) > 0) {
                     while ($row = mysqli_fetch_object($rs)) {
-                        $image_path = $GLOBALS['siteURL'] . "files/banners/" . $row->ban_file;
-                        $ext = pathinfo($image_path, PATHINFO_EXTENSION);
+                        $rel_banner = "files/banners/" . $row->ban_file;
+                        $image_path = $GLOBALS['siteURL'] . $rel_banner;
+                        $ext = strtolower(pathinfo($image_path, PATHINFO_EXTENSION));
                 ?>
                         <div>
                             <div class="banner_detail">
@@ -70,11 +75,27 @@
                                 <?php } ?>
                             </div>
                             <?php if(in_array($ext, array("mp4"))){?>
-                            <video autoplay loop>
+                            <?php if($ban_index === 0) { ?>
+                            <video autoplay loop muted playsinline preload="metadata">
                                 <source src="<?php print($image_path); ?>" type="video/mp4">
                             </video>
-                            <?php } else {?>
-                            <div class="banner_image"><img <?php print($ban_index > 0 ? 'loading="lazy"' : ''); ?> src="<?php print($image_path); ?>" alt=""></div>
+                            <?php } else { ?>
+                            <video loop muted playsinline preload="none" class="lazy_banner_video">
+                                <source data-src="<?php print($image_path); ?>" type="video/mp4">
+                            </video>
+                            <?php } ?>
+                            <?php } else {
+                                $img_640 = get_optimized_image($rel_banner, 640, 78);
+                                $img_800 = get_optimized_image($rel_banner, 800, 78);
+                                $img_1280 = get_optimized_image($rel_banner, 1280, 82);
+                                $srcset = $img_640 . " 640w, " . $img_800 . " 800w, " . $img_1280 . " 1280w";
+                                $sizes = "(max-width: 767px) 100vw, 1280px";
+                            ?>
+                            <?php if($ban_index === 0) { ?>
+                            <div class="banner_image"><img fetchpriority="high" src="<?php print($img_1280); ?>" srcset="<?php print($srcset); ?>" sizes="<?php print($sizes); ?>" width="1280" height="492" alt=""></div>
+                            <?php } else { ?>
+                            <div class="banner_image"><img class="lazy_banner_img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="<?php print($img_1280); ?>" data-srcset="<?php print($srcset); ?>" data-sizes="<?php print($sizes); ?>" width="1280" height="492" alt=""></div>
+                            <?php } ?>
                             <?php } ?>
                         </div>
                 <?php

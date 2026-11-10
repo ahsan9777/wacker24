@@ -14,10 +14,13 @@ header("X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, ma
 <?php } else { ?>
     <title><?php print($GLOBALS['siteTitle']); ?></title>
 <?php } ?>
-<link rel="preload" href="<?php print(get_font_link(config_fonts));?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>"></noscript>
-<link rel="preload" href="css/styles.min.css?dt=06112026" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="css/styles.min.css?dt=06112026"></noscript>
+<link rel="preload" href="css/fonts/sans-serif-fonts/roboto/Roboto-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="css/fonts/sans-serif-fonts/roboto/Roboto-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="<?php print(get_font_link(config_fonts));?>">
+<link rel="stylesheet" href="css/styles.min.css?dt=06112026">
+<link rel="stylesheet" href="css/responsive.min.css?dt=05112026">
+<link rel="stylesheet" href="css/slick-theme.min.css">
+<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 <?php include("includes/btn_color.php"); ?>
 <script src="js/jquery-3.7.1.min.js"></script>
 <script>
