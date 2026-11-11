@@ -277,6 +277,8 @@ body {
     overflow: auto;
 }
 
+.table_responsive table tbody .tr_border{border-bottom: 1px solid;}
+
 
 h1 {
     color: #f9fafb;

@@ -611,9 +611,6 @@ include("includes/messages.php");
                             <table>
                                 <tbody>
                                     <?php
-                                    $Query = "SELECT pro.*, manf.manf_name, pg.pg_mime_source_url, usp.usp_price_type, usp.usp_discounted_value, usp.usp_addedby, usp.usp_cdate, usp.usp_updatedby, usp.usp_udate, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_special_price_amount, pbp.pbp_tax FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_gallery AS pg ON pg.supplier_id = pro.supplier_id AND pg.pg_mime_source_url = (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) LEFT OUTER JOIN user_special_price AS usp ON usp.supplier_id = pro.supplier_id AND usp.user_id = 0 LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC";
-                                    //$Query = "SELECT pro.*, pq.pq_id, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_status FROM products AS pro LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id " . $searchQuery . " ORDER BY pro.pro_id ASC";
-                                    //print($Query);
                                     $supplier_id = array();
                                     $pro_ean = array();
                                     $pbp_price_amount = array();
@@ -621,10 +618,30 @@ include("includes/messages.php");
                                     $counter = 0;
                                     $limit = 15;
                                     $start = $p->findStart($limit);
-                                    $count = mysqli_num_rows(mysqli_query($GLOBALS['conn'], $Query));
+
+                                    $countQuery = "SELECT COUNT(*) AS total FROM products AS pro WHERE pro.pro_custom_add = '0' " . $searchQuery;
+                                    $countRs = mysqli_query($GLOBALS['conn'], $countQuery);
+                                    $countRow = $countRs ? mysqli_fetch_object($countRs) : null;
+                                    $count = $countRow ? (int)$countRow->total : 0;
                                     $pages = $p->findPages($count, $limit);
-                                    $rs = mysqli_query($GLOBALS['conn'], $Query . " LIMIT " . $start . ", " . $limit);
-                                    if (mysqli_num_rows($rs) > 0) {
+
+                                    $pageIds = array();
+                                    if ($count > 0) {
+                                        $idQuery = "SELECT pro.pro_id FROM products AS pro IGNORE INDEX (pro_custom_add) WHERE pro.pro_custom_add = '0' " . $searchQuery . " ORDER BY pro.pro_id ASC LIMIT " . (int)$start . ", " . (int)$limit;
+                                        $idRs = mysqli_query($GLOBALS['conn'], $idQuery);
+                                        if ($idRs) {
+                                            while ($idRow = mysqli_fetch_row($idRs)) {
+                                                $pageIds[] = (int)$idRow[0];
+                                            }
+                                        }
+                                    }
+
+                                    $rs = false;
+                                    if (!empty($pageIds)) {
+                                        $Query = "SELECT pro.*, manf.manf_name, (SELECT pg_inner.pg_mime_source_url FROM products_gallery AS pg_inner WHERE pg_inner.supplier_id = pro.supplier_id AND pg_inner.pg_mime_purpose = 'normal' ORDER BY pg_inner.pg_mime_order ASC LIMIT 1) AS pg_mime_source_url, pq.pq_quantity, pq.pq_upcomming_quantity, pq.pq_physical_quantity, pq.pq_status, usp.usp_price_type, usp.usp_discounted_value, usp.usp_addedby, usp.usp_cdate, usp.usp_updatedby, usp.usp_udate, CONCAT(u_add.user_fname, ' ', u_add.user_lname) AS usp_addedby_name, CONCAT(u_upd.user_fname, ' ', u_upd.user_lname) AS usp_updatedby_name, (pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount, pbp.pbp_price_amount AS pbp_price_without_tax, pbp.pbp_special_price_amount, pbp.pbp_tax FROM products AS pro LEFT OUTER JOIN manufacture AS manf ON manf.manf_id = pro.manf_id LEFT OUTER JOIN products_quantity AS pq ON pq.supplier_id = pro.supplier_id LEFT OUTER JOIN user_special_price AS usp ON usp.supplier_id = pro.supplier_id AND usp.user_id = 0 LEFT OUTER JOIN users AS u_add ON u_add.user_id = usp.usp_addedby LEFT OUTER JOIN users AS u_upd ON u_upd.user_id = usp.usp_updatedby LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = '1' WHERE pro.pro_id IN (" . implode(',', $pageIds) . ") ORDER BY pro.pro_id ASC";
+                                        $rs = mysqli_query($GLOBALS['conn'], $Query);
+                                    }
+                                    if ($rs && mysqli_num_rows($rs) > 0) {
                                         while ($row = mysqli_fetch_object($rs)) {
                                             $counter++;
                                             $strClass = 'label  label-danger';
@@ -646,7 +663,7 @@ include("includes/messages.php");
                                                 <td width="100">
                                                     <div class="popup_container">
                                                         <div class="container__img-holder">
-                                                            <img src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>">
+                                                            <img loading="lazy" src="<?php print(get_image_link(160, $row->pg_mime_source_url)); ?>">
                                                         </div>
                                                     </div>
                                                 </td>
@@ -678,12 +695,36 @@ include("includes/messages.php");
                                                 </td>
 
                                                 <td width="300" id="td_article_quantity_<?= $row->supplier_id ?>">
-                                                    <div class="loading-container" id="td_article_quantity_loading_<?= $row->supplier_id ?>">
-                                                        <p class="text-start fs-6 m-0"> Availability</p>
-                                                        <div class="loading-text">
-                                                            Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                                                    <?php if (config_site_quantity_source == 0) { ?>
+                                                        <div class="d-flex flex-column gap-2">
+                                                            <b>Availability</b>
+                                                            <?php
+                                                            if ($row->pro_type == 0) {
+                                                                $pq_quantity = (int)$row->pq_quantity;
+                                                                $pq_upcomming_quantity = (int)$row->pq_upcomming_quantity;
+                                                                $pq_status = $row->pq_status;
+                                                                if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
+                                                                    print('<div class="text-success"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>');
+                                                                } elseif ($pq_quantity > 0 && $pq_status == 'false') {
+                                                                    print('<div class="text-success"> ' . $pq_quantity . ' Stück sofort verfügbar</div>');
+                                                                } elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
+                                                                    print('<div class="text-danger">Auf Anfrage</div>');
+                                                                }
+                                                            } else {
+                                                                if ($row->pro_type <= 0) {
+                                                                    print('<div class="text-danger">Auf Anfrage</div>');
+                                                                }
+                                                            }
+                                                            ?>
                                                         </div>
-                                                    </div>
+                                                    <?php } else { ?>
+                                                        <div class="loading-container" id="td_article_quantity_loading_<?= $row->supplier_id ?>">
+                                                            <p class="text-start fs-6 m-0"> Availability</p>
+                                                            <div class="loading-text">
+                                                                Laden<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
                                                 </td>
                                                 <td width="170" >
                                                     <div class="price-wrapper mb-2">
@@ -708,13 +749,13 @@ include("includes/messages.php");
                                                                             </tr>
                                                                             <tr>
                                                                                 <td>Added By</td>
-                                                                                <td><?php print(returnName("CONCAT(user_fname, ' ',user_lname) AS full_name", "users", "user_id", $row->usp_addedby)); ?></td>
+                                                                                <td><?php print($row->usp_addedby_name); ?></td>
                                                                                 <td><?php echo date("F d, Y h:i", strtotime($row->usp_cdate)) ?></td>
                                                                             </tr>
                                                                             <?php if($row->usp_updatedby > 0){ ?>
                                                                             <tr>
                                                                                 <td>Updated By</td>
-                                                                                <td><?php print(returnName("CONCAT(user_fname, ' ',user_lname) AS full_name", "users", "user_id", $row->usp_updatedby)); ?></td>
+                                                                                <td><?php print($row->usp_updatedby_name); ?></td>
                                                                                 <td><?php echo date("F d, Y h:i", strtotime($row->usp_udate)) ?></td>
                                                                             </tr>
                                                                             <?php } ?>
@@ -761,7 +802,7 @@ include("includes/messages.php");
                                                         
                                                         <?php } ?>
                                                         <div class="d-flex align-items-center justify-content-end w-100 gap-2">
-                                                            <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'].product_detail_url($row->supplier_id)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
+                                                            <button type="button" class="btn btn-xs btn-success btn-style-light w-auto" target="_blank" title="View" onClick="javascript: window.open ('<?php print($GLOBALS['siteURL'].product_detail_url($row->supplier_id, 0, $row->pro_url)); ?>');"><span class="material-icons icon material-xs">visibility</span></button>
                                                             <button type="button" class="btn btn-xs btn-primary btn-style-light w-auto" title="Edit" onClick="javascript: window.location = '<?php print($_SERVER['PHP_SELF'] . "?action=2&" . $qryStrURL . "pro_id=" . $row->pro_id . "&supplier_id=" . $row->supplier_id); ?>';"><span class="material-icons icon material-xs">edit</span></button>
                                                         </div>
                                                     </div>
@@ -887,79 +928,35 @@ include("includes/messages.php");
     let pro_ean = <?php echo json_encode($pro_ean); ?>;
     let pbp_price_amount = <?php echo json_encode($pbp_price_amount); ?>;
     let pro_type = <?php echo json_encode($pro_type); ?>;
+    let skip_quantity = <?php echo (config_site_quantity_source == 0) ? 1 : 0; ?>;
 
-    $(window).on('load', function () {
-        $.each(pro_ean, function(index, id) {
-        $.ajax({
-            url: 'ajax_calls.php?action=td_article_price',
-            type: 'POST',
-            data: {
-                supplier_id: supplier_id[index],
-                pbp_price_amount: pbp_price_amount[index],
-                pro_ean: id
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#td_article_price_"+obj.supplier_id).html("");
-                    $("#td_article_price_"+obj.supplier_id).html(obj.td_article_price);
+    $(document).ready(function () {
+        const batchSize = 5;
+        for (let i = 0; i < pro_ean.length; i += batchSize) {
+            $.ajax({
+                url: 'ajax_calls.php?action=td_article_batch',
+                type: 'POST',
+                data: {
+                    supplier_id: supplier_id.slice(i, i + batchSize),
+                    pbp_price_amount: pbp_price_amount.slice(i, i + batchSize),
+                    pro_ean: pro_ean.slice(i, i + batchSize),
+                    pro_type: pro_type.slice(i, i + batchSize),
+                    skip_quantity: skip_quantity
+                },
+                success: function(response) {
+                    const obj = JSON.parse(response);
+                    if (obj.status == 1 && Array.isArray(obj.items)) {
+                        $.each(obj.items, function(idx, item) {
+                            $("#td_article_price_" + item.supplier_id).html(item.td_article_price);
+                            $("#td_article_margin_" + item.supplier_id).html(item.td_article_margin);
+                            if (!skip_quantity && item.td_article_quantity) {
+                                $("#td_article_quantity_" + item.supplier_id).html(item.td_article_quantity);
+                            }
+                        });
+                    }
                 }
-            }
-        });
-
-         });
-
-    });
-    
-    $(window).on('load', function () {
-        $.each(pro_ean, function(index, id) {
-        $.ajax({
-            url: 'ajax_calls.php?action=td_article_margin',
-            type: 'POST',
-            data: {
-                supplier_id: supplier_id[index],
-                pro_ean: id
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#td_article_margin_"+obj.supplier_id).html("");
-                    $("#td_article_margin_"+obj.supplier_id).html(obj.td_article_price);
-                }
-            }
-        });
-
-         });
-
-    });
-    
-    $(window).on('load', function () {
-        $.each(pro_ean, function(index, id) {
-        $.ajax({
-            url: 'ajax_calls.php?action=td_article_quantity',
-            type: 'POST',
-            data: {
-                supplier_id: supplier_id[index],
-                pro_type: pro_type[index],
-                pro_ean: id
-            },
-            success: function(response) {
-                //console.log("response = "+response);
-                const obj = JSON.parse(response);
-                //console.log(obj);
-                if (obj.status == 1) {
-                    $("#td_article_quantity_"+obj.supplier_id).html("");
-                    $("#td_article_quantity_"+obj.supplier_id).html(obj.td_article_price);
-                }
-            }
-        });
-
-         });
-
+            });
+        }
     });
 
     </script>

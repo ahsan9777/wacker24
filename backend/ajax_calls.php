@@ -55,6 +55,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'pro_description_short':
+            session_write_close();
             $json = array();
             $where = "";
             if (isset($_REQUEST['term']) && $_REQUEST['term'] != '') {
@@ -62,7 +63,7 @@ if (isset($_REQUEST['action'])) {
                 if (isset($_REQUEST['pro_custom_add']) && $_REQUEST['pro_custom_add'] > 0) {
                     $pro_custom_add = "pro_custom_add = '1' AND";
                 }
-                $where .= " WHERE " . $pro_custom_add . " pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%'";
+                $where .= " WHERE " . $pro_custom_add . " (pro_description_short LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR supplier_id LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%' OR pro_udx_seo_internetbezeichung LIKE '%" . dbStr(trim($_REQUEST['term'])) . "%')";
             }
             $Query = "SELECT pro_id, pro_description_short FROM products " . $where . " ORDER BY pro_id  LIMIT 0,20";
             //print($Query);
@@ -526,7 +527,152 @@ if (isset($_REQUEST['action'])) {
             print($jsonResults);
             break;
 
+        case 'td_article_batch':
+            session_write_close();
+            $supplier_ids = isset($_REQUEST['supplier_id']) && is_array($_REQUEST['supplier_id']) ? $_REQUEST['supplier_id'] : array();
+            $pro_eans = isset($_REQUEST['pro_ean']) && is_array($_REQUEST['pro_ean']) ? $_REQUEST['pro_ean'] : array();
+            $pbp_price_amounts = isset($_REQUEST['pbp_price_amount']) && is_array($_REQUEST['pbp_price_amount']) ? $_REQUEST['pbp_price_amount'] : array();
+            $pro_types = isset($_REQUEST['pro_type']) && is_array($_REQUEST['pro_type']) ? $_REQUEST['pro_type'] : array();
+            $skip_quantity = !empty($_REQUEST['skip_quantity']);
+
+            $pricesByEan = getprices_batch($pro_eans);
+            $items = array();
+
+            $countItems = count($supplier_ids);
+            for ($idx = 0; $idx < $countItems; $idx++) {
+                $supplier_id = $supplier_ids[$idx];
+                $pro_ean = isset($pro_eans[$idx]) ? trim((string)$pro_eans[$idx]) : '';
+                $pbp_price_amount = isset($pbp_price_amounts[$idx]) ? $pbp_price_amounts[$idx] : 0;
+                $pro_type = isset($pro_types[$idx]) ? $pro_types[$idx] : 0;
+                $getprice = isset($pricesByEan[$pro_ean]) ? $pricesByEan[$pro_ean] : array('status' => false, 'data' => '');
+
+                $lp_price = 0;
+                $td_article_price = '<div class="d-flex flex-column gap-2">
+                            <div class="price-wrapper">
+                                <div class="price-title">
+                                    Price Information
+                                    <div class="info-icon">i</div>
+                                </div>
+                                <div class="popup-box" style="left: 0px;">
+                                    <div class="popup-header">
+                                        Price information
+                                    </div>
+                                    <div class="popup-content">
+                                        <table>
+                                            <tr>';
+                if (!empty($getprice['data']) && is_array($getprice['data'])) {
+                    for ($i = 0; $i < count($getprice['data']); $i++) {
+                        if (!in_array($getprice['data'][$i]['type'], array('RSPVAT'))) {
+                            $td_article_price .= "<th>" . $getprice['data'][$i]['type'] . "</th>";
+                        }
+                    }
+                }
+                $td_article_price .= '<th>Your Price</th>
+                                            </tr>
+                                            <tr>';
+                if (!empty($getprice['data']) && is_array($getprice['data'])) {
+                    for ($i = 0; $i < count($getprice['data']); $i++) {
+                        if (!in_array($getprice['data'][$i]['type'], array('RSPVAT'))) {
+                            if ($getprice['data'][$i]['type'] == 'LISTBP') {
+                                $lp_price = $getprice['data'][$i]['price'];
+                            }
+                            $td_article_price .= "<td>" . price_format($getprice['data'][$i]['price']) . " €</td>";
+                        }
+                    }
+                }
+                $td_article_price .= '<td>' . price_format($pbp_price_amount) . ' €</td>
+                                            </tr>
+                                        </table>
+
+                                        <div class="note">
+                                            LP = list price <br>
+                                            RSP = recommended selling price
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>';
+
+                if (!empty($getprice['data']) && is_array($getprice['data'])) {
+                    for ($i = 0; $i < count($getprice['data']); $i++) {
+                        if (!in_array($getprice['data'][$i]['type'], array('RSPVAT'))) {
+                            $td_article_price .= "<div class='td_price-row'>
+                                <b class='td_label'>" . $getprice['data'][$i]['type'] . " :</b>
+                                <p class='td_price m-0'>" . price_format($getprice['data'][$i]['price']) . " €</p>
+                                <p class='td_unit m-0'>" . (isset($getprice['data'][$i]['fromQty']) ? (int)$getprice['data'][$i]['fromQty'] : (int)$getprice['data'][$i]['priceBase']) . " Piece</p>
+                            </div>";
+                        }
+                    }
+                }
+                $td_article_price .= ' </div>';
+
+                $td_article_margin = '
+                        <div class="d-flex flex-column gap-2">
+                            <b>Article Margin</b>
+                            <div class="td_price-row ">
+                                <b class="td_unit_margin m-0"> Staffel ab</b>
+                                <b class="td_price_calculation_margin m-0"> Calculation </b>
+                                <b class="td_price m-0"> Marge €</b>
+                                <b class="td_price m-0">Marge %</b>
+                            </div>';
+                if (!empty($getprice['data']) && is_array($getprice['data'])) {
+                    for ($i = 0; $i < count($getprice['data']); $i++) {
+                        if (!in_array($getprice['data'][$i]['type'], array('RSPVAT', 'LISTBP'))) {
+                            $net_profit = $getprice['data'][$i]['price'] - $lp_price;
+                            $profit_percentage = ($getprice['data'][$i]['price'] != 0) ? (($net_profit / $getprice['data'][$i]['price']) * 100) : 0;
+                            $td_article_margin .= "
+                            <div class='td_price-row'>
+                                <p class='td_unit_margin m-0'>" . (isset($getprice['data'][$i]['fromQty']) ? (int)$getprice['data'][$i]['fromQty'] : (int)$getprice['data'][$i]['priceBase']) . " Piece</p>
+                                <p class='td_price_calculation_margin m-0'>" . price_format($getprice['data'][$i]['price']) . " € - " . price_format($lp_price) . " € </p>
+                                <p class='td_price m-0'>" . price_format($net_profit) . " €</p>
+                                <p class='td_price m-0'>" . number_format($profit_percentage, '2', '.', '') . " %</p>
+                            </div>";
+                        }
+                    }
+                }
+                $td_article_margin .= '</div>';
+
+                $td_article_quantity = '';
+                if (!$skip_quantity) {
+                    $td_article_quantity .= '
+                        <div class="d-flex flex-column gap-2">
+                                <b>Availability</b>';
+                    if ($pro_type == 0) {
+                        $getQuantity = getQuantity($supplier_id, 0);
+                        $pq_quantity = isset($getQuantity['pq_quantity']) ? $getQuantity['pq_quantity'] : 0;
+                        $pq_upcomming_quantity = isset($getQuantity['pq_upcomming_quantity']) ? $getQuantity['pq_upcomming_quantity'] : 0;
+                        $pq_status = isset($getQuantity['pq_status']) ? $getQuantity['pq_status'] : 'false';
+                        if (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'true') {
+                            $td_article_quantity .= '<div class="text-success"> ' . $pq_upcomming_quantity . ' Stück Kurzfristig lieferbar</div>';
+                        } elseif ($pq_quantity > 0 && $pq_status == 'false') {
+                            $td_article_quantity .= '<div class="text-success"> ' . $pq_quantity . ' Stück sofort verfügbar</div>';
+                        } elseif (($pq_quantity == 0 || $pq_quantity < 0) && $pq_status == 'false') {
+                            $td_article_quantity .= '<div class="text-danger"">Auf Anfrage</div>';
+                        }
+                    } else {
+                        if ($pro_type <= 0) {
+                            $td_article_quantity .= '<div class="text-danger"">Auf Anfrage</div>';
+                        }
+                    }
+                    $td_article_quantity .= '</div>';
+                }
+
+                $items[] = array(
+                    'supplier_id' => $supplier_id,
+                    'pro_ean' => $pro_ean,
+                    'td_article_price' => $td_article_price,
+                    'td_article_margin' => $td_article_margin,
+                    'td_article_quantity' => $td_article_quantity
+                );
+            }
+
+            print(json_encode(array('status' => '1', 'items' => $items)));
+            break;
+
         case 'td_article_price':
+            session_write_close();
             //print_r($_REQUEST);die();
             $retValue = array();
             $td_article_price = '';
@@ -603,6 +749,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'td_article_margin':
+            session_write_close();
             //print_r($_REQUEST);die();
             $retValue = array();
             $td_article_margin = '';
@@ -652,6 +799,7 @@ if (isset($_REQUEST['action'])) {
             break;
 
         case 'td_article_quantity':
+            session_write_close();
             //print_r($_REQUEST);die();
             $retValue = array();
             $td_article_quantity = '';

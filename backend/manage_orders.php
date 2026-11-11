@@ -651,7 +651,7 @@ include("includes/messages.php");
                                                 }
                                             }
                                     ?>
-                                            <tr <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
+                                            <tr class="tr_border" <?php print(($row->ord_delivery_status == 0) ? 'style="background: #ff572229;"' : ''); ?>>
                                                 <td><?php print($row->ord_id); ?></td>
                                                 <td><?php print($user_info); ?></td>
                                                 <td><?php print($shipping_info); ?></td>
