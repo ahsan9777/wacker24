@@ -58,33 +58,40 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 										<?php
 										//$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.parent_id IN ( SELECT main_cat.group_id FROM category AS main_cat WHERE main_cat.parent_id = '" . $lf_parent_id . "' ORDER BY main_cat.group_id ASC) AND sub_cat.cat_status = '1' AND EXISTS (SELECT 1 FROM category_map AS cm WHERE cm.cm_type = '" . $pro_type . "' AND FIND_IN_SET(sub_cat.group_id, cm.cat_id) ) ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
 										if($level_check > 0){
-											$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.group_id = '".$level_check."'  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+											$cm_join_col = (strlen((string)$level_check) < 4) ? "cm.cat_id_level_two" : "cm.cat_id";
+											$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status, l1.cat_params_de AS level_one_params, MIN(pbp.pbp_price_amount) AS min_without_tax, MIN(pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS min_amount, MIN(cm.supplier_id) AS sample_supplier_id FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id LEFT OUTER JOIN category AS l1 ON l1.group_id = cat.parent_id INNER JOIN category_map AS cm ON " . $cm_join_col . " = sub_cat.group_id AND cm.cm_type = '" . $pro_type . "' INNER JOIN products AS pro ON pro.supplier_id = cm.supplier_id AND pro.pro_status = 1 INNER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = 1 WHERE sub_cat.group_id = '".$level_check."' GROUP BY sub_cat.group_id ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
 										} else {
-											$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status FROM category AS sub_cat LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id  WHERE sub_cat.group_id IN (SELECT cm.cat_id FROM category_map AS cm WHERE cm.supplier_id IN (SELECT pro.supplier_id FROM products AS pro WHERE pro.manf_id = '".$manf_id."') GROUP BY cm.cat_id )  ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
+											$Query = "SELECT sub_cat.cat_id, sub_cat.group_id, sub_cat.parent_id, cat.cat_title_de AS cat_title, sub_cat.cat_title_de AS sub_cat_title, cat.cat_params_de AS cat_params, sub_cat.cat_params_de AS sub_cat_params, sub_cat.cat_orderby, sub_cat.cat_status, l1.cat_params_de AS level_one_params, MIN(pbp.pbp_price_amount) AS min_without_tax, MIN(pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS min_amount, MIN(cm.supplier_id) AS sample_supplier_id FROM products AS pro INNER JOIN category_map AS cm ON cm.supplier_id = pro.supplier_id AND cm.cm_type = '" . $pro_type . "' INNER JOIN category AS sub_cat ON sub_cat.group_id = cm.cat_id LEFT OUTER JOIN category AS cat ON cat.group_id = sub_cat.parent_id LEFT OUTER JOIN category AS l1 ON l1.group_id = cat.parent_id INNER JOIN products_bundle_price AS pbp ON pbp.supplier_id = pro.supplier_id AND pbp.pbp_lower_bound = 1 WHERE pro.manf_id = '".$manf_id."' AND pro.pro_status = 1 GROUP BY sub_cat.group_id ORDER BY sub_cat.cat_orderby ASC, sub_cat.group_id ASC";
 										}
 										//print($Query);die();
 										$rs = mysqli_query($GLOBALS['conn'], $Query);
-										if (mysqli_num_rows($rs) > 0) {
+										if ($rs && mysqli_num_rows($rs) > 0) {
+											$slider_rows = array();
+											$sample_sids = array();
 											while ($row = mysqli_fetch_object($rs)) {
-												$pg_mime_source_url_href = "files/no_img_1.jpg";
-												$level_one = returnName("parent_id", "category", "group_id", $row->parent_id);
-												$level_one_params = returnName("cat_params_de", "category", "group_id", $level_one);
-												if (strlen($row->group_id) < 4) {
-													if ($pro_type == 20) {
-														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id_level_two");
-													} else {
-														$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id_level_two",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY sub_group_ids");
+												$slider_rows[] = $row;
+												if (!empty($row->sample_supplier_id)) {
+													$sample_sids[] = "'" . mysqli_real_escape_string($GLOBALS['conn'], $row->sample_supplier_id) . "'";
+												}
+											}
+											$gallery_map = array();
+											if (!empty($sample_sids)) {
+												$sids_in = implode(',', array_unique($sample_sids));
+												$q_gal = "SELECT pg.supplier_id, pg.pg_mime_source_url FROM products_gallery AS pg WHERE pg.supplier_id IN ($sids_in) AND pg.pg_mime_purpose = 'normal' ORDER BY pg.pg_mime_order ASC";
+												$rs_gal = mysqli_query($GLOBALS['conn'], $q_gal);
+												if ($rs_gal) {
+													while ($rg = mysqli_fetch_object($rs_gal)) {
+														if (!isset($gallery_map[$rg->supplier_id])) {
+															$gallery_map[$rg->supplier_id] = $rg->pg_mime_source_url;
+														}
 													}
-												} else {
-													$category_data = returnMultiName("pg_mime_source_url, MIN(pbp_price_without_tax), MIN(pbp_price_amount)", "vu_category_map", "cat_id",  $row->group_id, 3, "AND cm_type = '" . $pro_type . "' GROUP BY cat_id");
 												}
-												//print_r($category_data);die();
-												if (empty($category_data)) {
-													continue;
-												}
-												$pg_mime_source_url_href = $category_data['data_1'];
-												$pbp_price_without_tax = $category_data['data_2'];
-												$pbp_price_amount = $category_data['data_3'];
+											}
+											foreach ($slider_rows as $row) {
+												$pg_mime_source_url_href = isset($gallery_map[$row->sample_supplier_id]) ? $gallery_map[$row->sample_supplier_id] : "files/no_img_1.jpg";
+												$level_one_params = $row->level_one_params;
+												$pbp_price_without_tax = $row->min_without_tax;
+												$pbp_price_amount = $row->min_amount;
 												
 													//$cat_link = "artikelarten/" . $row->cat_params . "/" . $row->sub_cat_params;
 													$cat_link = "produkte/".$level_one_params."/" . $row->cat_params . "/" . $row->sub_cat_params;
@@ -217,6 +224,16 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 			$(".drop-down_2 .options ul").hide();
 	});
 
+	let currentProductXhr = null;
+	let currentGroupXhr = null;
+	let currentPfXhr = null;
+
+	$(window).on('beforeunload', function() {
+		if (currentProductXhr && currentProductXhr.readyState !== 4) currentProductXhr.abort();
+		if (currentGroupXhr && currentGroupXhr.readyState !== 4) currentGroupXhr.abort();
+		if (currentPfXhr && currentPfXhr.readyState !== 4) currentPfXhr.abort();
+	});
+
 	<?php if($leve_id == 0){ ?>
 		$(window).load(function() {
 			gerenric_product_inner();
@@ -226,6 +243,10 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 	function gerenric_product_inner(lf_group_id_data = "", lf_manf_id_data = "", lf_pf_fvalue_data = "", add_more = 0) {
 		$("#btn_load").hide();
 		$("#btn_load_spinner").show();
+		if (add_more == 0) {
+			$("#gerenric_product_inner").html("");
+			$("#gerenric_product_inner_page").val(0);
+		}
 		let start = $("#gerenric_product_inner_page").val();
 		let sortby = $("#sort_by_selected").val();
 		let lf_parent_id = 0;
@@ -237,10 +258,6 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display); ?>';
 		let lf_group_id = "";
 		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
-			if (add_more == 0) {
-				$("#gerenric_product_inner").html("");
-				$("#gerenric_product_inner_page").val(0);
-			}
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_group_id = lf_group_id_data;
@@ -249,25 +266,20 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		}
 		let lf_manf_id = "";
 		if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
-			if (add_more == 0) {
-				$("#gerenric_product_inner").html("");
-				$("#gerenric_product_inner_page").val(0);
-			}
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_manf_id = lf_manf_id_data;
 		}
 		let lf_pf_fvalue = "";
 		if (typeof lf_pf_fvalue_data !== 'undefined' && lf_pf_fvalue_data !== null && lf_pf_fvalue_data != "") {
-			if (add_more == 0) {
-				$("#gerenric_product_inner").html("");
-				$("#gerenric_product_inner_page").val(0);
-			}
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_pf_fvalue = lf_pf_fvalue_data;
 		}
-		$.ajax({
+		if (currentProductXhr && currentProductXhr.readyState !== 4) {
+			currentProductXhr.abort();
+		}
+		currentProductXhr = $.ajax({
 			url: 'ajax_calls.php?action=gerenric_product_inner',
 			method: 'POST',
 			data: {
@@ -426,7 +438,10 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		let level_check = <?php print($level_check); ?>;
 		let manf_id = "<?php print($manf_id); ?>";
 
-		$.ajax({
+		if (currentGroupXhr && currentGroupXhr.readyState !== 4) {
+			currentGroupXhr.abort();
+		}
+		currentGroupXhr = $.ajax({
 			url: 'ajax_calls.php?action=lf_group_id_inner',
 			method: 'POST',
 			data: {
@@ -474,7 +489,10 @@ $sortby_array = array("Sortieren nach", "Preis absteigend", "Preis aufsteigend",
 		}
 		let lf_manf_id = "";
 		let manf_id = "<?php print($manf_id); ?>";
-		$.ajax({
+		if (currentPfXhr && currentPfXhr.readyState !== 4) {
+			currentPfXhr.abort();
+		}
+		currentPfXhr = $.ajax({
 			url: 'ajax_calls.php?action=lf_pf_fvalue_inner',
 			method: 'POST',
 			data: {

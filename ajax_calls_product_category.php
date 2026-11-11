@@ -1,5 +1,8 @@
 <?php
 include("includes/php_includes_top.php");
+if (session_status() === PHP_SESSION_ACTIVE) {
+    session_write_close();
+}
 if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
         case 'feature_category':

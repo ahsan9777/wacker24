@@ -1558,7 +1558,9 @@ function returnMulCat($ID)
 function returnMultiName($Field, $Table, $IDField, $ID, $fieldcount, $AND = "")
 {
 	$retRes = array();
-	if (strlen($ID) < 4) {
+	if ($Table === "vu_category_map" && strpos($Field, "pg_mime_source_url") !== false) {
+		$strQry = "SELECT (SELECT pg.pg_mime_source_url FROM products_gallery AS pg WHERE pg.supplier_id = MIN(cm.supplier_id) AND pg.pg_mime_purpose = 'normal' ORDER BY pg.pg_mime_order ASC LIMIT 1) AS pg_mime_source_url, MIN(pbp.pbp_price_amount) AS pbp_price_without_tax, MIN(pbp.pbp_price_amount + (pbp.pbp_price_amount * pbp.pbp_tax)) AS pbp_price_amount FROM category_map AS cm INNER JOIN products AS pro ON pro.supplier_id = cm.supplier_id AND pro.pro_status = '1' LEFT OUTER JOIN products_bundle_price AS pbp ON pbp.supplier_id = cm.supplier_id AND pbp.pbp_lower_bound = '1' WHERE cm." . $IDField . " = '" . $ID . "' " . $AND;
+	} elseif (strlen($ID) < 4) {
 		//$strQry = "SELECT $Field FROM $Table WHERE FIND_IN_SET ('" . $ID . "', ".$IDField.") " . $AND . "";
 		$strQry = "SELECT $Field FROM $Table WHERE " . $IDField . " = '" . $ID . "' " . $AND . "";
 	} else {

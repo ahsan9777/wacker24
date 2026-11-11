@@ -345,6 +345,18 @@ if(!empty($whereclause_meta)){
 			$(".drop-down_2 .options ul").hide();
 	});
 
+	let currentProductXhr = null;
+	let currentGroupXhr = null;
+	let currentManfXhr = null;
+	let currentPfXhr = null;
+
+	$(window).on('beforeunload', function() {
+		if (currentProductXhr && currentProductXhr.readyState !== 4) currentProductXhr.abort();
+		if (currentGroupXhr && currentGroupXhr.readyState !== 4) currentGroupXhr.abort();
+		if (currentManfXhr && currentManfXhr.readyState !== 4) currentManfXhr.abort();
+		if (currentPfXhr && currentPfXhr.readyState !== 4) currentPfXhr.abort();
+	});
+
 	<?php if (!isset($_REQUEST['level_three'])) { ?>
 		$(window).load(function() {
 			gerenric_product_inner();
@@ -354,6 +366,10 @@ if(!empty($whereclause_meta)){
 	function gerenric_product_inner(lf_group_id_data = "", lf_manf_id_data = "", lf_pf_fvalue_data = "", add_more = 0) {
 		$("#btn_load").hide();
 		$("#btn_load_spinner").show();
+		if (add_more == 0) {
+			$("#gerenric_product_inner").html("");
+			$("#gerenric_product_inner_page").val(0);
+		}
 		let start = $("#gerenric_product_inner_page").val();
 		let sortby = $("#sort_by_selected").val();
 		let pq_quantity_selected = $("#pq_quantity_selected").val();
@@ -365,10 +381,6 @@ if(!empty($whereclause_meta)){
 		let pbp_price_with_tex_display = '<?php print($pbp_price_with_tex_display); ?>';
 		let lf_group_id = "";
 		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
-			if (add_more == 0) {
-				$("#gerenric_product_inner").html("");
-				$("#gerenric_product_inner_page").val(0);
-			}
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_group_id = lf_group_id_data;
@@ -377,25 +389,20 @@ if(!empty($whereclause_meta)){
 		}
 		let lf_manf_id = "";
 		if (typeof lf_manf_id_data !== 'undefined' && lf_manf_id_data !== null && lf_manf_id_data != "") {
-			if (add_more == 0) {
-				$("#gerenric_product_inner").html("");
-				$("#gerenric_product_inner_page").val(0);
-			}
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_manf_id = lf_manf_id_data;
 		}
 		let lf_pf_fvalue = "";
 		if (typeof lf_pf_fvalue_data !== 'undefined' && lf_pf_fvalue_data !== null && lf_pf_fvalue_data != "") {
-			if (add_more == 0) {
-				$("#gerenric_product_inner").html("");
-				$("#gerenric_product_inner_page").val(0);
-			}
 			$("#btn_load").hide();
 			$("#btn_load_spinner").show();
 			lf_pf_fvalue = lf_pf_fvalue_data;
 		}
-		$.ajax({
+		if (currentProductXhr && currentProductXhr.readyState !== 4) {
+			currentProductXhr.abort();
+		}
+		currentProductXhr = $.ajax({
 			url: 'ajax_calls.php?action=gerenric_product_inner',
 			method: 'POST',
 			data: {
@@ -607,7 +614,10 @@ if(!empty($whereclause_meta)){
 		let left_filter_cat_WhereQuery = "<?php print($left_filter_cat_WhereQuery); ?>";
 		let level_check = "<?php print($level_three); ?>";
 
-		$.ajax({
+		if (currentGroupXhr && currentGroupXhr.readyState !== 4) {
+			currentGroupXhr.abort();
+		}
+		currentGroupXhr = $.ajax({
 			url: 'ajax_calls.php?action=lf_group_id_inner',
 			method: 'POST',
 			data: {
@@ -654,7 +664,10 @@ if(!empty($whereclause_meta)){
 		if (typeof lf_group_id_data !== 'undefined' && lf_group_id_data !== null && lf_group_id_data != "") {
 			lf_group_id = lf_group_id_data;
 		}
-		$.ajax({
+		if (currentManfXhr && currentManfXhr.readyState !== 4) {
+			currentManfXhr.abort();
+		}
+		currentManfXhr = $.ajax({
 			url: 'ajax_calls.php?action=lf_manf_id_inner',
 			method: 'POST',
 			data: {
@@ -694,7 +707,10 @@ if(!empty($whereclause_meta)){
 			$("#lf_pf_fvalue_inner_loading").show();
 			lf_manf_id = lf_manf_id_data;
 		}
-		$.ajax({
+		if (currentPfXhr && currentPfXhr.readyState !== 4) {
+			currentPfXhr.abort();
+		}
+		currentPfXhr = $.ajax({
 			url: 'ajax_calls.php?action=lf_pf_fvalue_inner',
 			method: 'POST',
 			data: {

@@ -275,3 +275,62 @@ Before any project files were modified, full backups of all original files were 
 4. **Fixed Specifications Table & Pre-Slick Slider Responsive Containment (`product_detail.php`):**
    - Added `width: 100%; box-sizing: border-box; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);` on `.product_detail_container` and `min-width: 0; overflow-wrap: break-word; word-break: break-word;` on `.product_specification_name, .product_specification_value` so long German attribute names (e.g., `"Werbliche Produkttypbezeichnung"`) wrap cleanly without horizontal overflow.
    - Added responsive flex-basis rules (`25%` at `<= 1024px`, `33.333%` at `<= 650px`, `50%` at `<= 480px`) for `.gerenric_slider:not(.slick-initialized) > div` and `.gerenric_slider_mostviewed:not(.slick-initialized) > div`.
+
+
+---
+
+## Follow-Up Fix #5 — Sidebar Filter (`Laden...`) & Brand Page (`/marken/leitz-acco-brands`) Speed & 504 Nginx Timeout Fix
+
+### 1. Summary of Performance Improvements
+
+| Endpoint / Action | Before Optimization | After Optimization |
+| :--- | :--- | :--- |
+| **`ajax_calls.php?action=lf_pf_fvalue_inner` (`manf_id=56` / Leitz)** | **`205.82 s` (`~3.5 minutes`)** — caused PHP-FPM / Nginx `504 Gateway Time-out` | **`1.30 s` cold / `0.049 s` cached** (**158x – 4,200x faster**) |
+| **`ajax_calls.php?action=lf_group_id_inner` (`manf_id=56` / Leitz)** | **`3.75 s`** (queried `vu_category_map` view) | **`0.004 s` query / `0.16 s` total** |
+| **`ajax_calls.php?action=lf_manf_id_inner` (`leve_id=19`)** | **`2.91 s`** (`vu_category_map` + `FIND_IN_SET`) | **`0.021 s` query / `0.90 s` total** |
+| **`ajax_calls.php?action=gerenric_product_inner` (`manf_id=56`)** | **`1.92 s`** (`SELECT * FROM vu_category_map` count scan) | **`0.239 s` query / `0.39 s` total** |
+| **`manufacture_products.php` Initial Page Render (`/marken/leitz-acco-brands`)** | **`10.11 s`** (`475` N+1 queries across 158 categories in top slider) | **`0.60 s` query / `1.47 s` full render** |
+| **Concurrent Request / Navigation Blocking (`504` Error)** | Blocked all other requests for `3.5+ minutes` due to exclusive PHP session lock | **`0 ms` blocking** (`session_write_close()` + XHR abort on filter change / `beforeunload`) |
+
+---
+
+### 2. Root Causes & Fixes Applied
+
+1. **Eliminated PHP Session File Locking (`ajax_calls.php`, `ajax_calls_product_category.php`):**
+   - `includes/php_includes_top.php` calls `session_start()`, which acquires an exclusive lock on the user's PHP session file. Because `ajax_calls.php` and `ajax_calls_product_category.php` never called `session_write_close()`, any slow background AJAX filter request (`lf_pf_fvalue_inner`) held the session lock for minutes, causing all other concurrent AJAX calls and subsequent page clicks from that browser session to hang in PHP until Nginx returned `504 Gateway Time-out`.
+   - Added `session_write_close()` immediately in `ajax_calls_product_category.php` and before `switch ($_REQUEST['action'])` for all read-only actions in `ajax_calls.php` (preserving session write access only for cart/customer-type mutation actions: `switch_click`, `add_to_card`, `show_side_cart_data`, `item_ci_qty`, `item_deleted`, `add_to_cart_free_product`).
+
+2. **Optimized `lf_pf_fvalue_inner` (`205.8 s -> 1.3 s` Cold / `0.05 s` Cached in `ajax_calls.php`):**
+   - **Deduplicated `$Query1` (`798` rows -> `64` rows):** On `/marken/leitz-acco-brands` (`manf_id = 56`, spanning 158 categories), `$Query1` selected from `category_side_filter` without `GROUP BY sf.lov_sf_title`, returning 798 duplicate filter rows for only 64 distinct attributes. Added `GROUP BY sf.lov_sf_title`.
+   - **Replaced `1,596` N+1 `vu_category_map` Queries with 1 Batched Indexed Query:** Previously, for each of the 798 rows, `lf_pf_fvalue_inner` executed `$Query2` **twice** (`1,596` queries total), each evaluating `IN (SELECT cm.supplier_id FROM vu_category_map AS cm WHERE cm.manf_id = '56')`. Replaced the entire N+1 query loop with a single batched query joining `products` + `products_feature` (and `category_map` when `lf_group_id` is active), grouped and sorted in PHP, with a 10-minute JSON cache in `sys_get_temp_dir()`.
+   - **Fixed Category Filter (`lf_group_id`) Interaction on Brand Pages:** Fixed `$Query1` and `$Query2` in `lf_pf_fvalue_inner` when `manf_id > 0` and `lf_group_id` checkboxes are selected so the feature filter narrows to the selected categories instead of ignoring `lf_group_id`.
+   - **Fixed `$rs` vs `$rs1` Variable Bug:** Fixed `if (mysqli_num_rows($rs) > 0)` in `lf_pf_fvalue_inner` and `feature_show` where `$rs` referenced a leftover result variable from `lib/openCon.php` instead of `$rs1`.
+
+3. **Optimized `lf_group_id_inner`, `lf_manf_id_inner`, and `gerenric_product_inner` (`ajax_calls.php`):**
+   - Replaced `vu_category_map` and `FIND_IN_SET(..., cm.sub_group_ids)` in `lf_group_id_inner` and `lf_manf_id_inner` with direct indexed queries on `category_map` (`cat_id`, `cat_id_level_one`, `cat_id_level_two`) + `products`.
+   - Replaced the full-view count scan (`SELECT * FROM vu_category_map`) in `gerenric_product_inner` with a lightweight `SELECT COUNT(*)` query on `category_map` + `products` + `products_quantity`.
+
+4. **Optimized Top Category Slider & Added XHR Abort Handling (`manufacture_products.php`, `products.php`, `lib/functions.php`):**
+   - Replaced the `158 * 3 = 475` N+1 query loop in the top category slider of `manufacture_products.php` with 2 batched queries (`10.11 s -> 0.60 s`).
+   - Optimized `returnMultiName()` in `lib/functions.php` when querying `vu_category_map` for category slider prices/images so the `products_gallery` subquery executes once per category (`MIN(cm.supplier_id)`) instead of once per product row (`0.83 s -> 0.07 s` per category).
+   - Added active XHR tracking (`currentProductXhr`, `currentGroupXhr`, `currentManfXhr`, `currentPfXhr`) in `manufacture_products.php` and `products.php` so changing filters or navigating away (`beforeunload`) immediately aborts in-flight AJAX requests and prevents duplicate product cards from appending.
+
+---
+
+### 3. Files Modified, Backups & Database Indexes
+
+- **Backups saved to `md doc/backups_05112026/perf_backup/`:**
+  - `ajax_calls.php`, `ajax_calls_product_category.php`, `manufacture_products.php`, `products.php`, `product_category.php`, `includes/left_filter.php`, `lib/functions.php`
+- **Modified Files:**
+  - `ajax_calls.php`
+  - `ajax_calls_product_category.php`
+  - `manufacture_products.php`
+  - `products.php`
+  - `lib/functions.php`
+- **Database Composite Indexes Added (`gac_2024_wacker_buerocenter`) — Run on Production MySQL if not yet present:**
+  ```sql
+  ALTER TABLE products ADD INDEX idx_pro_manf_status_supp (manf_id, pro_status, supplier_id);
+  ALTER TABLE products_feature ADD INDEX idx_pf_supp_fname (supplier_id, pf_fname);
+  ALTER TABLE category_map ADD INDEX idx_cm_supp_cat (supplier_id(30), cat_id);
+  ```
+
