@@ -273,7 +273,7 @@
 		}
 	})();
 </script>
-<script src="js/jquery-ui-1.13.3.min.js"></script>
+<script src="js/jquery-ui-1.13.3.min.js?dt=12112026"></script>
 <script>
 	$('.close').on('click', function(){
         $('.alert').hide();
